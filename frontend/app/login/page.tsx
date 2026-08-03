@@ -21,17 +21,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-8">
-        <h1 className="text-3xl font-bold text-center mb-2">Rentas</h1>
-        <p className="text-center text-gray-600 mb-8">Sistema de Gestión de Propiedades</p>
+    <div className="min-h-screen bg-canvas flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-surface rounded-lg shadow-xl p-8">
+        <h1 className="text-3xl font-bold text-center mb-2 text-primary">Rentas</h1>
+        <p className="text-center text-muted mb-8">Sistema de Gestión de Propiedades</p>
 
         <LoginForm />
 
-        <div className="mt-6 border-t pt-6">
-          <p className="text-center text-sm text-gray-600">
+        <div className="mt-6 border-t border-black/10 pt-6">
+          <p className="text-center text-sm text-muted">
             ¿No tienes cuenta?{' '}
-            <Link href="/register" className="text-blue-600 hover:underline font-medium">
+            <Link href="/register" className="text-primary hover:underline font-medium">
               Regístrate aquí
             </Link>
           </p>

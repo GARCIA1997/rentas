@@ -30,7 +30,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-2">Teléfono</label>
+        <label className="block text-sm font-medium mb-2 text-heading">Teléfono</label>
         <input
           type="tel"
           value={phone}
@@ -38,19 +38,19 @@ export function LoginForm() {
           placeholder="5551234567"
           maxLength={10}
           required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">Contraseña</label>
+        <label className="block text-sm font-medium mb-2 text-heading">Contraseña</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
@@ -59,7 +59,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+        className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-pressed disabled:opacity-50"
       >
         {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </button>

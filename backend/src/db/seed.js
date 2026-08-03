@@ -6,23 +6,39 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  const adminPasswordHash = await bcryptjs.hash('admin123456', 10);
+  // Remove old demo admin from earlier seed runs, if present
+  await prisma.user.deleteMany({ where: { phone: '5551234567' } });
+
+  const adminPasswordHash = await bcryptjs.hash('@AgA151097', 10);
 
   const admin = await prisma.user.upsert({
-    where: { phone: '5551234567' },
+    where: { phone: '3131128425' },
     update: {},
     create: {
-      phone: '5551234567',
+      phone: '3131128425',
       passwordHash: adminPasswordHash,
-      firstName: 'Admin',
-      lastName: 'Principal',
-      email: 'admin@rentas.local',
+      firstName: 'Alejandro',
+      lastName: 'Garcia Alvarez',
       role: 'ADMIN',
       status: 'ACTIVE',
     },
   });
 
-  console.log(`✅ Admin user created: ${admin.phone} / admin123456`);
+  console.log(`✅ Admin user created: ${admin.phone}`);
+
+  const representative = await prisma.representative.upsert({
+    where: { id: 'seed-representative-1' },
+    update: {},
+    create: {
+      id: 'seed-representative-1',
+      fullName: 'Alejandro Garcia Alvarez',
+      position: 'Administrador',
+      createdBy: admin.id,
+      isActive: true,
+    },
+  });
+
+  console.log(`✅ Representative created: ${representative.fullName}`);
 
   const property1 = await prisma.property.upsert({
     where: { id: 'seed-property-1' },

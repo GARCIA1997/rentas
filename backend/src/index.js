@@ -4,6 +4,10 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import authRoutes from './routes/auth.js';
+import propertyRoutes from './routes/properties.js';
+import tenantRoutes from './routes/tenants.js';
+import representativeRoutes from './routes/representatives.js';
+import dashboardRoutes from './routes/dashboard.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -27,6 +31,10 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/properties', propertyRoutes);
+app.use('/api/tenants', tenantRoutes);
+app.use('/api/representatives', representativeRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // 404 handler
 app.use((req, res) => {

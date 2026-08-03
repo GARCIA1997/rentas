@@ -1,0 +1,9 @@
+import express from 'express';
+import * as dashboardController from '../controllers/dashboardController.js';
+import { authenticateJWT, requireAdmin } from '../middleware/auth.js';
+
+const router = express.Router();
+
+router.get('/stats', authenticateJWT, requireAdmin, dashboardController.getStats);
+
+export default router;
