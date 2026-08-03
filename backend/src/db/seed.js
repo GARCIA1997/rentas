@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
+import { CASA_TEMPLATE, LOCAL_TEMPLATE, CONTRACT_VARIABLES } from './contractTemplates.js';
 
 const prisma = new PrismaClient();
 
@@ -75,6 +76,34 @@ async function main() {
   });
 
   console.log(`✅ Properties created: ${property1.name}, ${property2.name}`);
+
+  const casaTemplate = await prisma.contractTemplate.upsert({
+    where: { id: 'seed-template-casa' },
+    update: { templateContent: CASA_TEMPLATE, variables: CONTRACT_VARIABLES },
+    create: {
+      id: 'seed-template-casa',
+      name: 'Contrato Estándar - Casa Habitación',
+      templateContent: CASA_TEMPLATE,
+      variables: CONTRACT_VARIABLES,
+      isDefault: true,
+      createdBy: admin.id,
+    },
+  });
+
+  const localTemplate = await prisma.contractTemplate.upsert({
+    where: { id: 'seed-template-local' },
+    update: { templateContent: LOCAL_TEMPLATE, variables: CONTRACT_VARIABLES },
+    create: {
+      id: 'seed-template-local',
+      name: 'Contrato Estándar - Local Comercial',
+      templateContent: LOCAL_TEMPLATE,
+      variables: CONTRACT_VARIABLES,
+      isDefault: false,
+      createdBy: admin.id,
+    },
+  });
+
+  console.log(`✅ Contract templates created: ${casaTemplate.name}, ${localTemplate.name}`);
 
   console.log('🌱 Seed complete.');
 }

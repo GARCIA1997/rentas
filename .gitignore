@@ -33,6 +33,9 @@ out/
 *.sqlite
 postgres_data/
 
+# Generated documents
+backend/uploads/
+
 # Docker
 docker-compose.override.yml
 

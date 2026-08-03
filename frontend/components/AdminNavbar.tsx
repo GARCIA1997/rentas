@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { ThemeToggle } from './ThemeToggle';
@@ -10,6 +11,7 @@ const links = [
   { href: '/admin/properties', label: 'Propiedades' },
   { href: '/admin/tenants', label: 'Inquilinos' },
   { href: '/admin/representatives', label: 'Representantes' },
+  { href: '/admin/contracts', label: 'Contratos' },
 ];
 
 export function AdminNavbar() {
@@ -21,8 +23,8 @@ export function AdminNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center gap-4">
           <div className="flex items-center gap-8 overflow-x-auto">
-            <Link href="/dashboard" className="text-xl font-bold text-primary shrink-0">
-              Rentas
+            <Link href="/dashboard" className="shrink-0 flex items-center">
+              <Image src="/logoksa.png" alt="KsaRed" width={40} height={40} className="h-10 w-10" priority />
             </Link>
             {user?.role === 'ADMIN' && (
               <div className="hidden sm:flex items-center gap-1">

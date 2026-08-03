@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -34,7 +35,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-canvas flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-surface rounded-lg shadow-xl p-8">
-        <h1 className="text-3xl font-bold text-center mb-2 text-primary">Rentas</h1>
+        <Image src="/logoksa.png" alt="KsaRed" width={96} height={96} className="mx-auto mb-2" priority />
         <p className="text-center text-muted mb-8">Crear cuenta de inquilino</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

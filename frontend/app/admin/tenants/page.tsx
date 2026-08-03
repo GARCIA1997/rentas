@@ -6,6 +6,7 @@ import { AdminNavbar } from '@/components/AdminNavbar';
 import { Modal } from '@/components/Modal';
 import { useAuth } from '@/hooks/useAuth';
 import { tenantsApi, propertiesApi, Tenant, TenantInput, Property } from '@/lib/api';
+import { formatDate } from '@/lib/formatDate';
 
 const emptyForm: TenantInput = {
   propertyId: '',
@@ -165,7 +166,7 @@ export default function TenantsPage() {
                       <td className="px-4 py-3 text-muted">{tenant.property?.name ?? '—'}</td>
                       <td className="px-4 py-3 text-muted">{tenant.phone ?? '—'}</td>
                       <td className="px-4 py-3 text-muted">
-                        {new Date(tenant.moveInDate).toLocaleDateString('es-MX')}
+                        {formatDate(tenant.moveInDate)}
                       </td>
                       <td className="px-4 py-3">
                         <span

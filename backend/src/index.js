@@ -8,6 +8,8 @@ import propertyRoutes from './routes/properties.js';
 import tenantRoutes from './routes/tenants.js';
 import representativeRoutes from './routes/representatives.js';
 import dashboardRoutes from './routes/dashboard.js';
+import contractRoutes from './routes/contracts.js';
+import contractTemplateRoutes from './routes/contractTemplates.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -35,6 +37,8 @@ app.use('/api/properties', propertyRoutes);
 app.use('/api/tenants', tenantRoutes);
 app.use('/api/representatives', representativeRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/contracts', contractRoutes);
+app.use('/api/contract-templates', contractTemplateRoutes);
 
 // 404 handler
 app.use((req, res) => {

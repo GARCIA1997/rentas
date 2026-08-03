@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/lib/authContext";
 import { ThemeProvider } from "@/lib/themeContext";
@@ -26,8 +26,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rentas - Gestión de Propiedades",
+  title: "KsaRed - Gestión de Propiedades",
   description: "Sistema de gestión de renta de casas habitación y locales comerciales",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "KsaRed",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0d9488",
 };
 
 export default function RootLayout({
