@@ -66,6 +66,13 @@ export const registerTenant = async (phone, password, firstName, lastName, email
     },
   });
 
+  // Link to a pre-existing tenant record with the same phone (admin may have
+  // registered this tenant before they created their account)
+  await prisma.tenant.updateMany({
+    where: { phone, userId: null },
+    data: { userId: user.id },
+  });
+
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 

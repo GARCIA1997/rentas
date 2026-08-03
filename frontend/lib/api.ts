@@ -327,6 +327,42 @@ export function buildWhatsAppReminderUrl(payment: RentPayment): string {
   return `https://wa.me/52${phone}?text=${encodeURIComponent(message)}`;
 }
 
+// ---- Me (tenant portal) ----
+
+export interface MyTenant {
+  id: string;
+  fullName: string;
+  phone?: string | null;
+  email?: string | null;
+  moveInDate: string;
+  status: 'ACTIVE' | 'EVICTED' | 'MOVED_OUT';
+  property: { id: string; name: string; address: string; city: string; propertyType: 'HOUSE' | 'LOCAL' };
+}
+
+const downloadBlob = async (url: string, token: string, filename: string, errorMessage: string) => {
+  const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (!response.ok) {
+    throw new Error(errorMessage);
+  }
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = objectUrl;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(objectUrl);
+};
+
+export const meApi = {
+  getTenant: (token: string) => apiCall('/api/me/tenant', { token }) as Promise<MyTenant | null>,
+  getContracts: (token: string) => apiCall('/api/me/contracts', { token }) as Promise<Contract[]>,
+  getPayments: (token: string) => apiCall('/api/me/payments', { token }) as Promise<RentPayment[]>,
+  downloadContractPdf: (id: string, token: string) =>
+    downloadBlob(`${API_URL}/api/me/contracts/${id}/pdf`, token, `contrato-${id}.pdf`, 'No se pudo descargar el contrato'),
+  downloadReceipt: (id: string, token: string) =>
+    downloadBlob(`${API_URL}/api/me/payments/${id}/receipt`, token, `recibo-${id}.pdf`, 'No se pudo descargar el recibo'),
+};
+
 // ---- Dashboard ----
 
 export interface DashboardStats {

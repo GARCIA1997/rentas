@@ -33,12 +33,23 @@ const ensurePropertyExists = async (propertyId) => {
   }
 };
 
+// Links a tenant record to a self-registered user account when their phone
+// numbers match, so the tenant portal can find "their" data regardless of
+// whether they registered before or after the admin created the tenant record.
+const findMatchingUserId = async (phone) => {
+  if (!phone) return null;
+  const user = await prisma.user.findFirst({ where: { phone, role: 'INQUILINO' } });
+  return user?.id ?? null;
+};
+
 export const createTenant = async (data) => {
   await ensurePropertyExists(data.propertyId);
+  const userId = await findMatchingUserId(data.phone);
 
   return prisma.tenant.create({
     data: {
       propertyId: data.propertyId,
+      userId,
       fullName: data.fullName,
       email: data.email,
       phone: data.phone,
@@ -50,16 +61,20 @@ export const createTenant = async (data) => {
 };
 
 export const updateTenant = async (id, data) => {
-  await getTenant(id);
+  const existing = await getTenant(id);
 
   if (data.propertyId) {
     await ensurePropertyExists(data.propertyId);
   }
 
+  const userId =
+    data.phone && data.phone !== existing.phone ? await findMatchingUserId(data.phone) : undefined;
+
   return prisma.tenant.update({
     where: { id },
     data: {
       propertyId: data.propertyId,
+      userId,
       fullName: data.fullName,
       email: data.email,
       phone: data.phone,
