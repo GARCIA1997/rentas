@@ -12,6 +12,7 @@ const links = [
   { href: '/admin/tenants', label: 'Inquilinos' },
   { href: '/admin/representatives', label: 'Representantes' },
   { href: '/admin/contracts', label: 'Contratos' },
+  { href: '/admin/payments', label: 'Pagos' },
 ];
 
 export function AdminNavbar() {

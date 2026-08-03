@@ -10,6 +10,7 @@ import representativeRoutes from './routes/representatives.js';
 import dashboardRoutes from './routes/dashboard.js';
 import contractRoutes from './routes/contracts.js';
 import contractTemplateRoutes from './routes/contractTemplates.js';
+import rentPaymentRoutes from './routes/rentPayments.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.use('/api/representatives', representativeRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/contracts', contractRoutes);
 app.use('/api/contract-templates', contractTemplateRoutes);
+app.use('/api/rent-payments', rentPaymentRoutes);
 
 // 404 handler
 app.use((req, res) => {

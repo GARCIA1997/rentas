@@ -255,6 +255,78 @@ export const contractsApi = {
   },
 };
 
+// ---- Rent Payments ----
+
+export interface RentPayment {
+  id: string;
+  contractId: string;
+  tenantId: string;
+  propertyId: string;
+  amountDue: string;
+  amountPaid: string;
+  dueDate: string;
+  paidDate?: string | null;
+  paymentMethod: 'MANUAL' | 'TRANSFERENCIA' | 'EFECTIVO' | 'CHEQUE';
+  notes?: string | null;
+  status: 'PENDING' | 'PAID' | 'OVERDUE';
+  createdAt: string;
+  updatedAt: string;
+  tenant?: { id: string; fullName: string; phone?: string | null };
+  property?: { id: string; name: string; address: string; city: string };
+  contract?: { id: string; penaltyRules?: PenaltyRules | null };
+}
+
+export interface RentPaymentInput {
+  contractId: string;
+  dueDate: string;
+  amountDue: number;
+  amountPaid?: number;
+  paidDate?: string;
+  paymentMethod: RentPayment['paymentMethod'];
+  notes?: string;
+}
+
+export const rentPaymentsApi = {
+  list: (token: string) => apiCall('/api/rent-payments', { token }) as Promise<RentPayment[]>,
+  get: (id: string, token: string) => apiCall(`/api/rent-payments/${id}`, { token }) as Promise<RentPayment>,
+  create: (data: RentPaymentInput, token: string) =>
+    apiCall('/api/rent-payments', { method: 'POST', body: JSON.stringify(data), token }) as Promise<RentPayment>,
+  update: (id: string, data: Partial<RentPaymentInput>, token: string) =>
+    apiCall(`/api/rent-payments/${id}`, { method: 'PUT', body: JSON.stringify(data), token }) as Promise<RentPayment>,
+  remove: (id: string, token: string) => apiCall(`/api/rent-payments/${id}`, { method: 'DELETE', token }),
+  markPaid: (id: string, paymentMethod: RentPayment['paymentMethod'], token: string) =>
+    apiCall(`/api/rent-payments/${id}/mark-paid`, {
+      method: 'POST',
+      body: JSON.stringify({ paymentMethod }),
+      token,
+    }) as Promise<RentPayment>,
+  downloadReceipt: async (id: string, token: string) => {
+    const response = await fetch(`${API_URL}/api/rent-payments/${id}/receipt`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) {
+      throw new Error('No se pudo descargar el recibo');
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `recibo-${id}.pdf`;
+    link.click();
+    URL.revokeObjectURL(url);
+  },
+};
+
+export function buildWhatsAppReminderUrl(payment: RentPayment): string {
+  const phone = payment.tenant?.phone?.replace(/\D/g, '') ?? '';
+  const dueDate = new Date(payment.dueDate).toLocaleDateString('es-MX', { timeZone: 'UTC' });
+  const isOverdue = payment.status === 'OVERDUE';
+  const message = isOverdue
+    ? `Hola ${payment.tenant?.fullName}, te recordamos que tu pago de renta de $${Number(payment.amountDue).toLocaleString('es-MX')} correspondiente a ${payment.property?.name} venció el ${dueDate}. Por favor realiza tu pago a la brevedad. ¡Gracias!`
+    : `Hola ${payment.tenant?.fullName}, te recordamos que tu pago de renta de $${Number(payment.amountDue).toLocaleString('es-MX')} correspondiente a ${payment.property?.name} vence el ${dueDate}. ¡Gracias!`;
+  return `https://wa.me/52${phone}?text=${encodeURIComponent(message)}`;
+}
+
 // ---- Dashboard ----
 
 export interface DashboardStats {

@@ -1,9 +1,9 @@
 import puppeteer from 'puppeteer';
 
-const formatCurrency = (amount) =>
+export const formatCurrency = (amount) =>
   new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(Number(amount));
 
-const formatDate = (date) =>
+export const formatDate = (date) =>
   new Intl.DateTimeFormat('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(date));
 
 export const renderTemplate = (templateContent, variables) => {
@@ -48,6 +48,73 @@ export const buildContractVariables = (contract) => {
       : 'Este contrato no se renueva de forma automática; al término de su vigencia deberá formalizarse un nuevo contrato de mutuo acuerdo entre las partes.',
     signature_date: formatDate(new Date()),
   };
+};
+
+const receiptStyles = `
+  body { font-family: 'Georgia', 'Times New Roman', serif; font-size: 12px; line-height: 1.6; color: #111827; padding: 10px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0d9488; padding-bottom: 12px; margin-bottom: 20px; }
+  .header h1 { font-size: 20px; color: #0d9488; margin: 0; }
+  .header .receipt-id { text-align: right; font-size: 11px; color: #6b7280; }
+  .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+  .row .label { color: #6b7280; }
+  .row .value { font-weight: bold; text-align: right; }
+  .total { display: flex; justify-content: space-between; padding: 14px 0; margin-top: 10px; border-top: 2px solid #111827; font-size: 15px; }
+  .late-fee { background: #fef3c7; color: #92400e; padding: 10px; border-radius: 6px; margin: 16px 0; font-size: 11px; }
+  .footer-note { margin-top: 50px; font-size: 10px; color: #6b7280; text-align: center; }
+  .signature-line { border-top: 1px solid #111827; margin-top: 60px; padding-top: 6px; width: 260px; text-align: center; }
+`;
+
+export const buildReceiptHtml = (payment) => {
+  const isLate = payment.paidDate && new Date(payment.paidDate) > new Date(payment.dueDate);
+  const latePercentage = payment.contract?.penaltyRules?.latePaymentPercentage;
+  const lateFeeAmount = isLate && latePercentage ? (Number(payment.amountDue) * latePercentage) / 100 : null;
+
+  const methodLabels = {
+    MANUAL: 'Manual',
+    TRANSFERENCIA: 'Transferencia',
+    EFECTIVO: 'Efectivo',
+    CHEQUE: 'Cheque',
+  };
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>${receiptStyles}</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Recibo de Pago</h1>
+    <div class="receipt-id">
+      Folio: ${payment.id.slice(-8).toUpperCase()}<br>
+      Fecha de emisión: ${formatDate(new Date())}
+    </div>
+  </div>
+
+  <div class="row"><span class="label">Inquilino</span><span class="value">${payment.tenant.fullName}</span></div>
+  <div class="row"><span class="label">Propiedad</span><span class="value">${payment.property.name}</span></div>
+  <div class="row"><span class="label">Dirección</span><span class="value">${payment.property.address}, ${payment.property.city}</span></div>
+  <div class="row"><span class="label">Concepto</span><span class="value">Renta correspondiente al ${formatDate(payment.dueDate)}</span></div>
+  <div class="row"><span class="label">Fecha de vencimiento</span><span class="value">${formatDate(payment.dueDate)}</span></div>
+  <div class="row"><span class="label">Fecha de pago</span><span class="value">${payment.paidDate ? formatDate(payment.paidDate) : 'Pendiente'}</span></div>
+  <div class="row"><span class="label">Método de pago</span><span class="value">${methodLabels[payment.paymentMethod] ?? payment.paymentMethod}</span></div>
+  <div class="row"><span class="label">Monto adeudado</span><span class="value">${formatCurrency(payment.amountDue)}</span></div>
+
+  ${
+    lateFeeAmount
+      ? `<div class="late-fee">Este pago se realizó después de la fecha de vencimiento. Conforme al contrato, aplica un recargo del ${latePercentage}% (${formatCurrency(lateFeeAmount)}) sobre el monto adeudado.</div>`
+      : ''
+  }
+
+  ${payment.notes ? `<div class="row"><span class="label">Notas</span><span class="value">${payment.notes}</span></div>` : ''}
+
+  <div class="total"><span>Total pagado</span><span>${formatCurrency(payment.amountPaid)}</span></div>
+
+  <div class="signature-line">Recibí conforme</div>
+
+  <p class="footer-note">Documento generado por el sistema de gestión de rentas KsaRed.</p>
+</body>
+</html>`;
 };
 
 let browserInstance;
