@@ -27,6 +27,11 @@ export async function apiCall(
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
+    if (response.status === 401 && token && typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
+      window.dispatchEvent(new Event('auth:expired'));
+    }
     throw new Error(error.error || error.errors?.[0]?.msg || `API error: ${response.statusText}`);
   }
 

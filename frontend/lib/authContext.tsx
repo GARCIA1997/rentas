@@ -40,6 +40,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
+  // A request came back 401 with an expired/invalid token (apiCall already
+  // cleared localStorage) — drop the in-memory session so ProtectedRoute
+  // redirects to /login.
+  useEffect(() => {
+    const handleExpired = () => {
+      setToken(null);
+      setUser(null);
+    };
+    window.addEventListener('auth:expired', handleExpired);
+    return () => window.removeEventListener('auth:expired', handleExpired);
+  }, []);
+
   const login = async (phone: string, password: string) => {
     const result = await api.login(phone, password);
     localStorage.setItem('accessToken', result.accessToken);

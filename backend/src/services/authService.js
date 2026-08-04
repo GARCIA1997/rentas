@@ -115,7 +115,7 @@ const generateAccessToken = (user) => {
       type: 'access',
     },
     process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: '30d' }
   );
 };
 
