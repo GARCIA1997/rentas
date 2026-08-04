@@ -58,7 +58,7 @@ export default function PaymentsPage() {
     } finally {
       setActionLoadingId(null);
     }
-  };
+  }, [token, loadPayments]);
 
   const handleDownloadReceipt = useCallback(async (paymentId: string) => {
     if (!token) return;
