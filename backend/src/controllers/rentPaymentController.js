@@ -105,3 +105,14 @@ export const downloadReceipt = async (req, res, next) => {
     next(error);
   }
 };
+
+export const exportCSV = async (req, res, next) => {
+  try {
+    const csv = await rentPaymentService.generatePaymentsCSV();
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="pagos.csv"');
+    res.send(csv);
+  } catch (error) {
+    next(error);
+  }
+};

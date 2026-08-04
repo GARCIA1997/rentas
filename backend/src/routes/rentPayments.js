@@ -9,6 +9,7 @@ router.use(authenticateJWT, requireAdmin);
 router.get('/', rentPaymentController.list);
 router.get('/filter/overdue', rentPaymentController.getOverdue);
 router.get('/filter/upcoming', rentPaymentController.getUpcoming);
+router.get('/export/csv', rentPaymentController.exportCSV);
 router.get('/:id', rentPaymentController.getOne);
 router.post('/', rentPaymentController.create);
 router.put('/:id', rentPaymentController.update);

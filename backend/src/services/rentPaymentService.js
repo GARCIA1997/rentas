@@ -145,3 +145,32 @@ export const getUpcomingPayments = async (daysAhead = 7) => {
     orderBy: { dueDate: 'asc' }
   });
 };
+
+export const generatePaymentsCSV = async () => {
+  const payments = await prisma.rentPayment.findMany({
+    include: includeRelations,
+    orderBy: { dueDate: 'asc' }
+  });
+
+  const headers = ['Inquilino', 'Propiedad', 'Tipo de Pago', 'Monto', 'Fecha de Vencimiento', 'Fecha de Pago', 'Método de Pago', 'Estado'];
+
+  const rows = payments.map(p => [
+    p.tenant?.fullName || '',
+    p.property?.name || '',
+    p.paymentType || 'RENT',
+    p.amountDue,
+    new Date(p.dueDate).toLocaleDateString('es-MX'),
+    p.paidDate ? new Date(p.paidDate).toLocaleDateString('es-MX') : '',
+    p.paymentMethod || '',
+    p.status
+  ]);
+
+  const csvContent = [
+    headers,
+    ...rows
+  ]
+    .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .join('\n');
+
+  return '﻿' + csvContent; // Add BOM for Excel UTF-8 support
+};

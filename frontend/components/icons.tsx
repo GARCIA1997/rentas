@@ -170,3 +170,11 @@ export function WhatsAppIcon({ active, ...props }: IconProps) {
     </svg>
   );
 }
+
+export function DownloadIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M12 2.5v11M7 9l5 5 5-5M4.5 20.5h15" />
+    </svg>
+  );
+}

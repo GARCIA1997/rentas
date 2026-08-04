@@ -138,9 +138,14 @@ export default function PaymentsPage() {
   return (
     <ProtectedRoute requiredRole="ADMIN">
       <div className="max-w-4xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-heading mb-1">Pagos</h1>
-          <p className="text-muted">Monitorea pagos vencidos y próximos a vencer</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-heading mb-1">Pagos</h1>
+            <p className="text-muted">Monitorea pagos vencidos y próximos a vencer</p>
+          </div>
+          <Link href="/reports" className="text-primary text-sm font-medium hover:underline">
+            Ver reporte completo →
+          </Link>
         </div>
 
         {/* Filters */}
