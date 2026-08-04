@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
-import { CASA_TEMPLATE, LOCAL_TEMPLATE, CONTRACT_VARIABLES } from './contractTemplates.js';
+import { CASA_TEMPLATE, LOCAL_TEMPLATE, COAHUAYANA_TEMPLATE, CONTRACT_VARIABLES } from './contractTemplates.js';
 
 const prisma = new PrismaClient();
 
@@ -106,6 +106,19 @@ async function main() {
       id: 'seed-template-local',
       name: 'Contrato Estándar - Local Comercial',
       templateContent: LOCAL_TEMPLATE,
+      variables: CONTRACT_VARIABLES,
+      isDefault: false,
+      createdBy: admin.id,
+    },
+  });
+
+  const coahuayanaTemplate = await prisma.contractTemplate.upsert({
+    where: { id: 'seed-template-coahuayana' },
+    update: { templateContent: COAHUAYANA_TEMPLATE, variables: CONTRACT_VARIABLES },
+    create: {
+      id: 'seed-template-coahuayana',
+      name: 'Contrato Detallado - Con Inventario y Convivencia',
+      templateContent: COAHUAYANA_TEMPLATE,
       variables: CONTRACT_VARIABLES,
       isDefault: false,
       createdBy: admin.id,

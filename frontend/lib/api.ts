@@ -224,6 +224,11 @@ export interface Contract {
   waterIncluded: boolean;
   depositReturnPolicy?: DepositReturnPolicy | null;
   penaltyRules?: PenaltyRules | null;
+  inventory?: { name: string; condition?: string; notes?: string }[] | null;
+  utilities?: Record<string, boolean | string> | null;
+  convivanceRules?: string | null;
+  witnessInfo?: { name?: string; phone?: string; signature?: string } | null;
+  landlordsInfo?: { name?: string; phone?: string; email?: string } | null;
   templateUsed?: string | null;
   signedAt?: string | null;
   signedDigitallyPhone: boolean;
@@ -253,6 +258,11 @@ export interface ContractInput {
   autoRenewal: boolean;
   penaltyRules?: PenaltyRules;
   depositReturnPolicy?: DepositReturnPolicy;
+  inventory?: { name: string; condition?: string; notes?: string }[];
+  utilities?: Record<string, boolean | string>;
+  convivanceRules?: string;
+  witnessInfo?: { name?: string; phone?: string; signature?: string };
+  landlordsInfo?: { name?: string; phone?: string; email?: string };
 }
 
 export const contractsApi = {

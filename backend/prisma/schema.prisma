@@ -167,6 +167,11 @@ model Contract {
   depositReturnPolicy   Json?       // JSON for flexibility: {condition: "perfect/minor/major", percentage: 100}
   penaltyRules          Json?       // JSON: {latePaymentPenalty: 2, maxDamageCharge: 5000}
   terms                 Json?       // JSON: array of custom clauses
+  inventory             Json?       // JSON: array of items included {name, condition, notes}
+  utilities             Json?       // JSON: {water, electricity, gas, etc} - who pays (tenant/landlord/included)
+  convivanceRules       String?     // Convivencia, ruidos, horarios permitidos
+  witnessInfo           Json?       // JSON: {name, phone, signature} - referencia de testigo
+  landlordsInfo         Json?       // JSON: {name, phone, email} - datos del arrendador
   templateUsed          String?
   signedAt              DateTime?
   signedDigitallyPhone  Boolean     @default(false)

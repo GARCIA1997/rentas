@@ -32,25 +32,77 @@ export const renderTemplate = (templateContent, variables) => {
 export const buildContractVariables = (contract) => {
   const penalty = contract.penaltyRules || {};
   const depositPolicy = contract.depositReturnPolicy || {};
+  const utilities = contract.utilities || {};
+  const inventory = contract.inventory || [];
+  const witness = contract.witnessInfo || {};
+  const landlord = contract.landlordsInfo || {};
+
+  // Build inventory text
+  const inventoryText = inventory.length > 0
+    ? `El inmueble incluye: ${inventory.map((item) => item.name).join(', ')}.`
+    : '';
+
+  // Build utilities text
+  const utilitiesText =
+    utilities.water || utilities.electricity || utilities.gas
+      ? `${utilities.water ? 'El servicio de agua será pagado al arrendador. ' : ''}${
+          utilities.electricity ? 'Luz y otros servicios corren por cuenta del Arrendatario. ' : ''
+        }${utilities.gas ? 'Gas por cuenta del Arrendatario.' : ''}`
+      : 'Los servicios de luz, gas y otros serán pagados por el Arrendatario. El servicio de agua corre por cuenta del Arrendador.';
+
+  // Build convivance rules (default if not provided)
+  const convivanceRulesText = contract.convivanceRules
+    ? `<p class="clause">${contract.convivanceRules}</p>`
+    : `<p class="clause">
+        El Arrendatario se compromete a mantener una convivencia respetuosa con los demás habitantes del inmueble,
+        evitando la generación de ruidos excesivos. Deberá respetar las horas de descanso (22:00 a 07:00) manteniendo
+        un nivel de ruido moderado, evitando música alta, reuniones ruidosas o cualquier actividad que altere el descanso
+        de los demás.
+      </p>`;
+
+  // Build witness section
+  const witnessSection = witness.name
+    ? `<div class="witness-block">
+        <h3>Referencia de Testigo</h3>
+        <p class="clause">
+          <strong>Nombre:</strong> ${witness.name}<br>
+          <strong>Teléfono:</strong> ${witness.phone || 'N/A'}<br>
+          <div style="margin-top: 20px; border-top: 1px solid #0f172a; padding-top: 10px;">
+            Firma del Testigo: _________________________
+          </div>
+        </p>
+      </div>`
+    : '';
 
   return {
     logo_src: getIconDataUri(),
-    representative_name: contract.representative?.fullName ?? 'No asignado',
-    representative_position: contract.representative?.position ?? '',
-    representative_id_document: contract.representative?.idDocument ?? '',
+    landlord_name: landlord.name || contract.representative?.fullName || 'No asignado',
+    landlord_phone: landlord.phone || contract.representative?.phone || 'N/A',
+    representative_name: contract.representative?.fullName || 'No asignado',
+    representative_position: contract.representative?.position || '',
+    representative_id_document: contract.representative?.idDocument || '',
     tenant_name: contract.tenant.fullName,
     tenant_id_document: contract.tenant.idDocument || 'N/A',
+    property_type: contract.property.propertyType === 'HOUSE' ? 'casa habitación' : 'local comercial',
     property_name: contract.property.name,
     property_address: contract.property.address,
     property_city: contract.property.city,
     property_postal_code: contract.property.postalCode,
     start_date: formatDate(contract.startDate),
     end_date: formatDate(contract.endDate),
+    duration_months: contract.durationMonths.toString(),
     monthly_rent: formatCurrency(contract.monthlyRent),
     deposit_amount: formatCurrency(contract.depositAmount),
+    property_condition: 'buenas condiciones',
+    additional_conditions: inventoryText,
+    inventory_text: inventoryText,
+    utilities_text: utilitiesText,
     water_included_text: contract.waterIncluded
       ? 'El servicio de agua está incluido en la renta mensual.'
       : 'El servicio de agua corre por cuenta del inquilino, independientemente de la renta pactada.',
+    convivance_rules: convivanceRulesText,
+    additional_prohibitions: '',
+    parking_text: 'El Arrendador no se hace responsable por daños, robos o afectaciones a vehículos en el área de estacionamiento.',
     penalty_text: penalty.latePaymentPercentage
       ? `En caso de retraso en el pago de la renta, se aplicará una penalización del ${penalty.latePaymentPercentage}% mensual sobre el monto adeudado.${
           penalty.maxDamageCharge
@@ -65,6 +117,7 @@ export const buildContractVariables = (contract) => {
       ? 'Este contrato se renovará automáticamente por periodos iguales al término de su vigencia, salvo notificación por escrito en contrario de cualquiera de las partes con al menos 30 días de anticipación.'
       : 'Este contrato no se renueva de forma automática; al término de su vigencia deberá formalizarse un nuevo contrato de mutuo acuerdo entre las partes.',
     signature_date: formatDate(new Date()),
+    witness_section: witnessSection,
   };
 };
 

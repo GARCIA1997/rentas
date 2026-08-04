@@ -203,24 +203,142 @@ export const LOCAL_TEMPLATE = `<!DOCTYPE html>
 </body>
 </html>`;
 
+export const COAHUAYANA_TEMPLATE = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>${baseStyles}
+  .inventory-list { margin: 8px 0 8px 20px; }
+  .inventory-list li { margin-bottom: 4px; }
+  .utilities-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+  .utilities-table td { padding: 6px; border: 1px solid #cbd5e1; }
+  .witness-block { margin-top: 30px; padding-top: 20px; border-top: 1px solid #cbd5e1; }
+</style>
+</head>
+<body>
+  ${header('Contrato de Arrendamiento')}
+
+  <p class="clause">
+    Contrato de arrendamiento que celebran, por una parte {{landlord_name}}, con número telefónico
+    {{landlord_phone}}, en su carácter de Arrendador, y por otra parte <strong>{{tenant_name}}</strong>,
+    identificado(a) con {{tenant_id_document}}, en su carácter de Arrendatario, respecto del inmueble ubicado en
+    {{property_address}}, {{property_city}}, C.P. {{property_postal_code}}, de acuerdo con las siguientes cláusulas:
+  </p>
+
+  <h2>Primera. Objeto y Ubicación</h2>
+  <p class="clause">
+    El Arrendador otorga en arrendamiento al Arrendatario {{property_type}} denominado {{property_name}}.
+    {{inventory_text}}
+  </p>
+
+  <h2>Segunda. Vigencia</h2>
+  <p class="clause">
+    La duración del presente contrato será de {{duration_months}} meses, iniciando el {{start_date}} y
+    finalizando el {{end_date}}. {{auto_renewal_text}}
+  </p>
+
+  <h2>Tercera. Preferencia de Renovación</h2>
+  <p class="clause">
+    Al término de la vigencia, si el Arrendatario está al corriente con sus pagos y ha cumplido las cláusulas
+    del presente contrato, tendrá preferencia para renovarlo, siempre que ambas partes coincidan en la voluntad
+    de hacerlo.
+  </p>
+
+  <h2>Cuarta. Precio de la Renta y Depósito</h2>
+  <p class="clause">
+    <strong>Renta:</strong> El Arrendatario pagará {{monthly_rent}} mensuales, dentro de los primeros cinco días
+    de cada mes.
+  </p>
+  <p class="clause">
+    <strong>Depósito:</strong> Se entrega la cantidad de {{deposit_amount}}. {{deposit_return_text}}
+  </p>
+
+  <h2>Quinta. Servicios y Mantenimiento</h2>
+  <p class="clause">
+    <strong>Servicios:</strong> {{utilities_text}}
+  </p>
+  <p class="clause">
+    <strong>Inventario y Condiciones:</strong> El inmueble se entrega en {{property_condition}}. El Arrendatario
+    se obliga a cuidar y mantener en buen estado todos los bienes y accesorios del inmueble, reparando los daños
+    causados por mal uso. {{additional_conditions}}
+  </p>
+
+  <h2>Sexta. Convivencia y Normas del Inmueble</h2>
+  {{convivance_rules}}
+
+  <h2>Séptima. Prohibiciones Específicas</h2>
+  <p class="clause">
+    Queda estrictamente prohibido: introducir armas de fuego, drogas, o sustancias ilícitas al inmueble. El
+    incumplimiento causará cancelación inmediata del contrato. {{additional_prohibitions}}
+  </p>
+
+  <h2>Octava. Estacionamiento</h2>
+  <p class="clause">
+    {{parking_text}}
+  </p>
+
+  <h2>Novena. Rescisión por Incumplimiento</h2>
+  <p class="clause">
+    El incumplimiento de cualquiera de las cláusulas por parte del Arrendatario da derecho al Arrendador a
+    rescindir el contrato inmediatamente, sin necesidad de declaración judicial, exigiendo desocupación y
+    pérdida del depósito como penalización. {{penalty_text}}
+  </p>
+
+  <h2>Décima. Jurisdicción</h2>
+  <p class="clause">
+    Las partes se someten a las leyes civiles del Estado de Michoacán para cualquier controversia legal.
+  </p>
+
+  <p class="clause">
+    Leído que fue el presente contrato y enteradas las partes de su contenido y alcance legal, lo firman de
+    conformidad en {{property_city}}, a {{signature_date}}.
+  </p>
+
+  <div class="signatures">
+    <div class="signature-block">
+      <div class="signature-line">{{landlord_name}}<br>Arrendador</div>
+    </div>
+    <div class="signature-block">
+      <div class="signature-line">{{tenant_name}}<br>Arrendatario</div>
+    </div>
+  </div>
+
+  {{witness_section}}
+
+  <p class="footer-note">Documento generado por KsaRed · Conserve una copia impresa firmada.</p>
+</body>
+</html>`;
+
 export const CONTRACT_VARIABLES = [
   'logo_src',
+  'landlord_name',
+  'landlord_phone',
   'representative_name',
   'representative_position',
   'representative_id_document',
   'tenant_name',
   'tenant_id_document',
+  'property_type',
   'property_name',
   'property_address',
   'property_city',
   'property_postal_code',
   'start_date',
   'end_date',
+  'duration_months',
   'monthly_rent',
   'deposit_amount',
   'water_included_text',
+  'utilities_text',
+  'property_condition',
+  'additional_conditions',
+  'convivance_rules',
+  'additional_prohibitions',
+  'parking_text',
   'penalty_text',
   'deposit_return_text',
   'auto_renewal_text',
   'signature_date',
+  'inventory_text',
+  'witness_section',
 ];
