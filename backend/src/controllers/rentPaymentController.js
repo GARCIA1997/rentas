@@ -4,9 +4,18 @@ import * as rentPaymentService from '../services/rentPaymentService.js';
 const validators = [
   body('contractId').notEmpty().withMessage('Contract is required'),
   body('dueDate').isISO8601().withMessage('Valid due date required'),
-  body('amountDue').isFloat({ min: 0 }).withMessage('Amount due must be a positive number'),
-  body('amountPaid').optional().isFloat({ min: 0 }).withMessage('Amount paid must be a positive number'),
-  body('paymentMethod').optional().isIn(['MANUAL', 'TRANSFERENCIA', 'EFECTIVO', 'CHEQUE']),
+  body('amountDue')
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount due must be greater than 0'),
+  body('amountPaid')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Amount paid cannot be negative'),
+  body('paymentMethod')
+    .optional()
+    .isIn(['MANUAL', 'TRANSFERENCIA', 'EFECTIVO', 'CHEQUE'])
+    .withMessage('Invalid payment method'),
+  body('notes').optional().trim(),
 ];
 
 const runValidators = async (req) => {

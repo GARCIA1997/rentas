@@ -2,9 +2,27 @@ import { body, validationResult } from 'express-validator';
 import * as tenantService from '../services/tenantService.js';
 
 const validators = [
-  body('fullName').notEmpty().withMessage('Full name is required'),
-  body('email').optional({ values: 'falsy' }).isEmail().withMessage('Valid email required'),
-  body('phone').optional({ values: 'falsy' }).matches(/^\d{10}$/).withMessage('Phone must be 10 digits'),
+  body('fullName')
+    .notEmpty()
+    .trim()
+    .withMessage('Full name is required')
+    .isLength({ min: 3 })
+    .withMessage('Full name must be at least 3 characters'),
+  body('email')
+    .optional({ values: 'falsy' })
+    .trim()
+    .toLowerCase()
+    .isEmail()
+    .withMessage('Valid email required'),
+  body('phone')
+    .optional({ values: 'falsy' })
+    .matches(/^\d{10}$/)
+    .withMessage('Phone must be 10 digits'),
+  body('idDocument')
+    .optional({ values: 'null' })
+    .trim()
+    .matches(/^[A-Z0-9]{6,18}$/)
+    .withMessage('ID document must be 6-18 alphanumeric characters'),
   body('status').optional().isIn(['ACTIVE', 'EVICTED', 'MOVED_OUT']).withMessage('Invalid status'),
 ];
 

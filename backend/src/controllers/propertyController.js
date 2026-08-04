@@ -5,16 +5,17 @@ import * as propertyService from '../services/propertyService.js';
 export const VALID_CITIES = ['Coahuayana de Hidalgo', 'Villa de Álvarez, Colima'];
 
 const validators = [
-  body('name').notEmpty().withMessage('Name is required'),
-  body('address').notEmpty().withMessage('Address is required'),
+  body('name').notEmpty().trim().withMessage('Name is required'),
+  body('address').notEmpty().trim().withMessage('Address is required'),
   body('city').isIn(VALID_CITIES).withMessage('Invalid city'),
-  body('postalCode').notEmpty().withMessage('Postal code is required'),
+  body('postalCode').notEmpty().trim().withMessage('Postal code is required'),
   body('propertyType').isIn(['HOUSE', 'LOCAL']).withMessage('Invalid property type'),
-  body('rentalPrice').isFloat({ min: 0 }).withMessage('Rental price must be a positive number'),
+  body('rentalPrice').isFloat({ min: 0.01 }).withMessage('Rental price must be greater than 0'),
   body('status').optional().isIn(['OCUPADA', 'LIBRE', 'MANTENIMIENTO']).withMessage('Invalid status'),
   body('waterIncluded').optional().isBoolean().withMessage('waterIncluded must be a boolean'),
-  body('bedrooms').optional({ values: 'null' }).isInt({ min: 0 }).withMessage('Bedrooms must be a positive integer'),
-  body('bathrooms').optional({ values: 'null' }).isInt({ min: 0 }).withMessage('Bathrooms must be a positive integer'),
+  body('bedrooms').optional({ values: 'null' }).isInt({ min: 0, max: 20 }).withMessage('Bedrooms must be between 0 and 20'),
+  body('bathrooms').optional({ values: 'null' }).isInt({ min: 0, max: 20 }).withMessage('Bathrooms must be between 0 and 20'),
+  body('maintenanceNotes').optional().trim(),
 ];
 
 const runValidators = async (req) => {

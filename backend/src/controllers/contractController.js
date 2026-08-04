@@ -3,11 +3,22 @@ import * as contractService from '../services/contractService.js';
 
 // Shared between create/update: the terms that can be set/edited.
 const termValidators = [
-  body('startDate').isISO8601().withMessage('Valid start date required'),
-  body('durationMonths').isInt({ min: 1 }).withMessage('Duration in months must be at least 1'),
+  body('startDate')
+    .isISO8601()
+    .withMessage('Valid start date required')
+    .custom((value) => {
+      const date = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date < today) {
+        throw new Error('Start date cannot be in the past');
+      }
+      return true;
+    }),
+  body('durationMonths').isInt({ min: 1, max: 360 }).withMessage('Duration must be between 1 and 360 months'),
   body('paymentDay').isInt({ min: 1, max: 31 }).withMessage('Payment day must be between 1 and 31'),
-  body('monthlyRent').isFloat({ min: 0 }).withMessage('Monthly rent must be a positive number'),
-  body('depositAmount').isFloat({ min: 0 }).withMessage('Deposit amount must be a positive number'),
+  body('monthlyRent').isFloat({ min: 0.01 }).withMessage('Monthly rent must be greater than 0'),
+  body('depositAmount').isFloat({ min: 0 }).withMessage('Deposit amount cannot be negative'),
   body('waterIncluded').optional().isBoolean(),
   body('autoRenewal').optional().isBoolean(),
 ];
