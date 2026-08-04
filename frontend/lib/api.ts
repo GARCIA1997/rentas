@@ -1,13 +1,19 @@
+// Import de sólo-tipo: se borra al compilar, así que no introduce un ciclo real con
+// authContext (que sí importa este módulo en tiempo de ejecución).
+import type { User } from './authContext';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 interface RequestOptions extends RequestInit {
   token?: string;
 }
 
+// Devuelve `unknown`: cada wrapper de este archivo hace el cast al tipo concreto de su
+// endpoint, así que tipar aquí como `any` sólo desactivaría el chequeo en la cadena.
 export async function apiCall(
   endpoint: string,
   options: RequestOptions = {}
-): Promise<any> {
+): Promise<unknown> {
   const { token, ...fetchOptions } = options;
 
   const headers: Record<string, string> = {
@@ -42,11 +48,16 @@ export async function apiCall(
   return response.json();
 }
 
+export interface AuthResult {
+  accessToken: string;
+  user: User;
+}
+
 export async function login(phone: string, password: string) {
   return apiCall('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({ phone, password }),
-  });
+  }) as Promise<AuthResult>;
 }
 
 export async function register(
@@ -65,7 +76,7 @@ export async function register(
       lastName,
       email,
     }),
-  });
+  }) as Promise<AuthResult>;
 }
 
 export async function refreshToken() {
@@ -151,7 +162,7 @@ export type TenantInput = Omit<Tenant, 'id' | 'userId' | 'createdAt' | 'updatedA
 
 export const tenantsApi = {
   list: (token: string) => apiCall('/api/tenants', { token }) as Promise<Tenant[]>,
-  get: (id: string, token: string) => apiCall(`/api/tenants/${id}`, { token }),
+  get: (id: string, token: string) => apiCall(`/api/tenants/${id}`, { token }) as Promise<Tenant>,
   create: (data: TenantInput, token: string) =>
     apiCall('/api/tenants', { method: 'POST', body: JSON.stringify(data), token }) as Promise<Tenant>,
   update: (id: string, data: Partial<TenantInput>, token: string) =>
@@ -179,7 +190,7 @@ export type RepresentativeInput = Omit<Representative, 'id' | 'createdBy' | 'cre
 
 export const representativesApi = {
   list: (token: string) => apiCall('/api/representatives', { token }) as Promise<Representative[]>,
-  get: (id: string, token: string) => apiCall(`/api/representatives/${id}`, { token }),
+  get: (id: string, token: string) => apiCall(`/api/representatives/${id}`, { token }) as Promise<Representative>,
   create: (data: RepresentativeInput, token: string) =>
     apiCall('/api/representatives', { method: 'POST', body: JSON.stringify(data), token }),
   update: (id: string, data: Partial<RepresentativeInput>, token: string) =>
@@ -193,6 +204,8 @@ export interface ContractTemplateSummary {
   id: string;
   name: string;
   isDefault: boolean;
+  // Tipo de inmueble al que aplica la plantilla; null = sirve para cualquiera.
+  propertyType: 'HOUSE' | 'LOCAL' | null;
 }
 
 export const contractTemplatesApi = {
@@ -242,6 +255,9 @@ export interface Contract {
   tenant?: { id: string; fullName: string; idDocument?: string | null };
   property?: { id: string; name: string; address: string; city: string };
   representative?: { id: string; fullName: string; position?: string | null } | null;
+  // Incumplimientos de normas de orden público detectados por el backend (p. ej. depósito
+  // mayor al tope de la ley inquilinaria). Informativos: no impiden guardar el contrato.
+  legalWarnings?: string[];
 }
 
 export interface ContractInput {
@@ -265,6 +281,26 @@ export interface ContractInput {
   landlordsInfo?: { name?: string; phone?: string; email?: string };
 }
 
+export interface ContractRenewalAlert {
+  id: string;
+  tenantId: string;
+  propertyId: string;
+  tenant: { id: string; fullName: string };
+  property: { id: string; name: string };
+  endDate: string;
+  monthlyRent: string;
+  depositAmount: string;
+  paymentDay: number;
+  daysUntilEnd: number;
+  suggestedMonthlyRent: number;
+}
+
+export interface RenewalInput {
+  monthlyRent: number;
+  durationMonths: number;
+  representativeId?: string;
+}
+
 export const contractsApi = {
   list: (token: string) => apiCall('/api/contracts', { token }) as Promise<Contract[]>,
   get: (id: string, token: string) => apiCall(`/api/contracts/${id}`, { token }) as Promise<Contract>,
@@ -285,6 +321,14 @@ export const contractsApi = {
     apiCall(`/api/contracts/${id}/cancel`, {
       method: 'POST',
       body: JSON.stringify({ reason }),
+      token,
+    }) as Promise<Contract>,
+  getRenewalAlerts: (token: string) =>
+    apiCall('/api/contracts/renewal-alerts', { token }) as Promise<ContractRenewalAlert[]>,
+  initiateRenewal: (id: string, data: RenewalInput, token: string) =>
+    apiCall(`/api/contracts/${id}/renew`, {
+      method: 'POST',
+      body: JSON.stringify(data),
       token,
     }) as Promise<Contract>,
   downloadPdf: async (id: string, token: string) => {
@@ -353,6 +397,28 @@ export function getPendingPayments(payments: RentPayment[]): RentPayment[] {
   return payments
     .filter((p) => p.status !== 'PAID')
     .filter((p) => p.contract?.status !== 'CANCELLED' && p.contract?.status !== 'EXPIRED')
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+}
+
+export function getPaymentsDue(payments: RentPayment[]): RentPayment[] {
+  const now = new Date();
+  const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  return payments
+    .filter((p) => p.status !== 'PAID')
+    .filter((p) => p.contract?.status !== 'CANCELLED' && p.contract?.status !== 'EXPIRED')
+    .filter((p) => new Date(p.dueDate) <= sevenDaysFromNow)
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+}
+
+export function getScheduledPayments(payments: RentPayment[]): RentPayment[] {
+  const now = new Date();
+  const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  return payments
+    .filter((p) => p.status !== 'PAID')
+    .filter((p) => p.contract?.status !== 'CANCELLED' && p.contract?.status !== 'EXPIRED')
+    .filter((p) => new Date(p.dueDate) > sevenDaysFromNow)
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 }
 

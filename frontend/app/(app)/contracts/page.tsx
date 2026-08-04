@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
-import { contractsApi, Contract } from '@/lib/api';
+import { contractsApi, Contract, ContractRenewalAlert } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { ChevronRightIcon } from '@/components/icons';
 
@@ -41,6 +41,7 @@ const segmentLabels: Record<Segment, string> = {
 export default function ContractsPage() {
   const { token } = useAuth();
   const [contracts, setContracts] = useState<Contract[]>([]);
+  const [renewalAlerts, setRenewalAlerts] = useState<ContractRenewalAlert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [segment, setSegment] = useState<Segment>('active');
@@ -48,9 +49,11 @@ export default function ContractsPage() {
   useEffect(() => {
     if (!token) return;
     setIsLoading(true);
-    contractsApi
-      .list(token)
-      .then(setContracts)
+    Promise.all([contractsApi.list(token), contractsApi.getRenewalAlerts(token)])
+      .then(([contractsData, alertsData]) => {
+        setContracts(contractsData);
+        setRenewalAlerts(alertsData);
+      })
       .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar contratos'))
       .finally(() => setIsLoading(false));
   }, [token]);
@@ -81,6 +84,38 @@ export default function ContractsPage() {
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-sm text-red-800 dark:text-red-400 mb-6">
           {error}
+        </div>
+      )}
+
+      {/* Renewal alerts */}
+      {renewalAlerts.length > 0 && (
+        <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 mb-6">
+          <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-3">
+            ⚠️ {renewalAlerts.length} contrato{renewalAlerts.length > 1 ? 's' : ''} próximo{renewalAlerts.length > 1 ? 's' : ''} a renovar
+          </h3>
+          <div className="space-y-2">
+            {renewalAlerts.map((alert) => (
+              <Link
+                key={alert.id}
+                href={`/contracts/${alert.id}`}
+                className="flex items-center justify-between p-3 bg-white dark:bg-black/20 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-heading">{alert.tenant.fullName}</p>
+                  <p className="text-xs text-muted">{alert.property.name} • Vence en {alert.daysUntilEnd} días</p>
+                </div>
+                <button
+                  className="ml-2 px-3 py-1.5 text-xs font-medium bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors active:opacity-80"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = `/contracts/${alert.id}/renew`;
+                  }}
+                >
+                  Renovar
+                </button>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 

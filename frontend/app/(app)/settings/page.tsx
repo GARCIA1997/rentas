@@ -25,7 +25,7 @@ export default function SettingsPage() {
     const loadSettings = async () => {
       if (!token) return;
       try {
-        const settings = await apiCall('/api/me/settings', { token });
+        const settings = (await apiCall('/api/me/settings', { token })) as { notificationsEnabled?: boolean };
         setNotificationsEnabled(settings.notificationsEnabled ?? true);
       } catch (err) {
         console.error('Failed to load settings:', err);

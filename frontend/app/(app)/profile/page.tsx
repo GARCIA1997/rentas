@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { meApi, MyTenant, Contract, RentPayment } from '@/lib/api';
+import { meApi, MyTenant, Contract, RentPayment, getPaymentsDue, getScheduledPayments } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { useToast } from '@/components/ToastProvider';
 
@@ -34,6 +34,7 @@ function TenantProfile() {
   const [payments, setPayments] = useState<RentPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [paymentSegment, setPaymentSegment] = useState<'pending' | 'paid' | 'scheduled'>('pending');
 
   useEffect(() => {
     if (!token) return;
@@ -59,6 +60,31 @@ function TenantProfile() {
     }
   };
 
+  // Calculate punctuality: % of payments that were paid on or before due date
+  const paidPayments = useMemo(() => payments.filter((p) => p.status === 'PAID'), [payments]);
+  const punctualPayments = useMemo(
+    () =>
+      paidPayments.filter((p) => {
+        if (!p.paidDate) return false;
+        return new Date(p.paidDate) <= new Date(p.dueDate);
+      }),
+    [paidPayments]
+  );
+  const punctualityPercent = useMemo(() => (paidPayments.length > 0 ? Math.round((punctualPayments.length / paidPayments.length) * 100) : 0), [paidPayments, punctualPayments]);
+
+  // Filter payments by segment
+  const pendingPayments = useMemo(() => getPaymentsDue(payments), [payments]);
+  const scheduledPayments = useMemo(() => getScheduledPayments(payments), [payments]);
+  const displayedPayments = useMemo(
+    () =>
+      paymentSegment === 'pending'
+        ? pendingPayments
+        : paymentSegment === 'paid'
+          ? [...paidPayments].sort((a, b) => new Date(b.paidDate ?? b.dueDate).getTime() - new Date(a.paidDate ?? a.dueDate).getTime())
+          : scheduledPayments,
+    [paymentSegment, pendingPayments, scheduledPayments, paidPayments]
+  );
+
   if (isLoading) {
     return <p className="text-muted">Cargando...</p>;
   }
@@ -75,17 +101,6 @@ function TenantProfile() {
   }
 
   const activeContract = contracts.find((c) => c.status === 'ACTIVE') ?? contracts[0];
-
-  // Calculate punctuality: % of payments that were paid on or before due date
-  const paidPayments = payments.filter((p) => p.status === 'PAID');
-  const punctualPayments = paidPayments.filter((p) => {
-    if (!p.paidDate) return false;
-    return new Date(p.paidDate) <= new Date(p.dueDate);
-  });
-  const punctualityPercent = paidPayments.length > 0 ? Math.round((punctualPayments.length / paidPayments.length) * 100) : 0;
-
-  // Get recent payments (last 5)
-  const recentPayments = [...payments].sort((a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime()).slice(0, 5);
 
   return (
     <div className="space-y-6">
@@ -147,33 +162,74 @@ function TenantProfile() {
         </div>
       )}
 
-      {/* Recent payments */}
-      {recentPayments.length > 0 && (
+      {/* Payment history with segment control */}
+      {payments.length > 0 && (
         <div className="bg-surface rounded-2xl shadow-sm p-5">
-          <h3 className="text-heading font-semibold mb-4">Últimos pagos</h3>
-          <div className="space-y-2">
-            {recentPayments.map((payment) => (
-              <div key={payment.id} className="flex items-center justify-between py-3 border-b border-black/5 dark:border-white/10 last:border-0 text-sm">
-                <div>
-                  <p className="text-heading font-medium">{formatDate(payment.dueDate)}</p>
-                  <p className="text-muted text-xs">
-                    ${Number(payment.amountDue).toLocaleString('es-MX')} {payment.paymentNumber && `(${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
-                  </p>
-                </div>
-                <span
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                    payment.status === 'PAID'
-                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
-                      : payment.status === 'OVERDUE'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                        : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
-                  }`}
-                >
-                  {payment.status === 'PAID' ? 'Pagado' : payment.status === 'OVERDUE' ? 'Vencido' : 'Pendiente'}
-                </span>
-              </div>
-            ))}
+          <h3 className="text-heading font-semibold mb-4">Historial de pagos</h3>
+
+          {/* Segmented control */}
+          <div className="flex bg-canvas rounded-xl p-1 mb-4 gap-1">
+            <button
+              onClick={() => setPaymentSegment('pending')}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                paymentSegment === 'pending' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+              }`}
+            >
+              Por pagar {pendingPayments.length > 0 && `(${pendingPayments.length})`}
+            </button>
+            <button
+              onClick={() => setPaymentSegment('paid')}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                paymentSegment === 'paid' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+              }`}
+            >
+              Pagados {paidPayments.length > 0 && `(${paidPayments.length})`}
+            </button>
+            <button
+              onClick={() => setPaymentSegment('scheduled')}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                paymentSegment === 'scheduled' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+              }`}
+            >
+              Programados {scheduledPayments.length > 0 && `(${scheduledPayments.length})`}
+            </button>
           </div>
+
+          {displayedPayments.length === 0 ? (
+            <p className="text-muted text-sm text-center py-6">
+              {paymentSegment === 'pending'
+                ? 'No hay pagos por pagar. ¡Felicidades!'
+                : paymentSegment === 'paid'
+                  ? 'Aún no hay pagos registrados.'
+                  : 'No hay pagos programados.'}
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {displayedPayments.map((payment) => (
+                <div key={payment.id} className="flex items-center justify-between py-3 border-b border-black/5 dark:border-white/10 last:border-0 text-sm">
+                  <div>
+                    <p className="text-heading font-medium">{formatDate(paymentSegment === 'paid' ? payment.paidDate ?? payment.dueDate : payment.dueDate)}</p>
+                    <p className="text-muted text-xs">
+                      ${Number(payment.amountDue).toLocaleString('es-MX')} {payment.paymentNumber && `(${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
+                    </p>
+                  </div>
+                  <span
+                    className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                      paymentSegment === 'paid'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
+                        : payment.status === 'OVERDUE'
+                          ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                          : paymentSegment === 'scheduled'
+                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                            : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+                    }`}
+                  >
+                    {paymentSegment === 'paid' ? 'Pagado' : payment.status === 'OVERDUE' ? 'Vencido' : paymentSegment === 'scheduled' ? 'Programado' : 'Próximo'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

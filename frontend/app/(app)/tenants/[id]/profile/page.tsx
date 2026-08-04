@@ -14,6 +14,8 @@ import {
   buildWhatsAppReminderUrl,
   shareReceiptOnWhatsApp,
   getPendingPayments,
+  getPaymentsDue,
+  getScheduledPayments,
   paymentTypeLabels,
   Tenant,
   Contract,
@@ -63,7 +65,7 @@ export default function TenantProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const [segment, setSegment] = useState<'due' | 'paid'>('due');
+  const [segment, setSegment] = useState<'pending' | 'paid' | 'scheduled'>('pending');
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [payTarget, setPayTarget] = useState<RentPayment | null>(null);
@@ -191,10 +193,19 @@ export default function TenantProfilePage() {
   const punctualPayments = paidPayments.filter((p) => p.paidDate && new Date(p.paidDate) <= new Date(p.dueDate));
   const punctualityPercent = paidPayments.length > 0 ? Math.round((punctualPayments.length / paidPayments.length) * 100) : 0;
 
-  const duePayments = getPendingPayments(payments);
+  const pendingPayments = getPendingPayments(payments).filter((p) => {
+    const now = new Date();
+    const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return new Date(p.dueDate) <= sevenDaysFromNow;
+  });
+  const scheduledPayments = getPendingPayments(payments).filter((p) => {
+    const now = new Date();
+    const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return new Date(p.dueDate) > sevenDaysFromNow;
+  });
   const paidHistory = [...paidPayments].sort((a, b) => new Date(b.paidDate ?? b.dueDate).getTime() - new Date(a.paidDate ?? a.dueDate).getTime());
 
-  const listToShow = segment === 'due' ? duePayments : paidHistory;
+  const listToShow = segment === 'pending' ? pendingPayments : segment === 'paid' ? paidHistory : scheduledPayments;
   const sortedContracts = [...contracts].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
 
   return (
@@ -317,12 +328,12 @@ export default function TenantProfilePage() {
               {/* Segmented control */}
               <div className="flex bg-canvas rounded-xl p-1 mb-4">
                 <button
-                  onClick={() => setSegment('due')}
+                  onClick={() => setSegment('pending')}
                   className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                    segment === 'due' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                    segment === 'pending' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
                   }`}
                 >
-                  Programados {duePayments.length > 0 && `(${duePayments.length})`}
+                  Programados {pendingPayments.length > 0 && `(${pendingPayments.length})`}
                 </button>
                 <button
                   onClick={() => setSegment('paid')}
@@ -336,7 +347,7 @@ export default function TenantProfilePage() {
 
               {listToShow.length === 0 ? (
                 <p className="text-muted text-sm text-center py-6">
-                  {segment === 'due' ? 'No hay pagos programados pendientes.' : 'Aún no hay pagos registrados.'}
+                  {segment === 'pending' ? 'No hay pagos programados pendientes.' : 'Aún no hay pagos registrados.'}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -360,10 +371,10 @@ export default function TenantProfilePage() {
                             <p className="text-muted text-xs truncate">
                               ${Number(payment.amountDue).toLocaleString('es-MX')}
                               {payment.paymentNumber && ` (${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
-                              {segment === 'due' && Number(payment.amountPaid) > 0 && ` · abonado $${Number(payment.amountPaid).toLocaleString('es-MX')}`}
+                              {segment === 'pending' && Number(payment.amountPaid) > 0 && ` · abonado $${Number(payment.amountPaid).toLocaleString('es-MX')}`}
                             </p>
                           </div>
-                          {segment === 'due' ? (
+                          {segment === 'pending' ? (
                             <span
                               className={`ml-2 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                                 isOverdue
@@ -380,7 +391,7 @@ export default function TenantProfilePage() {
                           )}
                         </div>
 
-                        {segment === 'due' ? (
+                        {segment === 'pending' ? (
                           <div className="flex gap-2 mt-2">
                             <button
                               onClick={() => handleReminder(payment)}

@@ -73,6 +73,15 @@ export const getPaymentStats = async () => {
   const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
   const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
+  // Filter out payments from cancelled/expired contracts
+  const contractFilter = {
+    contract: {
+      status: {
+        notIn: ['CANCELLED', 'EXPIRED'],
+      },
+    },
+  };
+
   const [
     totalOverdue,
     totalUpcoming,
@@ -80,7 +89,7 @@ export const getPaymentStats = async () => {
     overdueByProperty,
   ] = await Promise.all([
     prisma.rentPayment.aggregate({
-      where: { status: 'OVERDUE' },
+      where: { status: 'OVERDUE', ...contractFilter },
       _sum: { amountDue: true },
     }),
     prisma.rentPayment.aggregate({
@@ -88,16 +97,17 @@ export const getPaymentStats = async () => {
         status: 'PENDING',
         dueDate: { lte: sevenDaysFromNow },
         NOT: { status: 'OVERDUE' },
+        ...contractFilter,
       },
       _sum: { amountDue: true },
     }),
     prisma.rentPayment.aggregate({
-      where: { status: 'PAID', paidDate: { gte: monthStart } },
+      where: { status: 'PAID', paidDate: { gte: monthStart }, ...contractFilter },
       _sum: { amountPaid: true },
     }),
     prisma.rentPayment.groupBy({
       by: ['propertyId'],
-      where: { status: 'OVERDUE' },
+      where: { status: 'OVERDUE', ...contractFilter },
       _count: true,
       _sum: { amountDue: true },
       orderBy: { _count: { id: 'desc' } },

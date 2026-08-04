@@ -12,6 +12,8 @@ import {
   buildWhatsAppReminderUrl,
   shareReceiptOnWhatsApp,
   getPendingPayments,
+  getPaymentsDue,
+  getScheduledPayments,
   paymentTypeLabels,
   RentPayment,
 } from '@/lib/api';
@@ -27,7 +29,7 @@ export default function PaymentsPage() {
   const [payments, setPayments] = useState<RentPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [segment, setSegment] = useState<'due' | 'paid'>('due');
+  const [segment, setSegment] = useState<'pending' | 'paid' | 'scheduled'>('pending');
 
   const [payTarget, setPayTarget] = useState<RentPayment | null>(null);
   const [sharingId, setSharingId] = useState<string | null>(null);
@@ -97,7 +99,8 @@ export default function PaymentsPage() {
     }
   };
 
-  const duePayments = useMemo(() => getPendingPayments(payments), [payments]);
+  const pendingPayments = useMemo(() => getPaymentsDue(payments), [payments]);
+  const scheduledPayments = useMemo(() => getScheduledPayments(payments), [payments]);
   const paidHistory = useMemo(
     () =>
       payments
@@ -107,12 +110,12 @@ export default function PaymentsPage() {
   );
 
   const overdueTotal = useMemo(
-    () => duePayments.filter((p) => p.status === 'OVERDUE').reduce((sum, p) => sum + Number(p.amountDue), 0),
-    [duePayments]
+    () => pendingPayments.filter((p) => p.status === 'OVERDUE').reduce((sum, p) => sum + Number(p.amountDue), 0),
+    [pendingPayments]
   );
-  const scheduledTotal = useMemo(() => duePayments.reduce((sum, p) => sum + Number(p.amountDue), 0), [duePayments]);
+  const scheduledTotal = useMemo(() => scheduledPayments.reduce((sum, p) => sum + Number(p.amountDue), 0), [scheduledPayments]);
 
-  const listToShow = segment === 'due' ? duePayments : paidHistory;
+  const listToShow = segment === 'pending' ? pendingPayments : segment === 'paid' ? paidHistory : scheduledPayments;
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
@@ -150,14 +153,14 @@ export default function PaymentsPage() {
         ) : (
           <div className="bg-surface rounded-2xl shadow-sm p-5">
             {/* Segmented control */}
-            <div className="flex bg-canvas rounded-xl p-1 mb-4">
+            <div className="flex bg-canvas rounded-xl p-1 mb-4 gap-1">
               <button
-                onClick={() => setSegment('due')}
+                onClick={() => setSegment('pending')}
                 className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                  segment === 'due' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                  segment === 'pending' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
                 }`}
               >
-                Programados {duePayments.length > 0 && `(${duePayments.length})`}
+                Por pagar {pendingPayments.length > 0 && `(${pendingPayments.length})`}
               </button>
               <button
                 onClick={() => setSegment('paid')}
@@ -167,11 +170,19 @@ export default function PaymentsPage() {
               >
                 Pagados {paidHistory.length > 0 && `(${paidHistory.length})`}
               </button>
+              <button
+                onClick={() => setSegment('scheduled')}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                  segment === 'scheduled' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                }`}
+              >
+                Programados {scheduledPayments.length > 0 && `(${scheduledPayments.length})`}
+              </button>
             </div>
 
             {listToShow.length === 0 ? (
               <p className="text-muted text-sm text-center py-10">
-                {segment === 'due' ? 'No hay pagos programados. ¡Todo al corriente!' : 'Aún no hay pagos registrados.'}
+                {segment === 'pending' ? 'No hay pagos por pagar. ¡Todo al corriente!' : segment === 'paid' ? 'Aún no hay pagos registrados.' : 'No hay pagos programados.'}
               </p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -187,14 +198,16 @@ export default function PaymentsPage() {
                         </div>
                         <span
                           className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${
-                            segment === 'due'
+                            segment === 'pending'
                               ? isOverdue
                                 ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                                 : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
-                              : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
+                              : segment === 'paid'
+                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
+                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
                           }`}
                         >
-                          {segment === 'due' ? (isOverdue ? 'Vencido' : 'Próximo') : 'Pagado'}
+                          {segment === 'pending' ? (isOverdue ? 'Vencido' : 'Próximo') : segment === 'paid' ? 'Pagado' : 'Programado'}
                         </span>
                       </div>
 
@@ -211,9 +224,9 @@ export default function PaymentsPage() {
                           <span className="text-heading font-medium">${Number(payment.amountDue).toLocaleString('es-MX')}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted">{segment === 'due' ? 'Vencimiento' : 'Pagado el'}</span>
+                          <span className="text-muted">{segment === 'paid' ? 'Pagado el' : 'Vencimiento'}</span>
                           <span className="text-heading font-medium">
-                            {formatDate(segment === 'due' ? payment.dueDate : payment.paidDate ?? payment.dueDate)}
+                            {formatDate(segment === 'paid' ? payment.paidDate ?? payment.dueDate : payment.dueDate)}
                           </span>
                         </div>
                         {payment.paymentNumber && payment.totalPaymentsInContract && (
@@ -224,7 +237,7 @@ export default function PaymentsPage() {
                             </span>
                           </div>
                         )}
-                        {segment === 'due' && Number(payment.amountPaid) > 0 && (
+                        {segment === 'pending' && Number(payment.amountPaid) > 0 && (
                           <div className="flex justify-between">
                             <span className="text-muted">Abonado</span>
                             <span className="text-heading font-medium">${Number(payment.amountPaid).toLocaleString('es-MX')}</span>
@@ -232,7 +245,7 @@ export default function PaymentsPage() {
                         )}
                       </div>
 
-                      {segment === 'due' ? (
+                      {segment === 'pending' ? (
                         <div className="flex gap-2 pt-1">
                           <button
                             onClick={() => handleReminder(payment)}

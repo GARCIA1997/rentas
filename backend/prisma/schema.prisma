@@ -158,6 +158,7 @@ model Contract {
   tenantId              String
   propertyId            String
   representativeId      String?
+  previousContractId    String?     // FK to previous contract if this is a renewal
   startDate             DateTime
   durationMonths        Int         // Reemplaza endDate - duración en meses (ej: 12 para un año)
   paymentDay            Int         // Día del mes para pagos (1-31, ej: 7 = pagos el 7 de cada mes)
@@ -173,7 +174,7 @@ model Contract {
   convivanceRules       String?     // Convivencia, ruidos, horarios permitidos
   witnessInfo           Json?       // JSON: {name, phone, signature} - referencia de testigo
   landlordsInfo         Json?       // JSON: {name, phone, email} - datos del arrendador
-  templateUsed          String?
+  templateUsed          String      // Template ID for PDF generation - REQUIRED
   signedAt              DateTime?
   signedDigitallyPhone  Boolean     @default(false)
   documentUrl           String?
@@ -188,12 +189,15 @@ model Contract {
   tenant                Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   property              Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   representative        Representative? @relation(fields: [representativeId], references: [id], onDelete: SetNull)
+  previousContract      Contract?   @relation("ContractRenewal", fields: [previousContractId], references: [id], onDelete: SetNull)
+  renewedContracts      Contract[]  @relation("ContractRenewal")
   rentPayments          RentPayment[]
 
   @@index([tenantId])
   @@index([propertyId])
   @@index([representativeId])
   @@index([status])
+  @@index([previousContractId])
 }
 
 model Representative {
@@ -221,6 +225,10 @@ model ContractTemplate {
   name                  String
   templateContent       String      @db.Text
   variables             Json        // Array of variable names: ["tenant_name", "property_address", etc]
+  // Tipo de inmueble al que aplica la plantilla. null = agnóstica (sirve para cualquiera).
+  // Evita emparejar un local comercial con el contrato de casa habitación, cuyo clausulado
+  // declara un destino distinto.
+  propertyType          PropertyType?
   isDefault             Boolean     @default(false)
   createdBy             String
   createdAt             DateTime    @default(now())

@@ -135,3 +135,43 @@ export const cancel = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get all contracts eligible for renewal (within 2 months of end date)
+export const getRenewalAlerts = async (req, res, next) => {
+  try {
+    const contracts = await contractService.getContractsNeedingRenewal();
+    res.json(contracts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Initiate a contract renewal: create new DRAFT contract from previous one
+// POST /api/contracts/:id/renew
+// Body: { monthlyRent, durationMonths, representativeId? }
+export const initiateRenewal = async (req, res, next) => {
+  try {
+    const renewalValidators = [
+      body('monthlyRent').isFloat({ min: 0.01 }).withMessage('Monthly rent must be greater than 0'),
+      body('durationMonths').isInt({ min: 1, max: 360 }).withMessage('Duration must be between 1 and 360 months'),
+      body('representativeId').optional().isString(),
+    ];
+
+    const errors = await runValidators(req, renewalValidators);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    // Convert to correct types
+    const renewalData = {
+      monthlyRent: Number(req.body.monthlyRent),
+      durationMonths: Number(req.body.durationMonths),
+      representativeId: req.body.representativeId,
+    };
+
+    const newContract = await contractService.renewContract(req.params.id, renewalData);
+    res.status(201).json(newContract);
+  } catch (error) {
+    next(error);
+  }
+};

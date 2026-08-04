@@ -2,6 +2,12 @@ import puppeteer from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+  resolveJurisdiction,
+  resolveTenancyLaw,
+  buildLegalBasisText,
+  buildJurisdictionText,
+} from '../db/legalFramework.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -37,9 +43,20 @@ export const buildContractVariables = (contract) => {
   const witness = contract.witnessInfo || {};
   const landlord = contract.landlordsInfo || {};
 
+  // El arrendamiento es materia local: la entidad se deriva de la ciudad del inmueble
+  // y determina el código civil aplicable y el fuero al que se someten las partes.
+  const jurisdiction = resolveJurisdiction(contract.property.city);
+  // Ley inquilinaria especial (sólo vivienda, sólo donde exista). Sus disposiciones son de
+  // orden público: el clausulado debe reflejarlas, no contradecirlas.
+  const tenancyLaw = resolveTenancyLaw(jurisdiction, contract.property.propertyType);
+
+  // Término definido con el que cada plantilla nombra la cosa arrendada. Los textos que se
+  // arman aquí lo reutilizan para no decir "EL INMUEBLE" dentro de un contrato de local.
+  const subject = contract.property.propertyType === 'LOCAL' ? 'EL LOCAL' : 'EL INMUEBLE';
+
   // Build inventory text
   const inventoryText = inventory.length > 0
-    ? `El inmueble incluye: ${inventory.map((item) => item.name).join(', ')}.`
+    ? `${subject} incluye: ${inventory.map((item) => item.name).join(', ')}.`
     : '';
 
   // Build utilities text
@@ -48,29 +65,36 @@ export const buildContractVariables = (contract) => {
       ? `${utilities.water ? 'El servicio de agua será pagado al arrendador. ' : ''}${
           utilities.electricity ? 'Luz y otros servicios corren por cuenta del Arrendatario. ' : ''
         }${utilities.gas ? 'Gas por cuenta del Arrendatario.' : ''}`
-      : 'Los servicios de luz, gas y otros serán pagados por el Arrendatario. El servicio de agua corre por cuenta del Arrendador.';
+      : 'Los servicios de energía eléctrica, gas y demás consumos serán cubiertos por EL ARRENDATARIO, quien deberá acreditar su pago al término del contrato. El servicio de agua corre por cuenta de EL ARRENDADOR.';
 
   // Build convivance rules (default if not provided)
   const convivanceRulesText = contract.convivanceRules
     ? `<p class="clause">${contract.convivanceRules}</p>`
     : `<p class="clause">
-        El Arrendatario se compromete a mantener una convivencia respetuosa con los demás habitantes del inmueble,
-        evitando la generación de ruidos excesivos. Deberá respetar las horas de descanso (22:00 a 07:00) manteniendo
-        un nivel de ruido moderado, evitando música alta, reuniones ruidosas o cualquier actividad que altere el descanso
-        de los demás.
+        EL ARRENDATARIO se obliga a mantener una convivencia respetuosa con los demás ocupantes y vecinos,
+        absteniéndose de generar ruidos que excedan un nivel moderado, en especial durante el horario de
+        descanso comprendido entre las 22:00 y las 07:00 horas. Responderá por los actos de las personas que
+        ocupen ${subject} o a quienes admita en él. La reiteración de conductas que perturben la tranquilidad
+        de terceros, acreditada mediante queja fundada, se considerará incumplimiento para efectos de la
+        cláusula de rescisión.
       </p>`;
 
   // Build witness section
   const witnessSection = witness.name
     ? `<div class="witness-block">
-        <h3>Referencia de Testigo</h3>
+        <h3>Testigo</h3>
         <p class="clause">
-          <strong>Nombre:</strong> ${witness.name}<br>
-          <strong>Teléfono:</strong> ${witness.phone || 'N/A'}<br>
-          <div style="margin-top: 20px; border-top: 1px solid #0f172a; padding-top: 10px;">
-            Firma del Testigo: _________________________
-          </div>
+          Comparece como testigo de la celebración y firma del presente contrato, haciendo constar que las
+          partes lo suscribieron libremente y en su presencia:
         </p>
+        <p class="clause">
+          <strong>Nombre:</strong> ${witness.name} &nbsp;·&nbsp; <strong>Teléfono:</strong> ${witness.phone || 'N/A'}
+        </p>
+        <div style="margin-top: 34px; width: 45%; text-align: center;">
+          <div style="border-top: 1px solid #0f172a; padding-top: 5px; font-size: 11px;">
+            ${witness.name}<br>Testigo
+          </div>
+        </div>
       </div>`
     : '';
 
@@ -80,6 +104,12 @@ export const buildContractVariables = (contract) => {
     landlord_phone: landlord.phone || contract.representative?.phone || 'N/A',
     representative_name: contract.representative?.fullName || 'No asignado',
     representative_position: contract.representative?.position || '',
+    // Fragmento que se intercala en el proemio, entre el nombre y la coma que ya trae la
+    // plantilla: "<nombre>, en su carácter de Administrador, a quien...". Sin él, queda
+    // "<nombre>, a quien...", que también es gramatical.
+    representative_position_text: contract.representative?.position
+      ? `, en su carácter de ${contract.representative.position}`
+      : '',
     representative_id_document: contract.representative?.idDocument || '',
     tenant_name: contract.tenant.fullName,
     tenant_id_document: contract.tenant.idDocument || 'N/A',
@@ -91,33 +121,63 @@ export const buildContractVariables = (contract) => {
     start_date: formatDate(contract.startDate),
     end_date: formatDate(contract.endDate),
     duration_months: contract.durationMonths.toString(),
+    payment_day: contract.paymentDay?.toString() ?? '5',
     monthly_rent: formatCurrency(contract.monthlyRent),
     deposit_amount: formatCurrency(contract.depositAmount),
-    property_condition: 'buenas condiciones',
+    property_condition: 'buenas condiciones de habitabilidad y funcionamiento',
     additional_conditions: inventoryText,
     inventory_text: inventoryText,
     utilities_text: utilitiesText,
     water_included_text: contract.waterIncluded
-      ? 'El servicio de agua está incluido en la renta mensual.'
-      : 'El servicio de agua corre por cuenta del inquilino, independientemente de la renta pactada.',
+      ? 'El servicio de agua se encuentra comprendido en la renta mensual pactada.'
+      : 'El servicio de agua corre por cuenta de EL ARRENDATARIO, en adición e independientemente de la renta pactada.',
     convivance_rules: convivanceRulesText,
     additional_prohibitions: '',
-    parking_text: 'El Arrendador no se hace responsable por daños, robos o afectaciones a vehículos en el área de estacionamiento.',
+    parking_text:
+      'El área de estacionamiento, en su caso, se otorga en uso a título gratuito y accesorio al arrendamiento. EL ARRENDADOR no asume el carácter de depositario ni se hace responsable por daños, robos, pérdidas o afectaciones a vehículos, sus accesorios o los objetos que en ellos se dejen.',
     penalty_text: penalty.latePaymentPercentage
-      ? `En caso de retraso en el pago de la renta, se aplicará una penalización del ${penalty.latePaymentPercentage}% mensual sobre el monto adeudado.${
+      ? `Las partes convienen, como pena convencional por el retraso en el pago de la renta, un recargo del ${penalty.latePaymentPercentage}% mensual sobre el monto adeudado, calculado por cada mes o fracción de retraso.${
           penalty.maxDamageCharge
-            ? ` El cargo máximo por daños ocasionados a la propiedad será de ${formatCurrency(penalty.maxDamageCharge)}.`
+            ? ` El cargo por daños ocasionados al inmueble se cuantificará conforme al costo real de reparación, hasta un máximo de ${formatCurrency(penalty.maxDamageCharge)}.`
             : ''
         }`
-      : 'No se han establecido penalizaciones específicas adicionales para este contrato.',
+      : 'Las partes no pactan pena convencional adicional por mora, sin perjuicio del derecho de EL ARRENDADOR de exigir el pago de la renta vencida, los daños y perjuicios causados y la rescisión del contrato en términos de la cláusula respectiva.',
     deposit_return_text:
       depositPolicy.description ||
-      'El depósito en garantía será devuelto conforme al estado en que se encuentre el inmueble al finalizar el contrato, pudiendo ser reembolsado de forma completa, parcial o no reembolsado, a criterio del arrendador según los daños identificados.',
+      `El depósito será devuelto a EL ARRENDATARIO dentro de los 30 días naturales siguientes a la entrega de ${subject}, previa verificación de su estado y de que se encuentre al corriente en el pago de servicios, descontándose en su caso el costo de las reparaciones por daños imputables a EL ARRENDATARIO, los adeudos pendientes y las penas convencionales devengadas, debiendo EL ARRENDADOR entregar el desglose correspondiente.`,
     auto_renewal_text: contract.autoRenewal
-      ? 'Este contrato se renovará automáticamente por periodos iguales al término de su vigencia, salvo notificación por escrito en contrario de cualquiera de las partes con al menos 30 días de anticipación.'
-      : 'Este contrato no se renueva de forma automática; al término de su vigencia deberá formalizarse un nuevo contrato de mutuo acuerdo entre las partes.',
+      ? 'Concluida la vigencia, el contrato se prorrogará automáticamente por periodos iguales en las mismas condiciones, salvo que cualquiera de las partes notifique a la otra por escrito su voluntad de no prorrogarlo, con al menos 30 días naturales de anticipación al vencimiento.'
+      : 'Este contrato no se prorroga de forma automática; para continuar la relación arrendaticia deberá celebrarse un nuevo contrato por escrito, de mutuo acuerdo entre las partes.',
     signature_date: formatDate(new Date()),
     witness_section: witnessSection,
+    jurisdiction_text: buildJurisdictionText(jurisdiction, contract.property.propertyType),
+    legal_basis_text: buildLegalBasisText(jurisdiction, contract.property.propertyType),
+
+    // Bajo la Ley Inquilinaria de Michoacán (art. 14) el plazo es forzoso sólo para el
+    // arrendador; pactarlo forzoso para ambos sería renunciar a un beneficio irrenunciable.
+    term_binding_text: tenancyLaw?.tenantMayTerminate
+      ? `El presente contrato tendrá una vigencia de ${contract.durationMonths} meses, forzosa para EL ARRENDADOR y potestativa para EL ARRENDATARIO, quien podrá darlo por terminado anticipadamente dando aviso a EL ARRENDADOR con ${tenancyLaw.tenantNoticeMonths} meses de anticipación, en los términos de la ${tenancyLaw.name}`
+      : `El presente contrato tendrá una vigencia forzosa para ambas partes de ${contract.durationMonths} meses`,
+
+    // Art. 10 de la Ley Inquilinaria: el arrendador debe expedir recibo y el último hace
+    // presumir el pago de las rentas anteriores.
+    receipt_text: tenancyLaw
+      ? 'EL ARRENDADOR está obligado a expedir a EL ARRENDATARIO el recibo correspondiente por cada pago; el último recibo hace presumir el pago de las rentas anteriores.'
+      : 'Todo pago se acreditará mediante el recibo correspondiente que EL ARRENDADOR está obligado a expedir.',
+
+    // Beneficios irrenunciables que conviene hacer constar en el propio contrato.
+    tenancy_law_text: tenancyLaw
+      ? `<p class="clause"><span class="clause-number">Derechos irrenunciables.</span> Las partes reconocen
+         que a este contrato le resulta aplicable la ${tenancyLaw.name}, cuyas disposiciones son de orden
+         público y sus beneficios irrenunciables. En particular: el depósito en garantía no podrá exceder de
+         ${tenancyLaw.maxDepositMonths} mes de renta (art. 15); no se exige fiador (art. 16);
+         ${tenancyLaw.rentIncreaseCapNote} (art. 4); EL ARRENDATARIO tiene derecho de preferencia para el
+         nuevo arrendamiento si está al corriente (art. 8) y derecho al tanto si EL ARRENDADOR vende el
+         inmueble (art. 17); y en caso de fallecimiento de EL ARRENDATARIO se subrogarán en sus derechos
+         quienes hayan habitado el inmueble en los términos del art. 7. EL ARRENDADOR se obliga a presentar
+         este contrato para su registro ante la Oficina Rentística dentro de los
+         ${tenancyLaw.registrationDeadlineDays} días siguientes a su firma (arts. 3 y 26).</p>`
+      : '',
   };
 };
 

@@ -533,6 +533,16 @@ export default function ContractDetailPage() {
   const canCancel = contract.status === 'ACTIVE';
   const canDelete = contract.status !== 'ACTIVE';
 
+  // Contract is eligible for renewal if it's ACTIVE and ends within 2 months
+  const canRenew = (() => {
+    if (contract.status !== 'ACTIVE' || !contract.endDate) return false;
+    const now = new Date();
+    const twoMonthsFromNow = new Date();
+    twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+    const endDate = new Date(contract.endDate);
+    return endDate > now && endDate <= twoMonthsFromNow;
+  })();
+
   return (
     <ProtectedRoute requiredRole="ADMIN">
       <div className="space-y-6 max-w-2xl mx-auto">
@@ -586,6 +596,21 @@ export default function ContractDetailPage() {
               Cancelado el {contract.cancelledAt ? formatDate(contract.cancelledAt) : '—'}
             </p>
             {contract.cancellationReason && <p className="text-red-700 dark:text-red-400">{contract.cancellationReason}</p>}
+          </div>
+        )}
+
+        {contract.legalWarnings && contract.legalWarnings.length > 0 && (
+          <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-sm">
+            <p className="text-amber-800 dark:text-amber-300 font-medium mb-2">
+              Revisión legal: {contract.legalWarnings.length === 1 ? '1 observación' : `${contract.legalWarnings.length} observaciones`}
+            </p>
+            <ul className="space-y-1.5">
+              {contract.legalWarnings.map((warning) => (
+                <li key={warning} className="text-amber-700 dark:text-amber-400 leading-snug">
+                  {warning}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
@@ -668,6 +693,21 @@ export default function ContractDetailPage() {
             )}
           </div>
         </div>
+
+        {canRenew && (
+          <div className="bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl shadow-sm p-5 border border-emerald-200 dark:border-emerald-800">
+            <h3 className="text-heading font-semibold mb-1">Renovar contrato</h3>
+            <p className="text-muted text-sm mb-3">
+              Este contrato está próximo a vencer. Inicia el proceso de renovación para crear un nuevo período de ocupación con posibilidad de ajustar la renta.
+            </p>
+            <button
+              onClick={() => router.push(`/contracts/${contract.id}/renew`)}
+              className="flex items-center gap-1.5 text-sm font-medium py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors active:opacity-80"
+            >
+              Iniciar renovación →
+            </button>
+          </div>
+        )}
 
         {canCancel && (
           <div className="bg-surface rounded-2xl shadow-sm p-5">

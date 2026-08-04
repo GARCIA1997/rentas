@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { useAuth } from '@/hooks/useAuth';
-import { dashboardApi, DashboardStats, MonthlyIncome, PaymentStats, meApi, MyTenant, RentPayment } from '@/lib/api';
+import { dashboardApi, DashboardStats, MonthlyIncome, PaymentStats, meApi, MyTenant, RentPayment, contractsApi, ContractRenewalAlert } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { ChevronRightIcon } from '@/components/icons';
 import { useToast } from '@/components/ToastProvider';
@@ -29,15 +29,22 @@ function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [income, setIncome] = useState<MonthlyIncome[]>([]);
   const [paymentStats, setPaymentStats] = useState<PaymentStats | null>(null);
+  const [renewalAlerts, setRenewalAlerts] = useState<ContractRenewalAlert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!token) return;
-    Promise.all([dashboardApi.stats(token), dashboardApi.income(token), dashboardApi.paymentStats(token)])
-      .then(([statsData, incomeData, paymentStatsData]) => {
+    Promise.all([
+      dashboardApi.stats(token),
+      dashboardApi.income(token),
+      dashboardApi.paymentStats(token),
+      contractsApi.getRenewalAlerts(token),
+    ])
+      .then(([statsData, incomeData, paymentStatsData, alertsData]) => {
         setStats(statsData);
         setIncome(incomeData);
         setPaymentStats(paymentStatsData);
+        setRenewalAlerts(alertsData);
       })
       .finally(() => setIsLoading(false));
   }, [token]);
@@ -144,6 +151,36 @@ function AdminDashboard() {
             <p className="text-3xl font-bold text-heading">${paymentStats.thisMonthPaid.toLocaleString('es-MX')}</p>
             <p className="text-emerald-600 dark:text-emerald-400 text-xs font-medium mt-2">Colecciones del mes</p>
           </div>
+        </div>
+      )}
+
+      {/* Renewal Alerts Widget */}
+      {renewalAlerts.length > 0 && (
+        <div className="bg-amber-50 dark:bg-amber-900/10 rounded-2xl shadow-sm p-5 border border-amber-200 dark:border-amber-800">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-heading font-semibold">⚠️ Contratos a renovar</h3>
+            <span className="text-sm font-medium text-amber-700 dark:text-amber-300">{renewalAlerts.length}</span>
+          </div>
+          <div className="space-y-2">
+            {renewalAlerts.slice(0, 3).map((alert) => (
+              <Link
+                key={alert.id}
+                href={`/contracts/${alert.id}`}
+                className="flex items-center justify-between p-3 bg-white dark:bg-black/20 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-heading">{alert.tenant.fullName}</p>
+                  <p className="text-xs text-muted">{alert.property.name}</p>
+                </div>
+                <div className="text-right ml-2">
+                  <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">En {alert.daysUntilEnd}d</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <Link href="/contracts" className="text-amber-600 dark:text-amber-400 text-xs font-medium mt-3 inline-block hover:underline">
+            Ver todos →
+          </Link>
         </div>
       )}
 

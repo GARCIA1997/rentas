@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import { pathToFileURL } from 'url';
 import { PrismaClient } from '@prisma/client';
 import authRoutes from './routes/auth.js';
 import propertyRoutes from './routes/properties.js';
@@ -24,7 +25,7 @@ const PORT = process.env.API_PORT || 4000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'development' ? true : (process.env.FRONTEND_URL || 'http://localhost:3000'),
   credentials: true,
 }));
 
@@ -59,9 +60,15 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Backend running on http://localhost:${PORT}`);
-});
+// Sólo se escucha cuando este archivo es el punto de entrada. Al importarlo (smoke test,
+// pruebas de integración) el consumidor decide en qué puerto levantarlo, o si levantarlo.
+const isEntryPoint = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isEntryPoint) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Backend running on http://localhost:${PORT}`);
+  });
+}
 
 // Export for testing
 export { app, prisma };

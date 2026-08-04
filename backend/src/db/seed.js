@@ -10,16 +10,28 @@ async function main() {
   // Remove old demo admin from earlier seed runs, if present
   await prisma.user.deleteMany({ where: { phone: '5551234567' } });
 
-  const adminPasswordHash = await bcryptjs.hash('@AgA151097', 10);
+  // La contraseña del admin nunca va en el repositorio: se toma de SEED_ADMIN_PASSWORD.
+  // El valor por defecto sólo sirve para entornos desechables (CI, local); en cualquier
+  // instalación real hay que definir la variable.
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'changeme-dev-only';
+  if (!process.env.SEED_ADMIN_PASSWORD) {
+    console.warn('⚠️  SEED_ADMIN_PASSWORD no está definida; se usa la contraseña de desarrollo.');
+  }
+  const adminPasswordHash = await bcryptjs.hash(adminPassword, 10);
+
+  // Datos del admin inicial, parametrizados para no fijar en el repositorio los de una
+  // persona real. `update: {}` deja intacta la cuenta si ya existe: re-sembrar no pisa
+  // la contraseña vigente.
+  const adminPhone = process.env.SEED_ADMIN_PHONE || '5550000000';
 
   const admin = await prisma.user.upsert({
-    where: { phone: '3131128425' },
+    where: { phone: adminPhone },
     update: {},
     create: {
-      phone: '3131128425',
+      phone: adminPhone,
       passwordHash: adminPasswordHash,
-      firstName: 'Alejandro',
-      lastName: 'Garcia Alvarez',
+      firstName: process.env.SEED_ADMIN_FIRST_NAME || 'Admin',
+      lastName: process.env.SEED_ADMIN_LAST_NAME || 'KsaRed',
       role: 'ADMIN',
       status: 'ACTIVE',
     },
@@ -32,7 +44,7 @@ async function main() {
     update: {},
     create: {
       id: 'seed-representative-1',
-      fullName: 'Alejandro Garcia Alvarez',
+      fullName: `${admin.firstName} ${admin.lastName}`,
       position: 'Administrador',
       createdBy: admin.id,
       isActive: true,
@@ -88,12 +100,13 @@ async function main() {
 
   const casaTemplate = await prisma.contractTemplate.upsert({
     where: { id: 'seed-template-casa' },
-    update: { templateContent: CASA_TEMPLATE, variables: CONTRACT_VARIABLES },
+    update: { templateContent: CASA_TEMPLATE, variables: CONTRACT_VARIABLES, propertyType: 'HOUSE' },
     create: {
       id: 'seed-template-casa',
       name: 'Contrato Estándar - Casa Habitación',
       templateContent: CASA_TEMPLATE,
       variables: CONTRACT_VARIABLES,
+      propertyType: 'HOUSE',
       isDefault: true,
       createdBy: admin.id,
     },
@@ -101,25 +114,27 @@ async function main() {
 
   const localTemplate = await prisma.contractTemplate.upsert({
     where: { id: 'seed-template-local' },
-    update: { templateContent: LOCAL_TEMPLATE, variables: CONTRACT_VARIABLES },
+    update: { templateContent: LOCAL_TEMPLATE, variables: CONTRACT_VARIABLES, propertyType: 'LOCAL' },
     create: {
       id: 'seed-template-local',
       name: 'Contrato Estándar - Local Comercial',
       templateContent: LOCAL_TEMPLATE,
       variables: CONTRACT_VARIABLES,
+      propertyType: 'LOCAL',
       isDefault: false,
       createdBy: admin.id,
     },
   });
 
-  const coahuayanaTemplate = await prisma.contractTemplate.upsert({
+  await prisma.contractTemplate.upsert({
     where: { id: 'seed-template-coahuayana' },
-    update: { templateContent: COAHUAYANA_TEMPLATE, variables: CONTRACT_VARIABLES },
+    update: { templateContent: COAHUAYANA_TEMPLATE, variables: CONTRACT_VARIABLES, propertyType: null },
     create: {
       id: 'seed-template-coahuayana',
       name: 'Contrato Detallado - Con Inventario y Convivencia',
       templateContent: COAHUAYANA_TEMPLATE,
       variables: CONTRACT_VARIABLES,
+      propertyType: null,
       isDefault: false,
       createdBy: admin.id,
     },
