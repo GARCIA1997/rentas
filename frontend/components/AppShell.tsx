@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { HomeIcon, BuildingIcon, UsersIcon, DocumentIcon, MoreIcon, UserCircleIcon } from './icons';
+import { HomeIcon, BuildingIcon, UsersIcon, DocumentIcon, CashIcon, MoreIcon, UserCircleIcon } from './icons';
 
 interface TabItem {
   href: string;
@@ -18,6 +18,7 @@ const adminTabs: TabItem[] = [
   { href: '/properties', label: 'Propiedades', Icon: BuildingIcon },
   { href: '/tenants', label: 'Inquilinos', Icon: UsersIcon },
   { href: '/contracts', label: 'Contratos', Icon: DocumentIcon },
+  { href: '/payments', label: 'Pagos', Icon: CashIcon },
   { href: '/settings', label: 'Más', Icon: MoreIcon },
 ];
 
