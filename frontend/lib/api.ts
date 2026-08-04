@@ -215,7 +215,9 @@ export interface Contract {
   propertyId: string;
   representativeId?: string | null;
   startDate: string;
-  endDate: string;
+  endDate?: string | null;
+  durationMonths: number;
+  paymentDay: number;
   monthlyRent: string;
   depositAmount: string;
   waterIncluded: boolean;
@@ -240,7 +242,8 @@ export interface ContractInput {
   representativeId?: string;
   templateId?: string;
   startDate: string;
-  endDate: string;
+  durationMonths: number;
+  paymentDay: number;
   monthlyRent: number;
   depositAmount: number;
   waterIncluded: boolean;
@@ -294,6 +297,9 @@ export interface RentPayment {
   dueDate: string;
   paidDate?: string | null;
   paymentMethod: 'MANUAL' | 'TRANSFERENCIA' | 'EFECTIVO' | 'CHEQUE';
+  paymentType?: 'RENT' | 'DEPOSIT' | 'EXTRA';
+  paymentNumber?: number | null;
+  totalPaymentsInContract?: number | null;
   notes?: string | null;
   status: 'PENDING' | 'PAID' | 'OVERDUE';
   createdAt: string;

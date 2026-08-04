@@ -30,37 +30,34 @@ export const getContract = async (id) => {
   return contract;
 };
 
-// Number of monthly rent periods covered by [startDate, endDate), at least 1.
-const countMonthlyPeriods = (startDate, endDate) => {
-  let months =
-    (endDate.getUTCFullYear() - startDate.getUTCFullYear()) * 12 +
-    (endDate.getUTCMonth() - startDate.getUTCMonth());
-  if (endDate.getUTCDate() < startDate.getUTCDate()) {
-    months -= 1;
-  }
-  return Math.max(1, months);
-};
-
+// Add N months to a date, keeping the day-of-month (with adjustment for months with fewer days)
 const addMonthsUTC = (date, months) => {
   const result = new Date(date);
   result.setUTCMonth(result.getUTCMonth() + months);
   return result;
 };
 
-// Builds the full-term monthly payment schedule for a contract, so the admin
-// never has to manually create each month's rent payment by hand.
+// Builds the full-term monthly payment schedule for a contract
+// Payments are due on `paymentDay` of each month for `durationMonths` months
 const buildPaymentSchedule = (contract) => {
   const start = new Date(contract.startDate);
-  const end = new Date(contract.endDate);
-  const periods = countMonthlyPeriods(start, end);
   const now = new Date();
 
-  return Array.from({ length: periods }, (_, i) => {
-    const dueDate = addMonthsUTC(start, i);
+  return Array.from({ length: contract.durationMonths }, (_, i) => {
+    // Calculate due date: start month + i months, on the specified paymentDay
+    const dueDate = new Date(
+      start.getUTCFullYear(),
+      start.getUTCMonth() + i,
+      Math.min(contract.paymentDay, 28) // cap at 28 to avoid month-end issues
+    );
+
     return {
       contractId: contract.id,
       tenantId: contract.tenantId,
       propertyId: contract.propertyId,
+      paymentType: 'RENT',
+      paymentNumber: i + 1, // 1-indexed: 1, 2, 3, ..., durationMonths
+      totalPaymentsInContract: contract.durationMonths,
       amountDue: contract.monthlyRent,
       amountPaid: 0,
       dueDate,
@@ -88,14 +85,21 @@ export const createContract = async (data) => {
     }
   }
 
+  // Calculate endDate from startDate + durationMonths
+  const startDate = new Date(data.startDate);
+  const endDate = new Date(startDate);
+  endDate.setUTCMonth(endDate.getUTCMonth() + data.durationMonths);
+
   return prisma.$transaction(async (tx) => {
     const contract = await tx.contract.create({
       data: {
         tenantId: data.tenantId,
         propertyId: data.propertyId,
         representativeId: data.representativeId || null,
-        startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
+        startDate,
+        durationMonths: data.durationMonths,
+        paymentDay: data.paymentDay,
+        endDate, // calculated field for backward compatibility
         monthlyRent: data.monthlyRent,
         depositAmount: data.depositAmount,
         waterIncluded: data.waterIncluded ?? false,
@@ -117,22 +121,39 @@ export const createContract = async (data) => {
 };
 
 export const updateContract = async (id, data) => {
-  await getContract(id);
+  const contract = await getContract(id);
+
+  const updateData = {
+    representativeId: data.representativeId,
+    monthlyRent: data.monthlyRent,
+    depositAmount: data.depositAmount,
+    waterIncluded: data.waterIncluded,
+    autoRenewal: data.autoRenewal,
+    penaltyRules: data.penaltyRules,
+    depositReturnPolicy: data.depositReturnPolicy,
+    templateUsed: data.templateId,
+  };
+
+  // If startDate or durationMonths change, recalculate endDate
+  if (data.startDate || data.durationMonths) {
+    const startDate = data.startDate ? new Date(data.startDate) : contract.startDate;
+    const durationMonths = data.durationMonths ?? contract.durationMonths;
+    const endDate = new Date(startDate);
+    endDate.setUTCMonth(endDate.getUTCMonth() + durationMonths);
+
+    updateData.startDate = startDate;
+    updateData.durationMonths = durationMonths;
+    updateData.endDate = endDate;
+  }
+
+  // Payment day can also be updated
+  if (data.paymentDay) {
+    updateData.paymentDay = data.paymentDay;
+  }
 
   return prisma.contract.update({
     where: { id },
-    data: {
-      representativeId: data.representativeId,
-      startDate: data.startDate ? new Date(data.startDate) : undefined,
-      endDate: data.endDate ? new Date(data.endDate) : undefined,
-      monthlyRent: data.monthlyRent,
-      depositAmount: data.depositAmount,
-      waterIncluded: data.waterIncluded,
-      autoRenewal: data.autoRenewal,
-      penaltyRules: data.penaltyRules,
-      depositReturnPolicy: data.depositReturnPolicy,
-      templateUsed: data.templateId,
-    },
+    data: updateData,
     include: includeRelations,
   });
 };

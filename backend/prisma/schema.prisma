@@ -59,6 +59,12 @@ enum PaymentMethod {
   CHEQUE
 }
 
+enum PaymentType {
+  RENT
+  DEPOSIT
+  EXTRA
+}
+
 enum NotificationType {
   PAYMENT_REMINDER
   PAYMENT_CONFIRMED
@@ -150,7 +156,9 @@ model Contract {
   propertyId            String
   representativeId      String?
   startDate             DateTime
-  endDate               DateTime
+  durationMonths        Int         // Reemplaza endDate - duración en meses (ej: 12 para un año)
+  paymentDay            Int         // Día del mes para pagos (1-31, ej: 7 = pagos el 7 de cada mes)
+  endDate               DateTime?   // Calculado: startDate + durationMonths, para backward compat
   monthlyRent           Decimal     @db.Decimal(12, 2)
   depositAmount         Decimal     @db.Decimal(12, 2)
   waterIncluded         Boolean     @default(false)
@@ -224,6 +232,9 @@ model RentPayment {
   dueDate               DateTime
   paidDate              DateTime?
   paymentMethod         PaymentMethod
+  paymentType           PaymentType @default(RENT)  // RENT, DEPOSIT, EXTRA
+  paymentNumber         Int?        // Ej: 1 para el primer pago, 2 para el segundo, etc
+  totalPaymentsInContract Int?      // Ej: 12 si el contrato tiene 12 pagos - para mostrar "1/12"
   notes                 String?
   status                PaymentStatus @default(PENDING)
   createdAt             DateTime    @default(now())
