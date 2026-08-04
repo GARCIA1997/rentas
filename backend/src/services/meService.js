@@ -86,3 +86,42 @@ export const getMyReceiptPdf = async (userId, paymentId) => {
   const html = buildReceiptHtml(payment);
   return generatePdfBuffer(html);
 };
+
+export const getMySettings = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+      email: true,
+      notificationsEnabled: true,
+    },
+  });
+
+  if (!user) {
+    throw { status: 404, message: 'User not found' };
+  }
+
+  return user;
+};
+
+export const updateMySettings = async (userId, data) => {
+  const updateData = {};
+
+  if ('notificationsEnabled' in data) {
+    updateData.notificationsEnabled = !!data.notificationsEnabled;
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    return getMySettings(userId);
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: updateData,
+  });
+
+  return getMySettings(userId);
+};

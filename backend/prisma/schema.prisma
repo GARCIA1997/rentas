@@ -83,6 +83,7 @@ model User {
   email                 String?
   role                  UserRole    @default(INQUILINO)
   status                UserStatus  @default(ACTIVE)
+  notificationsEnabled  Boolean     @default(true)
   createdBy             String?     // FK to User for audit trail
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt

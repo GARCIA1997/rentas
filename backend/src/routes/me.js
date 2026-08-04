@@ -11,5 +11,7 @@ router.get('/contracts', meController.getContracts);
 router.get('/payments', meController.getPayments);
 router.get('/contracts/:id/pdf', meController.downloadContractPdf);
 router.get('/payments/:id/receipt', meController.downloadReceipt);
+router.get('/settings', meController.getSettings);
+router.put('/settings', meController.updateSettings);
 
 export default router;

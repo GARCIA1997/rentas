@@ -112,9 +112,8 @@ export const createContract = async (data) => {
       include: includeRelations,
     });
 
-    await tx.rentPayment.createMany({ data: buildPaymentSchedule(contract) });
-
-    await tx.property.update({ where: { id: data.propertyId }, data: { status: 'OCUPADA' } });
+    // No se generan los pagos aquí; se generarán cuando el contrato sea firmado (markAsSigned)
+    // Esto permite cambios antes de firmar sin inconsistencias
 
     return contract;
   });
@@ -229,7 +228,6 @@ export const generateContractPdf = async (id) => {
     where: { id },
     data: {
       documentUrl: `/uploads/contracts/${fileName}`,
-      status: contract.status === 'DRAFT' ? 'ACTIVE' : contract.status,
     },
     include: includeRelations,
   });
@@ -244,10 +242,47 @@ export const getContractPdfPath = async (id) => {
 };
 
 export const markAsSigned = async (id, signedDigitallyPhone) => {
-  await getContract(id);
-  return prisma.contract.update({
-    where: { id },
-    data: { signedAt: new Date(), signedDigitallyPhone: !!signedDigitallyPhone },
-    include: includeRelations,
+  const contract = await getContract(id);
+
+  if (contract.signedAt) {
+    throw { status: 400, message: 'Contract is already signed' };
+  }
+
+  return prisma.$transaction(async (tx) => {
+    // Generar el plan de pagos de renta
+    const rentPayments = buildPaymentSchedule(contract);
+    await tx.rentPayment.createMany({ data: rentPayments });
+
+    // Generar pago de depósito si existe
+    if (contract.depositAmount && Number(contract.depositAmount) > 0) {
+      await tx.rentPayment.create({
+        data: {
+          contractId: contract.id,
+          tenantId: contract.tenantId,
+          propertyId: contract.propertyId,
+          paymentType: 'DEPOSIT',
+          amountDue: contract.depositAmount,
+          amountPaid: 0,
+          dueDate: new Date(contract.startDate),
+          paymentMethod: 'MANUAL',
+          status: 'PENDING',
+        },
+      });
+    }
+
+    // Marcar como firmado, cambiar status a ACTIVE, marcar propiedad como OCUPADA
+    const signed = await tx.contract.update({
+      where: { id },
+      data: {
+        signedAt: new Date(),
+        signedDigitallyPhone: !!signedDigitallyPhone,
+        status: 'ACTIVE',
+      },
+      include: includeRelations,
+    });
+
+    await tx.property.update({ where: { id: contract.propertyId }, data: { status: 'OCUPADA' } });
+
+    return signed;
   });
 };

@@ -1,9 +1,12 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme, ThemePreference } from '@/lib/themeContext';
-import { SunIcon, MoonIcon, DesktopIcon, ChevronRightIcon, UsersIcon, LogoutIcon } from '@/components/icons';
+import { useToast } from '@/components/ToastProvider';
+import { SunIcon, MoonIcon, DesktopIcon, ChevronRightIcon, UsersIcon, LogoutIcon, BellIcon } from '@/components/icons';
+import { apiCall } from '@/lib/api';
 
 const themeOptions: { value: ThemePreference; label: string; Icon: typeof SunIcon }[] = [
   { value: 'light', label: 'Claro', Icon: SunIcon },
@@ -12,8 +15,46 @@ const themeOptions: { value: ThemePreference; label: string; Icon: typeof SunIco
 ];
 
 export default function SettingsPage() {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth();
   const { preference, setPreference } = useTheme();
+  const { showToast } = useToast();
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      if (!token) return;
+      try {
+        const settings = await apiCall('/api/me/settings', { token });
+        setNotificationsEnabled(settings.notificationsEnabled ?? true);
+      } catch (err) {
+        console.error('Failed to load settings:', err);
+        setNotificationsEnabled(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadSettings();
+  }, [token]);
+
+  const handleNotificationsToggle = async (enabled: boolean) => {
+    if (!token) return;
+    setNotificationsEnabled(enabled);
+    try {
+      await apiCall('/api/me/settings', {
+        token,
+        method: 'PUT',
+        body: JSON.stringify({ notificationsEnabled: enabled }),
+      });
+      showToast(
+        enabled ? 'Notificaciones habilitadas' : 'Notificaciones deshabilitadas',
+        'success'
+      );
+    } catch (err) {
+      setNotificationsEnabled(!enabled);
+      showToast('Error al actualizar configuración', 'error');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -47,6 +88,31 @@ export default function SettingsPage() {
               </button>
             );
           })}
+        </div>
+      </div>
+
+      <div className="bg-surface rounded-2xl shadow-sm p-5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 flex-1">
+            <BellIcon className="w-5 h-5 text-muted" />
+            <div>
+              <p className="text-heading font-medium text-sm">Notificaciones</p>
+              <p className="text-muted text-xs">Recibir alertas de pagos y contratos</p>
+            </div>
+          </div>
+          <button
+            onClick={() => handleNotificationsToggle(!notificationsEnabled)}
+            disabled={isLoading}
+            className={`w-12 h-7 rounded-full transition-colors ${
+              notificationsEnabled ? 'bg-primary' : 'bg-black/10 dark:bg-white/10'
+            } relative disabled:opacity-50`}
+          >
+            <div
+              className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-transform ${
+                notificationsEnabled ? 'right-1' : 'left-1'
+              }`}
+            />
+          </button>
         </div>
       </div>
 

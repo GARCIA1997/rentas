@@ -54,3 +54,21 @@ export const downloadReceipt = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSettings = async (req, res, next) => {
+  try {
+    const settings = await meService.getMySettings(req.user.id);
+    res.json(settings);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateSettings = async (req, res, next) => {
+  try {
+    const settings = await meService.updateMySettings(req.user.id, req.body);
+    res.json(settings);
+  } catch (error) {
+    next(error);
+  }
+};
