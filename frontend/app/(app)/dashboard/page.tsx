@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { useAuth } from '@/hooks/useAuth';
-import { dashboardApi, DashboardStats, MonthlyIncome, meApi, MyTenant, RentPayment } from '@/lib/api';
+import { dashboardApi, DashboardStats, MonthlyIncome, PaymentStats, meApi, MyTenant, RentPayment } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { ChevronRightIcon } from '@/components/icons';
 
@@ -27,14 +27,16 @@ function AdminDashboard() {
   const { token } = useAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [income, setIncome] = useState<MonthlyIncome[]>([]);
+  const [paymentStats, setPaymentStats] = useState<PaymentStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!token) return;
-    Promise.all([dashboardApi.stats(token), dashboardApi.income(token)])
-      .then(([statsData, incomeData]) => {
+    Promise.all([dashboardApi.stats(token), dashboardApi.income(token), dashboardApi.paymentStats(token)])
+      .then(([statsData, incomeData, paymentStatsData]) => {
         setStats(statsData);
         setIncome(incomeData);
+        setPaymentStats(paymentStatsData);
       })
       .finally(() => setIsLoading(false));
   }, [token]);
@@ -118,6 +120,49 @@ function AdminDashboard() {
           </ul>
         </div>
       </div>
+
+      {/* Payment Stats Widget */}
+      {paymentStats && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="bg-red-50 dark:bg-red-900/10 rounded-2xl shadow-sm p-5 border border-red-200 dark:border-red-800">
+            <p className="text-sm text-muted mb-1">Total vencido</p>
+            <p className="text-3xl font-bold text-heading">${paymentStats.totalOverdue.toLocaleString('es-MX')}</p>
+            <Link href="/payments" className="text-red-600 dark:text-red-400 text-xs font-medium mt-2 inline-block hover:underline">
+              Ver pagos vencidos →
+            </Link>
+          </div>
+          <div className="bg-amber-50 dark:bg-amber-900/10 rounded-2xl shadow-sm p-5 border border-amber-200 dark:border-amber-800">
+            <p className="text-sm text-muted mb-1">Próximos a vencer (7d)</p>
+            <p className="text-3xl font-bold text-heading">${paymentStats.totalUpcoming.toLocaleString('es-MX')}</p>
+            <Link href="/payments" className="text-amber-600 dark:text-amber-400 text-xs font-medium mt-2 inline-block hover:underline">
+              Ver próximos →
+            </Link>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl shadow-sm p-5 border border-emerald-200 dark:border-emerald-800">
+            <p className="text-sm text-muted mb-1">Pagado este mes</p>
+            <p className="text-3xl font-bold text-heading">${paymentStats.thisMonthPaid.toLocaleString('es-MX')}</p>
+            <p className="text-emerald-600 dark:text-emerald-400 text-xs font-medium mt-2">Colecciones del mes</p>
+          </div>
+        </div>
+      )}
+
+      {/* Properties with Most Overdue */}
+      {paymentStats && paymentStats.propertiesWithMostOverdue.length > 0 && (
+        <div className="bg-surface rounded-2xl shadow-sm p-5">
+          <h3 className="text-heading font-semibold mb-4">Propiedades con pagos vencidos</h3>
+          <div className="space-y-2">
+            {paymentStats.propertiesWithMostOverdue.map((prop) => (
+              <div key={prop.propertyId} className="flex items-center justify-between py-2 border-b border-black/5 dark:border-white/10 last:border-0">
+                <div>
+                  <p className="text-heading font-medium text-sm">{prop.propertyName}</p>
+                  <p className="text-muted text-xs">{prop.overdueCount} pagos vencidos</p>
+                </div>
+                <p className="text-red-600 dark:text-red-400 font-medium text-sm">${prop.overdueAmount.toLocaleString('es-MX')}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
