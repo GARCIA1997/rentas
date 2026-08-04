@@ -61,9 +61,21 @@ jobs:
         working-directory: ./backend
         run: npx prisma generate
 
+      # El conteo se verifica porque `node --test` da verde si el patrón resuelve a algo
+      # que no son archivos de prueba (pasarle un directorio, por ejemplo): un cero tests
+      # silencioso es peor que un fallo.
       - name: Pruebas unitarias
         working-directory: ./backend
-        run: npm run test:ci
+        run: |
+          npm run test:ci | tee test-output.txt
+          # El reportero varía entre TAP (`# tests N`) y spec (`ℹ tests N`) según el
+          # entorno, así que se acepta cualquiera de los dos prefijos.
+          total=$(grep -oE '(#|ℹ) tests [0-9]+' test-output.txt | grep -oE '[0-9]+' | head -1 || echo 0)
+          echo "Tests ejecutados: $total"
+          if [ "$total" -lt 20 ]; then
+            echo "::error::Se esperaban al menos 20 pruebas y sólo corrieron $total. ¿Falló el descubrimiento de archivos?"
+            exit 1
+          fi
 
       - name: Aplicar migraciones
         working-directory: ./backend
