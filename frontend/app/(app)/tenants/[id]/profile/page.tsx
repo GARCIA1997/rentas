@@ -60,8 +60,11 @@ export default function TenantProfilePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, tenantId]);
 
-  const loadData = async () => {
-    setIsLoading(true);
+  // `silent` skips the full-page "Cargando..." replacement — used when
+  // refreshing after an in-place action (paying, reverting, editing) so we
+  // don't unmount the whole tree (and the open modal with it) mid-flow.
+  const loadData = async (options?: { silent?: boolean }) => {
+    if (!options?.silent) setIsLoading(true);
     setError('');
     try {
       const [tenantData, contractsData, paymentsData] = await Promise.all([
@@ -75,7 +78,7 @@ export default function TenantProfilePage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar datos');
     } finally {
-      setIsLoading(false);
+      if (!options?.silent) setIsLoading(false);
     }
   };
 
@@ -124,7 +127,7 @@ export default function TenantProfilePage() {
     setRevertingId(payment.id);
     try {
       await rentPaymentsApi.update(payment.id, { amountPaid: 0, paidDate: null }, token);
-      await loadData();
+      await loadData({ silent: true });
       showToast('Pago revertido.', 'success');
     } catch (err) {
       showToast(err instanceof Error ? err.message : 'Error al revertir el pago', 'error');
@@ -409,12 +412,17 @@ export default function TenantProfilePage() {
         )}
       </div>
 
-      <TenantFormModal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} tenant={tenant} onSaved={loadData} />
+      <TenantFormModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        tenant={tenant}
+        onSaved={() => loadData({ silent: true })}
+      />
       <PayPaymentModal
         payment={payTarget}
         isOpen={!!payTarget}
         onClose={() => setPayTarget(null)}
-        onPaid={() => loadData()}
+        onPaid={() => loadData({ silent: true })}
       />
     </ProtectedRoute>
   );
