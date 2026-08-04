@@ -417,7 +417,20 @@ export interface MonthlyIncome {
   total: number;
 }
 
+export interface PaymentStats {
+  totalOverdue: number;
+  totalUpcoming: number;
+  thisMonthPaid: number;
+  propertiesWithMostOverdue: Array<{
+    propertyId: string;
+    propertyName: string;
+    overdueCount: number;
+    overdueAmount: number;
+  }>;
+}
+
 export const dashboardApi = {
   stats: (token: string) => apiCall('/api/dashboard/stats', { token }) as Promise<DashboardStats>,
   income: (token: string) => apiCall('/api/dashboard/income', { token }) as Promise<MonthlyIncome[]>,
+  paymentStats: (token: string) => apiCall('/api/dashboard/payment-stats', { token }) as Promise<PaymentStats>,
 };

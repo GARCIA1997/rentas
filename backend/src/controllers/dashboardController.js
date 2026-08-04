@@ -16,3 +16,11 @@ export const getIncome = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getPaymentStats = async (req, res, next) => {
+  try {
+    res.json(await dashboardService.getPaymentStats());
+  } catch (error) {
+    next(error);
+  }
+};

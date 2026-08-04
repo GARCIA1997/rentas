@@ -67,3 +67,62 @@ export const getMonthlyIncome = async () => {
 
   return Array.from(buckets.values());
 };
+
+export const getPaymentStats = async () => {
+  const now = new Date();
+  const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  const [
+    totalOverdue,
+    totalUpcoming,
+    thisMonthPaid,
+    overdueByProperty,
+  ] = await Promise.all([
+    prisma.rentPayment.aggregate({
+      where: { status: 'OVERDUE' },
+      _sum: { amountDue: true },
+    }),
+    prisma.rentPayment.aggregate({
+      where: {
+        status: 'PENDING',
+        dueDate: { lte: sevenDaysFromNow },
+        NOT: { status: 'OVERDUE' },
+      },
+      _sum: { amountDue: true },
+    }),
+    prisma.rentPayment.aggregate({
+      where: { status: 'PAID', paidDate: { gte: monthStart } },
+      _sum: { amountPaid: true },
+    }),
+    prisma.rentPayment.groupBy({
+      by: ['propertyId'],
+      where: { status: 'OVERDUE' },
+      _count: true,
+      _sum: { amountDue: true },
+      orderBy: { _count: { id: 'desc' } },
+      take: 5,
+    }),
+  ]);
+
+  // Get property names for overdueByProperty
+  const propertyIds = overdueByProperty.map((p) => p.propertyId);
+  const properties = await prisma.property.findMany({
+    where: { id: { in: propertyIds } },
+    select: { id: true, name: true },
+  });
+
+  const propertyMap = new Map(properties.map((p) => [p.id, p.name]));
+
+  return {
+    totalOverdue: totalOverdue._sum.amountDue || 0,
+    totalUpcoming: totalUpcoming._sum.amountDue || 0,
+    thisMonthPaid: thisMonthPaid._sum.amountPaid || 0,
+    propertiesWithMostOverdue: overdueByProperty.map((p) => ({
+      propertyId: p.propertyId,
+      propertyName: propertyMap.get(p.propertyId) || 'Unknown',
+      overdueCount: p._count,
+      overdueAmount: p._sum.amountDue,
+    })),
+  };
+};
