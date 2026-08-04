@@ -215,3 +215,12 @@ export function BanknoteIcon({ active, ...props }: IconProps) {
     </svg>
   );
 }
+
+export function UndoIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M7 10 3.5 6.5 7 3" />
+      <path d="M3.5 6.5H14a6 6 0 1 1 0 12H8" />
+    </svg>
+  );
+}

@@ -315,7 +315,7 @@ export interface RentPaymentInput {
   dueDate: string;
   amountDue: number;
   amountPaid?: number;
-  paidDate?: string;
+  paidDate?: string | null;
   paymentMethod: RentPayment['paymentMethod'];
   notes?: string;
 }

@@ -18,7 +18,7 @@ import {
   RentPayment,
 } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
-import { ArrowLeftIcon, PencilIcon, TrashIcon, BellIcon, BanknoteIcon, DownloadIcon } from '@/components/icons';
+import { ArrowLeftIcon, PencilIcon, TrashIcon, BellIcon, BanknoteIcon, DownloadIcon, UndoIcon } from '@/components/icons';
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -48,6 +48,7 @@ export default function TenantProfilePage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [payTarget, setPayTarget] = useState<RentPayment | null>(null);
   const [sharingId, setSharingId] = useState<string | null>(null);
+  const [revertingId, setRevertingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token || !tenantId) return;
@@ -103,6 +104,20 @@ export default function TenantProfilePage() {
       alert(err instanceof Error ? err.message : 'Error al compartir el recibo');
     } finally {
       setSharingId(null);
+    }
+  };
+
+  const handleRevertPayment = async (payment: RentPayment) => {
+    if (!token) return;
+    if (!confirm('¿Revertir este pago? Volverá a marcarse como no pagado y podrás registrarlo de nuevo.')) return;
+    setRevertingId(payment.id);
+    try {
+      await rentPaymentsApi.update(payment.id, { amountPaid: 0, paidDate: null }, token);
+      await loadData();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Error al revertir el pago');
+    } finally {
+      setRevertingId(null);
     }
   };
 
@@ -360,6 +375,15 @@ export default function TenantProfilePage() {
                               className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-primary text-white hover:bg-primary-pressed transition-colors disabled:opacity-50"
                             >
                               {sharingId === payment.id ? 'Enviando...' : 'Enviar recibo por WhatsApp'}
+                            </button>
+                            <button
+                              onClick={() => handleRevertPayment(payment)}
+                              disabled={revertingId === payment.id}
+                              className="flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-3 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-800 transition-colors disabled:opacity-50"
+                              aria-label="Revertir pago"
+                              title="Revertir pago"
+                            >
+                              <UndoIcon className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         )}
