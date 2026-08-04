@@ -38,72 +38,78 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex bg-canvas">
-      {/* Desktop sidebar */}
-      <aside className="hidden sm:flex sm:flex-col w-60 shrink-0 border-r border-black/5 dark:border-white/10 bg-surface p-4">
-        <Link href="/dashboard" className="flex items-center gap-2.5 mb-8 px-2 pt-1">
-          <Image src="/iconksa.png" alt="KsaRed" width={32} height={32} className="h-8 w-8 rounded-lg shrink-0" priority />
-          <span className="font-semibold text-lg text-heading">KsaRed</span>
-        </Link>
-
-        <nav className="flex flex-col gap-1">
-          {tabs
-            .filter((t) => t.href !== '/settings')
-            .map((tab) => {
-              const active = isActive(tab.href);
-              return (
-                <Link
-                  key={tab.href}
-                  href={tab.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                    active ? 'bg-primary text-white' : 'text-muted hover:bg-canvas hover:text-heading'
-                  }`}
-                >
-                  <tab.Icon active={active} className="w-5 h-5 shrink-0" />
-                  {tab.label}
-                </Link>
-              );
-            })}
-        </nav>
-
-        <div className="mt-auto flex flex-col gap-1 pt-4 border-t border-black/5 dark:border-white/10">
-          <Link
-            href="/settings"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-              isActive('/settings') ? 'bg-primary text-white' : 'text-muted hover:bg-canvas hover:text-heading'
-            }`}
-          >
-            <MoreIcon active={isActive('/settings')} className="w-5 h-5 shrink-0" />
-            Configuración
+      {/* Desktop sidebar — floating glass panel, inset from the edges */}
+      <aside className="hidden sm:flex sm:flex-col w-64 shrink-0 p-3 sticky top-0 h-screen">
+        <div className="glass-chrome flex flex-col flex-1 rounded-[28px] p-4">
+          <Link href="/dashboard" className="flex items-center gap-2.5 mb-6 px-2 pt-1">
+            <Image src="/iconksa.png" alt="KsaRed" width={32} height={32} className="h-8 w-8 rounded-[10px] shrink-0" priority />
+            <span className="font-semibold text-lg text-heading tracking-tight">KsaRed</span>
           </Link>
-          <button
-            onClick={logout}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left"
-          >
-            Cerrar sesión
-          </button>
+
+          <nav className="flex flex-col gap-1">
+            {tabs
+              .filter((t) => t.href !== '/settings')
+              .map((tab) => {
+                const active = isActive(tab.href);
+                return (
+                  <Link
+                    key={tab.href}
+                    href={tab.href}
+                    className={`relative flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+                      active
+                        ? 'text-primary bg-primary/12 dark:bg-primary/18'
+                        : 'text-muted hover:bg-black/[0.03] dark:hover:bg-white/[0.06] hover:text-heading'
+                    }`}
+                  >
+                    <tab.Icon active={active} className="w-5 h-5 shrink-0" />
+                    {tab.label}
+                  </Link>
+                );
+              })}
+          </nav>
+
+          <div className="mt-auto flex flex-col gap-1 pt-4 border-t border-black/[0.06] dark:border-white/[0.08]">
+            <Link
+              href="/settings"
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+                isActive('/settings')
+                  ? 'text-primary bg-primary/12 dark:bg-primary/18'
+                  : 'text-muted hover:bg-black/[0.03] dark:hover:bg-white/[0.06] hover:text-heading'
+              }`}
+            >
+              <MoreIcon active={isActive('/settings')} className="w-5 h-5 shrink-0" />
+              Configuración
+            </Link>
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-colors text-left"
+            >
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
-        <header className="sm:hidden sticky top-0 z-20 bg-surface/85 backdrop-blur-md border-b border-black/5 dark:border-white/10 pt-[env(safe-area-inset-top)]">
+        <header className="sm:hidden sticky top-0 z-20 glass-chrome pt-[env(safe-area-inset-top)]">
           <div className="flex items-center justify-between h-14 px-4">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <Image src="/iconksa.png" alt="KsaRed" width={28} height={28} className="h-7 w-7 rounded-lg" priority />
-              <span className="font-semibold text-heading">KsaRed</span>
+              <Image src="/iconksa.png" alt="KsaRed" width={28} height={28} className="h-7 w-7 rounded-[8px]" priority />
+              <span className="font-semibold text-heading tracking-tight">KsaRed</span>
             </Link>
             <span className="text-sm text-muted truncate max-w-[40%]">{user?.firstName}</span>
           </div>
         </header>
 
-        <main className="flex-1 pb-24 sm:pb-8 px-4 sm:px-8 py-4 sm:py-6 max-w-5xl w-full mx-auto">
+        <main className="flex-1 pb-28 sm:pb-8 px-4 sm:px-8 py-4 sm:py-6 max-w-5xl w-full mx-auto">
           {children}
         </main>
       </div>
 
-      {/* Mobile bottom tab bar */}
-      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-20 bg-surface/90 backdrop-blur-md border-t border-black/5 dark:border-white/10 pb-[env(safe-area-inset-bottom)]">
-        <div className="flex items-stretch h-16">
+      {/* Mobile bottom tab bar — floating glass capsule, inset from the edges */}
+      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-20 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+        <div className="glass-chrome flex items-stretch h-16 rounded-full px-1.5 mx-auto max-w-md">
           {tabs.map((tab) => {
             const active = isActive(tab.href);
             return (
@@ -112,8 +118,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                 href={tab.href}
                 className="flex-1 flex flex-col items-center justify-center gap-0.5 active:opacity-60 transition-opacity"
               >
-                <tab.Icon active={active} className={`w-6 h-6 ${active ? 'text-primary' : 'text-muted'}`} />
-                <span className={`text-[11px] leading-none ${active ? 'text-primary font-medium' : 'text-muted'}`}>
+                <span
+                  className={`flex items-center justify-center w-11 h-7 rounded-full transition-all ${
+                    active ? 'bg-primary/15 dark:bg-primary/25 animate-pill-in' : ''
+                  }`}
+                >
+                  <tab.Icon active={active} className={`w-[22px] h-[22px] ${active ? 'text-primary' : 'text-muted'}`} />
+                </span>
+                <span className={`text-[10px] leading-none ${active ? 'text-primary font-semibold' : 'text-muted'}`}>
                   {tab.label}
                 </span>
               </Link>
