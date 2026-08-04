@@ -8,3 +8,11 @@ export const getStats = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getIncome = async (req, res, next) => {
+  try {
+    res.json(await dashboardService.getMonthlyIncome());
+  } catch (error) {
+    next(error);
+  }
+};

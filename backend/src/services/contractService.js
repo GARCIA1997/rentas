@@ -13,7 +13,7 @@ const ensureUploadsDir = () => {
 };
 
 const includeRelations = {
-  tenant: { select: { id: true, fullName: true, idDocument: true, propertyId: true } },
+  tenant: { select: { id: true, fullName: true, idDocument: true, phone: true } },
   property: { select: { id: true, name: true, address: true, city: true, postalCode: true } },
   representative: { select: { id: true, fullName: true, position: true, idDocument: true } },
 };
@@ -30,10 +30,55 @@ export const getContract = async (id) => {
   return contract;
 };
 
+// Number of monthly rent periods covered by [startDate, endDate), at least 1.
+const countMonthlyPeriods = (startDate, endDate) => {
+  let months =
+    (endDate.getUTCFullYear() - startDate.getUTCFullYear()) * 12 +
+    (endDate.getUTCMonth() - startDate.getUTCMonth());
+  if (endDate.getUTCDate() < startDate.getUTCDate()) {
+    months -= 1;
+  }
+  return Math.max(1, months);
+};
+
+const addMonthsUTC = (date, months) => {
+  const result = new Date(date);
+  result.setUTCMonth(result.getUTCMonth() + months);
+  return result;
+};
+
+// Builds the full-term monthly payment schedule for a contract, so the admin
+// never has to manually create each month's rent payment by hand.
+const buildPaymentSchedule = (contract) => {
+  const start = new Date(contract.startDate);
+  const end = new Date(contract.endDate);
+  const periods = countMonthlyPeriods(start, end);
+  const now = new Date();
+
+  return Array.from({ length: periods }, (_, i) => {
+    const dueDate = addMonthsUTC(start, i);
+    return {
+      contractId: contract.id,
+      tenantId: contract.tenantId,
+      propertyId: contract.propertyId,
+      amountDue: contract.monthlyRent,
+      amountPaid: 0,
+      dueDate,
+      paymentMethod: 'MANUAL',
+      status: dueDate < now ? 'OVERDUE' : 'PENDING',
+    };
+  });
+};
+
 export const createContract = async (data) => {
   const tenant = await prisma.tenant.findUnique({ where: { id: data.tenantId } });
   if (!tenant) {
     throw { status: 400, message: 'Tenant not found' };
+  }
+
+  const property = await prisma.property.findUnique({ where: { id: data.propertyId } });
+  if (!property) {
+    throw { status: 400, message: 'Property not found' };
   }
 
   if (data.representativeId) {
@@ -43,23 +88,31 @@ export const createContract = async (data) => {
     }
   }
 
-  return prisma.contract.create({
-    data: {
-      tenantId: data.tenantId,
-      propertyId: tenant.propertyId,
-      representativeId: data.representativeId || null,
-      startDate: new Date(data.startDate),
-      endDate: new Date(data.endDate),
-      monthlyRent: data.monthlyRent,
-      depositAmount: data.depositAmount,
-      waterIncluded: data.waterIncluded ?? false,
-      autoRenewal: data.autoRenewal ?? false,
-      penaltyRules: data.penaltyRules ?? null,
-      depositReturnPolicy: data.depositReturnPolicy ?? null,
-      templateUsed: data.templateId || null,
-      status: 'DRAFT',
-    },
-    include: includeRelations,
+  return prisma.$transaction(async (tx) => {
+    const contract = await tx.contract.create({
+      data: {
+        tenantId: data.tenantId,
+        propertyId: data.propertyId,
+        representativeId: data.representativeId || null,
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
+        monthlyRent: data.monthlyRent,
+        depositAmount: data.depositAmount,
+        waterIncluded: data.waterIncluded ?? false,
+        autoRenewal: data.autoRenewal ?? false,
+        penaltyRules: data.penaltyRules ?? null,
+        depositReturnPolicy: data.depositReturnPolicy ?? null,
+        templateUsed: data.templateId || null,
+        status: 'DRAFT',
+      },
+      include: includeRelations,
+    });
+
+    await tx.rentPayment.createMany({ data: buildPaymentSchedule(contract) });
+
+    await tx.property.update({ where: { id: data.propertyId }, data: { status: 'OCUPADA' } });
+
+    return contract;
   });
 };
 

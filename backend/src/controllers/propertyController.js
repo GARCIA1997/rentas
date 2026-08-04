@@ -1,15 +1,20 @@
 import { body, validationResult } from 'express-validator';
 import * as propertyService from '../services/propertyService.js';
 
+// Service area is currently limited to these two municipalities.
+export const VALID_CITIES = ['Coahuayana de Hidalgo', 'Villa de Álvarez, Colima'];
+
 const validators = [
   body('name').notEmpty().withMessage('Name is required'),
   body('address').notEmpty().withMessage('Address is required'),
-  body('city').notEmpty().withMessage('City is required'),
+  body('city').isIn(VALID_CITIES).withMessage('Invalid city'),
   body('postalCode').notEmpty().withMessage('Postal code is required'),
   body('propertyType').isIn(['HOUSE', 'LOCAL']).withMessage('Invalid property type'),
   body('rentalPrice').isFloat({ min: 0 }).withMessage('Rental price must be a positive number'),
   body('status').optional().isIn(['OCUPADA', 'LIBRE', 'MANTENIMIENTO']).withMessage('Invalid status'),
   body('waterIncluded').optional().isBoolean().withMessage('waterIncluded must be a boolean'),
+  body('bedrooms').optional({ values: 'null' }).isInt({ min: 0 }).withMessage('Bedrooms must be a positive integer'),
+  body('bathrooms').optional({ values: 'null' }).isInt({ min: 0 }).withMessage('Bathrooms must be a positive integer'),
 ];
 
 const runValidators = async (req) => {
@@ -29,6 +34,15 @@ export const list = async (req, res, next) => {
 export const getOne = async (req, res, next) => {
   try {
     const property = await propertyService.getProperty(req.params.id);
+    res.json(property);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getDetail = async (req, res, next) => {
+  try {
+    const property = await propertyService.getPropertyDetail(req.params.id);
     res.json(property);
   } catch (error) {
     next(error);

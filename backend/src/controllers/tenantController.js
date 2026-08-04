@@ -2,11 +2,9 @@ import { body, validationResult } from 'express-validator';
 import * as tenantService from '../services/tenantService.js';
 
 const validators = [
-  body('propertyId').notEmpty().withMessage('Property is required'),
   body('fullName').notEmpty().withMessage('Full name is required'),
   body('email').optional({ values: 'falsy' }).isEmail().withMessage('Valid email required'),
   body('phone').optional({ values: 'falsy' }).matches(/^\d{10}$/).withMessage('Phone must be 10 digits'),
-  body('moveInDate').isISO8601().withMessage('Valid move-in date required'),
   body('status').optional().isIn(['ACTIVE', 'EVICTED', 'MOVED_OUT']).withMessage('Invalid status'),
 ];
 

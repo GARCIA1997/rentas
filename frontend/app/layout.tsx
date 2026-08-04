@@ -9,7 +9,7 @@ const themeInitScript = `
   try {
     var saved = localStorage.getItem('theme');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = saved || (prefersDark ? 'dark' : 'light');
+    var theme = (saved && saved !== 'system') ? saved : (prefersDark ? 'dark' : 'light');
     if (theme === 'dark') document.documentElement.classList.add('dark');
   } catch (e) {}
 })();
@@ -37,6 +37,10 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0d9488",
+  viewportFit: "cover",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({

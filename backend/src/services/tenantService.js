@@ -2,11 +2,20 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Tenants no longer carry a direct property FK — their current property (if
+// any) is derived from their active contract, if they have one.
+const activeContractInclude = {
+  contracts: {
+    where: { status: 'ACTIVE' },
+    include: { property: { select: { id: true, name: true, city: true } } },
+    orderBy: { startDate: 'desc' },
+    take: 1,
+  },
+};
+
 export const listTenants = async () => {
   return prisma.tenant.findMany({
-    include: {
-      property: { select: { id: true, name: true, city: true } },
-    },
+    include: activeContractInclude,
     orderBy: { createdAt: 'desc' },
   });
 };
@@ -14,9 +23,7 @@ export const listTenants = async () => {
 export const getTenant = async (id) => {
   const tenant = await prisma.tenant.findUnique({
     where: { id },
-    include: {
-      property: { select: { id: true, name: true, city: true } },
-    },
+    include: activeContractInclude,
   });
 
   if (!tenant) {
@@ -24,13 +31,6 @@ export const getTenant = async (id) => {
   }
 
   return tenant;
-};
-
-const ensurePropertyExists = async (propertyId) => {
-  const property = await prisma.property.findUnique({ where: { id: propertyId } });
-  if (!property) {
-    throw { status: 400, message: 'Property not found' };
-  }
 };
 
 // Links a tenant record to a self-registered user account when their phone
@@ -43,18 +43,15 @@ const findMatchingUserId = async (phone) => {
 };
 
 export const createTenant = async (data) => {
-  await ensurePropertyExists(data.propertyId);
   const userId = await findMatchingUserId(data.phone);
 
   return prisma.tenant.create({
     data: {
-      propertyId: data.propertyId,
       userId,
       fullName: data.fullName,
       email: data.email,
       phone: data.phone,
       idDocument: data.idDocument,
-      moveInDate: new Date(data.moveInDate),
       status: data.status ?? 'ACTIVE',
     },
   });
@@ -63,23 +60,17 @@ export const createTenant = async (data) => {
 export const updateTenant = async (id, data) => {
   const existing = await getTenant(id);
 
-  if (data.propertyId) {
-    await ensurePropertyExists(data.propertyId);
-  }
-
   const userId =
     data.phone && data.phone !== existing.phone ? await findMatchingUserId(data.phone) : undefined;
 
   return prisma.tenant.update({
     where: { id },
     data: {
-      propertyId: data.propertyId,
       userId,
       fullName: data.fullName,
       email: data.email,
       phone: data.phone,
       idDocument: data.idDocument,
-      moveInDate: data.moveInDate ? new Date(data.moveInDate) : undefined,
       status: data.status,
     },
   });

@@ -1,37 +1,61 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
-type Theme = 'light' | 'dark';
+export type ThemePreference = 'light' | 'dark' | 'system';
+type AppliedTheme = 'light' | 'dark';
 
 interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
+  preference: ThemePreference;
+  appliedTheme: AppliedTheme;
+  setPreference: (pref: ThemePreference) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const resolveApplied = (pref: ThemePreference): AppliedTheme => {
+  if (pref === 'system') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  return pref;
+};
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [preference, setPreferenceState] = useState<ThemePreference>('system');
+  const [appliedTheme, setAppliedTheme] = useState<AppliedTheme>('light');
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme') as Theme | null;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initial = saved ?? (prefersDark ? 'dark' : 'light');
-    setTheme(initial);
-    document.documentElement.classList.toggle('dark', initial === 'dark');
+    const saved = (localStorage.getItem('theme') as ThemePreference | null) ?? 'system';
+    setPreferenceState(saved);
+    const applied = resolveApplied(saved);
+    setAppliedTheme(applied);
+    document.documentElement.classList.toggle('dark', applied === 'dark');
+
+    if (saved === 'system') {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      const handler = (e: MediaQueryListEvent) => {
+        const next = e.matches ? 'dark' : 'light';
+        setAppliedTheme(next);
+        document.documentElement.classList.toggle('dark', next === 'dark');
+      };
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    }
   }, []);
 
-  const toggleTheme = () => {
-    setTheme((prev) => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', next);
-      document.documentElement.classList.toggle('dark', next === 'dark');
-      return next;
-    });
-  };
+  const setPreference = useCallback((pref: ThemePreference) => {
+    setPreferenceState(pref);
+    localStorage.setItem('theme', pref);
+    const applied = resolveApplied(pref);
+    setAppliedTheme(applied);
+    document.documentElement.classList.toggle('dark', applied === 'dark');
+  }, []);
 
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={{ preference, appliedTheme, setPreference }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {

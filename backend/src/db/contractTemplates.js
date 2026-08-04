@@ -1,14 +1,39 @@
 const baseStyles = `
-  body { font-family: 'Georgia', 'Times New Roman', serif; font-size: 12px; line-height: 1.6; color: #111827; }
-  h1 { font-size: 18px; text-align: center; margin-bottom: 4px; }
-  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 24px; margin-bottom: 8px; border-bottom: 1px solid #111827; padding-bottom: 4px; }
-  .subtitle { text-align: center; color: #4b5563; margin-bottom: 24px; font-size: 11px; }
-  .clause { margin-bottom: 10px; text-align: justify; }
-  .clause-number { font-weight: bold; }
-  .signatures { margin-top: 60px; display: flex; justify-content: space-between; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: #0f172a;
+  }
+  .doc-header {
+    display: flex; align-items: center; gap: 14px;
+    border-bottom: 2px solid #0d9488; padding-bottom: 16px; margin-bottom: 26px;
+  }
+  .doc-header img { width: 42px; height: 42px; border-radius: 10px; display: block; }
+  .doc-header h1 { font-size: 18px; margin: 0 0 3px; color: #0f172a; }
+  .doc-header .subtitle { color: #64748b; margin: 0; font-size: 11px; }
+  h2 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+    color: #0d9488; margin-top: 26px; margin-bottom: 10px;
+    border-left: 3px solid #0d9488; padding-left: 8px;
+  }
+  .clause { margin-bottom: 11px; text-align: justify; }
+  .clause-number { font-weight: 700; color: #0f172a; }
+  .signatures { margin-top: 64px; display: flex; justify-content: space-between; }
   .signature-block { width: 45%; text-align: center; }
-  .signature-line { border-top: 1px solid #111827; margin-top: 50px; padding-top: 6px; }
-  .footer-note { margin-top: 40px; font-size: 10px; color: #6b7280; text-align: center; }
+  .signature-line { border-top: 1px solid #0f172a; margin-top: 50px; padding-top: 6px; font-size: 12px; }
+  .footer-note { margin-top: 40px; font-size: 10px; color: #94a3b8; text-align: center; }
+`;
+
+const header = (title) => `
+  <div class="doc-header">
+    <img src="{{logo_src}}" alt="KsaRed" />
+    <div>
+      <h1>${title}</h1>
+      <p class="subtitle">Estados de Michoacán y Colima, México · KsaRed</p>
+    </div>
+  </div>
 `;
 
 export const CASA_TEMPLATE = `<!DOCTYPE html>
@@ -18,8 +43,7 @@ export const CASA_TEMPLATE = `<!DOCTYPE html>
 <style>${baseStyles}</style>
 </head>
 <body>
-  <h1>Contrato de Arrendamiento de Casa Habitación</h1>
-  <p class="subtitle">Estados de Michoacán y Colima, México</p>
+  ${header('Contrato de Arrendamiento de Casa Habitación')}
 
   <p class="clause">
     Contrato de arrendamiento que celebran, por una parte <strong>{{representative_name}}</strong>
@@ -89,7 +113,7 @@ export const CASA_TEMPLATE = `<!DOCTYPE html>
     </div>
   </div>
 
-  <p class="footer-note">Documento generado por el sistema de gestión de rentas. Conserve una copia impresa firmada.</p>
+  <p class="footer-note">Documento generado por KsaRed · Conserve una copia impresa firmada.</p>
 </body>
 </html>`;
 
@@ -100,8 +124,7 @@ export const LOCAL_TEMPLATE = `<!DOCTYPE html>
 <style>${baseStyles}</style>
 </head>
 <body>
-  <h1>Contrato de Arrendamiento de Local Comercial</h1>
-  <p class="subtitle">Estados de Michoacán y Colima, México</p>
+  ${header('Contrato de Arrendamiento de Local Comercial')}
 
   <p class="clause">
     Contrato de arrendamiento que celebran, por una parte <strong>{{representative_name}}</strong>
@@ -176,11 +199,12 @@ export const LOCAL_TEMPLATE = `<!DOCTYPE html>
     </div>
   </div>
 
-  <p class="footer-note">Documento generado por el sistema de gestión de rentas. Conserve una copia impresa firmada.</p>
+  <p class="footer-note">Documento generado por KsaRed · Conserve una copia impresa firmada.</p>
 </body>
 </html>`;
 
 export const CONTRACT_VARIABLES = [
+  'logo_src',
   'representative_name',
   'representative_position',
   'representative_id_document',

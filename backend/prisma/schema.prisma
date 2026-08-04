@@ -104,13 +104,14 @@ model Property {
   status                PropertyStatus  @default(LIBRE)
   rentalPrice           Decimal     @db.Decimal(12, 2)
   waterIncluded         Boolean     @default(false)
+  bedrooms              Int?
+  bathrooms             Int?
   maintenanceNotes      String?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 
   // Relations
   owner                 User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  tenants               Tenant[]
   contracts             Contract[]
   rentPayments          RentPayment[]
 
@@ -118,27 +119,27 @@ model Property {
   @@index([status])
 }
 
+// A Tenant is a person profile only. Which property they occupy, since when,
+// and on what terms lives on Contract (tenantId + propertyId + startDate) —
+// a tenant can have multiple contracts over time (different properties across
+// different periods), so there is no direct Tenant -> Property relation.
 model Tenant {
   id                    String      @id @default(cuid())
-  propertyId            String
   userId                String?
   fullName              String
   email                 String?
   phone                 String?
   idDocument            String?
-  moveInDate            DateTime
   status                TenantStatus @default(ACTIVE)
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 
   // Relations
-  property              Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   user                  User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   contracts             Contract[]
   rentPayments          RentPayment[]
   maintenanceReports    MaintenanceReport[]
 
-  @@index([propertyId])
   @@index([userId])
   @@index([status])
 }

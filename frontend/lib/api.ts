@@ -71,6 +71,15 @@ export async function refreshToken() {
 
 // ---- Properties ----
 
+// Service area is currently limited to these two municipalities (mirrors
+// backend VALID_CITIES in propertyController.js).
+export const VALID_CITIES = ['Coahuayana de Hidalgo', 'Villa de Álvarez, Colima'] as const;
+
+export interface PropertyActiveContract {
+  id: string;
+  tenant: { id: string; fullName: string };
+}
+
 export interface Property {
   id: string;
   ownerId: string;
@@ -82,17 +91,29 @@ export interface Property {
   status: 'OCUPADA' | 'LIBRE' | 'MANTENIMIENTO';
   rentalPrice: string;
   waterIncluded: boolean;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
   maintenanceNotes?: string | null;
   createdAt: string;
   updatedAt: string;
-  _count?: { tenants: number };
+  contracts?: PropertyActiveContract[];
 }
 
-export type PropertyInput = Omit<Property, 'id' | 'ownerId' | 'createdAt' | 'updatedAt' | '_count'>;
+export interface PropertyDetailContract extends Contract {
+  tenant: { id: string; fullName: string; phone?: string | null };
+}
+
+export interface PropertyDetail extends Omit<Property, 'contracts'> {
+  contracts: PropertyDetailContract[];
+  activeContract: PropertyDetailContract | null;
+}
+
+export type PropertyInput = Omit<Property, 'id' | 'ownerId' | 'createdAt' | 'updatedAt' | 'contracts'>;
 
 export const propertiesApi = {
   list: (token: string) => apiCall('/api/properties', { token }) as Promise<Property[]>,
-  get: (id: string, token: string) => apiCall(`/api/properties/${id}`, { token }),
+  get: (id: string, token: string) => apiCall(`/api/properties/${id}`, { token }) as Promise<Property>,
+  getDetail: (id: string, token: string) => apiCall(`/api/properties/${id}/detail`, { token }) as Promise<PropertyDetail>,
   create: (data: PropertyInput, token: string) =>
     apiCall('/api/properties', { method: 'POST', body: JSON.stringify(data), token }),
   update: (id: string, data: Partial<PropertyInput>, token: string) =>
@@ -102,31 +123,31 @@ export const propertiesApi = {
 
 // ---- Tenants ----
 
+export interface TenantActiveContract {
+  id: string;
+  property: { id: string; name: string; city: string };
+}
+
 export interface Tenant {
   id: string;
-  propertyId: string;
   userId?: string | null;
   fullName: string;
   email?: string | null;
   phone?: string | null;
   idDocument?: string | null;
-  moveInDate: string;
   status: 'ACTIVE' | 'EVICTED' | 'MOVED_OUT';
   createdAt: string;
   updatedAt: string;
-  property?: { id: string; name: string; city: string };
+  contracts?: TenantActiveContract[];
 }
 
-export type TenantInput = Omit<
-  Tenant,
-  'id' | 'userId' | 'createdAt' | 'updatedAt' | 'property'
->;
+export type TenantInput = Omit<Tenant, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'contracts'>;
 
 export const tenantsApi = {
   list: (token: string) => apiCall('/api/tenants', { token }) as Promise<Tenant[]>,
   get: (id: string, token: string) => apiCall(`/api/tenants/${id}`, { token }),
   create: (data: TenantInput, token: string) =>
-    apiCall('/api/tenants', { method: 'POST', body: JSON.stringify(data), token }),
+    apiCall('/api/tenants', { method: 'POST', body: JSON.stringify(data), token }) as Promise<Tenant>,
   update: (id: string, data: Partial<TenantInput>, token: string) =>
     apiCall(`/api/tenants/${id}`, { method: 'PUT', body: JSON.stringify(data), token }),
   remove: (id: string, token: string) => apiCall(`/api/tenants/${id}`, { method: 'DELETE', token }),
@@ -210,6 +231,7 @@ export interface Contract {
 
 export interface ContractInput {
   tenantId: string;
+  propertyId: string;
   representativeId?: string;
   templateId?: string;
   startDate: string;
@@ -334,9 +356,9 @@ export interface MyTenant {
   fullName: string;
   phone?: string | null;
   email?: string | null;
-  moveInDate: string;
+  idDocument?: string | null;
   status: 'ACTIVE' | 'EVICTED' | 'MOVED_OUT';
-  property: { id: string; name: string; address: string; city: string; propertyType: 'HOUSE' | 'LOCAL' };
+  currentProperty: { id: string; name: string; address: string; city: string; propertyType: 'HOUSE' | 'LOCAL' } | null;
 }
 
 const downloadBlob = async (url: string, token: string, filename: string, errorMessage: string) => {
@@ -376,6 +398,12 @@ export interface DashboardStats {
   activeRepresentatives: number;
 }
 
+export interface MonthlyIncome {
+  month: string;
+  total: number;
+}
+
 export const dashboardApi = {
   stats: (token: string) => apiCall('/api/dashboard/stats', { token }) as Promise<DashboardStats>,
+  income: (token: string) => apiCall('/api/dashboard/income', { token }) as Promise<MonthlyIncome[]>,
 };

@@ -1,4 +1,21 @@
 import puppeteer from 'puppeteer';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Brand icon embedded as a data URI so it renders in the generated PDF
+// without needing network access from within the headless browser.
+let cachedIconDataUri;
+const getIconDataUri = () => {
+  if (!cachedIconDataUri) {
+    const iconPath = path.join(__dirname, '..', 'assets', 'icon.png');
+    const base64 = fs.readFileSync(iconPath).toString('base64');
+    cachedIconDataUri = `data:image/png;base64,${base64}`;
+  }
+  return cachedIconDataUri;
+};
 
 export const formatCurrency = (amount) =>
   new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(Number(amount));
@@ -17,6 +34,7 @@ export const buildContractVariables = (contract) => {
   const depositPolicy = contract.depositReturnPolicy || {};
 
   return {
+    logo_src: getIconDataUri(),
     representative_name: contract.representative?.fullName ?? 'No asignado',
     representative_position: contract.representative?.position ?? '',
     representative_id_document: contract.representative?.idDocument ?? '',
@@ -51,17 +69,40 @@ export const buildContractVariables = (contract) => {
 };
 
 const receiptStyles = `
-  body { font-family: 'Georgia', 'Times New Roman', serif; font-size: 12px; line-height: 1.6; color: #111827; padding: 10px; }
-  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0d9488; padding-bottom: 12px; margin-bottom: 20px; }
-  .header h1 { font-size: 20px; color: #0d9488; margin: 0; }
-  .header .receipt-id { text-align: right; font-size: 11px; color: #6b7280; }
-  .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
-  .row .label { color: #6b7280; }
-  .row .value { font-weight: bold; text-align: right; }
-  .total { display: flex; justify-content: space-between; padding: 14px 0; margin-top: 10px; border-top: 2px solid #111827; font-size: 15px; }
-  .late-fee { background: #fef3c7; color: #92400e; padding: 10px; border-radius: 6px; margin: 16px 0; font-size: 11px; }
-  .footer-note { margin-top: 50px; font-size: 10px; color: #6b7280; text-align: center; }
-  .signature-line { border-top: 1px solid #111827; margin-top: 60px; padding-top: 6px; width: 260px; text-align: center; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #0f172a;
+    padding: 8px;
+  }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 36px; height: 36px; border-radius: 9px; display: block; }
+  .brand-name { font-size: 15px; font-weight: 700; color: #0d9488; }
+  .title { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 2px; }
+  .meta { text-align: right; font-size: 11px; color: #64748b; line-height: 1.5; }
+  .status-badge {
+    display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; background: #d1fae5; color: #065f46;
+  }
+  .card { background: #f8fafc; border-radius: 14px; padding: 4px 18px; margin-bottom: 18px; }
+  .row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid #e2e8f0; }
+  .row:last-child { border-bottom: none; }
+  .row .label { color: #64748b; }
+  .row .value { font-weight: 600; text-align: right; }
+  .total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #0d9488; color: #ffffff; border-radius: 14px; padding: 16px 18px; margin-bottom: 18px;
+  }
+  .total-row .label { font-size: 13px; opacity: 0.9; }
+  .total-row .value { font-size: 22px; font-weight: 700; }
+  .late-fee {
+    background: #fffbeb; border: 1px solid #fde68a; color: #92400e;
+    padding: 12px 16px; border-radius: 12px; margin-bottom: 18px; font-size: 12px; line-height: 1.5;
+  }
+  .footer-note { margin-top: 30px; font-size: 10.5px; color: #94a3b8; text-align: center; }
 `;
 
 export const buildReceiptHtml = (payment) => {
@@ -84,21 +125,30 @@ export const buildReceiptHtml = (payment) => {
 </head>
 <body>
   <div class="header">
-    <h1>Recibo de Pago</h1>
-    <div class="receipt-id">
-      Folio: ${payment.id.slice(-8).toUpperCase()}<br>
-      Fecha de emisión: ${formatDate(new Date())}
+    <div>
+      <div class="brand">
+        <img src="${getIconDataUri()}" alt="KsaRed" />
+        <span class="brand-name">KsaRed</span>
+      </div>
+      <p class="title" style="margin-top: 14px;">Recibo de Pago</p>
+      <span class="status-badge">Pagado</span>
+    </div>
+    <div class="meta">
+      Folio ${payment.id.slice(-8).toUpperCase()}<br>
+      Emitido el ${formatDate(new Date())}
     </div>
   </div>
 
-  <div class="row"><span class="label">Inquilino</span><span class="value">${payment.tenant.fullName}</span></div>
-  <div class="row"><span class="label">Propiedad</span><span class="value">${payment.property.name}</span></div>
-  <div class="row"><span class="label">Dirección</span><span class="value">${payment.property.address}, ${payment.property.city}</span></div>
-  <div class="row"><span class="label">Concepto</span><span class="value">Renta correspondiente al ${formatDate(payment.dueDate)}</span></div>
-  <div class="row"><span class="label">Fecha de vencimiento</span><span class="value">${formatDate(payment.dueDate)}</span></div>
-  <div class="row"><span class="label">Fecha de pago</span><span class="value">${payment.paidDate ? formatDate(payment.paidDate) : 'Pendiente'}</span></div>
-  <div class="row"><span class="label">Método de pago</span><span class="value">${methodLabels[payment.paymentMethod] ?? payment.paymentMethod}</span></div>
-  <div class="row"><span class="label">Monto adeudado</span><span class="value">${formatCurrency(payment.amountDue)}</span></div>
+  <div class="card">
+    <div class="row"><span class="label">Inquilino</span><span class="value">${payment.tenant.fullName}</span></div>
+    <div class="row"><span class="label">Propiedad</span><span class="value">${payment.property.name}</span></div>
+    <div class="row"><span class="label">Dirección</span><span class="value">${payment.property.address}, ${payment.property.city}</span></div>
+    <div class="row"><span class="label">Concepto</span><span class="value">Renta — ${formatDate(payment.dueDate)}</span></div>
+    <div class="row"><span class="label">Vencimiento</span><span class="value">${formatDate(payment.dueDate)}</span></div>
+    <div class="row"><span class="label">Fecha de pago</span><span class="value">${payment.paidDate ? formatDate(payment.paidDate) : 'Pendiente'}</span></div>
+    <div class="row"><span class="label">Método de pago</span><span class="value">${methodLabels[payment.paymentMethod] ?? payment.paymentMethod}</span></div>
+    ${payment.notes ? `<div class="row"><span class="label">Notas</span><span class="value">${payment.notes}</span></div>` : ''}
+  </div>
 
   ${
     lateFeeAmount
@@ -106,13 +156,12 @@ export const buildReceiptHtml = (payment) => {
       : ''
   }
 
-  ${payment.notes ? `<div class="row"><span class="label">Notas</span><span class="value">${payment.notes}</span></div>` : ''}
+  <div class="total-row">
+    <span class="label">Total pagado</span>
+    <span class="value">${formatCurrency(payment.amountPaid)}</span>
+  </div>
 
-  <div class="total"><span>Total pagado</span><span>${formatCurrency(payment.amountPaid)}</span></div>
-
-  <div class="signature-line">Recibí conforme</div>
-
-  <p class="footer-note">Documento generado por el sistema de gestión de rentas KsaRed.</p>
+  <p class="footer-note">Documento generado automáticamente por KsaRed · Sistema de gestión de rentas</p>
 </body>
 </html>`;
 };

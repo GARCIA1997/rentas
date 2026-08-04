@@ -9,7 +9,14 @@ export const getMyTenant = async (userId) => {
   const tenant = await prisma.tenant.findFirst({
     where: { userId },
     include: {
-      property: { select: { id: true, name: true, address: true, city: true, propertyType: true } },
+      contracts: {
+        where: { status: 'ACTIVE' },
+        include: {
+          property: { select: { id: true, name: true, address: true, city: true, propertyType: true } },
+        },
+        orderBy: { startDate: 'desc' },
+        take: 1,
+      },
     },
   });
 
@@ -17,7 +24,8 @@ export const getMyTenant = async (userId) => {
     throw { status: 404, message: 'No tenant profile linked to this account yet' };
   }
 
-  return tenant;
+  const { contracts, ...tenantFields } = tenant;
+  return { ...tenantFields, currentProperty: contracts[0]?.property ?? null };
 };
 
 export const getMyContracts = async (userId) => {

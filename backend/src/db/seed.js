@@ -41,37 +41,46 @@ async function main() {
 
   console.log(`✅ Representative created: ${representative.fullName}`);
 
+  const property1Data = {
+    ownerId: admin.id,
+    name: 'Casa Los Pinos #12',
+    address: 'Calle Los Pinos 12',
+    city: 'Coahuayana de Hidalgo',
+    postalCode: '60920',
+    propertyType: 'HOUSE',
+    status: 'LIBRE',
+    rentalPrice: 8500,
+    waterIncluded: false,
+    bedrooms: 3,
+    bathrooms: 2,
+  };
+
   const property1 = await prisma.property.upsert({
     where: { id: 'seed-property-1' },
-    update: {},
-    create: {
-      id: 'seed-property-1',
-      ownerId: admin.id,
-      name: 'Casa Los Pinos #12',
-      address: 'Calle Los Pinos 12',
-      city: 'Morelia',
-      postalCode: '58000',
-      propertyType: 'HOUSE',
-      status: 'OCUPADA',
-      rentalPrice: 8500,
-      waterIncluded: false,
-    },
+    update: property1Data,
+    create: { id: 'seed-property-1', ...property1Data },
   });
+
+  const property2Data = {
+    ownerId: admin.id,
+    name: 'Local Centro #3',
+    address: 'Av. Madero 100, Local 3',
+    city: 'Villa de Álvarez, Colima',
+    postalCode: '28979',
+    propertyType: 'LOCAL',
+    status: 'LIBRE',
+    rentalPrice: 12000,
+    waterIncluded: true,
+    bedrooms: null,
+    bathrooms: 1,
+  };
 
   const property2 = await prisma.property.upsert({
     where: { id: 'seed-property-2' },
-    update: {},
+    update: property2Data,
     create: {
       id: 'seed-property-2',
-      ownerId: admin.id,
-      name: 'Local Centro #3',
-      address: 'Av. Madero 100, Local 3',
-      city: 'Colima',
-      postalCode: '28000',
-      propertyType: 'LOCAL',
-      status: 'LIBRE',
-      rentalPrice: 12000,
-      waterIncluded: true,
+      ...property2Data,
     },
   });
 

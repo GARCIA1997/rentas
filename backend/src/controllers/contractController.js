@@ -1,8 +1,8 @@
 import { body, validationResult } from 'express-validator';
 import * as contractService from '../services/contractService.js';
 
-const validators = [
-  body('tenantId').notEmpty().withMessage('Tenant is required'),
+// Shared between create/update: the terms that can be set/edited.
+const termValidators = [
   body('startDate').isISO8601().withMessage('Valid start date required'),
   body('endDate').isISO8601().withMessage('Valid end date required'),
   body('monthlyRent').isFloat({ min: 0 }).withMessage('Monthly rent must be a positive number'),
@@ -11,7 +11,15 @@ const validators = [
   body('autoRenewal').optional().isBoolean(),
 ];
 
-const runValidators = async (req) => {
+// tenantId/propertyId are only set at creation — the auto-generated payment
+// schedule is tied to them, so they aren't editable afterwards.
+const createValidators = [
+  body('tenantId').notEmpty().withMessage('Tenant is required'),
+  body('propertyId').notEmpty().withMessage('Property is required'),
+  ...termValidators,
+];
+
+const runValidators = async (req, validators) => {
   await Promise.all(validators.map((v) => v.run(req)));
   return validationResult(req);
 };
@@ -34,7 +42,7 @@ export const getOne = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
   try {
-    const errors = await runValidators(req);
+    const errors = await runValidators(req, createValidators);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
@@ -48,7 +56,7 @@ export const create = async (req, res, next) => {
 
 export const update = async (req, res, next) => {
   try {
-    const errors = await runValidators(req);
+    const errors = await runValidators(req, termValidators);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }

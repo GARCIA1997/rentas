@@ -5,17 +5,36 @@ const prisma = new PrismaClient();
 export const listProperties = async () => {
   return prisma.property.findMany({
     include: {
-      _count: { select: { tenants: true } },
+      contracts: {
+        where: { status: 'ACTIVE' },
+        include: { tenant: { select: { id: true, fullName: true } } },
+        take: 1,
+      },
     },
     orderBy: { createdAt: 'desc' },
   });
 };
 
 export const getProperty = async (id) => {
+  const property = await prisma.property.findUnique({ where: { id } });
+
+  if (!property) {
+    throw { status: 404, message: 'Property not found' };
+  }
+
+  return property;
+};
+
+// Full profile view: current active contract (with tenant) plus contract
+// history, for the property detail page.
+export const getPropertyDetail = async (id) => {
   const property = await prisma.property.findUnique({
     where: { id },
     include: {
-      tenants: { orderBy: { createdAt: 'desc' } },
+      contracts: {
+        include: { tenant: { select: { id: true, fullName: true, phone: true } } },
+        orderBy: { startDate: 'desc' },
+      },
     },
   });
 
@@ -23,7 +42,9 @@ export const getProperty = async (id) => {
     throw { status: 404, message: 'Property not found' };
   }
 
-  return property;
+  const activeContract = property.contracts.find((c) => c.status === 'ACTIVE') ?? null;
+
+  return { ...property, activeContract };
 };
 
 export const createProperty = async (data, ownerId) => {
@@ -38,6 +59,8 @@ export const createProperty = async (data, ownerId) => {
       status: data.status ?? 'LIBRE',
       rentalPrice: data.rentalPrice,
       waterIncluded: data.waterIncluded ?? false,
+      bedrooms: data.bedrooms ?? null,
+      bathrooms: data.bathrooms ?? null,
       maintenanceNotes: data.maintenanceNotes,
     },
   });
@@ -57,6 +80,8 @@ export const updateProperty = async (id, data) => {
       status: data.status,
       rentalPrice: data.rentalPrice,
       waterIncluded: data.waterIncluded,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
       maintenanceNotes: data.maintenanceNotes,
     },
   });
