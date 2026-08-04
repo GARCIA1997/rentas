@@ -1,0 +1,383 @@
+# KsaRed — contexto del proyecto
+
+Este archivo es el mapa completo del repo para cualquier sesión de Claude Code que trabaje aquí:
+qué es, cómo está armado, y las decisiones que no son obvias leyendo un archivo suelto. Léelo
+antes de tocar código que no conozcas.
+
+## Qué es
+
+**KsaRed** es una PWA de gestión de rentas para un administrador de propiedades en México
+(Coahuayana de Hidalgo, Michoacán y Villa de Álvarez, Colima — son las dos únicas ciudades que
+el sistema acepta hoy, ver `frontend/lib/api.ts:VALID_CITIES`). Cubre el ciclo completo:
+
+1. Alta de propiedades e inquilinos (perfiles separados — ver más abajo por qué).
+2. Creación de contratos de arrendamiento con generación automática del calendario de pagos.
+3. Generación de PDFs de contrato con fundamento legal real (ver sección Marco Legal) y de
+   recibos de pago.
+4. Registro de pagos, cobro de renta, seguimiento de vencidos.
+5. Renovación manual de contratos con sugerencia de aumento de renta.
+6. Portal del inquilino: cada inquilino con cuenta ve su contrato, su historial de pagos y
+   descarga sus propios recibos/contrato.
+7. Envío de recibos/contratos al inquilino por WhatsApp (`wa.me` deep link, no hay API de
+   WhatsApp Business — es un link que abre WhatsApp con el mensaje precargado).
+
+Hay un solo rol administrador de facto (`ADMIN`) más los inquilinos (`INQUILINO`); no hay
+multi-tenancy entre distintos administradores/dueños de propiedades.
+
+## Stack
+
+| Capa | Tecnología |
+|---|---|
+| Frontend | Next.js 16 (App Router), React, TypeScript, Tailwind CSS v4 |
+| Backend | Node.js (ESM, `"type": "module"`), Express |
+| ORM / DB | Prisma 5 + PostgreSQL 16 |
+| PDFs | Puppeteer (Chromium del sistema en Alpine, no el bundle de Puppeteer) |
+| Auth | JWT (access 30 días + refresh 7 días), passwords con bcryptjs |
+| Contenedores | Docker Compose (postgres + backend + frontend) |
+| CI/CD | GitHub Actions — `ci.yml` (verificación) + `deploy.yml` (publicación/despliegue) |
+
+No hay framework de testing externo: el backend usa el test runner nativo de Node
+(`node --test`), sin Jest ni Vitest.
+
+## Estructura del repo
+
+```
+rentas/
+├── backend/
+│   ├── prisma/
+│   │   ├── schema.prisma          # fuente de verdad del modelo de datos
+│   │   └── migrations/            # una carpeta por migración, nunca se editan a mano
+│   ├── src/
+│   │   ├── index.js                # entrypoint Express; sólo escucha si es el entrypoint real
+│   │   │                            # (pathToFileURL check — permite importar `app` en tests)
+│   │   ├── routes/                 # un archivo por recurso, mapea verbo+path → controller
+│   │   ├── controllers/            # valida input (express-validator) y llama al service
+│   │   ├── services/                # toda la lógica de negocio y las queries de Prisma viven aquí
+│   │   ├── middleware/              # authenticateJWT, requireAdmin, requireTenant, errorHandler
+│   │   ├── db/
+│   │   │   ├── seed.js              # datos iniciales — credenciales del admin por env vars
+│   │   │   ├── contractTemplates.js # las 3 plantillas HTML de contrato (ver Contratos)
+│   │   │   └── legalFramework.js    # fundamento legal por jurisdicción (ver Marco Legal)
+│   │   ├── utils/rentCalculation.js # sugerencia de renta, elegibilidad de renovación
+│   │   └── assets/icon.png          # logo embebido como data-URI en los PDFs
+│   ├── scripts/
+│   │   ├── smoke-test.js            # integración end-to-end contra Postgres real (usa `app`)
+│   │   ├── audit-contract-templates.js  # detecta/corrige contratos con plantilla equivocada
+│   │   └── preview-contract-pdf.js  # genera PDFs de muestra de las 3 plantillas
+│   └── src/**/*.test.js             # unit tests junto al código que prueban
+│
+├── frontend/
+│   ├── app/
+│   │   ├── (app)/                   # route group: todo lo detrás de login vive aquí
+│   │   │   ├── layout.tsx           # ProtectedRoute + AppShell centralizados
+│   │   │   ├── dashboard/           # KPIs admin / resumen de pagos del inquilino
+│   │   │   ├── properties/          # listado + [id] perfil de propiedad
+│   │   │   ├── tenants/             # listado + [id]/profile
+│   │   │   ├── contracts/           # listado + [id] detalle + [id]/renew + new (wizard)
+│   │   │   ├── payments/            # listado con segmentos (vencidos/próximos/pagados)
+│   │   │   ├── profile/             # perfil del inquilino (portal)
+│   │   │   ├── settings/            # representantes + tema + perfil admin
+│   │   │   └── reports/
+│   │   ├── login/, register/        # fuera del route group, sin AppShell
+│   │   └── globals.css              # design tokens + utilidades de "glass" (ver Colorimetría)
+│   ├── components/                  # AppShell, Modal, TenantFormModal, ToastProvider, icons…
+│   ├── lib/
+│   │   ├── api.ts                   # ÚNICO punto de contacto con el backend — todo tipado aquí
+│   │   ├── authContext.tsx          # User type vive aquí; login/logout/refresh
+│   │   ├── themeContext.tsx         # claro/oscuro/sistema, persistido en localStorage
+│   │   └── formatDate.ts
+│   └── hooks/useAuth.ts
+│
+├── docker-compose.yml                # dev: bind mounts + hot reload en los tres servicios
+├── .github/workflows/
+│   ├── ci.yml                       # lint + tests + Postgres real + smoke test + build de imágenes
+│   └── deploy.yml                    # publica a Docker Hub y despliega por SSH — se salta limpio
+│                                      # si faltan secretos, no falla en rojo
+└── .env.example                      # variables de entorno documentadas, valores dummy
+```
+
+## Cómo correrlo local
+
+```bash
+cp .env.example .env    # ajustar si hace falta; los defaults ya sirven para Docker Compose
+docker compose up -d
+docker compose exec backend npx prisma migrate deploy
+docker compose exec backend npm run db:seed
+```
+
+Backend en `:4000`, frontend en `:3000`, Postgres expuesto en `:5442` (host) → `5432` (contenedor).
+El `SEED_ADMIN_PASSWORD`/`SEED_ADMIN_PHONE` los define quien despliega — sin ellos, el seed usa
+una contraseña de desarrollo conocida y avisa por consola. **El repo es público: nunca commitear
+credenciales reales.**
+
+Comandos backend relevantes (`backend/package.json`):
+- `npm run dev` — servidor con `--watch`
+- `npm test` / `npm run test:ci` — unit tests (`node --test "src/**/*.test.js"`)
+- `npm run test:smoke` — integración contra una base ya migrada y sembrada
+- `npm run lint` / `npm run lint:fix`
+- `npm run db:seed`, `prisma:migrate`, `prisma:studio`
+
+Frontend: `npm run dev`, `npm run build`, `npm run lint`, `npx tsc --noEmit`.
+
+## Modelo de datos — decisiones que no son obvias
+
+- **`Tenant` no tiene `propertyId`.** Un inquilino es sólo un perfil de persona. Qué propiedad
+  ocupa, desde cuándo y en qué términos vive enteramente en `Contract` (`tenantId` +
+  `propertyId` + `startDate`). Esto permite que un mismo inquilino tenga contratos históricos
+  en distintas propiedades sin relación directa Tenant→Property.
+- **`Contract.durationMonths` + `paymentDay`, no sólo `startDate`/`endDate`.** `endDate` existe
+  por compatibilidad pero se deriva de `startDate + durationMonths`. El calendario de pagos se
+  genera completo al firmar el contrato (`markAsSigned`), no pago por pago a mano.
+- **`Contract.templateUsed` es `String` NOT NULL** (migración `make_template_required`, agosto
+  2026). Antes era nullable y eso permitió contratos sin plantilla que no podían generar PDF ni
+  renovarse — ver `backend/src/services/CONTRACT_RENEWAL_CHECKLIST.md` para el post-mortem
+  completo y la lista de campos que deben/no deben heredarse en una renovación.
+- **`ContractTemplate.propertyType`** (`HOUSE` | `LOCAL` | `null`) evita que un local comercial
+  reciba el clausulado de casa habitación (o viceversa) — pasó en producción antes de agregar
+  esta validación. `resolveTemplateForProperty()` en `contractService.js` la hace cumplir al
+  crear y al renovar; `scripts/audit-contract-templates.js [--fix]` audita/corrige lo existente.
+- **`Contract.previousContractId`** enlaza una renovación con el contrato del que viene
+  (auto-relación `ContractRenewal`). Una renovación es un contrato nuevo en `DRAFT`, no una
+  edición del anterior.
+- **Todos los montos son `Decimal(12,2)`** — nunca `Float`, por precisión en dinero. Llegan al
+  frontend como `string` (así serializa Prisma `Decimal` a JSON); convertir con `Number()`
+  antes de operar o formatear.
+
+## Autenticación y autorización
+
+- JWT firmado con `JWT_SECRET` (access, 30 días) y `JWT_REFRESH_SECRET` (refresh, 7 días).
+  Access token viaje en `Authorization: Bearer <token>`; no hay cookies httpOnly, el frontend
+  guarda `accessToken`/`user` en `localStorage` (`authContext.tsx`).
+- `middleware/auth.js`: `authenticateJWT` decodifica y setea `req.user`; `requireAdmin` exige
+  `role === 'ADMIN'`; `requireTenant` acepta ambos roles (nombre engañoso — en realidad es "estás
+  logueado", casi todo lo usa así de facto vía `authenticateJWT` en `/api/me/*`).
+- Casi todas las rutas admin llevan `router.use(authenticateJWT, requireAdmin)` al inicio del
+  archivo — mirar el `router.use` antes de asumir que un endpoint es público.
+- Un `Tenant` se vincula a su `User` (portal) por **coincidencia de teléfono** al registrarse
+  (`authService.registerTenant`): si el admin ya dio de alta al inquilino con ese teléfono, el
+  registro lo enlaza automáticamente (`Tenant.userId`).
+
+## Rutas del API (todas bajo `/api`)
+
+```
+POST   /auth/login | /auth/register | /auth/refresh | /auth/logout
+
+GET    /properties | /properties/:id | /properties/:id/detail
+POST   /properties            PUT /properties/:id            DELETE /properties/:id
+
+GET    /tenants | /tenants/:id
+POST   /tenants                PUT /tenants/:id               DELETE /tenants/:id
+
+GET    /representatives | /representatives/:id
+POST   /representatives        PUT /representatives/:id       DELETE /representatives/:id
+
+GET    /contract-templates
+
+GET    /contracts/renewal-alerts   ← DEBE ir antes de /contracts/:id (colisión de rutas)
+GET    /contracts | /contracts/:id
+POST   /contracts              PUT /contracts/:id             DELETE /contracts/:id
+POST   /contracts/:id/generate-pdf     GET /contracts/:id/pdf
+POST   /contracts/:id/mark-signed
+POST   /contracts/:id/cancel
+POST   /contracts/:id/renew
+
+GET    /rent-payments | /rent-payments/:id
+GET    /rent-payments/filter/overdue | /rent-payments/filter/upcoming
+GET    /rent-payments/export/csv
+POST   /rent-payments          PUT /rent-payments/:id         DELETE /rent-payments/:id
+POST   /rent-payments/:id/mark-paid
+GET    /rent-payments/:id/receipt
+
+GET    /dashboard/stats | /dashboard/income | /dashboard/payment-stats
+
+GET    /me/tenant | /me/contracts | /me/payments | /me/settings
+PUT    /me/settings
+GET    /me/contracts/:id/pdf | /me/payments/:id/receipt
+
+GET    /health                 ← sin auth, usado por el healthcheck de deploy
+```
+
+## Contratos: generación de PDF y plantillas
+
+Tres plantillas HTML en `backend/src/db/contractTemplates.js`, sembradas por `seed.js`,
+renderizadas con reemplazo simple de placeholders `{{variable}}` (`renderTemplate()` en
+`pdfService.js` — no es un motor de templates real, es un `.replace` con regex).
+
+- **`CASA_TEMPLATE`** — casa habitación (`propertyType: 'HOUSE'`).
+- **`LOCAL_TEMPLATE`** — local comercial (`propertyType: 'LOCAL'`).
+- **`COAHUAYANA_TEMPLATE`** — versión enriquecida con inventario, reglas de convivencia,
+  estacionamiento y testigo (`propertyType: null`, agnóstica — se puede asignar a cualquiera).
+
+Estructura legal: proemio con términos definidos (EL ARRENDADOR / EL ARRENDATARIO / EL INMUEBLE
+o EL LOCAL) → sección Declaraciones (I, II, III) → cláusulas numeradas en ordinales (Primera,
+Segunda...). `buildContractVariables()` en `pdfService.js` arma las ~30 variables que rellenan
+la plantilla: montos formateados en MXN, fechas en español, textos condicionales según si el
+agua está incluida, si hay penalización pactada, si el contrato se renueva automático, etc.
+
+**PDF real** se genera con Puppeteer contra Chromium del sistema (no el bundle propio — ver
+`PUPPETEER_EXECUTABLE_PATH` en el Dockerfile del backend, necesario porque Alpine + el Chromium
+que trae Puppeteer no son compatibles de forma confiable).
+
+### Marco legal (`backend/src/db/legalFramework.js`)
+
+El arrendamiento es materia **local** en México — lo rige el código civil de cada estado, no el
+federal. `resolveJurisdiction(city)` mapea la ciudad de la propiedad a su entidad:
+
+| Ciudad | Entidad | Particularidad |
+|---|---|---|
+| Coahuayana de Hidalgo | Michoacán de Ocampo | **Ley Inquilinaria** especial para vivienda |
+| Villa de Álvarez, Colima | Colima | Sólo Código Civil estatal |
+
+**Verificado contra texto oficial** (agosto 2026): el articulado de Colima (arts. 2288, 2296,
+2302, 2315, 2370, 2379) y la Ley Inquilinaria de Michoacán completa (arts. 1-27). **El Código
+Civil del Estado de Michoacán se cita sólo por nombre, sin número de artículo** — no se localizó
+su texto legible y el archivo lo deja documentado explícitamente para no inventar una cita falsa.
+
+La Ley Inquilinaria de Michoacán es **de orden público e irrenunciable** (art. 2) y aplica sólo
+a vivienda. Impone topes que la app hace cumplir en `checkStatutoryCompliance()`:
+- Depósito en garantía: máximo 1 mes de renta (art. 15).
+- Duración mínima: 1 año, forzosa sólo para el arrendador — el inquilino puede terminar
+  anticipado avisando con 2 meses (art. 14). El clausulado de casa habitación en Michoacán
+  refleja esto (`term_binding_text` en `pdfService.js`), no pacta plazo forzoso para ambas partes.
+- El último recibo presume el pago de rentas anteriores (art. 10) — no al revés.
+
+`getContract()` adjunta `legalWarnings: string[]` a cada contrato (p. ej. "el depósito excede el
+tope legal"); el frontend lo muestra como aviso en `/contracts/[id]`, no bloquea el guardado.
+
+**Pendiente de verificar con un abogado local** antes de usar en firma real: el articulado
+específico del Código Civil de Michoacán, y confirmar que la Ley Inquilinaria de 1986 (única
+versión consultada íntegra) no fue modificada de fondo por la reforma de 2016.
+
+## Renovación de contratos
+
+Manual, no automática. `getContractsNeedingRenewal()` encuentra contratos `ACTIVE` cuyo
+`endDate` cae dentro de los próximos 2 meses (`isContractRenewalEligible` en
+`rentCalculation.js`) — se muestran como alertas en el dashboard y en `/contracts`.
+
+`renewContract(previousContractId, data)`:
+1. Valida elegibilidad (ACTIVE + dentro de 2 meses) y que el contrato anterior tenga los campos
+   críticos (`templateUsed`, `paymentDay`, `tenantId`, `propertyId`) — si no, corta con un
+   mensaje claro en vez de arrastrar un contrato incompleto a la renovación.
+2. Crea un contrato nuevo en `DRAFT`, `startDate` = día siguiente al `endDate` del anterior,
+   hereda términos (agua, penalidades, reglas, plantilla — revalidada por
+   `resolveTemplateForProperty`, no copiada a ciegas), permite editar `monthlyRent` y
+   `durationMonths`.
+3. **No genera pago de depósito** (se asume que el depósito original sigue en garantía).
+4. La renta sugerida: `calculateSuggestedRent()` = 7% de aumento redondeado hacia arriba a la
+   decena más cercana (`Math.ceil(rent * 1.07 / 10) * 10`).
+
+Formulario en `frontend/app/(app)/contracts/[id]/renew/page.tsx`: muestra el contrato original,
+permite editar duración/renta con botón "usar sugerencia", **requiere elegir representante**
+(el PDF no se puede generar sin uno).
+
+## Colorimetría y sistema de diseño
+
+Tailwind v4 con configuración **en CSS**, no en `tailwind.config.js` (no existe ese archivo —
+todo vive en `frontend/app/globals.css` vía `@theme inline`). Tipografía: Geist Sans / Geist Mono
+(`next/font/google`), con fallback a SF Pro / system-ui para sensación nativa en iOS.
+
+### Tokens semánticos (claro / oscuro vía clase `.dark` en `<html>`)
+
+| Token | Claro | Oscuro | Uso |
+|---|---|---|---|
+| `--color-primary` | `#0d9488` (teal 600) | igual | Acento de marca, CTAs, links activos |
+| `--color-primary-pressed` | `#0f766e` | igual | Estado presionado |
+| `--color-canvas` | `#eef2f4` | `#0a0e14` | Fondo de página |
+| `--color-surface` | blanco 68% + blur | `#1c2433` 62% + blur | Cards ("glass") |
+| `--color-heading` | `#0f172a` (slate 900) | `#f1f5f9` (slate 100) | Texto principal |
+| `--color-muted` | `#64748b` (slate 500) | `#94a3b8` (slate 400) | Texto secundario |
+
+El tema se resuelve en `themeContext.tsx` con preferencia `light`/`dark`/`system`, persistida en
+`localStorage`, y aplica la clase `.dark` en `<html>` — todo Tailwind con prefijo `dark:` en el
+código funciona sobre esa clase.
+
+### Estética "liquid glass" (iOS-like)
+
+Definida globalmente en `globals.css`, **no hay que repetirla por componente**:
+- `.bg-canvas`: fondo con 4 `radial-gradient` mesh (teal, índigo `#6366f1`, ámbar `#f59e0b`)
+  fijos al viewport (`background-attachment: fixed`) — así toda superficie opaca del app tiene
+  color detrás para que el blur de las cards encima se note.
+- `.bg-surface`: cualquier card se vuelve vidrio esmerilado real —
+  `backdrop-filter: blur(24px) saturate(1.8)`, borde interior sutil, sombra suave en capas,
+  gradiente de "highlight" superior. Se aplica poniendo la clase `bg-surface`, sin CSS extra.
+- `.glass-chrome`: variante más fuerte para elementos flotantes fijos (sidebar, tab bar, bottom
+  sheets) — blur más agresivo (`32px saturate(2)`).
+- `.bg-primary`: los botones sólidos llevan un sheen especular superior + sombra teñida del
+  color primario + animación de "press" (`scale(0.97)` + oscurecido al `:active`).
+- Radios de esquina más redondeados que el default de Tailwind (`--radius-2xl: 1.5rem`,
+  `--radius-3xl: 2rem`) — busca la sensación de iOS reciente, no Material.
+
+### Colores de estado (semánticos, usados con Tailwind directo, sin token custom)
+
+No hay un token de "success/warning/danger" — se usa la paleta de Tailwind directamente y
+consistentemente por significado en toda la app:
+
+| Significado | Clases típicas | Dónde aparece |
+|---|---|---|
+| Éxito / pagado / activo | `emerald-50..900` | Badges de estado PAID/ACTIVE, resúmenes de renovación |
+| Advertencia / próximo a vencer | `amber-50..900` | Alertas de renovación, pagos próximos, avisos legales |
+| Peligro / vencido / cancelado | `red-50..900` | Pagos OVERDUE, contratos CANCELLED, confirmaciones destructivas |
+| Neutral / info | `slate` (vía `heading`/`muted`) | Todo lo demás |
+
+Patrón repetido: `bg-{color}-50 dark:bg-{color}-900/10` para el fondo de una card de alerta,
+`text-{color}-800 dark:text-{color}-400` para el texto, `border-{color}-200 dark:border-{color}-800`
+para el borde — mantiene contraste correcto en ambos temas sin condicionales en JS.
+
+### Mobile-first / AppShell
+
+`components/AppShell.tsx` decide entre dos layouts según viewport, no según JS de detección de
+dispositivo — es puro CSS responsive (`hidden sm:flex` / etc):
+- **Desktop (`≥ sm`)**: sidebar fija flotante (`glass-chrome`, esquinas redondeadas, inset del
+  borde de pantalla) con navegación completa.
+- **Mobile (`< sm`)**: top bar delgada + **bottom tab bar** fijo estilo iOS con blur, safe-area
+  insets para el home indicator de iPhone.
+
+Tabs difieren por rol: admin ve Inicio/Propiedades/Inquilinos/Contratos/Pagos/Más; inquilino ve
+Inicio/Perfil/Más (el portal es deliberadamente más chico).
+
+`components/Modal.tsx` es responsive por CSS: en mobile se comporta como bottom sheet
+(`animate-sheet-up`, `rounded-t-2xl`), en desktop como modal centrado — mismo componente, sin
+lógica duplicada.
+
+## CI/CD
+
+**`ci.yml`** (en cada push/PR a `main`): tres jobs.
+1. `backend` — lint, unit tests contra `node --test "src/**/*.test.js"` (falla si corren menos
+   de 20 pruebas — guarda contra que el glob se rompa y el job pase en falso verde, ya pasó una
+   vez), `prisma migrate deploy` contra Postgres real del job, `prisma migrate diff` para
+   detectar schema sin migración (usa una base **desechable aparte** para el shadow — nunca la
+   de desarrollo, ver nota abajo), seed, smoke test end-to-end, auditoría de plantillas.
+2. `frontend` — lint, `tsc --noEmit`, build de Next.
+3. `docker` — construye ambas imágenes (sin publicar) para validar que los Dockerfile siguen
+   funcionando.
+
+**`deploy.yml`** (dispara cuando `ci.yml` termina en éxito sobre `main`, o manual): un job
+`preflight` detecta si existen los secretos de Docker Hub y del VPS; si faltan, los jobs
+siguientes se **saltan limpio** (no fallan en rojo) — así el repo puede vivir sin secretos
+configurados sin romper el pipeline. Si están, publica imágenes taggeadas `latest` + SHA del
+commit, y despliega por SSH aplicando `prisma migrate deploy` antes de levantar los contenedores,
+con verificación de `/api/health` con reintentos.
+
+⚠️ **`prisma migrate diff --shadow-database-url <URL>` borra el contenido de esa base** — Prisma
+la usa como scratch. Nunca apuntarlo a una base de desarrollo o producción real (ya pasó: se
+perdieron datos locales probando esto a mano).
+
+## Cosas que ya se rompieron una vez (para no repetir)
+
+- **`property.propertyType` sin seleccionar en el `include` de Prisma** → el destino declarado en
+  el PDF ("uso de casa habitación") salía mal para locales comerciales. Ahora
+  `contractService.js` lo incluye explícitamente con un comentario explicando por qué.
+- **Contratos con `templateUsed = null`** → no podían generar PDF ni renovarse. Resuelto con
+  constraint `NOT NULL` + `resolveTemplateForProperty()` con fallback automático.
+- **Plantilla de casa habitación asignada a un local comercial** (y viceversa) → el contrato
+  declaraba un destino falso. Resuelto con `ContractTemplate.propertyType` +
+  `scripts/audit-contract-templates.js`.
+- **Hooks de React (`useMemo`) llamados después de un `return` condicional** en el perfil del
+  inquilino → orden de hooks inestable entre renders. Siempre mover los hooks arriba de
+  cualquier `if (...) return`.
+- **`node --test src`** (sin el glob de archivos) trata el directorio como un solo test y
+  reporta 1 verde sin correr nada — hay que pasar el patrón `"src/**/*.test.js"` entre comillas
+  explícitamente.
+- **Credenciales reales del admin en `seed.js`** (teléfono y contraseña en texto plano) — el
+  repo es público. Movidas a `SEED_ADMIN_PHONE`/`SEED_ADMIN_PASSWORD`, nunca hardcodear datos
+  reales en scripts o seeds de un repo público.
