@@ -24,7 +24,8 @@ interface WizardState {
   tenantId: string;
   propertyId: string;
   startDate: string;
-  endDate: string;
+  durationMonths: string;
+  paymentDay: string;
   monthlyRent: string;
   depositAmount: string;
   waterIncluded: boolean;
@@ -40,7 +41,8 @@ const emptyState: WizardState = {
   tenantId: '',
   propertyId: '',
   startDate: '',
-  endDate: '',
+  durationMonths: '12',
+  paymentDay: '1',
   monthlyRent: '',
   depositAmount: '',
   waterIncluded: false,
@@ -112,7 +114,13 @@ export default function NewContractWizardPage() {
       case 0:
         return !!form.tenantId;
       case 1:
-        return !!form.propertyId && !!form.startDate && !!form.endDate && form.endDate > form.startDate;
+        return (
+          !!form.propertyId &&
+          !!form.startDate &&
+          Number(form.durationMonths) > 0 &&
+          Number(form.paymentDay) >= 1 &&
+          Number(form.paymentDay) <= 31
+        );
       case 2:
         return Number(form.monthlyRent) > 0 && Number(form.depositAmount) >= 0;
       default:
@@ -157,7 +165,8 @@ export default function NewContractWizardPage() {
           tenantId: form.tenantId,
           propertyId: form.propertyId,
           startDate: form.startDate,
-          endDate: form.endDate,
+          durationMonths: Number(form.durationMonths),
+          paymentDay: Number(form.paymentDay),
           monthlyRent: Number(form.monthlyRent),
           depositAmount: Number(form.depositAmount),
           waterIncluded: form.waterIncluded,
@@ -389,18 +398,28 @@ export default function NewContractWizardPage() {
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>Fecha de fin</label>
+                  <label className={labelClass}>Duración (meses)</label>
                   <input
-                    type="date"
-                    value={form.endDate}
-                    onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+                    type="number"
+                    min="1"
+                    value={form.durationMonths}
+                    onChange={(e) => setForm({ ...form, durationMonths: e.target.value })}
                     className={inputClass}
                   />
                 </div>
               </div>
-              {form.startDate && form.endDate && form.endDate <= form.startDate && (
-                <p className="text-red-600 dark:text-red-400 text-xs">La fecha de fin debe ser posterior al inicio.</p>
-              )}
+              <div>
+                <label className={labelClass}>Día de pago (1-31)</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="31"
+                  value={form.paymentDay}
+                  onChange={(e) => setForm({ ...form, paymentDay: e.target.value })}
+                  className={inputClass}
+                />
+                <p className="text-xs text-muted mt-1">Los pagos se vencen en este día de cada mes</p>
+              </div>
             </>
           )}
 
@@ -545,12 +564,20 @@ export default function NewContractWizardPage() {
           )}
 
           {/* Step 5: Review */}
-          {step === 5 && (
+          {step === 5 && (() => {
+            // Calculate end date for display
+            const startDate = new Date(form.startDate);
+            const endDate = new Date(startDate);
+            endDate.setMonth(endDate.getMonth() + Number(form.durationMonths));
+            const endDateStr = endDate.toISOString().split('T')[0];
+
+            return (
             <div className="space-y-1">
               {[
                 ['Inquilino', selectedTenant?.fullName ?? '—'],
                 ['Propiedad', selectedProperty?.name ?? '—'],
-                ['Vigencia', `${form.startDate} — ${form.endDate}`],
+                ['Vigencia', `${form.startDate} — ${endDateStr} (${form.durationMonths} meses)`],
+                ['Día de pago', `Día ${form.paymentDay} de cada mes`],
                 ['Renta mensual', `$${Number(form.monthlyRent || 0).toLocaleString('es-MX')}`],
                 ['Depósito', `$${Number(form.depositAmount || 0).toLocaleString('es-MX')}`],
                 ['Agua incluida', form.waterIncluded ? 'Sí' : 'No'],
@@ -565,7 +592,8 @@ export default function NewContractWizardPage() {
               ))}
               {error && <p className="text-red-600 dark:text-red-400 text-sm pt-2">{error}</p>}
             </div>
-          )}
+            );
+          })()}
         </div>
 
         {/* Navigation */}
