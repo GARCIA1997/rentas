@@ -95,7 +95,7 @@ function TenantProfile() {
         <h3 className="text-heading font-semibold mb-2">Mi contrato</h3>
         {activeContract ? (
           <>
-            <Row label="Vigencia" value={`${formatDate(activeContract.startDate)} — ${formatDate(activeContract.endDate)}`} />
+            <Row label="Vigencia" value={`${formatDate(activeContract.startDate)} — ${activeContract.endDate ? formatDate(activeContract.endDate) : '—'}`} />
             <Row label="Renta mensual" value={`$${Number(activeContract.monthlyRent).toLocaleString('es-MX')}`} />
             <Row label="Depósito" value={`$${Number(activeContract.depositAmount).toLocaleString('es-MX')}`} />
             <Row label="Agua incluida" value={activeContract.waterIncluded ? 'Sí' : 'No'} />

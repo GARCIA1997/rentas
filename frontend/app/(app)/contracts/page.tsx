@@ -79,7 +79,7 @@ export default function ContractsPage() {
       representativeId: contract.representativeId ?? '',
       templateId: contract.templateUsed ?? '',
       startDate: contract.startDate.slice(0, 10),
-      endDate: contract.endDate.slice(0, 10),
+      endDate: contract.endDate?.slice(0, 10) ?? '',
       monthlyRent: contract.monthlyRent,
       depositAmount: contract.depositAmount,
       waterIncluded: contract.waterIncluded,
@@ -204,7 +204,7 @@ export default function ContractsPage() {
                   </span>
                 </div>
                 <p className="text-xs text-muted mb-3">
-                  {formatDate(contract.startDate)} — {formatDate(contract.endDate)} · $
+                  {formatDate(contract.startDate)} — {contract.endDate ? formatDate(contract.endDate) : '—'} · $
                   {Number(contract.monthlyRent).toLocaleString('es-MX')}/mes
                 </p>
                 <div className="flex flex-wrap gap-x-4 gap-y-2 pt-3 border-t border-black/5 dark:border-white/10 text-sm font-medium">
@@ -252,7 +252,7 @@ export default function ContractsPage() {
                     <td className="px-4 py-3 text-heading font-medium">{contract.tenant?.fullName ?? '—'}</td>
                     <td className="px-4 py-3 text-muted">{contract.property?.name ?? '—'}</td>
                     <td className="px-4 py-3 text-muted whitespace-nowrap">
-                      {formatDate(contract.startDate)} — {formatDate(contract.endDate)}
+                      {formatDate(contract.startDate)} — {contract.endDate ? formatDate(contract.endDate) : '—'}
                     </td>
                     <td className="px-4 py-3 text-muted">${Number(contract.monthlyRent).toLocaleString('es-MX')}</td>
                     <td className="px-4 py-3">

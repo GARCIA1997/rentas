@@ -101,7 +101,7 @@ export default function PropertyDetailPage() {
                 <Row label="Inquilino" value={property.activeContract.tenant.fullName} />
                 <Row
                   label="Vigencia"
-                  value={`${formatDate(property.activeContract.startDate)} — ${formatDate(property.activeContract.endDate)}`}
+                  value={`${formatDate(property.activeContract.startDate)} — ${property.activeContract.endDate ? formatDate(property.activeContract.endDate) : "—"}`}
                 />
                 <Row label="Renta pactada" value={`$${Number(property.activeContract.monthlyRent).toLocaleString('es-MX')}`} />
                 <div className="pt-3">
@@ -124,7 +124,7 @@ export default function PropertyDetailPage() {
                     <div>
                       <p className="text-heading font-medium">{contract.tenant?.fullName ?? '—'}</p>
                       <p className="text-muted text-xs">
-                        {formatDate(contract.startDate)} — {formatDate(contract.endDate)}
+                        {formatDate(contract.startDate)} — {contract.endDate ? formatDate(contract.endDate) : "—"}
                       </p>
                     </div>
                     <span className="text-muted text-xs">{contractStatusLabels[contract.status]}</span>
