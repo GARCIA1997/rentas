@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { meApi, MyTenant, Contract, RentPayment } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
+import { useToast } from '@/components/ToastProvider';
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -27,6 +28,7 @@ function AdminProfile() {
 
 function TenantProfile() {
   const { token, user } = useAuth();
+  const { showToast } = useToast();
   const [tenant, setTenant] = useState<MyTenant | null | undefined>(undefined);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [payments, setPayments] = useState<RentPayment[]>([]);
@@ -51,7 +53,7 @@ function TenantProfile() {
     try {
       await meApi.downloadContractPdf(id, token);
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al descargar el contrato');
+      showToast(err instanceof Error ? err.message : 'Error al descargar el contrato', 'error');
     } finally {
       setDownloadingId(null);
     }

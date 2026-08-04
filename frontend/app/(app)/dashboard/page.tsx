@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { dashboardApi, DashboardStats, MonthlyIncome, PaymentStats, meApi, MyTenant, RentPayment } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { ChevronRightIcon } from '@/components/icons';
+import { useToast } from '@/components/ToastProvider';
 
 const STATUS_COLORS: Record<string, string> = {
   Ocupada: '#0d9488',
@@ -181,6 +182,7 @@ const paymentStatusColors: Record<RentPayment['status'], string> = {
 
 function TenantDashboard() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [tenant, setTenant] = useState<MyTenant | null | undefined>(undefined);
   const [payments, setPayments] = useState<RentPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -203,7 +205,7 @@ function TenantDashboard() {
     try {
       await meApi.downloadReceipt(id, token);
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al descargar el recibo');
+      showToast(err instanceof Error ? err.message : 'Error al descargar el recibo', 'error');
     } finally {
       setDownloadingId(null);
     }

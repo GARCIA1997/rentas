@@ -18,6 +18,8 @@ import {
   RentPayment,
 } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
+import { useToast } from '@/components/ToastProvider';
+import { useConfirm } from '@/components/ConfirmProvider';
 import { ArrowLeftIcon, PencilIcon, TrashIcon, BellIcon, BanknoteIcon, DownloadIcon, UndoIcon } from '@/components/icons';
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
@@ -36,6 +38,8 @@ export default function TenantProfilePage() {
   const router = useRouter();
   const params = useParams();
   const tenantId = params?.id as string;
+  const { showToast } = useToast();
+  const confirm = useConfirm();
 
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [contracts, setContracts] = useState<Contract[]>([]);
@@ -77,13 +81,19 @@ export default function TenantProfilePage() {
 
   const handleDelete = async () => {
     if (!token || !tenant) return;
-    if (!confirm(`¿Eliminar a ${tenant.fullName}? Esta acción no se puede deshacer.`)) return;
+    const confirmed = await confirm({
+      title: 'Eliminar inquilino',
+      message: `¿Eliminar a ${tenant.fullName}? Esta acción no se puede deshacer.`,
+      confirmLabel: 'Eliminar',
+      destructive: true,
+    });
+    if (!confirmed) return;
     setIsDeleting(true);
     try {
       await tenantsApi.remove(tenant.id, token);
       router.push('/tenants');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar');
+      showToast(err instanceof Error ? err.message : 'Error al eliminar', 'error');
       setIsDeleting(false);
     }
   };
@@ -98,10 +108,10 @@ export default function TenantProfilePage() {
     try {
       const result = await shareReceiptOnWhatsApp(payment, token);
       if (result === 'fallback') {
-        alert('El recibo se descargó — adjúntalo manualmente en la conversación de WhatsApp que se abrió.');
+        showToast('El recibo se descargó — adjúntalo manualmente en la conversación de WhatsApp que se abrió.', 'info');
       }
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al compartir el recibo');
+      showToast(err instanceof Error ? err.message : 'Error al compartir el recibo', 'error');
     } finally {
       setSharingId(null);
     }
@@ -109,13 +119,15 @@ export default function TenantProfilePage() {
 
   const handleRevertPayment = async (payment: RentPayment) => {
     if (!token) return;
-    if (!confirm('¿Revertir este pago? Volverá a marcarse como no pagado y podrás registrarlo de nuevo.')) return;
+    const confirmed = await confirm('¿Revertir este pago? Volverá a marcarse como no pagado y podrás registrarlo de nuevo.');
+    if (!confirmed) return;
     setRevertingId(payment.id);
     try {
       await rentPaymentsApi.update(payment.id, { amountPaid: 0, paidDate: null }, token);
       await loadData();
+      showToast('Pago revertido.', 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al revertir el pago');
+      showToast(err instanceof Error ? err.message : 'Error al revertir el pago', 'error');
     } finally {
       setRevertingId(null);
     }
@@ -126,7 +138,7 @@ export default function TenantProfilePage() {
     try {
       await rentPaymentsApi.downloadReceipt(payment.id, token);
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al descargar el recibo');
+      showToast(err instanceof Error ? err.message : 'Error al descargar el recibo', 'error');
     }
   };
 

@@ -224,3 +224,30 @@ export function UndoIcon({ active, ...props }: IconProps) {
     </svg>
   );
 }
+
+export function XCircleIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="m9 9 6 6M15 9l-6 6" />
+    </svg>
+  );
+}
+
+export function InfoIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 11v5.5M12 7.75h.01" />
+    </svg>
+  );
+}
+
+export function AlertTriangleIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M12 3.5 21.5 20h-19L12 3.5Z" />
+      <path d="M12 9.5v4.5M12 17h.01" />
+    </svg>
+  );
+}

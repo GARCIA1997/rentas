@@ -7,6 +7,8 @@ import { Modal } from '@/components/Modal';
 import { useAuth } from '@/hooks/useAuth';
 import { propertiesApi, Property, PropertyInput, VALID_CITIES } from '@/lib/api';
 import { ChevronRightIcon } from '@/components/icons';
+import { useToast } from '@/components/ToastProvider';
+import { useConfirm } from '@/components/ConfirmProvider';
 
 const emptyForm: PropertyInput = {
   name: '',
@@ -36,6 +38,8 @@ const statusColors: Record<Property['status'], string> = {
 
 export default function PropertiesPage() {
   const { token } = useAuth();
+  const { showToast } = useToast();
+  const confirm = useConfirm();
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,12 +116,19 @@ export default function PropertiesPage() {
 
   const handleDelete = async (id: string) => {
     if (!token) return;
-    if (!confirm('¿Eliminar esta propiedad? Esta acción no se puede deshacer.')) return;
+    const confirmed = await confirm({
+      title: 'Eliminar propiedad',
+      message: '¿Eliminar esta propiedad? Esta acción no se puede deshacer.',
+      confirmLabel: 'Eliminar',
+      destructive: true,
+    });
+    if (!confirmed) return;
     try {
       await propertiesApi.remove(id, token);
       await loadProperties();
+      showToast('Propiedad eliminada.', 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar');
+      showToast(err instanceof Error ? err.message : 'Error al eliminar', 'error');
     }
   };
 

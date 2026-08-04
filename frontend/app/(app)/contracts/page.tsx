@@ -7,6 +7,8 @@ import { Modal } from '@/components/Modal';
 import { useAuth } from '@/hooks/useAuth';
 import { contractsApi, representativesApi, contractTemplatesApi, Contract, Representative, ContractTemplateSummary } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
+import { useToast } from '@/components/ToastProvider';
+import { useConfirm } from '@/components/ConfirmProvider';
 
 interface EditFormState {
   representativeId: string;
@@ -38,6 +40,8 @@ const statusColors: Record<Contract['status'], string> = {
 
 export default function ContractsPage() {
   const { token } = useAuth();
+  const { showToast } = useToast();
+  const confirm = useConfirm();
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [representatives, setRepresentatives] = useState<Representative[]>([]);
   const [templates, setTemplates] = useState<ContractTemplateSummary[]>([]);
@@ -127,12 +131,19 @@ export default function ContractsPage() {
 
   const handleDelete = async (id: string) => {
     if (!token) return;
-    if (!confirm('¿Eliminar este contrato? Esta acción no se puede deshacer. También se eliminarán sus pagos programados.')) return;
+    const confirmed = await confirm({
+      title: 'Eliminar contrato',
+      message: '¿Eliminar este contrato? Esta acción no se puede deshacer. También se eliminarán sus pagos programados.',
+      confirmLabel: 'Eliminar',
+      destructive: true,
+    });
+    if (!confirmed) return;
     try {
       await contractsApi.remove(id, token);
       await loadData();
+      showToast('Contrato eliminado.', 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar');
+      showToast(err instanceof Error ? err.message : 'Error al eliminar', 'error');
     }
   };
 
@@ -143,7 +154,7 @@ export default function ContractsPage() {
       await contractsApi.generatePdf(id, token);
       await loadData();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al generar el PDF');
+      showToast(err instanceof Error ? err.message : 'Error al generar el PDF', 'error');
     } finally {
       setActionLoadingId(null);
     }
@@ -154,18 +165,24 @@ export default function ContractsPage() {
     try {
       await contractsApi.downloadPdf(id, token);
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al descargar el PDF');
+      showToast(err instanceof Error ? err.message : 'Error al descargar el PDF', 'error');
     }
   };
 
   const handleMarkSigned = async (id: string) => {
     if (!token) return;
-    const signedOnPhone = confirm('¿Se firmó digitalmente desde el teléfono? Aceptar = sí, Cancelar = firma física impresa.');
+    const signedOnPhone = await confirm({
+      title: '¿Cómo se firmó?',
+      message: 'Indica si el contrato se firmó digitalmente desde el teléfono del inquilino o de forma física impresa.',
+      confirmLabel: 'Por teléfono',
+      cancelLabel: 'Firma física',
+    });
     try {
       await contractsApi.markSigned(id, signedOnPhone, token);
       await loadData();
+      showToast('Contrato marcado como firmado.', 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al marcar como firmado');
+      showToast(err instanceof Error ? err.message : 'Error al marcar como firmado', 'error');
     }
   };
 

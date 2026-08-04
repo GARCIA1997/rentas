@@ -17,6 +17,7 @@ import {
   ContractTemplateSummary,
 } from '@/lib/api';
 import { ArrowLeftIcon, CheckCircleIcon } from '@/components/icons';
+import { useToast } from '@/components/ToastProvider';
 
 const STEP_LABELS = ['Inquilino', 'Propiedad y fechas', 'Renta y depósito', 'Firma y plantilla', 'Condiciones', 'Revisión'];
 
@@ -63,6 +64,7 @@ const labelClass = 'block text-sm font-medium text-heading mb-1.5';
 export default function NewContractWizardPage() {
   const { token } = useAuth();
   const router = useRouter();
+  const { showToast } = useToast();
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<WizardState>(emptyState);
@@ -196,7 +198,7 @@ export default function NewContractWizardPage() {
       await contractsApi.generatePdf(createdContractId, token);
       router.push('/contracts');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al generar el PDF');
+      showToast(err instanceof Error ? err.message : 'Error al generar el PDF', 'error');
     } finally {
       setIsGeneratingPdf(false);
     }

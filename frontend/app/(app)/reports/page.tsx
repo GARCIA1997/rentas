@@ -6,9 +6,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { rentPaymentsApi, RentPayment } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { ArrowLeftIcon, DownloadIcon } from '@/components/icons';
+import { useToast } from '@/components/ToastProvider';
 
 export default function ReportsPage() {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [payments, setPayments] = useState<RentPayment[]>([]);
   const [filtered, setFiltered] = useState<RentPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +72,7 @@ export default function ReportsPage() {
       link.click();
       URL.revokeObjectURL(url);
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al descargar');
+      showToast(err instanceof Error ? err.message : 'Error al descargar', 'error');
     } finally {
       setIsExporting(false);
     }

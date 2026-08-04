@@ -6,6 +6,8 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Modal } from '@/components/Modal';
 import { useAuth } from '@/hooks/useAuth';
 import { representativesApi, Representative, RepresentativeInput } from '@/lib/api';
+import { useToast } from '@/components/ToastProvider';
+import { useConfirm } from '@/components/ConfirmProvider';
 import { ArrowLeftIcon } from '@/components/icons';
 
 const emptyForm: RepresentativeInput = {
@@ -21,6 +23,8 @@ const emptyForm: RepresentativeInput = {
 export default function RepresentativesPage() {
   const { token } = useAuth();
   const router = useRouter();
+  const { showToast } = useToast();
+  const confirm = useConfirm();
   const [representatives, setRepresentatives] = useState<Representative[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,12 +96,19 @@ export default function RepresentativesPage() {
 
   const handleDelete = async (id: string) => {
     if (!token) return;
-    if (!confirm('¿Eliminar este representante? Si tiene contratos asociados, considera desactivarlo en su lugar.')) return;
+    const confirmed = await confirm({
+      title: 'Eliminar representante',
+      message: '¿Eliminar este representante? Si tiene contratos asociados, considera desactivarlo en su lugar.',
+      confirmLabel: 'Eliminar',
+      destructive: true,
+    });
+    if (!confirmed) return;
     try {
       await representativesApi.remove(id, token);
       await loadData();
+      showToast('Representante eliminado.', 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar');
+      showToast(err instanceof Error ? err.message : 'Error al eliminar', 'error');
     }
   };
 

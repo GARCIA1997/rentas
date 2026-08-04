@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Modal } from './Modal';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from './ToastProvider';
 import { rentPaymentsApi, shareReceiptOnWhatsApp, RentPayment } from '@/lib/api';
 
 const paymentMethodLabels: Record<RentPayment['paymentMethod'], string> = {
@@ -24,6 +25,7 @@ export function PayPaymentModal({
   onPaid: (updated: RentPayment) => void;
 }) {
   const { token } = useAuth();
+  const { showToast } = useToast();
   const [amount, setAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<RentPayment['paymentMethod']>('TRANSFERENCIA');
   const [error, setError] = useState('');
@@ -75,18 +77,26 @@ export function PayPaymentModal({
         try {
           const result = await shareReceiptOnWhatsApp(updated, token);
           if (result === 'fallback') {
-            alert('Pago completado. El recibo se descargó — adjúntalo manualmente en la conversación de WhatsApp que se abrió.');
+            showToast('Pago completado. El recibo se descargó — adjúntalo manualmente en la conversación de WhatsApp que se abrió.', 'success');
+          } else if (result === 'shared') {
+            showToast('Pago completado y recibo enviado.', 'success');
+          } else {
+            showToast('Pago completado.', 'success');
           }
         } catch (shareErr) {
           // The payment already succeeded — sharing is a convenience on top of it.
-          alert(
+          showToast(
             `Pago completado, pero no se pudo enviar el recibo automáticamente (${
               shareErr instanceof Error ? shareErr.message : 'error desconocido'
-            }). Puedes descargarlo desde la pestaña "Pagados".`
+            }). Puedes descargarlo desde la pestaña "Pagados".`,
+            'error'
           );
         }
       } else {
-        alert(`Abono registrado. Saldo pendiente: $${(Number(updated.amountDue) - Number(updated.amountPaid)).toLocaleString('es-MX')}`);
+        showToast(
+          `Abono registrado. Saldo pendiente: $${(Number(updated.amountDue) - Number(updated.amountPaid)).toLocaleString('es-MX')}`,
+          'success'
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al registrar el pago');
