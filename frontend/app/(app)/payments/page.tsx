@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { rentPaymentsApi, RentPayment } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 const paymentMethodLabels: Record<RentPayment['paymentMethod'], string> = {
   MANUAL: 'Manual',
@@ -24,18 +25,14 @@ export default function PaymentsPage() {
   const [filterProperty, setFilterProperty] = useState('');
   const [filterTenant, setFilterTenant] = useState('');
 
-  useEffect(() => {
+  const loadPayments = useCallback(async () => {
     if (!token) return;
-    loadPayments();
-  }, [token]);
-
-  const loadPayments = async () => {
     setIsLoading(true);
     setError('');
     try {
       const [overdue, upcoming] = await Promise.all([
-        rentPaymentsApi.getOverdue(token!),
-        rentPaymentsApi.getUpcoming(token!, 7),
+        rentPaymentsApi.getOverdue(token),
+        rentPaymentsApi.getUpcoming(token, 7),
       ]);
       setOverduePayments(overdue);
       setUpcomingPayments(upcoming);
@@ -44,9 +41,13 @@ export default function PaymentsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [token]);
 
-  const handleMarkPaid = async (paymentId: string) => {
+  useEffect(() => {
+    loadPayments();
+  }, [loadPayments]);
+
+  const handleMarkPaid = useCallback(async (paymentId: string) => {
     if (!token) return;
     setActionLoadingId(paymentId);
     try {
@@ -59,26 +60,26 @@ export default function PaymentsPage() {
     }
   };
 
-  const handleDownloadReceipt = async (paymentId: string) => {
+  const handleDownloadReceipt = useCallback(async (paymentId: string) => {
     if (!token) return;
     try {
       await rentPaymentsApi.downloadReceipt(paymentId, token);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al descargar recibo');
     }
-  };
+  }, [token]);
 
-  const filteredOverdue = overduePayments.filter((p) => {
+  const filteredOverdue = useMemo(() => overduePayments.filter((p) => {
     if (filterProperty && !p.property?.name.toLowerCase().includes(filterProperty.toLowerCase())) return false;
     if (filterTenant && !p.tenant?.fullName.toLowerCase().includes(filterTenant.toLowerCase())) return false;
     return true;
-  });
+  }), [overduePayments, filterProperty, filterTenant]);
 
-  const filteredUpcoming = upcomingPayments.filter((p) => {
+  const filteredUpcoming = useMemo(() => upcomingPayments.filter((p) => {
     if (filterProperty && !p.property?.name.toLowerCase().includes(filterProperty.toLowerCase())) return false;
     if (filterTenant && !p.tenant?.fullName.toLowerCase().includes(filterTenant.toLowerCase())) return false;
     return true;
-  });
+  }), [upcomingPayments, filterProperty, filterTenant]);
 
   const PaymentCard = ({ payment, isOverdue }: { payment: RentPayment; isOverdue: boolean }) => (
     <div className="bg-surface rounded-xl shadow-sm p-4 space-y-3">
@@ -187,7 +188,7 @@ export default function PaymentsPage() {
         )}
 
         {isLoading ? (
-          <p className="text-muted text-center py-8">Cargando pagos...</p>
+          <LoadingSpinner message="Cargando pagos..." />
         ) : (
           <>
             {/* Overdue section */}
