@@ -228,8 +228,10 @@ export interface Contract {
   signedAt?: string | null;
   signedDigitallyPhone: boolean;
   documentUrl?: string | null;
-  status: 'DRAFT' | 'ACTIVE' | 'EXPIRED' | 'AUTO_RENEWAL_PENDING';
+  status: 'DRAFT' | 'ACTIVE' | 'EXPIRED' | 'AUTO_RENEWAL_PENDING' | 'CANCELLED';
   autoRenewal: boolean;
+  cancellationReason?: string | null;
+  cancelledAt?: string | null;
   createdAt: string;
   updatedAt: string;
   tenant?: { id: string; fullName: string; idDocument?: string | null };
@@ -267,6 +269,12 @@ export const contractsApi = {
     apiCall(`/api/contracts/${id}/mark-signed`, {
       method: 'POST',
       body: JSON.stringify({ signedDigitallyPhone }),
+      token,
+    }) as Promise<Contract>,
+  cancel: (id: string, reason: string, token: string) =>
+    apiCall(`/api/contracts/${id}/cancel`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
       token,
     }) as Promise<Contract>,
   downloadPdf: async (id: string, token: string) => {
@@ -318,6 +326,21 @@ export interface RentPaymentInput {
   paidDate?: string | null;
   paymentMethod: RentPayment['paymentMethod'];
   notes?: string;
+}
+
+export const paymentTypeLabels: Record<NonNullable<RentPayment['paymentType']>, string> = {
+  RENT: 'Renta',
+  DEPOSIT: 'Depósito',
+  EXTRA: 'Extra',
+};
+
+// Every payment that isn't fully paid yet (overdue or still pending, any due
+// date), oldest first — the "Programados" bucket used by both the tenant
+// profile and the main payments page.
+export function getPendingPayments(payments: RentPayment[]): RentPayment[] {
+  return payments
+    .filter((p) => p.status !== 'PAID')
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 }
 
 export const rentPaymentsApi = {

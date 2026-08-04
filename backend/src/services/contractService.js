@@ -123,6 +123,10 @@ export const createContract = async (data) => {
 export const updateContract = async (id, data) => {
   const contract = await getContract(id);
 
+  if (contract.signedAt) {
+    throw { status: 400, message: 'Signed contracts cannot be edited. Cancel it to make changes.' };
+  }
+
   const updateData = {
     representativeId: data.representativeId,
     monthlyRent: data.monthlyRent,
@@ -159,8 +163,46 @@ export const updateContract = async (id, data) => {
 };
 
 export const deleteContract = async (id) => {
-  await getContract(id);
+  const contract = await getContract(id);
+
+  if (contract.status === 'ACTIVE') {
+    throw { status: 400, message: 'Active contracts cannot be deleted. Cancel it instead.' };
+  }
+
   await prisma.contract.delete({ where: { id } });
+};
+
+// Cancelling ends the contract early: it stops billing (future PENDING/OVERDUE
+// payments are voided — anything already PAID stays as history) and frees up
+// the property. The reason and any penalty terms already on the contract are
+// kept on the record for reference; this doesn't invent a new penalty amount,
+// it just surfaces what the contract already says.
+export const cancelContract = async (id, reason) => {
+  const contract = await getContract(id);
+
+  if (contract.status !== 'ACTIVE') {
+    throw { status: 400, message: 'Only active contracts can be cancelled' };
+  }
+
+  return prisma.$transaction(async (tx) => {
+    await tx.rentPayment.deleteMany({
+      where: { contractId: id, status: { in: ['PENDING', 'OVERDUE'] } },
+    });
+
+    const cancelled = await tx.contract.update({
+      where: { id },
+      data: {
+        status: 'CANCELLED',
+        cancellationReason: reason,
+        cancelledAt: new Date(),
+      },
+      include: includeRelations,
+    });
+
+    await tx.property.update({ where: { id: contract.propertyId }, data: { status: 'LIBRE' } });
+
+    return cancelled;
+  });
 };
 
 export const generateContractPdf = async (id) => {

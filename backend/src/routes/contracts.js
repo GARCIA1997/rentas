@@ -14,5 +14,6 @@ router.delete('/:id', contractController.remove);
 router.post('/:id/generate-pdf', contractController.generatePdf);
 router.get('/:id/pdf', contractController.downloadPdf);
 router.post('/:id/mark-signed', contractController.markSigned);
+router.post('/:id/cancel', contractController.cancel);
 
 export default router;

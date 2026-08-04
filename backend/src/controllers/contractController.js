@@ -31,6 +31,10 @@ const createValidators = [
   ...termValidators,
 ];
 
+const cancelValidators = [
+  body('reason').trim().notEmpty().withMessage('Cancellation reason is required').isLength({ max: 1000 }),
+];
+
 const runValidators = async (req, validators) => {
   await Promise.all(validators.map((v) => v.run(req)));
   return validationResult(req);
@@ -112,6 +116,20 @@ export const downloadPdf = async (req, res, next) => {
 export const markSigned = async (req, res, next) => {
   try {
     const contract = await contractService.markAsSigned(req.params.id, req.body.signedDigitallyPhone);
+    res.json(contract);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancel = async (req, res, next) => {
+  try {
+    const errors = await runValidators(req, cancelValidators);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    const contract = await contractService.cancelContract(req.params.id, req.body.reason);
     res.json(contract);
   } catch (error) {
     next(error);

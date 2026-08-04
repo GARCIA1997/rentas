@@ -44,6 +44,7 @@ enum ContractStatus {
   ACTIVE
   EXPIRED
   AUTO_RENEWAL_PENDING
+  CANCELLED
 }
 
 enum PaymentStatus {
@@ -172,6 +173,8 @@ model Contract {
   documentUrl           String?
   status                ContractStatus  @default(DRAFT)
   autoRenewal           Boolean     @default(false)
+  cancellationReason    String?
+  cancelledAt           DateTime?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 

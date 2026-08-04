@@ -13,6 +13,8 @@ import {
   rentPaymentsApi,
   buildWhatsAppReminderUrl,
   shareReceiptOnWhatsApp,
+  getPendingPayments,
+  paymentTypeLabels,
   Tenant,
   Contract,
   RentPayment,
@@ -31,7 +33,21 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-const DAYS_AHEAD = 7;
+const contractStatusLabels: Record<Contract['status'], string> = {
+  DRAFT: 'Borrador',
+  ACTIVE: 'Activo',
+  EXPIRED: 'Expirado',
+  AUTO_RENEWAL_PENDING: 'Renovación pendiente',
+  CANCELLED: 'Cancelado',
+};
+
+const contractStatusColors: Record<Contract['status'], string> = {
+  DRAFT: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+  ACTIVE: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
+  EXPIRED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+  AUTO_RENEWAL_PENDING: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
+  CANCELLED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+};
 
 export default function TenantProfilePage() {
   const { token } = useAuth();
@@ -175,12 +191,11 @@ export default function TenantProfilePage() {
   const punctualPayments = paidPayments.filter((p) => p.paidDate && new Date(p.paidDate) <= new Date(p.dueDate));
   const punctualityPercent = paidPayments.length > 0 ? Math.round((punctualPayments.length / paidPayments.length) * 100) : 0;
 
-  const now = new Date();
-  const upcomingLimit = new Date(now.getTime() + DAYS_AHEAD * 24 * 60 * 60 * 1000);
-  const duePayments = getDuePayments(payments, now, upcomingLimit);
+  const duePayments = getPendingPayments(payments);
   const paidHistory = [...paidPayments].sort((a, b) => new Date(b.paidDate ?? b.dueDate).getTime() - new Date(a.paidDate ?? a.dueDate).getTime());
 
   const listToShow = segment === 'due' ? duePayments : paidHistory;
+  const sortedContracts = [...contracts].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
@@ -307,7 +322,7 @@ export default function TenantProfilePage() {
                     segment === 'due' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
                   }`}
                 >
-                  Por pagar {duePayments.length > 0 && `(${duePayments.length})`}
+                  Programados {duePayments.length > 0 && `(${duePayments.length})`}
                 </button>
                 <button
                   onClick={() => setSegment('paid')}
@@ -321,7 +336,7 @@ export default function TenantProfilePage() {
 
               {listToShow.length === 0 ? (
                 <p className="text-muted text-sm text-center py-6">
-                  {segment === 'due' ? 'No hay pagos vencidos ni próximos a vencer.' : 'Aún no hay pagos registrados.'}
+                  {segment === 'due' ? 'No hay pagos programados pendientes.' : 'Aún no hay pagos registrados.'}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -332,9 +347,16 @@ export default function TenantProfilePage() {
                       <div key={payment.id} className="py-3 border-b border-black/5 dark:border-white/10 last:border-0">
                         <div className="flex items-center justify-between text-sm mb-1">
                           <div className="flex-1 min-w-0">
-                            <p className="text-heading font-medium">
-                              {formatDate(segment === 'paid' ? payment.paidDate ?? payment.dueDate : payment.dueDate)}
-                            </p>
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-heading font-medium">
+                                {formatDate(segment === 'paid' ? payment.paidDate ?? payment.dueDate : payment.dueDate)}
+                              </p>
+                              {payment.paymentType && (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-black/5 dark:bg-white/10 text-muted">
+                                  {paymentTypeLabels[payment.paymentType]}
+                                </span>
+                              )}
+                            </div>
                             <p className="text-muted text-xs truncate">
                               ${Number(payment.amountDue).toLocaleString('es-MX')}
                               {payment.paymentNumber && ` (${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
@@ -410,6 +432,33 @@ export default function TenantProfilePage() {
             </div>
           </>
         )}
+
+        {sortedContracts.length > 0 && (
+          <div className="bg-surface rounded-2xl shadow-sm p-5">
+            <h3 className="text-heading font-semibold mb-4">Historial de contratos</h3>
+            <div className="space-y-2">
+              {sortedContracts.map((c) => (
+                <div key={c.id} className="flex items-center justify-between gap-3 py-3 border-b border-black/5 dark:border-white/10 last:border-0">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <p className="text-heading font-medium text-sm truncate">{c.property?.name ?? '—'}</p>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${contractStatusColors[c.status]}`}>
+                        {contractStatusLabels[c.status]}
+                      </span>
+                    </div>
+                    <p className="text-muted text-xs mt-0.5">
+                      {formatDate(c.startDate)} — {c.endDate ? formatDate(c.endDate) : '—'} · $
+                      {Number(c.monthlyRent).toLocaleString('es-MX')}/mes
+                    </p>
+                  </div>
+                  <Link href={`/contracts/${c.id}`} className="shrink-0 text-primary text-sm font-medium hover:underline">
+                    Ver detalle →
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <TenantFormModal
@@ -426,20 +475,4 @@ export default function TenantProfilePage() {
       />
     </ProtectedRoute>
   );
-}
-
-// Overdue + due within the next N days, oldest first — same bucket the
-// admin sees on the Pagos page, scoped to this tenant. Plain helper (not a
-// hook) so it can be called after the loading/not-found early returns above.
-function getDuePayments(payments: RentPayment[], now: Date, upcomingLimit: Date) {
-  return payments
-    .filter((p) => {
-      if (p.status === 'OVERDUE') return true;
-      if (p.status === 'PENDING') {
-        const due = new Date(p.dueDate);
-        return due >= now && due <= upcomingLimit;
-      }
-      return false;
-    })
-    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 }

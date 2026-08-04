@@ -26,6 +26,7 @@ const contractStatusLabels: Record<Contract['status'], string> = {
   ACTIVE: 'Activo',
   EXPIRED: 'Expirado',
   AUTO_RENEWAL_PENDING: 'Renovación pendiente',
+  CANCELLED: 'Cancelado',
 };
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
