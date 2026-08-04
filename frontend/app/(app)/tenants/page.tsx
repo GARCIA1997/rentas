@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import { useEffect, useState, FormEvent } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Modal } from '@/components/Modal';
@@ -144,7 +144,10 @@ export default function TenantsPage() {
                       {statusLabels[tenant.status]}
                     </span>
                   </div>
-                  <div className="flex gap-4 mt-3 pt-3 border-t border-black/5 dark:border-white/10">
+                  <div className="flex gap-4 mt-3 pt-3 border-t border-black/5 dark:border-white/10 text-sm font-medium">
+                    <Link href={`/tenants/${tenant.id}/profile`} className="text-primary text-sm font-medium hover:underline">
+                      Ver perfil
+                    </Link>
                     <button onClick={() => openEditModal(tenant)} className="text-primary text-sm font-medium">
                       Editar
                     </button>
