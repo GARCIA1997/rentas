@@ -24,11 +24,26 @@ const statusColors: Record<Contract['status'], string> = {
   CANCELLED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
 };
 
+type Segment = 'active' | 'finished' | 'cancelled';
+
+const segmentStatuses: Record<Segment, Contract['status'][]> = {
+  active: ['DRAFT', 'ACTIVE', 'AUTO_RENEWAL_PENDING'],
+  finished: ['EXPIRED'],
+  cancelled: ['CANCELLED'],
+};
+
+const segmentLabels: Record<Segment, string> = {
+  active: 'Activos',
+  finished: 'Finalizados',
+  cancelled: 'Cancelados',
+};
+
 export default function ContractsPage() {
   const { token } = useAuth();
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [segment, setSegment] = useState<Segment>('active');
 
   useEffect(() => {
     if (!token) return;
@@ -39,6 +54,14 @@ export default function ContractsPage() {
       .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar contratos'))
       .finally(() => setIsLoading(false));
   }, [token]);
+
+  const counts: Record<Segment, number> = {
+    active: contracts.filter((c) => segmentStatuses.active.includes(c.status)).length,
+    finished: contracts.filter((c) => segmentStatuses.finished.includes(c.status)).length,
+    cancelled: contracts.filter((c) => segmentStatuses.cancelled.includes(c.status)).length,
+  };
+
+  const filteredContracts = contracts.filter((c) => segmentStatuses[segment].includes(c.status));
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
@@ -61,15 +84,34 @@ export default function ContractsPage() {
         </div>
       )}
 
+      {/* Segmented control */}
+      <div className="flex bg-canvas rounded-xl p-1 mb-6">
+        {(Object.keys(segmentLabels) as Segment[]).map((key) => (
+          <button
+            key={key}
+            onClick={() => setSegment(key)}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+              segment === key ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+            }`}
+          >
+            {segmentLabels[key]} {counts[key] > 0 && `(${counts[key]})`}
+          </button>
+        ))}
+      </div>
+
       {isLoading ? (
         <p className="text-muted">Cargando...</p>
       ) : contracts.length === 0 ? (
         <div className="bg-surface rounded-2xl p-8 text-center text-muted">No hay contratos registrados.</div>
+      ) : filteredContracts.length === 0 ? (
+        <div className="bg-surface rounded-2xl p-8 text-center text-muted">
+          No hay contratos {segmentLabels[segment].toLowerCase()}.
+        </div>
       ) : (
         <>
           {/* Mobile: cards */}
           <div className="sm:hidden space-y-3">
-            {contracts.map((contract) => (
+            {filteredContracts.map((contract) => (
               <Link
                 key={contract.id}
                 href={`/contracts/${contract.id}`}
@@ -109,7 +151,7 @@ export default function ContractsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/5 dark:divide-white/10">
-                {contracts.map((contract) => (
+                {filteredContracts.map((contract) => (
                   <tr
                     key={contract.id}
                     onClick={() => (window.location.href = `/contracts/${contract.id}`)}
