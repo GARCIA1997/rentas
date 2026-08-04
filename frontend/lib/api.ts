@@ -315,7 +315,7 @@ export interface RentPayment {
   updatedAt: string;
   tenant?: { id: string; fullName: string; phone?: string | null };
   property?: { id: string; name: string; address: string; city: string };
-  contract?: { id: string; penaltyRules?: PenaltyRules | null };
+  contract?: { id: string; penaltyRules?: PenaltyRules | null; status?: Contract['status'] };
 }
 
 export interface RentPaymentInput {
@@ -336,10 +336,13 @@ export const paymentTypeLabels: Record<NonNullable<RentPayment['paymentType']>, 
 
 // Every payment that isn't fully paid yet (overdue or still pending, any due
 // date), oldest first — the "Programados" bucket used by both the tenant
-// profile and the main payments page.
+// profile and the main payments page. Payments whose contract is no longer
+// in force (cancelled or expired) are excluded — there's nothing to collect
+// on a contract that's already over, even if a stale schedule entry exists.
 export function getPendingPayments(payments: RentPayment[]): RentPayment[] {
   return payments
     .filter((p) => p.status !== 'PAID')
+    .filter((p) => p.contract?.status !== 'CANCELLED' && p.contract?.status !== 'EXPIRED')
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 }
 

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const includeRelations = {
   tenant: { select: { id: true, fullName: true, phone: true } },
   property: { select: { id: true, name: true, address: true, city: true } },
-  contract: { select: { id: true, penaltyRules: true } },
+  contract: { select: { id: true, penaltyRules: true, status: true } },
 };
 
 const computeStatus = (amountDue, amountPaid, dueDate, paidDate) => {

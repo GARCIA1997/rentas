@@ -27,8 +27,6 @@ export default function PaymentsPage() {
   const [payments, setPayments] = useState<RentPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filterProperty, setFilterProperty] = useState('');
-  const [filterTenant, setFilterTenant] = useState('');
   const [segment, setSegment] = useState<'due' | 'paid'>('due');
 
   const [payTarget, setPayTarget] = useState<RentPayment | null>(null);
@@ -99,15 +97,6 @@ export default function PaymentsPage() {
     }
   };
 
-  const matchesFilters = useCallback(
-    (p: RentPayment) => {
-      if (filterProperty && !p.property?.name.toLowerCase().includes(filterProperty.toLowerCase())) return false;
-      if (filterTenant && !p.tenant?.fullName.toLowerCase().includes(filterTenant.toLowerCase())) return false;
-      return true;
-    },
-    [filterProperty, filterTenant]
-  );
-
   const duePayments = useMemo(() => getPendingPayments(payments), [payments]);
   const paidHistory = useMemo(
     () =>
@@ -117,16 +106,13 @@ export default function PaymentsPage() {
     [payments]
   );
 
-  const filteredDue = useMemo(() => duePayments.filter(matchesFilters), [duePayments, matchesFilters]);
-  const filteredPaid = useMemo(() => paidHistory.filter(matchesFilters), [paidHistory, matchesFilters]);
-
   const overdueTotal = useMemo(
-    () => filteredDue.filter((p) => p.status === 'OVERDUE').reduce((sum, p) => sum + Number(p.amountDue), 0),
-    [filteredDue]
+    () => duePayments.filter((p) => p.status === 'OVERDUE').reduce((sum, p) => sum + Number(p.amountDue), 0),
+    [duePayments]
   );
-  const scheduledTotal = useMemo(() => filteredDue.reduce((sum, p) => sum + Number(p.amountDue), 0), [filteredDue]);
+  const scheduledTotal = useMemo(() => duePayments.reduce((sum, p) => sum + Number(p.amountDue), 0), [duePayments]);
 
-  const listToShow = segment === 'due' ? filteredDue : filteredPaid;
+  const listToShow = segment === 'due' ? duePayments : paidHistory;
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
@@ -153,38 +139,6 @@ export default function PaymentsPage() {
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="bg-surface rounded-2xl shadow-sm p-5 space-y-3">
-          <h3 className="text-heading font-semibold text-sm">Filtros</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input
-              type="text"
-              placeholder="Filtrar por propiedad..."
-              value={filterProperty}
-              onChange={(e) => setFilterProperty(e.target.value)}
-              className="px-3 py-2.5 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-            />
-            <input
-              type="text"
-              placeholder="Filtrar por inquilino..."
-              value={filterTenant}
-              onChange={(e) => setFilterTenant(e.target.value)}
-              className="px-3 py-2.5 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-            />
-          </div>
-          {(filterProperty || filterTenant) && (
-            <button
-              onClick={() => {
-                setFilterProperty('');
-                setFilterTenant('');
-              }}
-              className="text-sm text-muted hover:text-heading"
-            >
-              Limpiar filtros
-            </button>
-          )}
-        </div>
-
         {error && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-sm text-red-800 dark:text-red-400">
             {error}
@@ -203,7 +157,7 @@ export default function PaymentsPage() {
                   segment === 'due' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
                 }`}
               >
-                Programados {filteredDue.length > 0 && `(${filteredDue.length})`}
+                Programados {duePayments.length > 0 && `(${duePayments.length})`}
               </button>
               <button
                 onClick={() => setSegment('paid')}
@@ -211,19 +165,13 @@ export default function PaymentsPage() {
                   segment === 'paid' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
                 }`}
               >
-                Pagados {filteredPaid.length > 0 && `(${filteredPaid.length})`}
+                Pagados {paidHistory.length > 0 && `(${paidHistory.length})`}
               </button>
             </div>
 
             {listToShow.length === 0 ? (
               <p className="text-muted text-sm text-center py-10">
-                {segment === 'due'
-                  ? duePayments.length === 0
-                    ? 'No hay pagos programados. ¡Todo al corriente!'
-                    : 'No hay resultados con los filtros seleccionados.'
-                  : paidHistory.length === 0
-                    ? 'Aún no hay pagos registrados.'
-                    : 'No hay resultados con los filtros seleccionados.'}
+                {segment === 'due' ? 'No hay pagos programados. ¡Todo al corriente!' : 'Aún no hay pagos registrados.'}
               </p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
