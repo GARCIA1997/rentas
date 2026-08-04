@@ -19,11 +19,13 @@ const validators = [
     .matches(/^\d{10}$/)
     .withMessage('Phone must be 10 digits'),
   body('idDocument')
-    .optional({ values: 'null' })
+    .optional({ values: 'falsy' })
     .trim()
+    .customSanitizer((value) => value.toUpperCase())
     .matches(/^[A-Z0-9]{6,18}$/)
     .withMessage('ID document must be 6-18 alphanumeric characters'),
   body('status').optional().isIn(['ACTIVE', 'EVICTED', 'MOVED_OUT']).withMessage('Invalid status'),
+  body('notes').optional({ values: 'null' }).trim().isLength({ max: 2000 }).withMessage('Notes must be under 2000 characters'),
 ];
 
 const runValidators = async (req) => {

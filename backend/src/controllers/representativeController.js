@@ -22,8 +22,9 @@ const validators = [
     .optional()
     .trim(),
   body('idDocument')
-    .optional({ values: 'null' })
+    .optional({ values: 'falsy' })
     .trim()
+    .customSanitizer((value) => value.toUpperCase())
     .matches(/^[A-Z0-9]{6,18}$/)
     .withMessage('ID document must be 6-18 alphanumeric characters'),
   body('isActive').optional().isBoolean().withMessage('isActive must be a boolean'),

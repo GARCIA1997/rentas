@@ -137,6 +137,7 @@ model Tenant {
   phone                 String?
   idDocument            String?
   status                TenantStatus @default(ACTIVE)
+  notes                 String?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 

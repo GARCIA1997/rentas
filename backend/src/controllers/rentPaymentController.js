@@ -1,7 +1,8 @@
 import { body, validationResult } from 'express-validator';
 import * as rentPaymentService from '../services/rentPaymentService.js';
 
-const validators = [
+// Full validation for creation — every payment needs a contract, due date and amount.
+const createValidators = [
   body('contractId').notEmpty().withMessage('Contract is required'),
   body('dueDate').isISO8601().withMessage('Valid due date required'),
   body('amountDue')
@@ -18,7 +19,27 @@ const validators = [
   body('notes').optional().trim(),
 ];
 
-const runValidators = async (req) => {
+// Updates are partial — e.g. registering an installment only sends
+// amountPaid/paidDate/paymentMethod, so nothing here is required.
+const updateValidators = [
+  body('contractId').optional().notEmpty().withMessage('Contract is required'),
+  body('dueDate').optional().isISO8601().withMessage('Valid due date required'),
+  body('amountDue')
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount due must be greater than 0'),
+  body('amountPaid')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Amount paid cannot be negative'),
+  body('paymentMethod')
+    .optional()
+    .isIn(['MANUAL', 'TRANSFERENCIA', 'EFECTIVO', 'CHEQUE'])
+    .withMessage('Invalid payment method'),
+  body('notes').optional().trim(),
+];
+
+const runValidators = async (req, validators) => {
   await Promise.all(validators.map((v) => v.run(req)));
   return validationResult(req);
 };
@@ -41,7 +62,7 @@ export const getOne = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
   try {
-    const errors = await runValidators(req);
+    const errors = await runValidators(req, createValidators);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
@@ -55,7 +76,7 @@ export const create = async (req, res, next) => {
 
 export const update = async (req, res, next) => {
   try {
-    const errors = await runValidators(req);
+    const errors = await runValidators(req, updateValidators);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }

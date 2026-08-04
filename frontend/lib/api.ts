@@ -141,6 +141,7 @@ export interface Tenant {
   phone?: string | null;
   idDocument?: string | null;
   status: 'ACTIVE' | 'EVICTED' | 'MOVED_OUT';
+  notes?: string | null;
   createdAt: string;
   updatedAt: string;
   contracts?: TenantActiveContract[];
@@ -351,6 +352,15 @@ export const rentPaymentsApi = {
     link.click();
     URL.revokeObjectURL(url);
   },
+  getReceiptBlob: async (id: string, token: string) => {
+    const response = await fetch(`${API_URL}/api/rent-payments/${id}/receipt`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) {
+      throw new Error('No se pudo generar el recibo');
+    }
+    return response.blob();
+  },
 };
 
 export function buildWhatsAppReminderUrl(payment: RentPayment): string {
@@ -361,6 +371,56 @@ export function buildWhatsAppReminderUrl(payment: RentPayment): string {
     ? `Hola ${payment.tenant?.fullName}, te recordamos que tu pago de renta de $${Number(payment.amountDue).toLocaleString('es-MX')} correspondiente a ${payment.property?.name} venció el ${dueDate}. Por favor realiza tu pago a la brevedad. ¡Gracias!`
     : `Hola ${payment.tenant?.fullName}, te recordamos que tu pago de renta de $${Number(payment.amountDue).toLocaleString('es-MX')} correspondiente a ${payment.property?.name} vence el ${dueDate}. ¡Gracias!`;
   return `https://wa.me/52${phone}?text=${encodeURIComponent(message)}`;
+}
+
+// Shares the paid receipt as a PDF via the native share sheet (WhatsApp is
+// one of the apps the user can pick there) so the file arrives attached
+// instead of just a text link. Falls back to downloading the PDF and
+// opening a pre-filled WhatsApp chat when the browser can't share files, the
+// share sheet fails for any reason other than the user backing out, or the
+// fetch needed to build the file cost enough time that the browser no
+// longer considers this call "user-initiated" (both share() and a blocked
+// window.open rely on that) — the admin then attaches the PDF manually.
+export async function shareReceiptOnWhatsApp(payment: RentPayment, token: string): Promise<'shared' | 'cancelled' | 'fallback'> {
+  const blob = await rentPaymentsApi.getReceiptBlob(payment.id, token);
+  const fileName = `recibo-${payment.id}.pdf`;
+  const file = new File([blob], fileName, { type: 'application/pdf' });
+  const dueDate = new Date(payment.dueDate).toLocaleDateString('es-MX', { timeZone: 'UTC' });
+  const text = `Hola ${payment.tenant?.fullName}, aquí está tu recibo de pago de $${Number(payment.amountPaid).toLocaleString('es-MX')} correspondiente a ${payment.property?.name} (vencimiento ${dueDate}). ¡Gracias!`;
+
+  if (typeof navigator !== 'undefined' && navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], text, title: 'Recibo de pago' });
+      return 'shared';
+    } catch (err) {
+      // The user closing the share sheet without picking an app is not a
+      // failure — respect it and stop, don't force a download on them.
+      if (err instanceof Error && err.name === 'AbortError') {
+        return 'cancelled';
+      }
+      // Any other failure (unsupported target, expired activation, etc.)
+      // falls through to the manual-attach fallback below.
+    }
+  }
+
+  const url = URL.createObjectURL(blob);
+  // Anchor.click() navigations aren't subject to popup-blocker rules the
+  // way window.open() is, so this stays reliable even after the async
+  // fetch above may have used up the click's "user activation".
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.download = fileName;
+  downloadLink.click();
+  URL.revokeObjectURL(url);
+
+  const phone = payment.tenant?.phone?.replace(/\D/g, '') ?? '';
+  const waLink = document.createElement('a');
+  waLink.href = `https://wa.me/52${phone}?text=${encodeURIComponent(text + ' (adjunta el PDF que se acaba de descargar)')}`;
+  waLink.target = '_blank';
+  waLink.rel = 'noopener';
+  waLink.click();
+
+  return 'fallback';
 }
 
 // ---- Me (tenant portal) ----

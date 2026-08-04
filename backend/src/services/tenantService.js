@@ -53,6 +53,7 @@ export const createTenant = async (data) => {
       phone: data.phone,
       idDocument: data.idDocument,
       status: data.status ?? 'ACTIVE',
+      notes: data.notes,
     },
   });
 };
@@ -72,6 +73,7 @@ export const updateTenant = async (id, data) => {
       phone: data.phone,
       idDocument: data.idDocument,
       status: data.status,
+      notes: data.notes,
     },
   });
 };

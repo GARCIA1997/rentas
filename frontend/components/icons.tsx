@@ -178,3 +178,40 @@ export function DownloadIcon({ active, ...props }: IconProps) {
     </svg>
   );
 }
+
+export function PencilIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3Z" />
+      <path d="M13.5 8 16 10.5" />
+    </svg>
+  );
+}
+
+export function TrashIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M5 7h14M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M7 7l1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13" />
+      <path d="M10 11v6M14 11v6" />
+    </svg>
+  );
+}
+
+export function BellIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2.5h-15L6 17Z" />
+      <path d="M10 21.5a2 2 0 0 0 4 0" />
+    </svg>
+  );
+}
+
+export function BanknoteIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <rect x="2.5" y="6" width="19" height="12" rx="1.5" />
+      <circle cx="12" cy="12" r="2.5" />
+      <path d="M5.5 9h.01M18.5 15h.01" />
+    </svg>
+  );
+}
