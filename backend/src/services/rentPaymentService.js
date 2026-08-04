@@ -50,6 +50,9 @@ export const createPayment = async (data) => {
       dueDate: new Date(data.dueDate),
       paidDate,
       paymentMethod: data.paymentMethod ?? 'MANUAL',
+      paymentType: data.paymentType ?? 'RENT',
+      paymentNumber: data.paymentNumber,
+      totalPaymentsInContract: data.totalPaymentsInContract,
       notes: data.notes,
       status: computeStatus(data.amountDue, amountPaid, data.dueDate, paidDate),
     },
@@ -73,6 +76,7 @@ export const updatePayment = async (id, data) => {
       dueDate: new Date(dueDate),
       paidDate,
       paymentMethod: data.paymentMethod,
+      paymentType: data.paymentType,
       notes: data.notes,
       status: computeStatus(amountDue, amountPaid, dueDate, paidDate),
     },
@@ -110,4 +114,34 @@ export const generateReceiptPdf = async (id) => {
 
   const html = buildReceiptHtml(payment);
   return generatePdfBuffer(html);
+};
+
+// Get overdue payments (dueDate in the past and status is OVERDUE)
+export const getOverduePayments = async () => {
+  const now = new Date();
+  return prisma.rentPayment.findMany({
+    where: {
+      dueDate: { lt: now },
+      status: 'OVERDUE'
+    },
+    include: includeRelations,
+    orderBy: { dueDate: 'asc' }
+  });
+};
+
+// Get payments due within N days (default: 7 days)
+export const getUpcomingPayments = async (daysAhead = 7) => {
+  const now = new Date();
+  const futureDate = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
+
+  return prisma.rentPayment.findMany({
+    where: {
+      AND: [
+        { dueDate: { gte: now, lte: futureDate } },
+        { status: { in: ['PENDING'] } }
+      ]
+    },
+    include: includeRelations,
+    orderBy: { dueDate: 'asc' }
+  });
 };

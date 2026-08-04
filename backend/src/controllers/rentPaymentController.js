@@ -76,6 +76,25 @@ export const markPaid = async (req, res, next) => {
   }
 };
 
+export const getOverdue = async (req, res, next) => {
+  try {
+    const payments = await rentPaymentService.getOverduePayments();
+    res.json(payments);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUpcoming = async (req, res, next) => {
+  try {
+    const daysAhead = req.query.days ? parseInt(req.query.days, 10) : 7;
+    const payments = await rentPaymentService.getUpcomingPayments(daysAhead);
+    res.json(payments);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const downloadReceipt = async (req, res, next) => {
   try {
     const pdfBuffer = await rentPaymentService.generateReceiptPdf(req.params.id);

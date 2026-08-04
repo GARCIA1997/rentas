@@ -333,6 +333,9 @@ export const rentPaymentsApi = {
       body: JSON.stringify({ paymentMethod }),
       token,
     }) as Promise<RentPayment>,
+  getOverdue: (token: string) => apiCall('/api/rent-payments/filter/overdue', { token }) as Promise<RentPayment[]>,
+  getUpcoming: (token: string, daysAhead: number = 7) =>
+    apiCall(`/api/rent-payments/filter/upcoming?days=${daysAhead}`, { token }) as Promise<RentPayment[]>,
   downloadReceipt: async (id: string, token: string) => {
     const response = await fetch(`${API_URL}/api/rent-payments/${id}/receipt`, {
       headers: { Authorization: `Bearer ${token}` },
