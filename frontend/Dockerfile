@@ -12,6 +12,15 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+
+# NEXT_PUBLIC_* vars get inlined into the client JS bundle right here, during
+# `next build` — setting them as a container `environment:` at runtime does nothing,
+# the bundle already shipped to the browser with whatever was present at this step.
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_APP_NAME
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_APP_NAME=$NEXT_PUBLIC_APP_NAME
+
 RUN npm run build
 
 # Stage 3: runner

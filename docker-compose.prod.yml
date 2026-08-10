@@ -72,6 +72,13 @@ services:
       dockerfile: Dockerfile
       # Sin 'target': usa la etapa final 'runner' (build standalone de producción),
       # no la etapa 'deps' que usa el compose de desarrollo.
+      #
+      # NEXT_PUBLIC_* se inlinea en el JS del navegador durante `next build`, adentro
+      # de la imagen — pasarlo sólo como `environment:` de abajo no alcanza, porque
+      # para entonces el bundle ya quedó compilado. Tiene que llegar como build arg.
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
     container_name: ksared_frontend
     restart: unless-stopped
     environment:
