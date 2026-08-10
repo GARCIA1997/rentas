@@ -21,74 +21,23 @@ export const loginUser = async (phone, password) => {
     throw { status: 403, message: 'User account is inactive' };
   }
 
-  const accessToken = generateAccessToken(user);
-  const refreshToken = generateRefreshToken(user);
-
-  return {
-    accessToken,
-    refreshToken,
-    user: {
-      id: user.id,
-      phone: user.phone,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-    },
-  };
+  return issueTokens(user);
 };
 
-export const registerTenant = async (phone, password, firstName, lastName, email) => {
-  // Check if phone already exists
-  const existingUser = await prisma.user.findUnique({ where: { phone } });
-  if (existingUser) {
-    throw { status: 400, message: 'Phone already registered' };
-  }
-
-  // Validate phone format (10 digits)
-  if (!/^\d{10}$/.test(phone)) {
-    throw { status: 400, message: 'Phone must be 10 digits' };
-  }
-
-  // Hash password
-  const passwordHash = await bcryptjs.hash(password, 10);
-
-  // Create user
-  const user = await prisma.user.create({
-    data: {
-      phone,
-      passwordHash,
-      firstName,
-      lastName,
-      email,
-      role: 'INQUILINO',
-      status: 'ACTIVE',
-    },
-  });
-
-  // Link to a pre-existing tenant record with the same phone (admin may have
-  // registered this tenant before they created their account)
-  await prisma.tenant.updateMany({
-    where: { phone, userId: null },
-    data: { userId: user.id },
-  });
-
-  const accessToken = generateAccessToken(user);
-  const refreshToken = generateRefreshToken(user);
-
-  return {
-    accessToken,
-    refreshToken,
-    user: {
-      id: user.id,
-      phone: user.phone,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-    },
-  };
-};
+// Compartido con inviteService: arma la misma respuesta { accessToken, refreshToken, user }
+// que login, para que aceptar una invitación deje al usuario logueado igual que un login.
+export const issueTokens = (user) => ({
+  accessToken: generateAccessToken(user),
+  refreshToken: generateRefreshToken(user),
+  user: {
+    id: user.id,
+    phone: user.phone,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    role: user.role,
+  },
+});
 
 export const refreshAccessToken = async (refreshToken) => {
   try {

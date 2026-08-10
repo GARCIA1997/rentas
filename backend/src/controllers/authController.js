@@ -31,38 +31,8 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const register = async (req, res, next) => {
-  try {
-    // Validation
-    await body('phone').matches(/^\d{10}$/).withMessage('Phone must be 10 digits').run(req);
-    await body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters').run(req);
-    await body('firstName').notEmpty().withMessage('First name is required').run(req);
-    await body('lastName').notEmpty().withMessage('Last name is required').run(req);
-    await body('email').optional().isEmail().withMessage('Valid email required').run(req);
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
-
-    const { phone, password, firstName, lastName, email } = req.body;
-    const result = await authService.registerTenant(phone, password, firstName, lastName, email);
-
-    res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.status(201).json({
-      accessToken: result.accessToken,
-      user: result.user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+// No hay registro público: las cuentas se crean únicamente aceptando una invitación
+// (ver inviteController.js / POST /api/invites/:token/accept).
 
 export const refresh = async (req, res, next) => {
   try {

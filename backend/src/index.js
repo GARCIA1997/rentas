@@ -13,6 +13,7 @@ import contractRoutes from './routes/contracts.js';
 import contractTemplateRoutes from './routes/contractTemplates.js';
 import rentPaymentRoutes from './routes/rentPayments.js';
 import meRoutes from './routes/me.js';
+import inviteRoutes from './routes/invites.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -44,6 +45,7 @@ app.use('/api/contracts', contractRoutes);
 app.use('/api/contract-templates', contractTemplateRoutes);
 app.use('/api/rent-payments', rentPaymentRoutes);
 app.use('/api/me', meRoutes);
+app.use('/api/invites', inviteRoutes);
 
 // 404 handler
 app.use((req, res) => {

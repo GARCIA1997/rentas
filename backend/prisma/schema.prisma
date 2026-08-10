@@ -96,6 +96,8 @@ model User {
   representatives       Representative[]
   createdUsers          User[]      @relation("UserCreatedBy")
   creatorUser           User?       @relation("UserCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  createdInvites        RegistrationInvite[] @relation("InviteCreator")
+  usedInvites           RegistrationInvite[] @relation("InviteUsedBy")
 
   @@index([phone])
   @@index([role])
@@ -148,6 +150,7 @@ model Tenant {
   contracts             Contract[]
   rentPayments          RentPayment[]
   maintenanceReports    MaintenanceReport[]
+  invites               RegistrationInvite[]
 
   @@index([userId])
   @@index([status])
@@ -302,4 +305,28 @@ model NotificationLog {
 
   @@index([userId])
   @@index([notificationType])
+}
+
+// Único mecanismo de alta de cuentas: no hay registro público abierto. Un admin genera
+// una invitación (ADMIN, o INQUILINO ligada a un Tenant que ya existe) y comparte el link
+// con token; quien lo abre ve sólo lo que le corresponde y, al aceptar, el token se
+// consume — de un solo uso, con vencimiento.
+model RegistrationInvite {
+  id                    String      @id @default(cuid())
+  token                 String      @unique
+  role                  UserRole
+  tenantId              String?     // requerido cuando role = INQUILINO; a qué Tenant se liga
+  createdBy             String
+  expiresAt             DateTime
+  usedAt                DateTime?
+  usedByUserId          String?
+  createdAt             DateTime    @default(now())
+
+  // Relations
+  tenant                Tenant?     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator               User        @relation("InviteCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  usedBy                User?       @relation("InviteUsedBy", fields: [usedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([token])
+  @@index([tenantId])
 }

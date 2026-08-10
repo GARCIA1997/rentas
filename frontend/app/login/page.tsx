@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { LoginForm } from '@/components/LoginForm';
 import { useAuth } from '@/hooks/useAuth';
@@ -28,15 +27,6 @@ export default function LoginPage() {
         <p className="text-center text-muted mb-8">Sistema de Gestión de Propiedades</p>
 
         <LoginForm />
-
-        <div className="mt-6 border-t border-black/10 pt-6">
-          <p className="text-center text-sm text-muted">
-            ¿No tienes cuenta?{' '}
-            <Link href="/register" className="text-primary hover:underline font-medium">
-              Regístrate aquí
-            </Link>
-          </p>
-        </div>
       </div>
     </div>
   );

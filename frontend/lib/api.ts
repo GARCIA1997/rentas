@@ -60,24 +60,58 @@ export async function login(phone: string, password: string) {
   }) as Promise<AuthResult>;
 }
 
-export async function register(
-  phone: string,
-  password: string,
-  firstName: string,
-  lastName: string,
-  email?: string
-) {
-  return apiCall('/api/auth/register', {
+// ---- Invitaciones ----
+// No hay registro público: toda cuenta nueva pasa por un link de invitación que un
+// admin genera. `getInvite` valida el token y dice qué mostrar; `acceptInvite` lo
+// consume y crea la cuenta.
+
+export interface InviteDetails {
+  role: 'ADMIN' | 'INQUILINO';
+  // Presente sólo cuando role = INQUILINO: a qué persona corresponde el link, para
+  // confirmárselo en pantalla antes de pedirle sólo la contraseña.
+  tenant: { fullName: string; phone: string } | null;
+}
+
+export interface AdminInviteAcceptInput {
+  phone: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+}
+
+export interface TenantInviteAcceptInput {
+  password: string;
+}
+
+export async function getInvite(token: string) {
+  return apiCall(`/api/invites/${token}`) as Promise<InviteDetails>;
+}
+
+export async function acceptInvite(token: string, payload: AdminInviteAcceptInput | TenantInviteAcceptInput) {
+  return apiCall(`/api/invites/${token}/accept`, {
     method: 'POST',
-    body: JSON.stringify({
-      phone,
-      password,
-      firstName,
-      lastName,
-      email,
-    }),
+    body: JSON.stringify(payload),
   }) as Promise<AuthResult>;
 }
+
+export interface CreateInviteInput {
+  role: 'ADMIN' | 'INQUILINO';
+  // Requerido cuando role = INQUILINO: a qué Tenant se liga el link.
+  tenantId?: string;
+}
+
+export interface CreatedInvite {
+  token: string;
+  link: string;
+  role: 'ADMIN' | 'INQUILINO';
+  expiresAt: string;
+}
+
+export const invitesApi = {
+  create: (data: CreateInviteInput, token: string) =>
+    apiCall('/api/invites', { method: 'POST', body: JSON.stringify(data), token }) as Promise<CreatedInvite>,
+};
 
 export async function refreshToken() {
   return apiCall('/api/auth/refresh', {

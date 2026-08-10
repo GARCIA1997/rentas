@@ -17,7 +17,7 @@ export interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   login: (phone: string, password: string) => Promise<void>;
-  register: (phone: string, password: string, firstName: string, lastName: string, email?: string) => Promise<void>;
+  acceptInvite: (inviteToken: string, payload: api.AdminInviteAcceptInput | api.TenantInviteAcceptInput) => Promise<void>;
   logout: () => void;
 }
 
@@ -60,8 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(result.user);
   };
 
-  const register = async (phone: string, password: string, firstName: string, lastName: string, email?: string) => {
-    const result = await api.register(phone, password, firstName, lastName, email);
+  const acceptInvite = async (inviteToken: string, payload: api.AdminInviteAcceptInput | api.TenantInviteAcceptInput) => {
+    const result = await api.acceptInvite(inviteToken, payload);
     localStorage.setItem('accessToken', result.accessToken);
     localStorage.setItem('user', JSON.stringify(result.user));
     setToken(result.accessToken);
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, acceptInvite, logout }}>
       {children}
     </AuthContext.Provider>
   );

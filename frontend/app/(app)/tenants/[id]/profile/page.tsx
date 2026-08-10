@@ -11,6 +11,7 @@ import {
   tenantsApi,
   contractsApi,
   rentPaymentsApi,
+  invitesApi,
   buildWhatsAppReminderUrl,
   shareReceiptOnWhatsApp,
   getPendingPayments,
@@ -71,6 +72,8 @@ export default function TenantProfilePage() {
   const [payTarget, setPayTarget] = useState<RentPayment | null>(null);
   const [sharingId, setSharingId] = useState<string | null>(null);
   const [revertingId, setRevertingId] = useState<string | null>(null);
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [isCreatingInvite, setIsCreatingInvite] = useState(false);
 
   useEffect(() => {
     if (!token || !tenantId) return;
@@ -152,6 +155,25 @@ export default function TenantProfilePage() {
     } finally {
       setRevertingId(null);
     }
+  };
+
+  const handleCreateInvite = async () => {
+    if (!token || !tenant) return;
+    setIsCreatingInvite(true);
+    try {
+      const invite = await invitesApi.create({ role: 'INQUILINO', tenantId: tenant.id }, token);
+      setInviteLink(invite.link);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Error al generar el link de registro', 'error');
+    } finally {
+      setIsCreatingInvite(false);
+    }
+  };
+
+  const handleCopyInviteLink = async () => {
+    if (!inviteLink) return;
+    await navigator.clipboard.writeText(inviteLink);
+    showToast('Link copiado', 'success');
   };
 
   const handleDownloadReceipt = async (payment: RentPayment) => {
@@ -253,6 +275,37 @@ export default function TenantProfilePage() {
           <Row label="Email" value={tenant.email ?? '—'} />
           <Row label="Identificación" value={tenant.idDocument ?? '—'} />
           <Row label="Estado" value={tenant.status} />
+        </div>
+
+        <div className="bg-surface rounded-2xl shadow-sm p-5">
+          <h3 className="text-heading font-semibold mb-1">Acceso al portal</h3>
+          {tenant.userId ? (
+            <p className="text-sm text-muted">Ya tiene una cuenta vinculada — puede iniciar sesión con su teléfono.</p>
+          ) : !tenant.phone ? (
+            <p className="text-sm text-muted">Agrega un teléfono al inquilino antes de generar su link de registro.</p>
+          ) : (
+            <>
+              <p className="text-sm text-muted mb-3">
+                Aún no tiene cuenta. Genera un link de un solo uso para que se registre — sólo le pedirá una contraseña.
+              </p>
+              {inviteLink ? (
+                <div className="flex items-center gap-2 bg-canvas rounded-lg px-3 py-2">
+                  <p className="text-xs text-heading truncate flex-1">{inviteLink}</p>
+                  <button onClick={handleCopyInviteLink} className="text-primary text-xs font-medium shrink-0 hover:underline">
+                    Copiar
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleCreateInvite}
+                  disabled={isCreatingInvite}
+                  className="text-primary text-sm font-medium disabled:opacity-50"
+                >
+                  {isCreatingInvite ? 'Generando...' : 'Generar link de registro'}
+                </button>
+              )}
+            </>
+          )}
         </div>
 
         <div className="bg-surface rounded-2xl shadow-sm p-5">

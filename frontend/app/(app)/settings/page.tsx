@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme, ThemePreference } from '@/lib/themeContext';
 import { useToast } from '@/components/ToastProvider';
-import { SunIcon, MoonIcon, DesktopIcon, ChevronRightIcon, UsersIcon, LogoutIcon, BellIcon } from '@/components/icons';
-import { apiCall } from '@/lib/api';
+import { SunIcon, MoonIcon, DesktopIcon, ChevronRightIcon, UsersIcon, LogoutIcon, BellIcon, PlusIcon } from '@/components/icons';
+import { apiCall, invitesApi } from '@/lib/api';
 
 const themeOptions: { value: ThemePreference; label: string; Icon: typeof SunIcon }[] = [
   { value: 'light', label: 'Claro', Icon: SunIcon },
@@ -20,6 +20,8 @@ export default function SettingsPage() {
   const { showToast } = useToast();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [adminInviteLink, setAdminInviteLink] = useState<string | null>(null);
+  const [isCreatingInvite, setIsCreatingInvite] = useState(false);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -54,6 +56,25 @@ export default function SettingsPage() {
       setNotificationsEnabled(!enabled);
       showToast('Error al actualizar configuración', 'error');
     }
+  };
+
+  const handleCreateAdminInvite = async () => {
+    if (!token) return;
+    setIsCreatingInvite(true);
+    try {
+      const invite = await invitesApi.create({ role: 'ADMIN' }, token);
+      setAdminInviteLink(invite.link);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Error al generar la invitación', 'error');
+    } finally {
+      setIsCreatingInvite(false);
+    }
+  };
+
+  const handleCopyInviteLink = async () => {
+    if (!adminInviteLink) return;
+    await navigator.clipboard.writeText(adminInviteLink);
+    showToast('Link copiado', 'success');
   };
 
   return (
@@ -120,7 +141,7 @@ export default function SettingsPage() {
         <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
           <Link
             href="/settings/representatives"
-            className="flex items-center justify-between px-5 py-4 active:bg-canvas transition-colors"
+            className="flex items-center justify-between px-5 py-4 active:bg-canvas transition-colors border-b border-black/5 dark:border-white/10"
           >
             <div className="flex items-center gap-3">
               <UsersIcon className="w-5 h-5 text-muted" />
@@ -131,6 +152,38 @@ export default function SettingsPage() {
             </div>
             <ChevronRightIcon className="w-5 h-5 text-muted" />
           </Link>
+
+          <div className="px-5 py-4">
+            <div className="flex items-center gap-3 mb-1">
+              <PlusIcon className="w-5 h-5 text-muted" />
+              <div>
+                <p className="text-heading font-medium text-sm">Invitar administrador</p>
+                <p className="text-muted text-xs">
+                  No hay registro público — genera un link de un solo uso y compártelo.
+                </p>
+              </div>
+            </div>
+
+            {adminInviteLink ? (
+              <div className="mt-3 flex items-center gap-2 bg-canvas rounded-lg px-3 py-2">
+                <p className="text-xs text-heading truncate flex-1">{adminInviteLink}</p>
+                <button
+                  onClick={handleCopyInviteLink}
+                  className="text-primary text-xs font-medium shrink-0 hover:underline"
+                >
+                  Copiar
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleCreateAdminInvite}
+                disabled={isCreatingInvite}
+                className="mt-2 text-primary text-sm font-medium disabled:opacity-50"
+              >
+                {isCreatingInvite ? 'Generando...' : 'Generar link de invitación'}
+              </button>
+            )}
+          </div>
         </div>
       )}
 

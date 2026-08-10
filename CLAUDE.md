@@ -143,6 +143,9 @@ Frontend: `npm run dev`, `npm run build`, `npm run lint`, `npx tsc --noEmit`.
 - **Todos los montos son `Decimal(12,2)`** — nunca `Float`, por precisión en dinero. Llegan al
   frontend como `string` (así serializa Prisma `Decimal` a JSON); convertir con `Number()`
   antes de operar o formatear.
+- **`RegistrationInvite`** es el único camino para crear una cuenta — ver sección
+  "Alta de cuentas" más abajo. `token` es de un solo uso (`usedAt`) y vence
+  (`expiresAt`, 7 días); `tenantId` sólo aplica a invitaciones de `INQUILINO`.
 
 ## Autenticación y autorización
 
@@ -154,14 +157,39 @@ Frontend: `npm run dev`, `npm run build`, `npm run lint`, `npx tsc --noEmit`.
   logueado", casi todo lo usa así de facto vía `authenticateJWT` en `/api/me/*`).
 - Casi todas las rutas admin llevan `router.use(authenticateJWT, requireAdmin)` al inicio del
   archivo — mirar el `router.use` antes de asumir que un endpoint es público.
-- Un `Tenant` se vincula a su `User` (portal) por **coincidencia de teléfono** al registrarse
-  (`authService.registerTenant`): si el admin ya dio de alta al inquilino con ese teléfono, el
-  registro lo enlaza automáticamente (`Tenant.userId`).
+
+### Alta de cuentas: sólo por invitación, no hay registro público
+
+`POST /api/auth/register` **no existe** (se quitó agosto 2026, ver más abajo). La única forma
+de crear una cuenta es aceptando una invitación:
+
+- Un admin genera una invitación (`POST /api/invites`, requiere sesión de admin):
+  `{ role: 'ADMIN' }` o `{ role: 'INQUILINO', tenantId }` — para inquilinos, el `Tenant` ya
+  debe existir (dado de alta antes por el admin) y no tener `userId` todavía.
+- El link (`{FRONTEND_URL}/register?token=...`) lo comparte el admin por fuera de la app
+  (WhatsApp, lo que sea). `GET /api/invites/:token` es público y sólo devuelve lo necesario
+  para pintar la pantalla: el rol, y si es de inquilino, `tenant.fullName`/`tenant.phone` de
+  solo lectura — nunca datos sensibles adicionales.
+- `POST /api/invites/:token/accept` (público) consume el token — de un solo uso, vence a los
+  7 días (`RegistrationInvite.expiresAt`). Para invitación de inquilino sólo pide **contraseña**
+  (nombre y teléfono ya vienen del `Tenant`); para invitación de admin pide los datos completos.
+  El `Tenant.userId` se liga **por id explícito** desde la invitación, no por coincidencia de
+  teléfono como antes — elimina el caso raro de que dos registros compartieran teléfono.
+- **Por qué se quitó el registro público**: se consideró hacer que el registro público creara
+  cuentas `ADMIN` directamente (para simplificar el alta del propio admin en el primer deploy) —
+  eso habría dejado acceso total de administrador a cualquiera que encontrara la URL, sin
+  invitación. En vez de eso se rediseñó todo el flujo hacia invitaciones de un solo uso, que de
+  paso cierra también el registro abierto de `INQUILINO` que existía antes. Decisión de
+  seguridad deliberada, agosto 2026 — nunca reintroducir un endpoint de registro sin invitación.
 
 ## Rutas del API (todas bajo `/api`)
 
 ```
-POST   /auth/login | /auth/register | /auth/refresh | /auth/logout
+POST   /auth/login | /auth/refresh | /auth/logout
+
+POST   /invites                    ← requiere sesión de admin
+GET    /invites/:token             ← público
+POST   /invites/:token/accept      ← público, consume el token
 
 GET    /properties | /properties/:id | /properties/:id/detail
 POST   /properties            PUT /properties/:id            DELETE /properties/:id
