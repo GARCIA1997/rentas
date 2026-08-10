@@ -11,83 +11,44 @@ on:
 
 jobs:
   # El despliegue depende de secretos que quizá aún no estén configurados. En vez de
-  # fallar en rojo, este job los detecta y los siguientes se saltan de forma limpia.
+  # fallar en rojo, este job los detecta y el siguiente se salta de forma limpia.
   preflight:
     name: Revisar configuración
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     outputs:
-      can-push-images: ${{ steps.check.outputs.can-push-images }}
       can-deploy: ${{ steps.check.outputs.can-deploy }}
     steps:
       - id: check
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          if [ -n "$DOCKER_USERNAME" ] && [ -n "$DOCKER_PASSWORD" ]; then
-            echo "can-push-images=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "can-push-images=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Sin DOCKER_USERNAME/DOCKER_PASSWORD: se omite la publicación de imágenes."
-          fi
-
-          if [ -n "$VPS_HOST" ] && [ -n "$VPS_SSH_KEY" ] && [ -n "$DEPLOY_PATH" ]; then
+          if [ -n "$VPS_HOST" ] && [ -n "$VPS_USER" ] && [ -n "$VPS_SSH_KEY" ] && [ -n "$DEPLOY_PATH" ]; then
             echo "can-deploy=true" >> "$GITHUB_OUTPUT"
           else
             echo "can-deploy=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Sin VPS_HOST/VPS_SSH_KEY/DEPLOY_PATH: se omite el despliegue."
+            echo "::notice::Sin VPS_HOST/VPS_USER/VPS_SSH_KEY/DEPLOY_PATH: se omite el despliegue."
           fi
-
-  publish-images:
-    name: Publicar imágenes
-    runs-on: ubuntu-latest
-    needs: preflight
-    if: needs.preflight.outputs.can-push-images == 'true'
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-buildx-action@v3
-
-      - uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # Se etiqueta también con el SHA del commit para poder volver a una versión
-      # anterior sin depender de que `latest` siga apuntando a donde uno cree.
-      - name: Backend
-        uses: docker/build-push-action@v6
-        with:
-          context: ./backend
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/rentas-backend:latest
-            ${{ secrets.DOCKER_USERNAME }}/rentas-backend:${{ github.sha }}
-          cache-from: type=gha,scope=backend
-          cache-to: type=gha,mode=max,scope=backend
-
-      - name: Frontend
-        uses: docker/build-push-action@v6
-        with:
-          context: ./frontend
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/rentas-frontend:latest
-            ${{ secrets.DOCKER_USERNAME }}/rentas-frontend:${{ github.sha }}
-          cache-from: type=gha,scope=frontend
-          cache-to: type=gha,mode=max,scope=frontend
 
   deploy:
     name: Desplegar al VPS
     runs-on: ubuntu-latest
-    needs: [preflight, publish-images]
+    needs: preflight
     if: needs.preflight.outputs.can-deploy == 'true'
     steps:
-      - name: Actualizar y verificar
+      # El VPS es compartido con otra app (Kredired) que corre en contenedores y un
+      # vhost de nginx completamente aparte. Este workflow sólo toca lo que vive dentro
+      # de DEPLOY_PATH: `docker compose` sin -p usa el nombre del directorio como
+      # namespace del proyecto, así que nunca puede alcanzar los contenedores de la otra
+      # app aunque algo saliera mal aquí.
+      #
+      # Construye la imagen EN el propio VPS (no hay publicación a un registro externo):
+      # para un proyecto de este tamaño, evita depender de credenciales de Docker Hub y
+      # mantiene un solo lugar de verdad para el Dockerfile.
+      - name: Actualizar, construir y desplegar
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -98,13 +59,19 @@ jobs:
             set -euo pipefail
             cd "${{ secrets.DEPLOY_PATH }}"
             git pull origin main
-            docker compose pull
+
+            COMPOSE="docker compose -f docker-compose.prod.yml --env-file .env"
+
+            $COMPOSE build
             # Las migraciones se aplican antes de levantar la app, para que el código
             # nuevo nunca hable con un esquema viejo.
-            docker compose run --rm backend npx prisma migrate deploy
-            docker compose up -d
+            $COMPOSE run --rm backend npx prisma migrate deploy
+            $COMPOSE up -d
+
+            # El backend sólo escucha en loopback (nginx es la única puerta pública),
+            # así que el health check corre en el propio VPS contra ese puerto.
             for i in $(seq 1 15); do
-              if curl -fsS http://localhost:4000/api/health > /dev/null; then
+              if curl -fsS http://127.0.0.1:4001/api/health > /dev/null; then
                 echo "✅ Backend respondiendo"
                 exit 0
               fi
@@ -112,5 +79,5 @@ jobs:
               sleep 4
             done
             echo "❌ El backend no respondió tras el despliegue"
-            docker compose logs --tail 50 backend
+            $COMPOSE logs --tail 50 backend
             exit 1

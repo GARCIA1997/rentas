@@ -1,0 +1,93 @@
+# Compose de PRODUCCIÓN. Distinto del docker-compose.yml del repo (ese es para
+# desarrollo local: bind mounts + npm run dev). Este construye las imágenes de verdad
+# (build de Next.js standalone, backend sin --watch) y no monta el código fuente del
+# host, para no romper lo ya compilado.
+#
+# Todo queda en 127.0.0.1: nginx (fuera de este compose) es la única puerta de entrada
+# pública, haciendo reverse proxy por path — / al frontend, /api/ al backend — para que
+# el navegador llame a la API en el mismo origen que sirve las páginas.
+#
+# Requiere un .env junto a este archivo (nunca versionado) con: DB_USER, DB_PASSWORD,
+# DB_NAME, DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, API_URL, FRONTEND_URL,
+# NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_NAME, y opcionalmente SEED_ADMIN_PHONE/
+# SEED_ADMIN_PASSWORD/SEED_ADMIN_FIRST_NAME/SEED_ADMIN_LAST_NAME para `npm run db:seed`.
+#
+# Los puertos de host (5433/4001/3001) son los que ya usa el despliegue actual en el VPS
+# compartido con Kredired — elegidos para no chocar con los suyos (3000/5432). Si se
+# despliega en un VPS propio, se pueden simplificar, pero deben coincidir con el vhost
+# de nginx y con el health check del workflow de deploy.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ksared_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - ksared_db_data:/var/lib/postgresql/data
+    networks:
+      - ksared_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ksared_backend
+    restart: unless-stopped
+    # El Dockerfile trae CMD ["npm", "run", "dev"] (usa --watch, pensado para
+    # desarrollo); en producción se corre sin watch.
+    command: npm run start
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      API_PORT: 4000
+      API_URL: ${API_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      SEED_ADMIN_PHONE: ${SEED_ADMIN_PHONE}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
+      SEED_ADMIN_FIRST_NAME: ${SEED_ADMIN_FIRST_NAME}
+      SEED_ADMIN_LAST_NAME: ${SEED_ADMIN_LAST_NAME}
+    ports:
+      - "127.0.0.1:4001:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ksared_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      # Sin 'target': usa la etapa final 'runner' (build standalone de producción),
+      # no la etapa 'deps' que usa el compose de desarrollo.
+    container_name: ksared_frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      - backend
+    networks:
+      - ksared_network
+
+volumes:
+  ksared_db_data:
+
+networks:
+  ksared_network:
+    driver: bridge

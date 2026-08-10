@@ -34,7 +34,7 @@ multi-tenancy entre distintos administradores/dueños de propiedades.
 | PDFs | Puppeteer (Chromium del sistema en Alpine, no el bundle de Puppeteer) |
 | Auth | JWT (access 30 días + refresh 7 días), passwords con bcryptjs |
 | Contenedores | Docker Compose (postgres + backend + frontend) |
-| CI/CD | GitHub Actions — `ci.yml` (verificación) + `deploy.yml` (publicación/despliegue) |
+| CI/CD | GitHub Actions — `ci.yml` (verificación) + `deploy.yml` (build in-situ y despliegue por SSH) |
 
 No hay framework de testing externo: el backend usa el test runner nativo de Node
 (`node --test`), sin Jest ni Vitest.
@@ -89,9 +89,10 @@ rentas/
 │   └── hooks/useAuth.ts
 │
 ├── docker-compose.yml                # dev: bind mounts + hot reload en los tres servicios
+├── docker-compose.prod.yml           # prod: build real, sin bind mounts, puertos en 127.0.0.1
 ├── .github/workflows/
 │   ├── ci.yml                       # lint + tests + Postgres real + smoke test + build de imágenes
-│   └── deploy.yml                    # publica a Docker Hub y despliega por SSH — se salta limpio
+│   └── deploy.yml                    # SSH al VPS, build in-situ y despliegue — se salta limpio
 │                                      # si faltan secretos, no falla en rojo
 └── .env.example                      # variables de entorno documentadas, valores dummy
 ```
@@ -351,16 +352,68 @@ lógica duplicada.
 3. `docker` — construye ambas imágenes (sin publicar) para validar que los Dockerfile siguen
    funcionando.
 
-**`deploy.yml`** (dispara cuando `ci.yml` termina en éxito sobre `main`, o manual): un job
-`preflight` detecta si existen los secretos de Docker Hub y del VPS; si faltan, los jobs
-siguientes se **saltan limpio** (no fallan en rojo) — así el repo puede vivir sin secretos
-configurados sin romper el pipeline. Si están, publica imágenes taggeadas `latest` + SHA del
-commit, y despliega por SSH aplicando `prisma migrate deploy` antes de levantar los contenedores,
-con verificación de `/api/health` con reintentos.
+**`deploy.yml`** (dispara cuando `ci.yml` termina en éxito sobre `main`, o manual vía
+`workflow_dispatch`): un job `preflight` detecta si existen los secretos del VPS
+(`VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `DEPLOY_PATH`, y opcionalmente `VPS_PORT`); si faltan,
+el job de despliegue se **salta limpio** (no falla en rojo). Si están, entra por SSH y hace,
+dentro de `DEPLOY_PATH` en el VPS:
+
+```
+git pull origin main
+docker compose -f docker-compose.prod.yml --env-file .env build
+docker compose -f docker-compose.prod.yml --env-file .env run --rm backend npx prisma migrate deploy
+docker compose -f docker-compose.prod.yml --env-file .env up -d
+```
+
+seguido de un health check contra `/api/health` con reintentos. **No publica a ningún registro
+de imágenes** (no hay Docker Hub de por medio) — construye directamente en el VPS con
+`docker-compose.prod.yml`, que es el compose de *producción* (sin bind mounts, backend sin
+`--watch`, ver más abajo) y vive versionado en el repo; el `.env` con los secretos reales
+**nunca** se versiona, sólo existe en el VPS.
 
 ⚠️ **`prisma migrate diff --shadow-database-url <URL>` borra el contenido de esa base** — Prisma
 la usa como scratch. Nunca apuntarlo a una base de desarrollo o producción real (ya pasó: se
 perdieron datos locales probando esto a mano).
+
+### Despliegue real: VPS compartido con Kredired
+
+La instancia productiva vive en `https://ksared.kredired.cloud`, en el mismo VPS de Hostinger
+que otra aplicación (Kredired) que **no es de este repo y nunca se toca** desde aquí. Aislamiento:
+
+| | Kredired (ajeno) | ksared (este repo) |
+|---|---|---|
+| Carpeta en el VPS | `~/kredired` | `~/ksared` (= `DEPLOY_PATH`) |
+| Contenedores | `kredired-app-1`, `kredired-db-1` | `ksared_postgres`, `ksared_backend`, `ksared_frontend` |
+| Puertos de host (127.0.0.1) | 3000, 5432 | 3001 (frontend), 4001 (backend), 5433 (postgres) |
+| Vhost nginx | `/etc/nginx/sites-available/kredired` | `/etc/nginx/sites-available/ksared` |
+| Certificado SSL | `kredired.cloud` | `ksared.kredired.cloud` |
+
+`docker compose` sin `-p` usa el nombre del directorio como namespace del proyecto, así que
+operar dentro de `~/ksared` es estructuralmente incapaz de tocar los contenedores de Kredired,
+incluso si algo saliera mal en el deploy.
+
+**nginx multiplexa un solo dominio por path**: `/` va al contenedor `frontend` (3001), `/api/`
+va al contenedor `backend` (4001). `NEXT_PUBLIC_API_URL` apunta al propio dominio
+(`https://ksared.kredired.cloud`) para que el navegador llame a la API en el mismo origen que
+sirve las páginas — el backend nunca queda expuesto en un puerto público aparte.
+
+**La llave SSH del pipeline (`VPS_SSH_KEY`) es dedicada** — un keypair generado sólo para que
+GitHub Actions entre como `deploy@VPS`, añadido a `~deploy/.ssh/authorized_keys` sin reemplazar
+las entradas ya existentes (la del admin, la del propio pipeline de Kredired). Nunca se reusa
+la llave personal de quien despliega a mano.
+
+**Redeploy manual** (si hace falta sin pasar por Actions):
+```bash
+ssh deploy@187.127.248.213
+cd ~/ksared && git pull
+docker compose -f docker-compose.prod.yml --env-file .env build
+docker compose -f docker-compose.prod.yml --env-file .env run --rm backend npx prisma migrate deploy
+docker compose -f docker-compose.prod.yml --env-file .env up -d
+```
+
+**Login del admin en producción**: el teléfono sembrado (`SEED_ADMIN_PHONE` en el `.env` del VPS)
+quedó como *placeholder* al desplegar por primera vez — cambiarlo antes de operar con datos
+reales de inquilinos.
 
 ## Cosas que ya se rompieron una vez (para no repetir)
 
