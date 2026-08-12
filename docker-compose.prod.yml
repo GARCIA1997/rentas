@@ -60,6 +60,13 @@ services:
       SEED_ADMIN_LAST_NAME: ${SEED_ADMIN_LAST_NAME}
     ports:
       - "127.0.0.1:4001:4000"
+    volumes:
+      # Las fotos del INE se escriben en disco, no en la base. Sin este volumen
+      # vivían en la capa de escritura del contenedor, y el deploy hace `build` +
+      # `up -d` en cada push a main: eso recrea el contenedor y borraba TODAS las
+      # identificaciones guardadas. Son el respaldo de cumplimiento del alta de
+      # inquilinos, así que tienen que sobrevivir a los redeploys.
+      - ksared_uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -94,6 +101,7 @@ services:
 
 volumes:
   ksared_db_data:
+  ksared_uploads:
 
 networks:
   ksared_network:

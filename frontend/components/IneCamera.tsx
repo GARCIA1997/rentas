@@ -51,6 +51,24 @@ export function IneCamera({ side, stepLabel, onCapture, onCancel, onPickFile }: 
   const [torchOn, setTorchOn] = useState(false);
   const [torchAvailable, setTorchAvailable] = useState(false);
 
+  // Bloqueo de orientación mientras la cámara está abierta. El manifest ya declara
+  // `orientation: portrait`, pero eso sólo aplica a la PWA instalada; este lock cubre
+  // además el caso de pestaña normal en los navegadores que lo permiten. Falla en
+  // silencio donde no está soportado (Safari, o fuera de pantalla completa).
+  useEffect(() => {
+    const orientation = screen.orientation as ScreenOrientation & {
+      lock?: (orientation: string) => Promise<void>;
+    };
+    orientation?.lock?.('portrait').catch(() => {});
+    return () => {
+      try {
+        screen.orientation?.unlock?.();
+      } catch {
+        /* no soportado */
+      }
+    };
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 

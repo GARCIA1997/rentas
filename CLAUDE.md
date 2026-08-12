@@ -324,6 +324,42 @@ Decisiones que no son obvias:
 - El umbral es **adaptativo** (Bradley-Roth sobre imagen integral), no global: una foto de
   credencial casi siempre tiene un lado más iluminado, y cualquier corte único deja media
   credencial en negro.
+- **El recorte fino al contorno se detecta por textura, no por brillo** (`detectCardBounds`):
+  se suma la diferencia entre píxeles vecinos por fila y columna, y se aprieta el margen
+  mientras el detalle sea bajo. La credencial está impresa (detalle alto), la mesa no. Keyear
+  en brillo se cae en cuanto la superficie es clara. Sólo recorta hacia adentro y con tope del
+  18%, así que el peor caso es no recortar — nunca perder texto.
+- **El nombre se valida antes de aceptarse** (`looksLikePersonName`). El modo de falla del OCR
+  del frente no es devolver nada, es devolver *algo*: media etiqueta, un pedazo del domicilio,
+  ruido del holograma. Si ninguna fuente pasa el filtro el campo se deja **vacío a propósito**:
+  un campo vacío se ve y se llena, un nombre equivocado se firma en el contrato.
+- **El nombre va en orden apellidos-primero** en las dos fuentes (MRZ y frente), igual que
+  impreso en la credencial. Que coincidan importa porque el admin compara el campo contra la
+  credencial que tiene en la mano.
+
+### Permisos sobre los datos del INE
+
+Sólo el administrador toca esta información. Verificado end-to-end contra el backend:
+
+| Acción del inquilino | Resultado |
+|---|---|
+| `PUT /tenants/:id` (propio o ajeno) | 403 |
+| `GET /tenants`, `DELETE /tenants/:id` | 403 |
+| `GET /tenants/:id/ine-front` / `-back` | 403 |
+| `PUT /me/settings` con `fullName`/`curp`/`role` inyectados | campos ignorados (allowlist de un solo campo) |
+
+`updateMySettings` acepta **únicamente** `notificationsEnabled`; es un allowlist explícito, no
+un filtro por lista negra. El portal del inquilino no tiene campos editables de datos
+personales. Las fotos se sirven sólo por rutas de admin (`router.use(authenticateJWT,
+requireAdmin)`), así que no se pueden poner en un `<img src>`: el perfil las trae con `fetch` +
+header de auth y arma un object URL (mismo patrón que los PDFs).
+
+### Orientación
+
+La app está pensada para retrato: el manifest declara `orientation: 'portrait'`, y `IneCamera`
+además intenta `screen.orientation.lock()`. **El lock sólo funciona en la PWA instalada** o en
+pantalla completa según el navegador (Safari no lo soporta), así que el layout sigue siendo
+responsive — forzar vertical no es algo que la web permita garantizar desde una pestaña.
 
 **Techo conocido:** tesseract.js sobre fotos reales de INE tiene un techo de precisión. El
 formulario de revisión siempre es editable y marca de qué fuente vino cada campo por eso.
@@ -516,3 +552,15 @@ reales de inquilinos.
 - **Credenciales reales del admin en `seed.js`** (teléfono y contraseña en texto plano) — el
   repo es público. Movidas a `SEED_ADMIN_PHONE`/`SEED_ADMIN_PASSWORD`, nunca hardcodear datos
   reales en scripts o seeds de un repo público.
+- **`uploads/` sin volumen en `docker-compose.prod.yml`** → las fotos del INE vivían en la
+  capa de escritura del contenedor, y el deploy hace `build` + `up -d` en cada push a `main`:
+  eso recrea el contenedor y **borraba todas las identificaciones guardadas**. Resuelto con el
+  volumen nombrado `ksared_uploads:/app/uploads`. Cualquier archivo nuevo que el backend
+  escriba a disco necesita su volumen, o se pierde en el siguiente deploy.
+- **Paquete npm nuevo instalado sólo en el host, no en el contenedor** → `/app/node_modules`
+  del backend es un volumen anónimo aparte, así que `npm install <pkg>` en el host no lo ve.
+  Ya pasó con Prisma y volvió a pasar con `sharp`: el código nuevo no corría y no era obvio
+  (los archivos se guardaban con el comportamiento viejo, sin error visible). Tras agregar una
+  dependencia: `docker compose exec backend npm install` y reiniciar el contenedor.
+- **`curl` dentro de un `while read` se come el stdin del loop** y sólo se procesa la primera
+  línea. Pasó limpiando datos de prueba y quedó un registro sin borrar. Usar `curl < /dev/null`.
