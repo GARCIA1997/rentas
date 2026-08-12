@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { PropertyFormModal } from '@/components/PropertyFormModal';
 import { useAuth } from '@/hooks/useAuth';
 import { propertiesApi, PropertyDetail, Contract } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
-import { ArrowLeftIcon } from '@/components/icons';
+import { useToast } from '@/components/ToastProvider';
+import { useConfirm } from '@/components/ConfirmProvider';
+import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@/components/icons';
 
 const statusLabels: Record<PropertyDetail['status'], string> = {
   OCUPADA: 'Ocupada',
@@ -43,18 +46,49 @@ export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const { showToast } = useToast();
+  const confirm = useConfirm();
   const [property, setProperty] = useState<PropertyDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
+  const loadProperty = (options?: { silent?: boolean }) => {
     if (!token || !id) return;
+    if (!options?.silent) setIsLoading(true);
     propertiesApi
       .getDetail(id, token)
       .then(setProperty)
       .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar la propiedad'))
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        if (!options?.silent) setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadProperty();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, id]);
+
+  const handleDelete = async () => {
+    if (!token || !property) return;
+    const confirmed = await confirm({
+      title: 'Eliminar propiedad',
+      message: `¿Eliminar ${property.name}? Esta acción no se puede deshacer.`,
+      confirmLabel: 'Eliminar',
+      destructive: true,
+    });
+    if (!confirmed) return;
+    setIsDeleting(true);
+    try {
+      await propertiesApi.remove(property.id, token);
+      router.push('/properties');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Error al eliminar', 'error');
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
@@ -79,9 +113,26 @@ export default function PropertyDetailPage() {
                 {property.address}, {property.city}
               </p>
             </div>
-            <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[property.status]}`}>
-              {statusLabels[property.status]}
-            </span>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[property.status]}`}>
+                {statusLabels[property.status]}
+              </span>
+              <button
+                onClick={() => setIsEditOpen(true)}
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-surface shadow-sm text-muted hover:text-primary transition-colors"
+                aria-label="Editar"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-surface shadow-sm text-muted hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
+                aria-label="Eliminar"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           <div className="bg-surface rounded-2xl shadow-sm p-5">
@@ -136,6 +187,13 @@ export default function PropertyDetailPage() {
           )}
         </div>
       )}
+
+      <PropertyFormModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        property={property}
+        onSaved={() => loadProperty({ silent: true })}
+      />
     </ProtectedRoute>
   );
 }

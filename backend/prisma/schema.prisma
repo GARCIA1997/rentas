@@ -139,9 +139,19 @@ model Tenant {
   fullName              String
   email                 String?
   phone                 String?
-  idDocument            String?
+  idDocument            String?     // Clave de elector (INE), distinta de la CURP
   status                TenantStatus @default(ACTIVE)
   notes                 String?
+  // Capturados al escanear el INE (ver /tenants/new); todos opcionales porque el alta
+  // manual (sin escaneo) sigue siendo un camino válido.
+  address               String?     @db.Text
+  curp                  String?     @db.VarChar(18)
+  birthDate             DateTime?
+  // Fotos del INE guardadas como respaldo — decisión explícita del usuario de conservarlas,
+  // no sólo procesarlas y descartarlas. Rutas relativas bajo uploads/tenants/{id}/, servidas
+  // sólo vía endpoints autenticados de admin (nunca públicas, son datos personales sensibles).
+  ineFrontUrl           String?
+  ineBackUrl            String?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 

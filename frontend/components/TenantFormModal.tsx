@@ -12,6 +12,9 @@ const emptyForm: TenantInput = {
   idDocument: '',
   status: 'ACTIVE',
   notes: '',
+  address: '',
+  curp: '',
+  birthDate: '',
 };
 
 export function TenantFormModal({
@@ -42,6 +45,9 @@ export function TenantFormModal({
             idDocument: tenant.idDocument ?? '',
             status: tenant.status,
             notes: tenant.notes ?? '',
+            address: tenant.address ?? '',
+            curp: tenant.curp ?? '',
+            birthDate: tenant.birthDate ? tenant.birthDate.slice(0, 10) : '',
           }
         : emptyForm
     );
@@ -104,12 +110,44 @@ export function TenantFormModal({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-heading mb-1">Identificación (INE/CURP)</label>
+          <label className="block text-sm font-medium text-heading mb-1">Clave de elector</label>
           <input
             type="text"
             value={form.idDocument ?? ''}
-            onChange={(e) => setForm({ ...form, idDocument: e.target.value })}
+            onChange={(e) => setForm({ ...form, idDocument: e.target.value.toUpperCase() })}
             className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-heading mb-1">CURP</label>
+            <input
+              type="text"
+              value={form.curp ?? ''}
+              onChange={(e) => setForm({ ...form, curp: e.target.value.toUpperCase() })}
+              maxLength={18}
+              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-heading mb-1">Fecha de nacimiento</label>
+            <input
+              type="date"
+              value={form.birthDate ?? ''}
+              onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
+              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-heading mb-1">Domicilio</label>
+          <textarea
+            value={form.address ?? ''}
+            onChange={(e) => setForm({ ...form, address: e.target.value })}
+            rows={2}
+            className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
           />
         </div>
 

@@ -187,21 +187,58 @@ export interface Tenant {
   idDocument?: string | null;
   status: 'ACTIVE' | 'EVICTED' | 'MOVED_OUT';
   notes?: string | null;
+  address?: string | null;
+  curp?: string | null;
+  birthDate?: string | null;
+  ineFrontUrl?: string | null;
+  ineBackUrl?: string | null;
   createdAt: string;
   updatedAt: string;
   contracts?: TenantActiveContract[];
 }
 
-export type TenantInput = Omit<Tenant, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'contracts'>;
+export type TenantInput = Omit<
+  Tenant,
+  'id' | 'userId' | 'createdAt' | 'updatedAt' | 'contracts' | 'ineFrontUrl' | 'ineBackUrl'
+>;
 
 export const tenantsApi = {
   list: (token: string) => apiCall('/api/tenants', { token }) as Promise<Tenant[]>,
   get: (id: string, token: string) => apiCall(`/api/tenants/${id}`, { token }) as Promise<Tenant>,
   create: (data: TenantInput, token: string) =>
     apiCall('/api/tenants', { method: 'POST', body: JSON.stringify(data), token }) as Promise<Tenant>,
+  // Variante para el wizard de escaneo de INE: además de los datos, sube las fotos de
+  // frente/reverso como multipart. `express-validator` en el backend acepta los mismos
+  // campos vía multipart que vía JSON (multer los deja en req.body).
+  createWithIne: async (
+    data: TenantInput,
+    photos: { front?: File | null; back?: File | null },
+    token: string
+  ) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        formData.append(key, String(value));
+      }
+    });
+    if (photos.front) formData.append('ineFront', photos.front);
+    if (photos.back) formData.append('ineBack', photos.back);
+
+    const response = await fetch(`${API_URL}/api/tenants`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || error.errors?.[0]?.msg || 'Error al crear inquilino');
+    }
+    return response.json() as Promise<Tenant>;
+  },
   update: (id: string, data: Partial<TenantInput>, token: string) =>
     apiCall(`/api/tenants/${id}`, { method: 'PUT', body: JSON.stringify(data), token }),
   remove: (id: string, token: string) => apiCall(`/api/tenants/${id}`, { method: 'DELETE', token }),
+  ineImageUrl: (tenantId: string, side: 'front' | 'back') => `${API_URL}/api/tenants/${tenantId}/ine-${side}`,
 };
 
 // ---- Representatives ----
