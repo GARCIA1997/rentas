@@ -12,9 +12,14 @@ export interface ParsedIneData {
   birthDate?: string; // ISO yyyy-mm-dd
   address?: string;
   idDocument?: string; // Clave de elector
+  confidence?: 'high' | 'medium' | 'low'; // Nivel de confianza de la lectura
 }
 
-const CURP_REGEX = /[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d/;
+// CURP tiene formato muy específico: 4 letras + 6 dígitos (AAMMDD) + 1 letra (sexo) + 5 letras + 1 letra/dígito + 1 dígito
+const CURP_REGEX = /[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z\d]\d/;
+
+// Clave de elector: 6 letras + 8 dígitos + 1 letra (sexo) + 3 dígitos
+const CLAVE_ELECTOR_REGEX = /[A-Z]{6}\d{8}[HM]\d{3}/;
 
 const stripNonAlnum = (value: string) => value.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
@@ -70,8 +75,13 @@ export function extractClaveElector(rawText: string): string | null {
   const token = findTokenNearLabel(lines, 'CLAVE DE ELECTOR', 13);
   if (!token) return null;
 
-  const match = token.match(/[A-Z0-9]{13,18}/);
-  return match ? match[0].slice(0, 18) : null;
+  // Buscar el patrón específico de clave de elector
+  const match = token.match(CLAVE_ELECTOR_REGEX);
+  if (match) return match[0];
+
+  // Fallback: buscar cualquier secuencia de 13+ caracteres alfanuméricos
+  const fallbackMatch = token.match(/[A-Z0-9]{13,18}/);
+  return fallbackMatch ? fallbackMatch[0].slice(0, 18) : null;
 }
 
 export function extractAddress(rawText: string): string | null {
@@ -123,6 +133,11 @@ export function extractFullName(rawText: string): string | null {
 export function parseIneText(frontText: string, backText = ''): ParsedIneData {
   const combined = `${frontText}\n${backText}`;
 
+  // Extraer campos individuales
+  const fullName = extractFullName(frontText);
+  const address = extractAddress(frontText);
+  const idDocument = extractClaveElector(frontText);
+
   // Buscar CURP con mayor tolerancia — puede estar entre ruido de códigos de barras
   let curp = extractCurp(combined);
   if (!curp) {
@@ -133,11 +148,21 @@ export function parseIneText(frontText: string, backText = ''): ParsedIneData {
     }
   }
 
+  // Derivar fecha de nacimiento si se encontró CURP
+  const birthDate = curp ? deriveBirthDateFromCurp(curp) : undefined;
+
+  // Calcular nivel de confianza basado en cuántos campos se extrajeron exitosamente
+  let confidence: 'high' | 'medium' | 'low' = 'low';
+  const fieldsFound = [fullName, curp, birthDate, address, idDocument].filter(Boolean).length;
+  if (fieldsFound >= 4) confidence = 'high';
+  else if (fieldsFound >= 2) confidence = 'medium';
+
   return {
-    fullName: extractFullName(frontText) ?? undefined,
+    fullName: fullName ?? undefined,
     curp: curp ?? undefined,
-    birthDate: curp ? deriveBirthDateFromCurp(curp) ?? undefined : undefined,
-    address: extractAddress(frontText) ?? undefined,
-    idDocument: extractClaveElector(frontText) ?? undefined,
+    birthDate: birthDate ?? undefined,
+    address: address ?? undefined,
+    idDocument: idDocument ?? undefined,
+    confidence,
   };
 }
