@@ -116,13 +116,26 @@ export function extractFullName(rawText: string): string | null {
 // Combina el texto OCR de ambos lados de la credencial. La clave de elector y el
 // domicilio normalmente sólo están en el frente; la CURP puede aparecer en cualquiera
 // de los dos lados según el formato de la credencial.
+//
+// Nota: el OCR del INE es desafiante porque los campos están en un layout específico
+// con códigos de barras, QR y hologramas. Se mejora con cada captura; si el OCR falla,
+// los campos se dejan en blanco para que el usuario los rellene manualmente.
 export function parseIneText(frontText: string, backText = ''): ParsedIneData {
   const combined = `${frontText}\n${backText}`;
-  const curp = extractCurp(combined) ?? undefined;
+
+  // Buscar CURP con mayor tolerancia — puede estar entre ruido de códigos de barras
+  let curp = extractCurp(combined);
+  if (!curp) {
+    // Intento alternativo: buscar el patrón CURP incluso si hay caracteres raros alrededor
+    const curpMatch = combined.match(/[A-Z]{4}\d{6}[HM][A-Z]{5}[\w]{2}\d/);
+    if (curpMatch) {
+      curp = curpMatch[0].substring(0, 18);
+    }
+  }
 
   return {
     fullName: extractFullName(frontText) ?? undefined,
-    curp,
+    curp: curp ?? undefined,
     birthDate: curp ? deriveBirthDateFromCurp(curp) ?? undefined : undefined,
     address: extractAddress(frontText) ?? undefined,
     idDocument: extractClaveElector(frontText) ?? undefined,

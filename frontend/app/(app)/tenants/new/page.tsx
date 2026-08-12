@@ -1,14 +1,15 @@
 'use client';
 
-import { ChangeEvent, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { IneCamera } from '@/components/IneCamera';
 import { useAuth } from '@/hooks/useAuth';
 import { tenantsApi, TenantInput } from '@/lib/api';
 import { parseIneText } from '@/lib/ineParser';
-import { ArrowLeftIcon, CameraIcon, CheckCircleIcon } from '@/components/icons';
+import { ArrowLeftIcon, CheckCircleIcon } from '@/components/icons';
 
-type Stage = 'front' | 'back' | 'processing' | 'review';
+type Stage = 'camera-front' | 'camera-back' | 'processing' | 'review';
 
 const emptyForm: TenantInput = {
   fullName: '',
@@ -32,9 +33,9 @@ export default function NewTenantWizardPage() {
   const { token } = useAuth();
   const router = useRouter();
 
-  const [stage, setStage] = useState<Stage>('front');
-  const [frontFile, setFrontFile] = useState<File | null>(null);
-  const [backFile, setBackFile] = useState<File | null>(null);
+  const [stage, setStage] = useState<Stage>('camera-front');
+  const [frontBlob, setFrontBlob] = useState<Blob | null>(null);
+  const [backBlob, setBackBlob] = useState<Blob | null>(null);
   const [frontPreview, setFrontPreview] = useState<string | null>(null);
   const [backPreview, setBackPreview] = useState<string | null>(null);
   const [ocrStatus, setOcrStatus] = useState('');
@@ -44,10 +45,7 @@ export default function NewTenantWizardPage() {
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  const frontInputRef = useRef<HTMLInputElement>(null);
-  const backInputRef = useRef<HTMLInputElement>(null);
-
-  const runOcr = async (front: File, back: File | null) => {
+  const runOcr = async (front: Blob, back: Blob | null) => {
     setStage('processing');
     setOcrWarning('');
     try {
@@ -79,25 +77,21 @@ export default function NewTenantWizardPage() {
     }
   };
 
-  const handleFrontSelected = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setFrontFile(file);
-    setFrontPreview(URL.createObjectURL(file));
-    setStage('back');
+  const handleFrontCapture = (blob: Blob) => {
+    setFrontBlob(blob);
+    setFrontPreview(URL.createObjectURL(blob));
+    setStage('camera-back');
   };
 
-  const handleBackSelected = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setBackFile(file);
-    setBackPreview(URL.createObjectURL(file));
-    runOcr(frontFile as File, file);
+  const handleBackCapture = (blob: Blob) => {
+    setBackBlob(blob);
+    setBackPreview(URL.createObjectURL(blob));
+    runOcr(frontBlob as Blob, blob);
   };
 
   const handleSkipManual = () => {
-    setFrontFile(null);
-    setBackFile(null);
+    setFrontBlob(null);
+    setBackBlob(null);
     setFrontPreview(null);
     setBackPreview(null);
     setForm(emptyForm);
@@ -121,6 +115,9 @@ export default function NewTenantWizardPage() {
     setError('');
     setIsSaving(true);
     try {
+      // Convertir blobs a files con nombres apropiados
+      const frontFile = frontBlob ? new File([frontBlob], 'ine-front.jpg', { type: 'image/jpeg' }) : null;
+      const backFile = backBlob ? new File([backBlob], 'ine-back.jpg', { type: 'image/jpeg' }) : null;
       const created = await tenantsApi.createWithIne(form, { front: frontFile, back: backFile }, token);
       router.push(`/tenants/${created.id}/profile`);
     } catch (err) {
@@ -131,11 +128,11 @@ export default function NewTenantWizardPage() {
   };
 
   const handleBack = () => {
-    if (stage === 'back') {
-      setBackFile(null);
+    if (stage === 'camera-back') {
+      setBackBlob(null);
       setBackPreview(null);
-      setStage('front');
-    } else if (stage === 'front') {
+      setStage('camera-front');
+    } else if (stage === 'camera-front') {
       router.push('/tenants');
     } else {
       router.push('/tenants');
@@ -151,35 +148,22 @@ export default function NewTenantWizardPage() {
             className="flex items-center gap-1.5 text-muted hover:text-heading text-sm mb-4 -ml-1"
           >
             <ArrowLeftIcon className="w-4 h-4" />
-            {stage === 'back' ? 'Frente del INE' : 'Inquilinos'}
+            {stage === 'camera-back' ? 'Frente del INE' : 'Inquilinos'}
           </button>
         )}
 
-        {stage === 'front' && (
-          <div className="text-center py-8">
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
-              <CameraIcon className="w-9 h-9 text-primary" />
-            </div>
-            <h1 className="text-xl font-bold text-heading mb-2">Frente del INE</h1>
-            <p className="text-muted text-sm mb-8 px-4">
-              Toma una foto clara del frente de la credencial. Vamos a extraer el nombre, CURP, domicilio y
-              clave de elector automáticamente.
+        {stage === 'camera-front' && (
+          <div className="space-y-4">
+            <h1 className="text-xl font-bold text-heading mb-1">Frente del INE</h1>
+            <p className="text-muted text-sm mb-4">
+              Posiciona el frente de la credencial dentro del recuadro. La cámara está dentro de la app.
             </p>
-            <input
-              ref={frontInputRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handleFrontSelected}
-              className="hidden"
+            <IneCamera
+              side="front"
+              onCapture={handleFrontCapture}
+              onCancel={handleSkipManual}
             />
-            <button
-              onClick={() => frontInputRef.current?.click()}
-              className="bg-primary hover:bg-primary-pressed text-white px-6 py-3 rounded-xl text-sm font-medium"
-            >
-              Tomar foto / elegir archivo
-            </button>
-            <div className="mt-6">
+            <div className="mt-4">
               <button onClick={handleSkipManual} className="text-muted text-sm underline hover:text-heading">
                 Prefiero llenar los datos manualmente
               </button>
@@ -187,30 +171,23 @@ export default function NewTenantWizardPage() {
           </div>
         )}
 
-        {stage === 'back' && (
-          <div className="text-center py-8">
+        {stage === 'camera-back' && (
+          <div className="space-y-4">
             {frontPreview && (
-              <img src={frontPreview} alt="Frente del INE" className="w-40 mx-auto rounded-xl shadow-sm mb-6" />
+              <div className="bg-surface rounded-2xl p-4 text-center">
+                <p className="text-muted text-xs mb-2">Foto del frente capturada:</p>
+                <img src={frontPreview} alt="Frente del INE" className="w-32 mx-auto rounded-lg shadow-sm" />
+              </div>
             )}
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
-              <CameraIcon className="w-9 h-9 text-primary" />
-            </div>
-            <h1 className="text-xl font-bold text-heading mb-2">Reverso del INE</h1>
-            <p className="text-muted text-sm mb-8 px-4">Ahora la parte de atrás de la credencial.</p>
-            <input
-              ref={backInputRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handleBackSelected}
-              className="hidden"
+            <h1 className="text-xl font-bold text-heading mb-1">Reverso del INE</h1>
+            <p className="text-muted text-sm mb-4">
+              Ahora posiciona el reverso de la credencial dentro del recuadro.
+            </p>
+            <IneCamera
+              side="back"
+              onCapture={handleBackCapture}
+              onCancel={() => setStage('camera-front')}
             />
-            <button
-              onClick={() => backInputRef.current?.click()}
-              className="bg-primary hover:bg-primary-pressed text-white px-6 py-3 rounded-xl text-sm font-medium"
-            >
-              Tomar foto / elegir archivo
-            </button>
           </div>
         )}
 
@@ -226,15 +203,25 @@ export default function NewTenantWizardPage() {
           <div>
             <h1 className="text-xl font-bold text-heading mb-1">Revisa los datos</h1>
             <p className="text-muted text-sm mb-5">
-              {frontFile
+              {frontBlob
                 ? 'Corrige lo que haga falta. El teléfono no viene en el INE, así que agrégalo a mano.'
                 : 'Captura los datos del inquilino manualmente.'}
             </p>
 
             {(frontPreview || backPreview) && (
-              <div className="flex gap-3 mb-5">
-                {frontPreview && <img src={frontPreview} alt="Frente del INE" className="w-24 rounded-lg shadow-sm" />}
-                {backPreview && <img src={backPreview} alt="Reverso del INE" className="w-24 rounded-lg shadow-sm" />}
+              <div className="flex gap-3 mb-5 p-4 bg-canvas rounded-xl">
+                {frontPreview && (
+                  <div className="text-center">
+                    <img src={frontPreview} alt="Frente del INE" className="w-24 rounded-lg shadow-sm" />
+                    <p className="text-muted text-xs mt-1">Frente</p>
+                  </div>
+                )}
+                {backPreview && (
+                  <div className="text-center">
+                    <img src={backPreview} alt="Reverso del INE" className="w-24 rounded-lg shadow-sm" />
+                    <p className="text-muted text-xs mt-1">Reverso</p>
+                  </div>
+                )}
               </div>
             )}
 
