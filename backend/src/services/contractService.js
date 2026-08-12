@@ -15,7 +15,10 @@ const ensureUploadsDir = () => {
 };
 
 const includeRelations = {
-  tenant: { select: { id: true, fullName: true, idDocument: true, phone: true } },
+  // curp y address se capturan en el escaneo del INE y alimentan el contrato (CURP y
+  // domicilio del arrendatario en las declaraciones) — sin seleccionarlos aquí llegaban
+  // completos a la BD pero nunca al PDF, porque Prisma no trae columnas fuera del select.
+  tenant: { select: { id: true, fullName: true, idDocument: true, phone: true, curp: true, address: true } },
   // propertyType alimenta el destino declarado y el plazo legal máximo del contrato (10 años
   // habitación / 15 comercio), y city determina la entidad y el código civil aplicable.
   property: {

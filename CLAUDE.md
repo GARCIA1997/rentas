@@ -232,6 +232,22 @@ Tres plantillas HTML en `backend/src/db/contractTemplates.js`, sembradas por `se
 renderizadas con reemplazo simple de placeholders `{{variable}}` (`renderTemplate()` en
 `pdfService.js` — no es un motor de templates real, es un `.replace` con regex).
 
+**⚠️ El HTML que se renderiza vive en la base de datos (`ContractTemplate.templateContent`),
+no se lee del archivo en cada generación.** `generateContractPdf()` busca la plantilla por
+`contract.templateUsed` y usa lo que está en la tabla — editar `contractTemplates.js` no
+tiene ningún efecto en los PDFs hasta correr `npm run db:seed` (el seed hace `upsert` con
+`update: { templateContent: ... }`, así que sí actualiza plantillas existentes, no sólo
+crea nuevas). **`deploy.yml` sólo corre `prisma migrate deploy`, nunca `db:seed`** — tras
+mergear un cambio al HTML de una plantilla hay que correr el seed a mano en el VPS
+(`docker compose -f docker-compose.prod.yml --env-file .env run --rm backend npm run
+db:seed`) o el cambio queda sin efecto en producción indefinidamente, en silencio.
+
+Los datos del tenant que llegan al PDF son los que el `select` de Prisma en
+`contractService.js` (`includeRelations.tenant`) decide traer — campos que existen en la
+BD pero no están en ese `select` nunca llegan a `buildContractVariables()`, aunque el
+tenant los tenga. Ya pasó con `curp`/`address` (capturados por el escaneo del INE desde
+hace varias versiones, pero ausentes del `select` hasta que se agregaron explícitamente).
+
 - **`CASA_TEMPLATE`** — casa habitación (`propertyType: 'HOUSE'`).
 - **`LOCAL_TEMPLATE`** — local comercial (`propertyType: 'LOCAL'`).
 - **`COAHUAYANA_TEMPLATE`** — versión enriquecida con inventario, reglas de convivencia,
@@ -312,6 +328,13 @@ Decisiones que no son obvias:
 - **El recorte a la ROI es la mejora más grande.** Sin él Tesseract intenta segmentar toda
   la escena (mesa, mano, sombra) y acaba leyendo el fondo. Junto con `PSM.SINGLE_BLOCK` y
   `user_defined_dpi=300` es la diferencia entre "no lee nada" y leer los campos.
+- **El marco guía usa la mayor parte de la pantalla** (`FRAME_WIDTH_RATIO`/
+  `FRAME_MAX_HEIGHT_RATIO` en `cardFrame.ts`, ~0.92×0.90) — más marco es más píxeles reales
+  de la credencial, que es la palanca más directa para mejorar la lectura. El recorte fino
+  automático (`detectCardBounds`) corre siempre después, pero es deliberadamente
+  conservador (tope 18%, nunca pierde texto): ajusta el margen que ya quedó dentro del
+  marco, no sustituye tener un marco grande — con el marco muy ajustado a la credencial casi
+  no encuentra nada que recortar, lo cual es "estar funcionando" y no "no estar corriendo".
 - **El MRZ del reverso es la fuente confiable, no el frente.** Tipografía OCR-B hecha para
   máquinas, posiciones fijas por norma ICAO 9303, y dígitos verificadores que permiten
   *saber* si la lectura salió bien. El frente tiene guilloches, holograma y un layout que

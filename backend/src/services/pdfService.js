@@ -113,6 +113,14 @@ export const buildContractVariables = (contract) => {
     representative_id_document: contract.representative?.idDocument || '',
     tenant_name: contract.tenant.fullName,
     tenant_id_document: contract.tenant.idDocument || 'N/A',
+    // La CURP se intercala tras la clave de elector en la misma declaración ("identificarse
+    // con {{tenant_id_document}}{{tenant_curp_text}}"); condicional porque no todo tenant
+    // pasó por el escaneo del INE (alta manual) y la plantilla no puede quedar con ", CURP ,".
+    tenant_curp_text: contract.tenant.curp ? `, CURP ${contract.tenant.curp}` : '',
+    // Domicilio previo del arrendatario (el que traía en el INE al momento de firmar, no el
+    // del inmueble arrendado) — se intercala en el proemio tras el nombre: "{{tenant_name}}
+    // {{tenant_address_text}}, a quien...".
+    tenant_address_text: contract.tenant.address ? `, con domicilio en ${contract.tenant.address}` : '',
     property_type: contract.property.propertyType === 'HOUSE' ? 'casa habitación' : 'local comercial',
     property_name: contract.property.name,
     property_address: contract.property.address,
