@@ -252,6 +252,25 @@ export function AlertTriangleIcon({ active, ...props }: IconProps) {
   );
 }
 
+export function BoltIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M13 2.5 5.5 13.5H11l-1 8 7.5-11H12l1-7.5Z" />
+    </svg>
+  );
+}
+
+export function RotateCardIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <rect x="7.5" y="3" width="9" height="14" rx="1.5" />
+      <rect x="9.5" y="5.5" width="3" height="3" rx="0.5" />
+      <path d="M9.5 11h5M9.5 13.5h5" />
+      <path d="M4.5 19.5a7.5 7.5 0 0 0 3 1.7M19.5 19.5a7.5 7.5 0 0 1-3 1.7" />
+    </svg>
+  );
+}
+
 export function CameraIcon({ active, ...props }: IconProps) {
   return (
     <svg {...base(active)} {...props}>
