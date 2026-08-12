@@ -1,28 +1,12 @@
 'use client';
 
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { Modal } from '@/components/Modal';
+import { PropertyFormModal } from '@/components/PropertyFormModal';
 import { useAuth } from '@/hooks/useAuth';
-import { propertiesApi, Property, PropertyInput, VALID_CITIES } from '@/lib/api';
+import { propertiesApi, Property } from '@/lib/api';
 import { ChevronRightIcon } from '@/components/icons';
-import { useToast } from '@/components/ToastProvider';
-import { useConfirm } from '@/components/ConfirmProvider';
-
-const emptyForm: PropertyInput = {
-  name: '',
-  address: '',
-  city: VALID_CITIES[0],
-  postalCode: '',
-  propertyType: 'HOUSE',
-  status: 'LIBRE',
-  rentalPrice: '' as unknown as string,
-  waterIncluded: false,
-  bedrooms: null,
-  bathrooms: null,
-  maintenanceNotes: '',
-};
 
 const statusLabels: Record<Property['status'], string> = {
   OCUPADA: 'Ocupada',
@@ -38,15 +22,10 @@ const statusColors: Record<Property['status'], string> = {
 
 export default function PropertiesPage() {
   const { token } = useAuth();
-  const { showToast } = useToast();
-  const confirm = useConfirm();
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState<PropertyInput>(emptyForm);
   const [error, setError] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
 
   const loadProperties = async () => {
     if (!token) return;
@@ -66,83 +45,23 @@ export default function PropertiesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  const openCreateModal = () => {
-    setEditingId(null);
-    setForm(emptyForm);
-    setError('');
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (property: Property) => {
-    setEditingId(property.id);
-    setForm({
-      name: property.name,
-      address: property.address,
-      city: property.city,
-      postalCode: property.postalCode,
-      propertyType: property.propertyType,
-      status: property.status,
-      rentalPrice: property.rentalPrice,
-      waterIncluded: property.waterIncluded,
-      bedrooms: property.bedrooms ?? null,
-      bathrooms: property.bathrooms ?? null,
-      maintenanceNotes: property.maintenanceNotes ?? '',
-    });
-    setError('');
-    setIsModalOpen(true);
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!token) return;
-    setError('');
-    setIsSaving(true);
-
-    try {
-      const payload = { ...form, rentalPrice: Number(form.rentalPrice) as unknown as string };
-      if (editingId) {
-        await propertiesApi.update(editingId, payload, token);
-      } else {
-        await propertiesApi.create(payload, token);
-      }
-      setIsModalOpen(false);
-      await loadProperties();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al guardar');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!token) return;
-    const confirmed = await confirm({
-      title: 'Eliminar propiedad',
-      message: '¿Eliminar esta propiedad? Esta acción no se puede deshacer.',
-      confirmLabel: 'Eliminar',
-      destructive: true,
-    });
-    if (!confirmed) return;
-    try {
-      await propertiesApi.remove(id, token);
-      await loadProperties();
-      showToast('Propiedad eliminada.', 'success');
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Error al eliminar', 'error');
-    }
-  };
-
   return (
     <ProtectedRoute requiredRole="ADMIN">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <h1 className="text-2xl font-bold text-heading">Propiedades</h1>
         <button
-          onClick={openCreateModal}
+          onClick={() => setIsModalOpen(true)}
           className="bg-primary hover:bg-primary-pressed text-white px-4 py-2.5 rounded-xl text-sm font-medium self-start sm:self-auto active:opacity-80"
         >
           + Nueva propiedad
         </button>
       </div>
+
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-sm text-red-800 dark:text-red-400 mb-4">
+          {error}
+        </div>
+      )}
 
       {isLoading ? (
         <p className="text-muted">Cargando...</p>
@@ -179,7 +98,9 @@ export default function PropertiesPage() {
             })}
           </div>
 
-          {/* Desktop: table */}
+          {/* Desktop: table — editar y eliminar viven en el perfil de la propiedad, no aquí
+              (mismo patrón que Inquilinos), así ambas vías de entrada (lista y tarjeta móvil)
+              terminan en un único lugar con las acciones. */}
           <div className="hidden sm:block bg-surface rounded-2xl shadow-sm overflow-hidden overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-canvas text-muted text-left">
@@ -190,17 +111,17 @@ export default function PropertiesPage() {
                   <th className="px-4 py-3 font-medium">Renta</th>
                   <th className="px-4 py-3 font-medium">Estado</th>
                   <th className="px-4 py-3 font-medium">Inquilino</th>
-                  <th className="px-4 py-3 font-medium text-right">Acciones</th>
+                  <th className="px-4 py-3 font-medium text-right">Perfil</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/5 dark:divide-white/10">
                 {properties.map((property) => (
-                  <tr key={property.id} className="hover:bg-canvas/50">
-                    <td className="px-4 py-3">
-                      <Link href={`/properties/${property.id}`} className="text-heading font-medium hover:text-primary">
-                        {property.name}
-                      </Link>
-                    </td>
+                  <tr
+                    key={property.id}
+                    onClick={() => (window.location.href = `/properties/${property.id}`)}
+                    className="cursor-pointer hover:bg-black/[0.02] dark:hover:bg-white/[0.03]"
+                  >
+                    <td className="px-4 py-3 text-heading font-medium">{property.name}</td>
                     <td className="px-4 py-3 text-muted">{property.city}</td>
                     <td className="px-4 py-3 text-muted">{property.propertyType === 'HOUSE' ? 'Casa' : 'Local'}</td>
                     <td className="px-4 py-3 text-muted">${Number(property.rentalPrice).toLocaleString('es-MX')}</td>
@@ -210,13 +131,10 @@ export default function PropertiesPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-muted">{property.contracts?.[0]?.tenant.fullName ?? '—'}</td>
-                    <td className="px-4 py-3 text-right space-x-3">
-                      <button onClick={() => openEditModal(property)} className="text-primary hover:underline">
-                        Editar
-                      </button>
-                      <button onClick={() => handleDelete(property.id)} className="text-red-600 hover:underline">
-                        Eliminar
-                      </button>
+                    <td className="px-4 py-3 text-right">
+                      <Link href={`/properties/${property.id}`} className="text-primary hover:underline">
+                        Ver perfil →
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -226,168 +144,7 @@ export default function PropertiesPage() {
         </>
       )}
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={editingId ? 'Editar propiedad' : 'Nueva propiedad'}
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-heading mb-1">Nombre</label>
-            <input
-              type="text"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-heading mb-1">Dirección</label>
-            <input
-              type="text"
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              required
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-heading mb-1">Ciudad</label>
-              <select
-                value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
-                required
-                className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                {VALID_CITIES.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-heading mb-1">Código Postal</label>
-              <input
-                type="text"
-                value={form.postalCode}
-                onChange={(e) => setForm({ ...form, postalCode: e.target.value })}
-                required
-                className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-heading mb-1">Tipo</label>
-              <select
-                value={form.propertyType}
-                onChange={(e) => setForm({ ...form, propertyType: e.target.value as PropertyInput['propertyType'] })}
-                className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="HOUSE">Casa</option>
-                <option value="LOCAL">Local</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-heading mb-1">Estado</label>
-              <select
-                value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value as PropertyInput['status'] })}
-                className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="LIBRE">Libre</option>
-                <option value="OCUPADA">Ocupada</option>
-                <option value="MANTENIMIENTO">Mantenimiento</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-heading mb-1">Cuartos</label>
-              <input
-                type="number"
-                min="0"
-                value={form.bedrooms ?? ''}
-                onChange={(e) => setForm({ ...form, bedrooms: e.target.value ? Number(e.target.value) : null })}
-                className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-heading mb-1">Baños</label>
-              <input
-                type="number"
-                min="0"
-                value={form.bathrooms ?? ''}
-                onChange={(e) => setForm({ ...form, bathrooms: e.target.value ? Number(e.target.value) : null })}
-                className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 items-end">
-            <div>
-              <label className="block text-sm font-medium text-heading mb-1">Renta mensual (precio de lista)</label>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={form.rentalPrice}
-                onChange={(e) => setForm({ ...form, rentalPrice: e.target.value as unknown as string })}
-                required
-                className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <label className="flex items-center gap-2 text-sm text-heading pb-2">
-              <input
-                type="checkbox"
-                checked={form.waterIncluded}
-                onChange={(e) => setForm({ ...form, waterIncluded: e.target.checked })}
-                className="rounded"
-              />
-              Agua incluida
-            </label>
-          </div>
-          <p className="text-xs text-muted -mt-2">
-            Este es el precio de referencia. La renta pactada de cada contrato se define al generarlo.
-          </p>
-
-          <div>
-            <label className="block text-sm font-medium text-heading mb-1">Notas de mantenimiento</label>
-            <textarea
-              value={form.maintenanceNotes ?? ''}
-              onChange={(e) => setForm({ ...form, maintenanceNotes: e.target.value })}
-              rows={2}
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          {error && <div className="p-3 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg text-sm">{error}</div>}
-
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-lg text-sm font-medium text-muted hover:bg-canvas"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="bg-primary hover:bg-primary-pressed text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
-            >
-              {isSaving ? 'Guardando...' : 'Guardar'}
-            </button>
-          </div>
-        </form>
-      </Modal>
+      <PropertyFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSaved={loadProperties} />
     </ProtectedRoute>
   );
 }
