@@ -277,6 +277,60 @@ tope legal"); el frontend lo muestra como aviso en `/contracts/[id]`, no bloquea
 específico del Código Civil de Michoacán, y confirmar que la Ley Inquilinaria de 1986 (única
 versión consultada íntegra) no fue modificada de fondo por la reforma de 2016.
 
+## Escaneo del INE (alta de inquilinos)
+
+`/tenants/new` es un wizard de pantallas dedicadas que captura el frente y el reverso de
+la credencial, lee los datos con OCR y prellena el formulario. El teléfono nunca sale del
+INE, siempre se captura a mano.
+
+**⚠️ El OCR corre ENTERAMENTE EN EL CLIENTE.** `tesseract.js` procesa el blob recién
+capturado en el navegador, *antes* de subir la foto. Esto ya causó una confusión completa:
+se agregó preprocesamiento con `sharp` en el backend creyendo que mejoraría la lectura, y
+no cambió nada — el OCR ya había terminado cuando la imagen llegaba al servidor.
+`backend/src/services/imagePreprocessor.js` **sólo** normaliza la copia que se archiva
+(orientación EXIF + resolución acotada), y a propósito **no** altera tonos: esa copia es
+el respaldo de la identificación y una versión alterada vale menos como evidencia.
+
+El preprocesamiento que sí determina si se lee algo vive en el frontend:
+
+| Archivo | Responsabilidad |
+|---|---|
+| `lib/cardFrame.ts` | Geometría del marco guía → ROI. Aparte del componente para poder verificarla numéricamente |
+| `lib/imagePreprocess.ts` | Pipeline en canvas: recorte ROI → giro → escalado → gris → contraste → umbral adaptativo |
+| `lib/ineOcr.ts` | Configuración del worker de Tesseract y las pasadas (frente, reverso, MRZ) |
+| `lib/mrzParser.ts` | MRZ del reverso, formato **TD1** (3 líneas × 30) con dígitos verificadores ICAO |
+| `lib/ineParser.ts` | Regex del frente + fusión de fuentes por campo |
+| `components/IneCamera.tsx` | Cámara a pantalla completa, marco vertical, linterna |
+
+Decisiones que no son obvias:
+
+- **El marco guía es vertical y la credencial se coloca girada 90°.** Con el teléfono en
+  retrato, una credencial de pie ocupa el lado largo del sensor: ~50% más de píxeles por
+  milímetro que acostada. El texto de la CURP mide ~2 mm, así que esa diferencia decide si
+  el motor puede resolverlo. La imagen se gira de vuelta antes del OCR, y si el puntaje sale
+  muy bajo se reintenta con el giro opuesto (por si se giró la credencial al otro lado).
+- **El recorte a la ROI es la mejora más grande.** Sin él Tesseract intenta segmentar toda
+  la escena (mesa, mano, sombra) y acaba leyendo el fondo. Junto con `PSM.SINGLE_BLOCK` y
+  `user_defined_dpi=300` es la diferencia entre "no lee nada" y leer los campos.
+- **El MRZ del reverso es la fuente confiable, no el frente.** Tipografía OCR-B hecha para
+  máquinas, posiciones fijas por norma ICAO 9303, y dígitos verificadores que permiten
+  *saber* si la lectura salió bien. El frente tiene guilloches, holograma y un layout que
+  cambió entre las emisiones de 2013, 2019 y 2023. Por eso el nombre y la fecha se toman
+  del MRZ cuando está disponible, y el frente sólo aporta domicilio y clave de elector.
+- **El siglo de nacimiento NO se lee del diferenciador de la CURP** (posición 16), aunque
+  la norma lo codifique ahí. Es justo la posición donde el OCR confunde `0` con `O`, y
+  equivocarla mueve la fecha un siglo en silencio (1985 → 2085). Se deduce por
+  plausibilidad, y luego se usa ese siglo para corregir el carácter al revés.
+- El umbral es **adaptativo** (Bradley-Roth sobre imagen integral), no global: una foto de
+  credencial casi siempre tiene un lado más iluminado, y cualquier corte único deja media
+  credencial en negro.
+
+**Techo conocido:** tesseract.js sobre fotos reales de INE tiene un techo de precisión. El
+formulario de revisión siempre es editable y marca de qué fuente vino cada campo por eso.
+Si se necesita más exactitud, el siguiente paso es un OCR en la nube (Google Vision,
+AWS Textract) llamado desde el backend — tiene costo por imagen, se descartó a propósito
+por ahora a favor de la opción sin costo.
+
 ## Renovación de contratos
 
 Manual, no automática. `getContractsNeedingRenewal()` encuentra contratos `ACTIVE` cuyo

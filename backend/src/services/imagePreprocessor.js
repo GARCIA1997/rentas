@@ -1,39 +1,37 @@
 import sharp from 'sharp';
 
-// Preprocesa una imagen para OCR mejorando contraste y legibilidad.
-// Útil para fotos del INE tomadas con sombras, reflejos o borrosas.
-export async function preprocessImageForOcr(imageBuffer) {
+// Normaliza las fotos del INE ANTES de archivarlas en disco.
+//
+// OJO CON EL ALCANCE: esto no tiene nada que ver con el OCR. El OCR corre en el
+// navegador (tesseract.js) sobre el blob recién capturado, antes de que la foto
+// llegue al backend — ver `frontend/lib/imagePreprocess.ts`, que es donde sí vive
+// el preprocesamiento que mejora la lectura. Aquí sólo se acota el peso en disco.
+//
+// Por lo mismo NO se pasa a escala de grises ni se sube el contraste: la copia
+// archivada es el respaldo de cumplimiento de la identificación, y una versión
+// alterada vale menos como evidencia que el original. Sólo se reorienta según EXIF,
+// se acota la resolución y se recomprime.
+
+/** Un INE a ~2000 px de lado largo queda legible a ojo y pesa una fracción del original. */
+const MAX_LONG_EDGE = 2000;
+const JPEG_QUALITY = 88;
+
+export async function normalizeIneImageForStorage(imageBuffer) {
   try {
-    // 1. Redimensionar a un tamaño que mejore OCR (width 2000px es estándar)
-    // 2. Convertir a escala de grises (las redes neuronales OCR lo prefieren)
-    // 3. Aumentar contraste para que el texto negro resalte
-    // 4. Mejorar nitidez (sharpening) si está borrosa
-    const processedBuffer = await sharp(imageBuffer)
-      .resize(2000, 3000, {
+    return await sharp(imageBuffer)
+      // Las cámaras de celular guardan la orientación en EXIF en vez de rotar los
+      // píxeles; sin esto la foto archivada se ve de lado en la mitad de los visores.
+      .rotate()
+      .resize(MAX_LONG_EDGE, MAX_LONG_EDGE, {
         fit: 'inside',
         withoutEnlargement: true,
       })
-      .grayscale() // Escala de grises mejora OCR
-      .normalize() // Normaliza el rango dinámico de píxeles
-      .modulate({
-        saturation: 0, // Fuerza escala de grises
-        brightness: 1.05, // Ligero brillo
-        contrast: 1.3, // Aumenta contraste significativamente
-      })
-      .sharpen({
-        sigma: 1.5, // Sharpening para mejorar bordes
-      })
+      .jpeg({ quality: JPEG_QUALITY, mozjpeg: true })
       .toBuffer();
-
-    return processedBuffer;
   } catch (error) {
-    console.error('Error preprocessing image for OCR:', error);
-    // Retornar imagen original si el preprocessamiento falla
+    // Una foto que no se puede normalizar se archiva tal cual: perder el respaldo
+    // es peor que archivarlo sin optimizar.
+    console.error('No se pudo normalizar la imagen del INE, se archiva el original:', error);
     return imageBuffer;
   }
-}
-
-// Procesa múltiples imágenes (útil para frente + reverso del INE)
-export async function preprocessMultipleImages(imageBuffers) {
-  return Promise.all(imageBuffers.map(preprocessImageForOcr));
 }
