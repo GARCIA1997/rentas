@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { PrismaClient } from '@prisma/client';
+import { preprocessImageForOcr } from './imagePreprocessor.js';
 
 const prisma = new PrismaClient();
 const UPLOADS_DIR = path.join(process.cwd(), 'uploads', 'tenants');
@@ -96,6 +97,7 @@ export const deleteTenant = async (id) => {
 // Se conservan como respaldo — decisión explícita, no sólo procesar-y-descartar — así que
 // viven fuera del control de versiones y se sirven únicamente por rutas autenticadas de
 // admin (ver tenantController.getIneFront/getIneBack), nunca de forma pública.
+// Las imágenes se preprocesan para mejorar la legibilidad (contraste, escala de grises).
 export const saveIneImages = async (tenantId, { front, back }) => {
   if (!front && !back) return getTenant(tenantId);
 
@@ -104,14 +106,32 @@ export const saveIneImages = async (tenantId, { front, back }) => {
 
   const data = {};
   if (front) {
-    const fileName = `front${path.extname(front.originalname) || '.jpg'}`;
-    fs.writeFileSync(path.join(dir, fileName), front.buffer);
-    data.ineFrontUrl = `/uploads/tenants/${tenantId}/${fileName}`;
+    try {
+      const processedBuffer = await preprocessImageForOcr(front.buffer);
+      const fileName = `front${path.extname(front.originalname) || '.jpg'}`;
+      fs.writeFileSync(path.join(dir, fileName), processedBuffer);
+      data.ineFrontUrl = `/uploads/tenants/${tenantId}/${fileName}`;
+    } catch (error) {
+      console.error(`Error preprocessing front image for tenant ${tenantId}:`, error);
+      // Fallback: guardar imagen original sin procesar
+      const fileName = `front${path.extname(front.originalname) || '.jpg'}`;
+      fs.writeFileSync(path.join(dir, fileName), front.buffer);
+      data.ineFrontUrl = `/uploads/tenants/${tenantId}/${fileName}`;
+    }
   }
   if (back) {
-    const fileName = `back${path.extname(back.originalname) || '.jpg'}`;
-    fs.writeFileSync(path.join(dir, fileName), back.buffer);
-    data.ineBackUrl = `/uploads/tenants/${tenantId}/${fileName}`;
+    try {
+      const processedBuffer = await preprocessImageForOcr(back.buffer);
+      const fileName = `back${path.extname(back.originalname) || '.jpg'}`;
+      fs.writeFileSync(path.join(dir, fileName), processedBuffer);
+      data.ineBackUrl = `/uploads/tenants/${tenantId}/${fileName}`;
+    } catch (error) {
+      console.error(`Error preprocessing back image for tenant ${tenantId}:`, error);
+      // Fallback: guardar imagen original sin procesar
+      const fileName = `back${path.extname(back.originalname) || '.jpg'}`;
+      fs.writeFileSync(path.join(dir, fileName), back.buffer);
+      data.ineBackUrl = `/uploads/tenants/${tenantId}/${fileName}`;
+    }
   }
 
   return prisma.tenant.update({ where: { id: tenantId }, data });
