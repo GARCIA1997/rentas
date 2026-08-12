@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { TenantFormModal } from '@/components/TenantFormModal';
 import { useAuth } from '@/hooks/useAuth';
 import { tenantsApi, Tenant } from '@/lib/api';
 import { ChevronRightIcon } from '@/components/icons';
@@ -23,7 +22,6 @@ export default function TenantsPage() {
   const { token } = useAuth();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState('');
 
   const loadData = async () => {
@@ -47,16 +45,17 @@ export default function TenantsPage() {
     <ProtectedRoute requiredRole="ADMIN">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <h1 className="text-2xl font-bold text-heading">Inquilinos</h1>
-        <button
-          onClick={() => setIsModalOpen(true)}
+        <Link
+          href="/tenants/new"
           className="bg-primary hover:bg-primary-pressed text-white px-4 py-2.5 rounded-xl text-sm font-medium self-start sm:self-auto active:opacity-80"
         >
           + Nuevo inquilino
-        </button>
+        </Link>
       </div>
       <p className="text-sm text-muted -mt-4 mb-6">
-        Aquí solo se capturan los datos personales. La propiedad y la fecha de ingreso se asignan al crear su contrato.
-        Toca un inquilino para ver su perfil completo, editarlo o eliminarlo.
+        Escanea el INE para llenar los datos automáticamente, o captúralos a mano. La propiedad y la fecha de
+        ingreso se asignan al crear su contrato. Toca un inquilino para ver su perfil completo, editarlo o
+        eliminarlo.
       </p>
 
       {error && (
@@ -138,8 +137,6 @@ export default function TenantsPage() {
           </div>
         </>
       )}
-
-      <TenantFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSaved={loadData} />
     </ProtectedRoute>
   );
 }

@@ -65,6 +65,7 @@ export default function TenantProfilePage() {
   const [payments, setPayments] = useState<RentPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [inePhotos, setInePhotos] = useState<{ front?: string; back?: string }>({});
 
   const [segment, setSegment] = useState<'pending' | 'paid' | 'scheduled'>('pending');
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -80,6 +81,36 @@ export default function TenantProfilePage() {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, tenantId]);
+
+  // Las fotos del INE se sirven por una ruta autenticada de admin, no una URL pública —
+  // hay que traerlas como blob con el header de auth y armar un object URL, igual que
+  // la descarga de PDFs/recibos.
+  useEffect(() => {
+    if (!token || !tenant) return;
+    const objectUrls: string[] = [];
+
+    const loadPhoto = async (side: 'front' | 'back', hasPhoto: boolean) => {
+      if (!hasPhoto) return;
+      try {
+        const res = await fetch(tenantsApi.ineImageUrl(tenant.id, side), {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        objectUrls.push(url);
+        setInePhotos((prev) => ({ ...prev, [side]: url }));
+      } catch {
+        // Sin bloquear el resto del perfil si una foto no carga
+      }
+    };
+
+    loadPhoto('front', !!tenant.ineFrontUrl);
+    loadPhoto('back', !!tenant.ineBackUrl);
+
+    return () => objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, tenant?.id, tenant?.ineFrontUrl, tenant?.ineBackUrl]);
 
   // `silent` skips the full-page "Cargando..." replacement — used when
   // refreshing after an in-place action (paying, reverting, editing) so we
@@ -273,9 +304,33 @@ export default function TenantProfilePage() {
           <Row label="Nombre" value={tenant.fullName} />
           <Row label="Teléfono" value={tenant.phone ?? '—'} />
           <Row label="Email" value={tenant.email ?? '—'} />
-          <Row label="Identificación" value={tenant.idDocument ?? '—'} />
+          <Row label="Clave de elector" value={tenant.idDocument ?? '—'} />
+          <Row label="CURP" value={tenant.curp ?? '—'} />
+          <Row label="Fecha de nacimiento" value={tenant.birthDate ? formatDate(tenant.birthDate) : '—'} />
+          <Row label="Domicilio" value={tenant.address ?? '—'} />
           <Row label="Estado" value={tenant.status} />
         </div>
+
+        {(tenant.ineFrontUrl || tenant.ineBackUrl) && (
+          <div className="bg-surface rounded-2xl shadow-sm p-5">
+            <h3 className="text-heading font-semibold mb-1">Fotografías del INE</h3>
+            <p className="text-muted text-xs mb-3">Guardadas como respaldo. Toca una foto para verla en tamaño completo.</p>
+            <div className="flex gap-3">
+              {inePhotos.front && (
+                <a href={inePhotos.front} target="_blank" rel="noopener noreferrer" className="block w-1/2">
+                  <img src={inePhotos.front} alt="Frente del INE" className="w-full rounded-xl shadow-sm" />
+                  <p className="text-muted text-xs text-center mt-1">Frente</p>
+                </a>
+              )}
+              {inePhotos.back && (
+                <a href={inePhotos.back} target="_blank" rel="noopener noreferrer" className="block w-1/2">
+                  <img src={inePhotos.back} alt="Reverso del INE" className="w-full rounded-xl shadow-sm" />
+                  <p className="text-muted text-xs text-center mt-1">Reverso</p>
+                </a>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="bg-surface rounded-2xl shadow-sm p-5">
           <h3 className="text-heading font-semibold mb-1">Acceso al portal</h3>

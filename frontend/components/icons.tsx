@@ -251,3 +251,12 @@ export function AlertTriangleIcon({ active, ...props }: IconProps) {
     </svg>
   );
 }
+
+export function CameraIcon({ active, ...props }: IconProps) {
+  return (
+    <svg {...base(active)} {...props}>
+      <path d="M4 8.5a1 1 0 0 1 1-1h2l1.2-2h7.6l1.2 2h2a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8.5Z" />
+      <circle cx="12" cy="13" r="3.5" />
+    </svg>
+  );
+}
