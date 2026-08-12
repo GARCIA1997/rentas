@@ -238,6 +238,16 @@ export const buildReceiptHtml = (payment) => {
     CHEQUE: 'Cheque',
   };
 
+  // El recibo decía "Renta" sin importar el tipo real del pago — el frontend ya
+  // distinguía RENT/DEPOSIT/EXTRA (ver paymentTypeLabels en lib/api.ts), pero esta
+  // plantilla nunca leía payment.paymentType.
+  const conceptLabels = {
+    RENT: 'Renta',
+    DEPOSIT: 'Depósito en garantía',
+    EXTRA: 'Cargo extra',
+  };
+  const conceptLabel = conceptLabels[payment.paymentType] ?? 'Renta';
+
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -264,7 +274,7 @@ export const buildReceiptHtml = (payment) => {
     <div class="row"><span class="label">Inquilino</span><span class="value">${payment.tenant.fullName}</span></div>
     <div class="row"><span class="label">Propiedad</span><span class="value">${payment.property.name}</span></div>
     <div class="row"><span class="label">Dirección</span><span class="value">${payment.property.address}, ${payment.property.city}</span></div>
-    <div class="row"><span class="label">Concepto</span><span class="value">Renta — ${formatDate(payment.dueDate)}</span></div>
+    <div class="row"><span class="label">Concepto</span><span class="value">${conceptLabel} — ${formatDate(payment.dueDate)}</span></div>
     <div class="row"><span class="label">Vencimiento</span><span class="value">${formatDate(payment.dueDate)}</span></div>
     <div class="row"><span class="label">Fecha de pago</span><span class="value">${payment.paidDate ? formatDate(payment.paidDate) : 'Pendiente'}</span></div>
     <div class="row"><span class="label">Método de pago</span><span class="value">${methodLabels[payment.paymentMethod] ?? payment.paymentMethod}</span></div>

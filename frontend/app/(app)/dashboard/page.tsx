@@ -267,6 +267,14 @@ function TenantDashboard() {
     .filter((p) => p.status !== 'PAID')
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())[0];
 
+  // El inicio es un resumen, no el historial completo — sólo los 3 pagos ya
+  // realizados más recientes, con un link a /profile para ver todo (ahí vive el
+  // historial completo con los tabs Por pagar/Pagados/Programados).
+  const recentPayments = payments
+    .filter((p) => p.status === 'PAID')
+    .sort((a, b) => new Date(b.paidDate ?? b.dueDate).getTime() - new Date(a.paidDate ?? a.dueDate).getTime())
+    .slice(0, 3);
+
   return (
     <div className="space-y-6">
       <Link
@@ -306,15 +314,24 @@ function TenantDashboard() {
       </div>
 
       <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
-        <h3 className="text-heading font-semibold p-5 pb-3">Historial de pagos</h3>
-        {payments.length === 0 ? (
+        <div className="flex items-center justify-between p-5 pb-3">
+          <h3 className="text-heading font-semibold">Pagos recientes</h3>
+          {payments.length > 0 && (
+            <Link href="/profile" className="text-primary text-sm font-medium">
+              Ver todo
+            </Link>
+          )}
+        </div>
+        {recentPayments.length === 0 ? (
           <p className="text-muted text-sm px-5 pb-5">No hay pagos registrados todavía.</p>
         ) : (
           <div className="divide-y divide-black/5 dark:divide-white/10">
-            {payments.map((payment) => (
+            {recentPayments.map((payment) => (
               <div key={payment.id} className="flex items-center justify-between px-5 py-3">
                 <div>
-                  <p className="text-heading text-sm font-medium">{formatDate(payment.dueDate)}</p>
+                  <p className="text-heading text-sm font-medium">
+                    {formatDate(payment.paidDate ?? payment.dueDate)}
+                  </p>
                   <p className="text-muted text-xs">${Number(payment.amountDue).toLocaleString('es-MX')}</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -323,15 +340,13 @@ function TenantDashboard() {
                   >
                     {paymentStatusLabels[payment.status]}
                   </span>
-                  {payment.status === 'PAID' && (
-                    <button
-                      onClick={() => handleDownloadReceipt(payment.id)}
-                      disabled={downloadingId === payment.id}
-                      className="text-primary text-sm font-medium disabled:opacity-50"
-                    >
-                      {downloadingId === payment.id ? '...' : 'Recibo'}
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleDownloadReceipt(payment.id)}
+                    disabled={downloadingId === payment.id}
+                    className="text-primary text-sm font-medium disabled:opacity-50"
+                  >
+                    {downloadingId === payment.id ? '...' : 'Recibo'}
+                  </button>
                 </div>
               </div>
             ))}

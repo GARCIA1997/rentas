@@ -34,6 +34,7 @@ function TenantProfile() {
   const [payments, setPayments] = useState<RentPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [downloadingReceiptId, setDownloadingReceiptId] = useState<string | null>(null);
   const [paymentSegment, setPaymentSegment] = useState<'pending' | 'paid' | 'scheduled'>('pending');
 
   useEffect(() => {
@@ -57,6 +58,18 @@ function TenantProfile() {
       showToast(err instanceof Error ? err.message : 'Error al descargar el contrato', 'error');
     } finally {
       setDownloadingId(null);
+    }
+  };
+
+  const handleDownloadReceipt = async (id: string) => {
+    if (!token) return;
+    setDownloadingReceiptId(id);
+    try {
+      await meApi.downloadReceipt(id, token);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Error al descargar el recibo', 'error');
+    } finally {
+      setDownloadingReceiptId(null);
     }
   };
 
@@ -213,19 +226,30 @@ function TenantProfile() {
                       ${Number(payment.amountDue).toLocaleString('es-MX')} {payment.paymentNumber && `(${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
                     </p>
                   </div>
-                  <span
-                    className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                      paymentSegment === 'paid'
-                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
-                        : payment.status === 'OVERDUE'
-                          ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                          : paymentSegment === 'scheduled'
-                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                            : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
-                    }`}
-                  >
-                    {paymentSegment === 'paid' ? 'Pagado' : payment.status === 'OVERDUE' ? 'Vencido' : paymentSegment === 'scheduled' ? 'Programado' : 'Próximo'}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                        paymentSegment === 'paid'
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
+                          : payment.status === 'OVERDUE'
+                            ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                            : paymentSegment === 'scheduled'
+                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                              : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+                      }`}
+                    >
+                      {paymentSegment === 'paid' ? 'Pagado' : payment.status === 'OVERDUE' ? 'Vencido' : paymentSegment === 'scheduled' ? 'Programado' : 'Próximo'}
+                    </span>
+                    {paymentSegment === 'paid' && (
+                      <button
+                        onClick={() => handleDownloadReceipt(payment.id)}
+                        disabled={downloadingReceiptId === payment.id}
+                        className="text-primary text-xs font-medium disabled:opacity-50"
+                      >
+                        {downloadingReceiptId === payment.id ? '...' : 'Recibo'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
