@@ -138,24 +138,74 @@ export function extractClaveElector(rawText: string): string | null {
   return fallbackMatch ? fallbackMatch[0].slice(0, 18) : null;
 }
 
+const ADDRESS_STOP_LABELS = [
+  'CLAVE DE ELECTOR',
+  'CURP',
+  'FECHA DE NACIMIENTO',
+  'SEXO',
+  'AÑO DE REGISTRO',
+  'ANO DE REGISTRO',
+  'ESTADO',
+  'MUNICIPIO',
+  'LOCALIDAD',
+  'SECCION',
+  'SECCIÓN',
+  'EMISION',
+  'EMISIÓN',
+  'VIGENCIA',
+  'INSTITUTO NACIONAL',
+];
+
+/**
+ * ¿Este renglón puede ser un fragmento real de domicilio, o es ruido del OCR?
+ *
+ * A diferencia del nombre, una línea de domicilio SÍ puede traer dígitos (número
+ * exterior, código postal), así que el filtro es más laxo — pero un domicilio real
+ * siempre trae al menos una letra: un fragmento de puros dígitos o símbolos es
+ * casi siempre basura de un código de barras o el holograma de seguridad.
+ */
+const looksLikeAddressFragment = (line: string) => {
+  const trimmed = line.trim();
+  if (trimmed.length < 3) return false;
+  if (ADDRESS_STOP_LABELS.some((label) => trimmed.includes(label))) return false;
+  // Si el propio renglón trae un CURP o clave de elector reconocible, el OCR se saltó
+  // la etiqueta que debía detener la captura — se corta aquí de todos modos.
+  if (CURP_REGEX.test(trimmed) || CLAVE_ELECTOR_REGEX.test(trimmed)) return false;
+
+  // Un domicilio real siempre trae al menos una letra — salvo el código postal, que a
+  // veces Tesseract envuelve solo en su propio renglón cuando la línea física se parte.
+  // Se distingue de basura de código de barras/holograma por el largo: un CP mexicano
+  // son 5 dígitos, así que una racha corta de puros dígitos (4-6) se acepta y cualquier
+  // otra cosa sin letras (más larga, más corta, o con símbolos) se rechaza.
+  if (!/[A-ZÁÉÍÓÚÜÑ]/.test(trimmed)) {
+    return /^\d{4,6}$/.test(trimmed);
+  }
+
+  return true;
+};
+
+/**
+ * Domicilio desde el texto del frente.
+ *
+ * El domicilio real del INE mide 3 renglones casi siempre (calle y número, colonia y
+ * CP, municipio/estado), pero el recorte de la imagen puede hacer que Tesseract envuelva
+ * una de esas líneas en dos — con el tope viejo de 3 renglones fijos eso cortaba la
+ * dirección a la mitad. Ahora se avanza mientras cada renglón parezca domicilio (con
+ * un tope generoso de seguridad) y se corta en la primera etiqueta u otro campo.
+ */
 export function extractAddress(rawText: string): string | null {
   const lines = toLines(rawText);
-  const startIdx = lines.findIndex((line) => line.includes('DOMICILIO'));
+  // DOMICILIO es casi siempre legible tal cual, pero se tolera que el OCR pierda la
+  // última letra ("DOMICILI0" con cero en vez de O) igual que se hace para NOMBRE.
+  const startIdx = lines.findIndex((line) => line.includes('DOMICILI'));
   if (startIdx === -1) return null;
 
-  const stopLabels = [
-    'CLAVE DE ELECTOR',
-    'CURP',
-    'FECHA DE NACIMIENTO',
-    'SEXO',
-    'AÑO DE REGISTRO',
-    'ANO DE REGISTRO',
-  ];
-
+  const MAX_ADDRESS_LINES = 6;
   const addressLines: string[] = [];
-  for (let i = startIdx + 1; i < lines.length && addressLines.length < 3; i++) {
-    if (stopLabels.some((label) => lines[i].includes(label))) break;
-    addressLines.push(lines[i]);
+  for (let i = startIdx + 1; i < lines.length && addressLines.length < MAX_ADDRESS_LINES; i++) {
+    if (!lines[i].trim()) continue; // renglón en blanco: se ignora, no corta la captura
+    if (!looksLikeAddressFragment(lines[i])) break;
+    addressLines.push(lines[i].trim());
   }
 
   return addressLines.length ? addressLines.join(', ') : null;

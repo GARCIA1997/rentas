@@ -90,7 +90,7 @@ export const CASA_TEMPLATE = `<!DOCTYPE html>
 
   <p class="clause">
     Contrato de arrendamiento que celebran, por una parte <strong>{{representative_name}}</strong>{{representative_position_text}}, a quien en lo sucesivo se le denominará <strong>"EL ARRENDADOR"</strong>,
-    y por otra parte <strong>{{tenant_name}}</strong>, a quien se le denominará <strong>"EL ARRENDATARIO"</strong>,
+    y por otra parte <strong>{{tenant_name}}</strong>{{tenant_address_text}}, a quien se le denominará <strong>"EL ARRENDATARIO"</strong>,
     respecto del inmueble ubicado en {{property_address}}, {{property_city}}, C.P. {{property_postal_code}},
     en adelante <strong>"EL INMUEBLE"</strong>, al tenor de las siguientes declaraciones y cláusulas.
   </p>
@@ -101,7 +101,7 @@ export const CASA_TEMPLATE = `<!DOCTYPE html>
     obligarse, y contar con la legítima posesión y las facultades suficientes para dar EL INMUEBLE en
     arrendamiento, manifestando que sobre el mismo no pesa limitación de dominio ni impedimento legal alguno
     que obste la celebración de este contrato.</p>
-    <p><strong>II. Declara EL ARRENDATARIO:</strong> ser mayor de edad, identificarse con {{tenant_id_document}},
+    <p><strong>II. Declara EL ARRENDATARIO:</strong> ser mayor de edad, identificarse con {{tenant_id_document}}{{tenant_curp_text}},
     contar con capacidad jurídica y solvencia para obligarse en los términos de este contrato, y haber
     inspeccionado EL INMUEBLE previamente a su firma, recibiéndolo a su entera satisfacción en
     {{property_condition}}.</p>
@@ -268,7 +268,7 @@ export const LOCAL_TEMPLATE = `<!DOCTYPE html>
 
   <p class="clause">
     Contrato de arrendamiento que celebran, por una parte <strong>{{representative_name}}</strong>{{representative_position_text}}, a quien en lo sucesivo se le denominará <strong>"EL ARRENDADOR"</strong>,
-    y por otra parte <strong>{{tenant_name}}</strong>, a quien se le denominará <strong>"EL ARRENDATARIO"</strong>,
+    y por otra parte <strong>{{tenant_name}}</strong>{{tenant_address_text}}, a quien se le denominará <strong>"EL ARRENDATARIO"</strong>,
     respecto del local comercial ubicado en {{property_address}}, {{property_city}}, C.P.
     {{property_postal_code}}, en adelante <strong>"EL LOCAL"</strong>, al tenor de las siguientes declaraciones
     y cláusulas.
@@ -280,7 +280,7 @@ export const LOCAL_TEMPLATE = `<!DOCTYPE html>
     obligarse, y contar con la legítima posesión y las facultades suficientes para dar EL LOCAL en
     arrendamiento, manifestando que sobre el mismo no pesa limitación de dominio ni impedimento legal alguno
     que obste la celebración de este contrato.</p>
-    <p><strong>II. Declara EL ARRENDATARIO:</strong> ser mayor de edad, identificarse con {{tenant_id_document}},
+    <p><strong>II. Declara EL ARRENDATARIO:</strong> ser mayor de edad, identificarse con {{tenant_id_document}}{{tenant_curp_text}},
     contar con capacidad jurídica y solvencia para obligarse, y haber inspeccionado EL LOCAL previamente a su
     firma, recibiéndolo a su entera satisfacción en {{property_condition}}, reconociendo que es apto para el
     giro que pretende desarrollar.</p>
@@ -454,7 +454,7 @@ export const COAHUAYANA_TEMPLATE = `<!DOCTYPE html>
   <p class="clause">
     Contrato de arrendamiento que celebran, por una parte <strong>{{landlord_name}}</strong>, con número
     telefónico {{landlord_phone}}, a quien en lo sucesivo se le denominará <strong>"EL ARRENDADOR"</strong>, y
-    por otra parte <strong>{{tenant_name}}</strong>, a quien se le denominará <strong>"EL ARRENDATARIO"</strong>,
+    por otra parte <strong>{{tenant_name}}</strong>{{tenant_address_text}}, a quien se le denominará <strong>"EL ARRENDATARIO"</strong>,
     respecto del inmueble ubicado en {{property_address}}, {{property_city}}, C.P. {{property_postal_code}},
     en adelante <strong>"EL INMUEBLE"</strong>, al tenor de las siguientes declaraciones y cláusulas.
   </p>
@@ -464,7 +464,7 @@ export const COAHUAYANA_TEMPLATE = `<!DOCTYPE html>
     <p><strong>I. Declara EL ARRENDADOR:</strong> ser mayor de edad, con plena capacidad jurídica para
     obligarse, y contar con la legítima posesión y las facultades suficientes para dar EL INMUEBLE en
     arrendamiento, sin que sobre el mismo pese limitación de dominio o impedimento legal alguno.</p>
-    <p><strong>II. Declara EL ARRENDATARIO:</strong> ser mayor de edad, identificarse con {{tenant_id_document}},
+    <p><strong>II. Declara EL ARRENDATARIO:</strong> ser mayor de edad, identificarse con {{tenant_id_document}}{{tenant_curp_text}},
     contar con capacidad jurídica y solvencia para obligarse, y haber inspeccionado EL INMUEBLE previamente a
     su firma, recibiéndolo a su entera satisfacción en {{property_condition}}.</p>
     <p><strong>III. Declaran ambas partes:</strong> reconocerse mutuamente la personalidad con que comparecen

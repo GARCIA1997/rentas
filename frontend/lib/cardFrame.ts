@@ -14,10 +14,15 @@ import type { Roi } from './imagePreprocess';
  */
 export const CARD_PORTRAIT_RATIO = 85.6 / 54;
 
-const FRAME_WIDTH_RATIO = 0.82;
-const FRAME_MAX_HEIGHT_RATIO = 0.84;
+// Mientras el recorte automático por contorno (detectCardBounds, en imagePreprocess.ts)
+// SIEMPRE corre después de esto, el marco más grande sigue siendo la palanca principal
+// para más resolución: ese recorte fino sólo aprieta el margen hasta un 18%, así que su
+// techo depende de cuánta credencial ya haya dentro del marco al momento de capturar.
+// Más marco = más credencial = más para que el auto-recorte trabaje, no un sustituto.
+const FRAME_WIDTH_RATIO = 0.92;
+const FRAME_MAX_HEIGHT_RATIO = 0.9;
 /** Se recorta un poco más allá del marco para no cortar caracteres pegados al borde. */
-const ROI_PADDING = 0.02;
+const ROI_PADDING = 0.015;
 
 export interface Rect {
   left: number;
