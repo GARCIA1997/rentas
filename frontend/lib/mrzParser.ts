@@ -151,14 +151,19 @@ const padLine = (line: string) =>
 /** La línea de nombres es la única sin verificador, pero es la más valiosa y la más legible. */
 function parseNameLine(line: string): { lastName?: string; firstName?: string; fullName?: string } {
   const cleaned = coerceAlpha(line).replace(/<+$/, '');
+
+  // El separador entre apellidos y nombres es '<<'. Si el OCR se comió uno de los dos
+  // chevrones no hay forma de saber dónde cortaba, así que se toma todo como un bloque
+  // en vez de inventar una división: un nombre completo sin separar sigue siendo útil.
   const [surnamePart, ...givenParts] = cleaned.split('<<');
 
   const toWords = (value: string) =>
     value
       .split('<')
       .map((word) => word.trim())
-      .filter((word) => word.length > 1)
+      .filter(Boolean)
       .join(' ')
+      .replace(/\s+/g, ' ')
       .trim();
 
   const lastName = toWords(surnamePart ?? '');
@@ -166,9 +171,11 @@ function parseNameLine(line: string): { lastName?: string; firstName?: string; f
 
   if (!lastName && !firstName) return {};
 
-  // El INE muestra "NOMBRE APELLIDOS" en ese orden; se respeta para que el campo
-  // del formulario coincida con lo que el admin ve en la credencial.
-  const fullName = [firstName, lastName].filter(Boolean).join(' ');
+  // Orden apellidos-primero, igual que impreso en la credencial y que lo que sale del
+  // texto del frente. Que las dos fuentes coincidan importa: el admin compara el campo
+  // contra la credencial que tiene en la mano, y un orden distinto según de dónde se
+  // leyó parecería un error de lectura.
+  const fullName = [lastName, firstName].filter(Boolean).join(' ');
   return {
     lastName: lastName || undefined,
     firstName: firstName || undefined,

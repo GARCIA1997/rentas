@@ -32,6 +32,8 @@ export interface PreprocessOptions {
   thresholdWindowRatio?: number;
   /** Sesgo del umbral: más alto = más píxeles a negro. */
   thresholdBias?: number;
+  /** Aprieta el recorte al contorno real de la credencial dentro del encuadre. */
+  autoCrop?: boolean;
 }
 
 const DEFAULTS: Required<Omit<PreprocessOptions, 'roi' | 'rotateDeg'>> = {
@@ -39,6 +41,7 @@ const DEFAULTS: Required<Omit<PreprocessOptions, 'roi' | 'rotateDeg'>> = {
   binarize: true,
   thresholdWindowRatio: 1 / 16,
   thresholdBias: 0.12,
+  autoCrop: true,
 };
 
 /** Decodifica un blob a algo dibujable. `createImageBitmap` evita un decode extra. */
@@ -232,6 +235,107 @@ function adaptiveThreshold(canvas: HTMLCanvasElement, windowRatio: number, bias:
   ctx.putImageData(image, 0, 0);
 }
 
+/**
+ * Ajusta el recorte al contorno real de la credencial dentro del encuadre.
+ *
+ * Se detecta por DETALLE, no por brillo: se suma la diferencia entre píxeles vecinos
+ * por fila y por columna. La credencial está impresa, así que tiene detalle alto; una
+ * mesa lisa, una mano o una sombra tienen detalle bajo. Keyear en la textura y no en la
+ * luminosidad hace que funcione igual sobre superficie clara u oscura, que es donde un
+ * umbral de brillo se cae.
+ *
+ * Sólo recorta hacia adentro y con un tope (`maxTrimRatio`), porque la entrada ya viene
+ * recortada a la ROI del marco: aquí no hay que *encontrar* la credencial, sólo apretar
+ * el margen. Con el tope, el peor caso es no recortar nada — nunca perder texto.
+ */
+export function detectCardBounds(
+  canvas: HTMLCanvasElement,
+  maxTrimRatio = 0.18,
+): { left: number; top: number; width: number; height: number } | null {
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return null;
+
+  const { width: w, height: h } = canvas;
+  if (w < 40 || h < 40) return null;
+
+  const px = ctx.getImageData(0, 0, w, h).data;
+  const columnDetail = new Float64Array(w);
+  const rowDetail = new Float64Array(h);
+
+  // Gradiente horizontal para el perfil de columnas, vertical para el de filas.
+  for (let y = 1; y < h; y++) {
+    for (let x = 1; x < w; x++) {
+      const index = (y * w + x) * 4;
+      const dx = Math.abs(px[index] - px[index - 4]);
+      const dy = Math.abs(px[index] - px[index - w * 4]);
+      columnDetail[x] += dx;
+      rowDetail[y] += dy;
+    }
+  }
+
+  /** Avanza desde un extremo mientras el detalle sea bajo, sin pasar del tope. */
+  const trim = (profile: Float64Array, size: number) => {
+    let min = Infinity;
+    let max = -Infinity;
+    for (const value of profile) {
+      if (value < min) min = value;
+      if (value > max) max = value;
+    }
+    // Si el perfil es plano no hay borde que detectar: no se recorta.
+    if (max - min < 1e-6) return { start: 0, end: size };
+
+    const threshold = min + (max - min) * 0.22;
+    const limit = Math.floor(size * maxTrimRatio);
+
+    let start = 0;
+    while (start < limit && profile[start] < threshold) start++;
+
+    let end = size;
+    while (size - end < limit && profile[end - 1] < threshold) end--;
+
+    return { start, end };
+  };
+
+  const horizontal = trim(columnDetail, w);
+  const vertical = trim(rowDetail, h);
+
+  const left = horizontal.start;
+  const top = vertical.start;
+  const width = horizontal.end - left;
+  const height = vertical.end - top;
+
+  // Salvaguarda: si la detección se quedó con un pedazo chico, algo salió mal
+  // (credencial muy tenue, fondo con textura) y se prefiere el encuadre original.
+  if (width < w * 0.5 || height < h * 0.5) return null;
+  // Y si no recortó nada apreciable, no vale rehacer el canvas.
+  if (width > w * 0.99 && height > h * 0.99) return null;
+
+  return { left, top, width, height };
+}
+
+function cropTo(
+  canvas: HTMLCanvasElement,
+  bounds: { left: number; top: number; width: number; height: number },
+): HTMLCanvasElement {
+  const out = document.createElement('canvas');
+  out.width = bounds.width;
+  out.height = bounds.height;
+  const ctx = out.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return canvas;
+  ctx.drawImage(
+    canvas,
+    bounds.left,
+    bounds.top,
+    bounds.width,
+    bounds.height,
+    0,
+    0,
+    bounds.width,
+    bounds.height,
+  );
+  return out;
+}
+
 /** Pipeline completo. Devuelve un canvas listo para pasar a Tesseract. */
 export async function preprocessForOcr(
   source: Blob | ImageBitmap | HTMLImageElement,
@@ -240,8 +344,17 @@ export async function preprocessForOcr(
   const opts = { ...DEFAULTS, ...options };
   const image = source instanceof Blob ? await decodeImage(source) : source;
 
-  const canvas = cropRotateScale(image, options.roi, options.rotateDeg ?? 0, opts.targetLongEdge);
+  let canvas = cropRotateScale(image, options.roi, options.rotateDeg ?? 0, opts.targetLongEdge);
   grayscaleAndStretch(canvas);
+
+  // El recorte fino va DESPUÉS del gris (necesita luminancia para medir el detalle) y
+  // ANTES del umbral: binarizar arrastra el fondo al cálculo de las medias locales, y
+  // eso ensucia el umbral de las orillas del texto.
+  if (opts.autoCrop) {
+    const bounds = detectCardBounds(canvas);
+    if (bounds) canvas = cropTo(canvas, bounds);
+  }
+
   if (opts.binarize) {
     adaptiveThreshold(canvas, opts.thresholdWindowRatio, opts.thresholdBias);
   }

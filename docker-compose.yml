@@ -40,6 +40,9 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+      # Las fotos del INE quedan en ./backend/uploads del host por el bind mount de
+      # arriba (está en .gitignore). En prod es un volumen nombrado — ver
+      # docker-compose.prod.yml, donde su ausencia borraba las fotos en cada deploy.
     networks:
       - rentas_network
     command: npm run dev

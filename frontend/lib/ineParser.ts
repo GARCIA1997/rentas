@@ -161,20 +161,91 @@ export function extractAddress(rawText: string): string | null {
   return addressLines.length ? addressLines.join(', ') : null;
 }
 
+// Palabras impresas en la credencial que NO son parte de un nombre. Se comparan como
+// palabra completa, no como subcadena: buscar "ESTADO" dentro de la línea descartaría
+// apellidos legítimos que la contengan por casualidad.
+const NON_NAME_WORDS = new Set([
+  'INSTITUTO', 'NACIONAL', 'ELECTORAL', 'CREDENCIAL', 'PARA', 'VOTAR', 'MEXICO', 'MÉXICO',
+  'NOMBRE', 'DOMICILIO', 'CLAVE', 'ELECTOR', 'CURP', 'SEXO', 'FECHA', 'NACIMIENTO',
+  'EDAD', 'ANO', 'AÑO', 'REGISTRO', 'ESTADO', 'MUNICIPIO', 'LOCALIDAD', 'SECCION',
+  'SECCIÓN', 'EMISION', 'EMISIÓN', 'VIGENCIA', 'CALLE', 'COL', 'COLONIA',
+]);
+
+const NAME_CHARS = /^[A-ZÁÉÍÓÚÜÑ][A-ZÁÉÍÓÚÜÑ'.\- ]*$/;
+
+/**
+ * ¿Esto se ve como el nombre de una persona y no como una etiqueta o basura del OCR?
+ *
+ * Existe porque el modo de falla del OCR del frente no es devolver nada, es devolver
+ * *algo*: media etiqueta, un pedazo del domicilio, o ruido del holograma. Meter eso en
+ * el campo del nombre es peor que dejarlo vacío — un campo vacío se ve y se llena, un
+ * nombre equivocado se firma en el contrato.
+ */
+export function looksLikePersonName(value: string): boolean {
+  const cleaned = value.trim().replace(/\s+/g, ' ');
+  if (cleaned.length < 5 || cleaned.length > 70) return false;
+  if (/\d/.test(cleaned)) return false;
+  if (!NAME_CHARS.test(cleaned)) return false;
+
+  const words = cleaned.split(' ').filter(Boolean);
+  // Un nombre completo trae al menos apellido y nombre.
+  if (words.length < 2) return false;
+  if (words.some((word) => NON_NAME_WORDS.has(word))) return false;
+  // Y al menos una palabra de largo real: "DE LA" solo no es un nombre.
+  return words.some((word) => word.length >= 3);
+}
+
+/** Las líneas de nombre del INE son sólo letras; sirve para saber dónde cortar. */
+const isNameFragment = (line: string) =>
+  /^[A-ZÁÉÍÓÚÜÑ][A-ZÁÉÍÓÚÜÑ'.\- ]*$/.test(line.trim()) &&
+  line.trim().length >= 2 &&
+  !line.trim().split(/\s+/).some((word) => NON_NAME_WORDS.has(word));
+
+/**
+ * Nombre desde el texto del frente.
+ *
+ * El INE moderno imprime el nombre en tres renglones bajo la etiqueta NOMBRE (apellido
+ * paterno, apellido materno, nombres); los formatos viejos lo ponen en uno o dos. En vez
+ * de tomar ciegamente los 3 siguientes renglones, se avanza mientras cada uno *parezca*
+ * un fragmento de nombre y se corta en el primero que no: así una etiqueta o una línea
+ * de domicilio que el OCR haya dejado en medio ya no se cuela al campo.
+ */
 export function extractFullName(rawText: string): string | null {
   const lines = toLines(rawText);
-  const startIdx = lines.findIndex((line) => line.includes('NOMBRE'));
-  if (startIdx === -1) return null;
+  const labelIdx = lines.findIndex((line) => /\bNOMBRE\b/.test(line));
 
-  const stopLabels = ['DOMICILIO', 'CLAVE DE ELECTOR', 'CURP'];
+  const collectFrom = (startIdx: number, sameLineRest = ''): string | null => {
+    const fragments: string[] = [];
+    // El OCR a veces deja el valor pegado a la etiqueta en el mismo renglón.
+    if (sameLineRest && isNameFragment(sameLineRest)) fragments.push(sameLineRest.trim());
 
-  const nameLines: string[] = [];
-  for (let i = startIdx + 1; i < lines.length && nameLines.length < 3; i++) {
-    if (stopLabels.some((label) => lines[i].includes(label))) break;
-    nameLines.push(lines[i]);
+    for (let i = startIdx; i < lines.length && fragments.length < 3; i++) {
+      if (!isNameFragment(lines[i])) break;
+      fragments.push(lines[i].trim());
+    }
+
+    if (!fragments.length) return null;
+    const candidate = fragments.join(' ').replace(/\s+/g, ' ').trim();
+    return looksLikePersonName(candidate) ? candidate : null;
+  };
+
+  if (labelIdx !== -1) {
+    const rest = lines[labelIdx].split(/\bNOMBRE\b/)[1] ?? '';
+    const fromLabel = collectFrom(labelIdx + 1, rest);
+    if (fromLabel) return fromLabel;
   }
 
-  return nameLines.length ? nameLines.join(' ') : null;
+  // Respaldo estructural para cuando el OCR no leyó la etiqueta "NOMBRE": el nombre es
+  // el bloque de renglones de puras letras que está justo antes del domicilio.
+  const addressIdx = lines.findIndex((line) => /\bDOMICILIO\b/.test(line));
+  if (addressIdx > 0) {
+    for (let start = Math.max(0, addressIdx - 3); start < addressIdx; start++) {
+      const candidate = collectFrom(start);
+      if (candidate) return candidate;
+    }
+  }
+
+  return null;
 }
 
 // Combina el texto OCR de ambos lados de la credencial. La clave de elector y el
@@ -260,13 +331,26 @@ export function parseIneData(ocr: {
   const curp = rawCurp ? normalizeCurp(rawCurp) : null;
   if (curp) sources.curp = 'curp';
 
-  // --- Nombre: el MRZ gana porque su tipografía está hecha para máquinas.
-  let fullName = mrz?.fullName ?? null;
-  if (fullName) {
+  // --- Nombre: el MRZ gana porque su tipografía está hecha para máquinas, pero sólo si
+  // lo que salió de ahí realmente parece un nombre. Ambas fuentes pasan por el mismo
+  // filtro, y si ninguna lo pasa el campo se deja VACÍO a propósito: un nombre
+  // equivocado acaba firmado en un contrato, uno vacío se ve y se llena.
+  let fullName: string | null = null;
+  if (mrz?.fullName && looksLikePersonName(mrz.fullName)) {
+    fullName = mrz.fullName;
     sources.fullName = 'mrz';
   } else {
-    fullName = extractFullName(frontText);
-    if (fullName) sources.fullName = 'ocr';
+    const fromFront = extractFullName(frontText);
+    if (fromFront) {
+      fullName = fromFront;
+      sources.fullName = 'ocr';
+    } else if (mrz?.fullName) {
+      // Último recurso: el MRZ dio algo que no pasó el filtro (probablemente parcial),
+      // pero el frente no dio nada. Se ofrece marcado como lectura del MRZ para que el
+      // admin lo corrija en vez de teclear todo.
+      fullName = mrz.fullName;
+      sources.fullName = 'mrz';
+    }
   }
 
   // --- Nacimiento: MRZ verificado > CURP > MRZ sin verificar.
