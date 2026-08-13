@@ -275,6 +275,13 @@ model RentPayment {
   totalPaymentsInContract Int?      // Ej: 12 si el contrato tiene 12 pagos - para mostrar "1/12"
   notes                 String?
   status                PaymentStatus @default(PENDING)
+  // Marca de una sola vía para el recordatorio de pago por push (ver paymentReminderService.js)
+  // — evita reenviar el mismo aviso en cada corrida diaria del cron. Cada uno se dispara
+  // como máximo una vez por pago: "próximo" cuando faltan pocos días, "vencido" al pasar
+  // la fecha límite sin pagarse. `status` no sirve para esta comprobación porque sólo se
+  // recalcula al escribir el registro (crear/editar), no pasivamente con el paso del tiempo.
+  upcomingReminderSentAt DateTime?
+  overdueReminderSentAt DateTime?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 

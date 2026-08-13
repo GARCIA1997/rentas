@@ -76,6 +76,7 @@ export default function TenantProfilePage() {
   const [error, setError] = useState('');
   const [inePhotos, setInePhotos] = useState<{ front?: string; back?: string }>({});
 
+  const [tab, setTab] = useState<'resumen' | 'pagos' | 'contratos' | 'reportes'>('resumen');
   const [segment, setSegment] = useState<'pending' | 'paid' | 'scheduled'>('pending');
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -271,6 +272,7 @@ export default function TenantProfilePage() {
 
   const listToShow = segment === 'pending' ? pendingPayments : segment === 'paid' ? paidHistory : scheduledPayments;
   const sortedContracts = [...contracts].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+  const openReportsCount = reports.filter((r) => r.status !== 'CLOSED').length;
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
@@ -310,311 +312,358 @@ export default function TenantProfilePage() {
           </div>
         )}
 
-        <div className="bg-surface rounded-2xl shadow-sm p-5">
-          <h3 className="text-heading font-semibold mb-2">Datos personales</h3>
-          <Row label="Nombre" value={tenant.fullName} />
-          <Row label="Teléfono" value={tenant.phone ?? '—'} />
-          <Row label="Email" value={tenant.email ?? '—'} />
-          <Row label="Clave de elector" value={tenant.idDocument ?? '—'} />
-          <Row label="CURP" value={tenant.curp ?? '—'} />
-          <Row label="Fecha de nacimiento" value={tenant.birthDate ? formatDate(tenant.birthDate) : '—'} />
-          <Row label="Domicilio" value={tenant.address ?? '—'} />
-          <Row label="Estado" value={tenant.status} />
-        </div>
-
-        <div className="bg-surface rounded-2xl shadow-sm p-5">
-          <h3 className="text-heading font-semibold mb-3">Reportes</h3>
-          {reports.length === 0 ? (
-            <p className="text-muted text-sm">Sin incidencias reportadas.</p>
-          ) : (
-            <div className="space-y-2">
-              {reports.map((report) => (
-                <Link
-                  key={report.id}
-                  href={`/tenants/${tenantId}/reports/${report.id}`}
-                  className="flex items-center gap-3 py-2.5 border-b border-black/5 dark:border-white/10 last:border-0 active:opacity-70 transition-opacity"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-heading text-sm truncate">{report.description}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${reportStatusColors[report.status]}`}>
-                        {maintenanceReportStatusLabels[report.status]}
-                      </span>
-                      <span className="text-muted text-xs">{formatDate(report.createdAt)}</span>
-                    </div>
-                  </div>
-                  <ChevronRightIcon className="w-4 h-4 text-muted shrink-0" />
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {(tenant.ineFrontUrl || tenant.ineBackUrl) && (
-          <div className="bg-surface rounded-2xl shadow-sm p-5">
-            <h3 className="text-heading font-semibold mb-1">Fotografías del INE</h3>
-            <p className="text-muted text-xs mb-3">Guardadas como respaldo. Toca una foto para verla en tamaño completo.</p>
-            <div className="flex gap-3">
-              {inePhotos.front && (
-                <a href={inePhotos.front} target="_blank" rel="noopener noreferrer" className="block w-1/2">
-                  <img src={inePhotos.front} alt="Frente del INE" className="w-full rounded-xl shadow-sm" />
-                  <p className="text-muted text-xs text-center mt-1">Frente</p>
-                </a>
-              )}
-              {inePhotos.back && (
-                <a href={inePhotos.back} target="_blank" rel="noopener noreferrer" className="block w-1/2">
-                  <img src={inePhotos.back} alt="Reverso del INE" className="w-full rounded-xl shadow-sm" />
-                  <p className="text-muted text-xs text-center mt-1">Reverso</p>
-                </a>
-              )}
-            </div>
-          </div>
-        )}
-
-        <div className="bg-surface rounded-2xl shadow-sm p-5">
-          <h3 className="text-heading font-semibold mb-1">Acceso al portal</h3>
-          {tenant.userId ? (
-            <p className="text-sm text-muted">Ya tiene una cuenta vinculada — puede iniciar sesión con su teléfono.</p>
-          ) : !tenant.phone ? (
-            <p className="text-sm text-muted">Agrega un teléfono al inquilino antes de generar su link de registro.</p>
-          ) : (
-            <>
-              <p className="text-sm text-muted mb-3">
-                Aún no tiene cuenta. Genera un link de un solo uso para que se registre — sólo le pedirá una contraseña.
-              </p>
-              {inviteLink ? (
-                <div className="flex items-center gap-2 bg-canvas rounded-lg px-3 py-2">
-                  <p className="text-xs text-heading truncate flex-1">{inviteLink}</p>
-                  <button onClick={handleCopyInviteLink} className="text-primary text-xs font-medium shrink-0 hover:underline">
-                    Copiar
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={handleCreateInvite}
-                  disabled={isCreatingInvite}
-                  className="text-primary text-sm font-medium disabled:opacity-50"
-                >
-                  {isCreatingInvite ? 'Generando...' : 'Generar link de registro'}
-                </button>
-              )}
-            </>
-          )}
-        </div>
-
-        <div className="bg-surface rounded-2xl shadow-sm p-5">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-heading font-semibold">Notas</h3>
-            <button onClick={() => setIsEditOpen(true)} className="text-primary text-xs font-medium hover:underline">
-              Editar
-            </button>
-          </div>
-          {tenant.notes ? (
-            <p className="text-sm text-heading whitespace-pre-wrap">{tenant.notes}</p>
-          ) : (
-            <p className="text-sm text-muted">Sin notas registradas. Usa este espacio para observaciones internas sobre el inquilino.</p>
-          )}
-        </div>
-
-        {activeContract && (
-          <div className="bg-surface rounded-2xl shadow-sm p-5">
-            <h3 className="text-heading font-semibold mb-2">Contrato activo</h3>
-            <Row label="Propiedad" value={activeContract.property?.name ?? '—'} />
-            <Row
-              label="Vigencia"
-              value={`${formatDate(activeContract.startDate)} — ${activeContract.endDate ? formatDate(activeContract.endDate) : '—'}`}
-            />
-            <Row label="Renta mensual" value={`$${Number(activeContract.monthlyRent).toLocaleString('es-MX')}`} />
-            <Row label="Depósito" value={`$${Number(activeContract.depositAmount).toLocaleString('es-MX')}`} />
-            <Row label="Estado" value={activeContract.status} />
-            <Link href={`/contracts/${activeContract.id}`} className="block mt-4 text-primary text-sm font-medium hover:underline">
-              Ver contrato completo →
-            </Link>
-          </div>
-        )}
-
-        {contracts.length > 0 && (
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-blue-50 dark:bg-blue-900/10 rounded-2xl shadow-sm p-4 border border-blue-200 dark:border-blue-800">
-              <p className="text-muted text-xs mb-2">Contratos totales</p>
-              <p className="text-heading font-bold text-2xl">{contracts.length}</p>
-            </div>
-            <div
-              className={`rounded-2xl shadow-sm p-4 border ${
-                activeContract
-                  ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800'
-                  : 'bg-gray-50 dark:bg-gray-900/10 border-gray-200 dark:border-gray-800'
+        {/* Resumen / Pagos / Contratos / Reportes — antes todo vivía en un solo scroll
+            largo (datos, notas, fotos, stats, historial de pagos, historial de contratos,
+            reportes) y abrumaba. Se agrupa por tarea: consultar identidad, cobrar, revisar
+            contratos, o atender incidencias — mismo patrón que /profile del inquilino. */}
+        <div className="flex bg-canvas rounded-xl p-1 gap-1 overflow-x-auto">
+          {(
+            [
+              ['resumen', 'Resumen'],
+              ['pagos', `Pagos${pendingPayments.length > 0 ? ` (${pendingPayments.length})` : ''}`],
+              ['contratos', 'Contratos'],
+              ['reportes', `Reportes${openReportsCount > 0 ? ` (${openReportsCount})` : ''}`],
+            ] as const
+          ).map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setTab(value)}
+              className={`flex-1 py-2 px-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                tab === value ? 'bg-surface shadow-sm text-heading' : 'text-muted'
               }`}
             >
-              <p className="text-muted text-xs mb-2">Contratos activos</p>
-              <p className="text-heading font-bold text-2xl">{contracts.filter((c) => c.status === 'ACTIVE').length}</p>
-            </div>
-          </div>
-        )}
+              {label}
+            </button>
+          ))}
+        </div>
 
-        {payments.length > 0 && (
-          <>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl shadow-sm p-4 border border-emerald-200 dark:border-emerald-800">
-                <p className="text-muted text-xs mb-2">Puntualidad</p>
-                <p className="text-heading font-bold text-2xl">{punctualityPercent}%</p>
-                <p className="text-muted text-xs mt-1">
-                  {punctualPayments.length}/{paidPayments.length} puntuales
-                </p>
-              </div>
-              <div className="bg-blue-50 dark:bg-blue-900/10 rounded-2xl shadow-sm p-4 border border-blue-200 dark:border-blue-800">
-                <p className="text-muted text-xs mb-2">Pagos</p>
-                <p className="text-heading font-bold text-2xl">{paidPayments.length}</p>
-                <p className="text-muted text-xs mt-1">de {payments.length} registrados</p>
-              </div>
+        {tab === 'resumen' && (
+          <div className="space-y-6">
+            <div className="bg-surface rounded-2xl shadow-sm p-5">
+              <h3 className="text-heading font-semibold mb-2">Datos personales</h3>
+              <Row label="Nombre" value={tenant.fullName} />
+              <Row label="Teléfono" value={tenant.phone ?? '—'} />
+              <Row label="Email" value={tenant.email ?? '—'} />
+              <Row label="Clave de elector" value={tenant.idDocument ?? '—'} />
+              <Row label="CURP" value={tenant.curp ?? '—'} />
+              <Row label="Fecha de nacimiento" value={tenant.birthDate ? formatDate(tenant.birthDate) : '—'} />
+              <Row label="Domicilio" value={tenant.address ?? '—'} />
+              <Row label="Estado" value={tenant.status} />
             </div>
 
             <div className="bg-surface rounded-2xl shadow-sm p-5">
-              <h3 className="text-heading font-semibold mb-4">Historial de pagos</h3>
-
-              {/* Segmented control */}
-              <div className="flex bg-canvas rounded-xl p-1 mb-4">
-                <button
-                  onClick={() => setSegment('pending')}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                    segment === 'pending' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
-                  }`}
-                >
-                  Programados {pendingPayments.length > 0 && `(${pendingPayments.length})`}
-                </button>
-                <button
-                  onClick={() => setSegment('paid')}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                    segment === 'paid' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
-                  }`}
-                >
-                  Pagados {paidHistory.length > 0 && `(${paidHistory.length})`}
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-heading font-semibold">Notas</h3>
+                <button onClick={() => setIsEditOpen(true)} className="text-primary text-xs font-medium hover:underline">
+                  Editar
                 </button>
               </div>
-
-              {listToShow.length === 0 ? (
-                <p className="text-muted text-sm text-center py-6">
-                  {segment === 'pending' ? 'No hay pagos programados pendientes.' : 'Aún no hay pagos registrados.'}
-                </p>
+              {tenant.notes ? (
+                <p className="text-sm text-heading whitespace-pre-wrap">{tenant.notes}</p>
               ) : (
-                <div className="space-y-2">
-                  {listToShow.map((payment) => {
-                    const isOverdue = payment.status === 'OVERDUE';
-                    const remaining = Number(payment.amountDue) - Number(payment.amountPaid || 0);
-                    return (
-                      <div key={payment.id} className="py-3 border-b border-black/5 dark:border-white/10 last:border-0">
-                        <div className="flex items-center justify-between text-sm mb-1">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <p className="text-heading font-medium">
-                                {formatDate(segment === 'paid' ? payment.paidDate ?? payment.dueDate : payment.dueDate)}
-                              </p>
-                              {payment.paymentType && (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-black/5 dark:bg-white/10 text-muted">
-                                  {paymentTypeLabels[payment.paymentType]}
+                <p className="text-sm text-muted">Sin notas registradas. Usa este espacio para observaciones internas sobre el inquilino.</p>
+              )}
+            </div>
+
+            {(tenant.ineFrontUrl || tenant.ineBackUrl) && (
+              <div className="bg-surface rounded-2xl shadow-sm p-5">
+                <h3 className="text-heading font-semibold mb-1">Fotografías del INE</h3>
+                <p className="text-muted text-xs mb-3">Guardadas como respaldo. Toca una foto para verla en tamaño completo.</p>
+                <div className="flex gap-3">
+                  {inePhotos.front && (
+                    <a href={inePhotos.front} target="_blank" rel="noopener noreferrer" className="block w-1/2">
+                      <img src={inePhotos.front} alt="Frente del INE" className="w-full rounded-xl shadow-sm" />
+                      <p className="text-muted text-xs text-center mt-1">Frente</p>
+                    </a>
+                  )}
+                  {inePhotos.back && (
+                    <a href={inePhotos.back} target="_blank" rel="noopener noreferrer" className="block w-1/2">
+                      <img src={inePhotos.back} alt="Reverso del INE" className="w-full rounded-xl shadow-sm" />
+                      <p className="text-muted text-xs text-center mt-1">Reverso</p>
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="bg-surface rounded-2xl shadow-sm p-5">
+              <h3 className="text-heading font-semibold mb-1">Acceso al portal</h3>
+              {tenant.userId ? (
+                <p className="text-sm text-muted">Ya tiene una cuenta vinculada — puede iniciar sesión con su teléfono.</p>
+              ) : !tenant.phone ? (
+                <p className="text-sm text-muted">Agrega un teléfono al inquilino antes de generar su link de registro.</p>
+              ) : (
+                <>
+                  <p className="text-sm text-muted mb-3">
+                    Aún no tiene cuenta. Genera un link de un solo uso para que se registre — sólo le pedirá una contraseña.
+                  </p>
+                  {inviteLink ? (
+                    <div className="flex items-center gap-2 bg-canvas rounded-lg px-3 py-2">
+                      <p className="text-xs text-heading truncate flex-1">{inviteLink}</p>
+                      <button onClick={handleCopyInviteLink} className="text-primary text-xs font-medium shrink-0 hover:underline">
+                        Copiar
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleCreateInvite}
+                      disabled={isCreatingInvite}
+                      className="text-primary text-sm font-medium disabled:opacity-50"
+                    >
+                      {isCreatingInvite ? 'Generando...' : 'Generar link de registro'}
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {tab === 'pagos' && (
+          <div className="space-y-6">
+            {payments.length === 0 ? (
+              <div className="bg-surface rounded-2xl shadow-sm p-6">
+                <p className="text-muted text-sm text-center">Sin pagos registrados todavía.</p>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl shadow-sm p-4 border border-emerald-200 dark:border-emerald-800">
+                    <p className="text-muted text-xs mb-2">Puntualidad</p>
+                    <p className="text-heading font-bold text-2xl">{punctualityPercent}%</p>
+                    <p className="text-muted text-xs mt-1">
+                      {punctualPayments.length}/{paidPayments.length} puntuales
+                    </p>
+                  </div>
+                  <div className="bg-blue-50 dark:bg-blue-900/10 rounded-2xl shadow-sm p-4 border border-blue-200 dark:border-blue-800">
+                    <p className="text-muted text-xs mb-2">Pagos</p>
+                    <p className="text-heading font-bold text-2xl">{paidPayments.length}</p>
+                    <p className="text-muted text-xs mt-1">de {payments.length} registrados</p>
+                  </div>
+                </div>
+
+                <div className="bg-surface rounded-2xl shadow-sm p-5">
+                  <h3 className="text-heading font-semibold mb-4">Historial de pagos</h3>
+
+                  {/* Segmented control */}
+                  <div className="flex bg-canvas rounded-xl p-1 mb-4">
+                    <button
+                      onClick={() => setSegment('pending')}
+                      className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                        segment === 'pending' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                      }`}
+                    >
+                      Programados {pendingPayments.length > 0 && `(${pendingPayments.length})`}
+                    </button>
+                    <button
+                      onClick={() => setSegment('paid')}
+                      className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                        segment === 'paid' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                      }`}
+                    >
+                      Pagados {paidHistory.length > 0 && `(${paidHistory.length})`}
+                    </button>
+                  </div>
+
+                  {listToShow.length === 0 ? (
+                    <p className="text-muted text-sm text-center py-6">
+                      {segment === 'pending' ? 'No hay pagos programados pendientes.' : 'Aún no hay pagos registrados.'}
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {listToShow.map((payment) => {
+                        const isOverdue = payment.status === 'OVERDUE';
+                        const remaining = Number(payment.amountDue) - Number(payment.amountPaid || 0);
+                        return (
+                          <div key={payment.id} className="py-3 border-b border-black/5 dark:border-white/10 last:border-0">
+                            <div className="flex items-center justify-between text-sm mb-1">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                  <p className="text-heading font-medium">
+                                    {formatDate(segment === 'paid' ? payment.paidDate ?? payment.dueDate : payment.dueDate)}
+                                  </p>
+                                  {payment.paymentType && (
+                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-black/5 dark:bg-white/10 text-muted">
+                                      {paymentTypeLabels[payment.paymentType]}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-muted text-xs truncate">
+                                  ${Number(payment.amountDue).toLocaleString('es-MX')}
+                                  {payment.paymentNumber && ` (${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
+                                  {segment === 'pending' && Number(payment.amountPaid) > 0 && ` · abonado $${Number(payment.amountPaid).toLocaleString('es-MX')}`}
+                                </p>
+                              </div>
+                              {segment === 'pending' ? (
+                                <span
+                                  className={`ml-2 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                                    isOverdue
+                                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                                      : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+                                  }`}
+                                >
+                                  {isOverdue ? 'Vencido' : 'Próximo'}
+                                </span>
+                              ) : (
+                                <span className="ml-2 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                  Pagado
                                 </span>
                               )}
                             </div>
-                            <p className="text-muted text-xs truncate">
-                              ${Number(payment.amountDue).toLocaleString('es-MX')}
-                              {payment.paymentNumber && ` (${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
-                              {segment === 'pending' && Number(payment.amountPaid) > 0 && ` · abonado $${Number(payment.amountPaid).toLocaleString('es-MX')}`}
-                            </p>
-                          </div>
-                          {segment === 'pending' ? (
-                            <span
-                              className={`ml-2 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                                isOverdue
-                                  ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                                  : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
-                              }`}
-                            >
-                              {isOverdue ? 'Vencido' : 'Próximo'}
-                            </span>
-                          ) : (
-                            <span className="ml-2 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
-                              Pagado
-                            </span>
-                          )}
-                        </div>
 
-                        {segment === 'pending' ? (
-                          <div className="flex gap-2 mt-2">
-                            <button
-                              onClick={() => handleReminder(payment)}
-                              className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas transition-colors"
-                            >
-                              <BellIcon className="w-3.5 h-3.5" />
-                              Recordatorio
-                            </button>
-                            <button
-                              onClick={() => setPayTarget(payment)}
-                              className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-primary text-white hover:bg-primary-pressed transition-colors"
-                            >
-                              <BanknoteIcon className="w-3.5 h-3.5" />
-                              Pagar {remaining < Number(payment.amountDue) && `($${remaining.toLocaleString('es-MX')})`}
-                            </button>
+                            {segment === 'pending' ? (
+                              <div className="flex gap-2 mt-2">
+                                <button
+                                  onClick={() => handleReminder(payment)}
+                                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas transition-colors"
+                                >
+                                  <BellIcon className="w-3.5 h-3.5" />
+                                  Recordatorio
+                                </button>
+                                <button
+                                  onClick={() => setPayTarget(payment)}
+                                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-primary text-white hover:bg-primary-pressed transition-colors"
+                                >
+                                  <BanknoteIcon className="w-3.5 h-3.5" />
+                                  Pagar {remaining < Number(payment.amountDue) && `($${remaining.toLocaleString('es-MX')})`}
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex gap-2 mt-2">
+                                <button
+                                  onClick={() => handleDownloadReceipt(payment)}
+                                  className="flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-3 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas transition-colors"
+                                  aria-label="Descargar recibo"
+                                >
+                                  <DownloadIcon className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => handleShareReceipt(payment)}
+                                  disabled={sharingId === payment.id}
+                                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-primary text-white hover:bg-primary-pressed transition-colors disabled:opacity-50"
+                                >
+                                  {sharingId === payment.id ? 'Enviando...' : 'Enviar recibo por WhatsApp'}
+                                </button>
+                                <button
+                                  onClick={() => handleRevertPayment(payment)}
+                                  disabled={revertingId === payment.id}
+                                  className="flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-3 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-800 transition-colors disabled:opacity-50"
+                                  aria-label="Revertir pago"
+                                  title="Revertir pago"
+                                >
+                                  <UndoIcon className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            )}
                           </div>
-                        ) : (
-                          <div className="flex gap-2 mt-2">
-                            <button
-                              onClick={() => handleDownloadReceipt(payment)}
-                              className="flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-3 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas transition-colors"
-                              aria-label="Descargar recibo"
-                            >
-                              <DownloadIcon className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleShareReceipt(payment)}
-                              disabled={sharingId === payment.id}
-                              className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-primary text-white hover:bg-primary-pressed transition-colors disabled:opacity-50"
-                            >
-                              {sharingId === payment.id ? 'Enviando...' : 'Enviar recibo por WhatsApp'}
-                            </button>
-                            <button
-                              onClick={() => handleRevertPayment(payment)}
-                              disabled={revertingId === payment.id}
-                              className="flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-3 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-800 transition-colors disabled:opacity-50"
-                              aria-label="Revertir pago"
-                              title="Revertir pago"
-                            >
-                              <UndoIcon className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </>
+              </>
+            )}
+          </div>
         )}
 
-        {sortedContracts.length > 0 && (
-          <div className="bg-surface rounded-2xl shadow-sm p-5">
-            <h3 className="text-heading font-semibold mb-4">Historial de contratos</h3>
-            <div className="space-y-2">
-              {sortedContracts.map((c) => (
-                <div key={c.id} className="flex items-center justify-between gap-3 py-3 border-b border-black/5 dark:border-white/10 last:border-0">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <p className="text-heading font-medium text-sm truncate">{c.property?.name ?? '—'}</p>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${contractStatusColors[c.status]}`}>
-                        {contractStatusLabels[c.status]}
-                      </span>
-                    </div>
-                    <p className="text-muted text-xs mt-0.5">
-                      {formatDate(c.startDate)} — {c.endDate ? formatDate(c.endDate) : '—'} · $
-                      {Number(c.monthlyRent).toLocaleString('es-MX')}/mes
-                    </p>
-                  </div>
-                  <Link href={`/contracts/${c.id}`} className="shrink-0 text-primary text-sm font-medium hover:underline">
-                    Ver detalle →
-                  </Link>
+        {tab === 'contratos' && (
+          <div className="space-y-6">
+            {contracts.length === 0 ? (
+              <div className="bg-surface rounded-2xl shadow-sm p-6">
+                <p className="text-muted text-sm text-center">Sin contratos registrados todavía.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-blue-50 dark:bg-blue-900/10 rounded-2xl shadow-sm p-4 border border-blue-200 dark:border-blue-800">
+                  <p className="text-muted text-xs mb-2">Contratos totales</p>
+                  <p className="text-heading font-bold text-2xl">{contracts.length}</p>
                 </div>
-              ))}
-            </div>
+                <div
+                  className={`rounded-2xl shadow-sm p-4 border ${
+                    activeContract
+                      ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800'
+                      : 'bg-gray-50 dark:bg-gray-900/10 border-gray-200 dark:border-gray-800'
+                  }`}
+                >
+                  <p className="text-muted text-xs mb-2">Contratos activos</p>
+                  <p className="text-heading font-bold text-2xl">{contracts.filter((c) => c.status === 'ACTIVE').length}</p>
+                </div>
+              </div>
+            )}
+
+            {activeContract && (
+              <div className="bg-surface rounded-2xl shadow-sm p-5">
+                <h3 className="text-heading font-semibold mb-2">Contrato activo</h3>
+                <Row label="Propiedad" value={activeContract.property?.name ?? '—'} />
+                <Row
+                  label="Vigencia"
+                  value={`${formatDate(activeContract.startDate)} — ${activeContract.endDate ? formatDate(activeContract.endDate) : '—'}`}
+                />
+                <Row label="Renta mensual" value={`$${Number(activeContract.monthlyRent).toLocaleString('es-MX')}`} />
+                <Row label="Depósito" value={`$${Number(activeContract.depositAmount).toLocaleString('es-MX')}`} />
+                <Row label="Estado" value={activeContract.status} />
+                <Link href={`/contracts/${activeContract.id}`} className="block mt-4 text-primary text-sm font-medium hover:underline">
+                  Ver contrato completo →
+                </Link>
+              </div>
+            )}
+
+            {sortedContracts.length > 0 && (
+              <div className="bg-surface rounded-2xl shadow-sm p-5">
+                <h3 className="text-heading font-semibold mb-4">Historial de contratos</h3>
+                <div className="space-y-2">
+                  {sortedContracts.map((c) => (
+                    <div key={c.id} className="flex items-center justify-between gap-3 py-3 border-b border-black/5 dark:border-white/10 last:border-0">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <p className="text-heading font-medium text-sm truncate">{c.property?.name ?? '—'}</p>
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${contractStatusColors[c.status]}`}>
+                            {contractStatusLabels[c.status]}
+                          </span>
+                        </div>
+                        <p className="text-muted text-xs mt-0.5">
+                          {formatDate(c.startDate)} — {c.endDate ? formatDate(c.endDate) : '—'} · $
+                          {Number(c.monthlyRent).toLocaleString('es-MX')}/mes
+                        </p>
+                      </div>
+                      <Link href={`/contracts/${c.id}`} className="shrink-0 text-primary text-sm font-medium hover:underline">
+                        Ver detalle →
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {tab === 'reportes' && (
+          <div className="bg-surface rounded-2xl shadow-sm p-5">
+            <h3 className="text-heading font-semibold mb-3">Reportes</h3>
+            {reports.length === 0 ? (
+              <p className="text-muted text-sm">Sin incidencias reportadas.</p>
+            ) : (
+              <div className="space-y-2">
+                {reports.map((report) => (
+                  <Link
+                    key={report.id}
+                    href={`/tenants/${tenantId}/reports/${report.id}`}
+                    className="flex items-center gap-3 py-2.5 border-b border-black/5 dark:border-white/10 last:border-0 active:opacity-70 transition-opacity"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-heading text-sm truncate">{report.description}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${reportStatusColors[report.status]}`}>
+                          {maintenanceReportStatusLabels[report.status]}
+                        </span>
+                        <span className="text-muted text-xs">{formatDate(report.createdAt)}</span>
+                      </div>
+                    </div>
+                    <ChevronRightIcon className="w-4 h-4 text-muted shrink-0" />
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

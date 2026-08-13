@@ -16,6 +16,7 @@ import meRoutes from './routes/me.js';
 import inviteRoutes from './routes/invites.js';
 import reportRoutes from './routes/reports.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { startScheduler } from './scheduler.js';
 
 dotenv.config();
 
@@ -72,6 +73,7 @@ if (isEntryPoint) {
   app.listen(PORT, () => {
     console.log(`🚀 Backend running on http://localhost:${PORT}`);
   });
+  startScheduler();
 }
 
 // Export for testing
