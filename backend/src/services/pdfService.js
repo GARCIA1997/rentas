@@ -141,8 +141,12 @@ export const buildContractVariables = (contract) => {
       : 'El servicio de agua corre por cuenta de EL ARRENDATARIO, en adición e independientemente de la renta pactada.',
     convivance_rules: convivanceRulesText,
     additional_prohibitions: '',
-    parking_text:
-      'El área de estacionamiento, en su caso, se otorga en uso a título gratuito y accesorio al arrendamiento. EL ARRENDADOR no asume el carácter de depositario ni se hace responsable por daños, robos, pérdidas o afectaciones a vehículos, sus accesorios o los objetos que en ellos se dejen.',
+    // Declara explícitamente si hay o no cajón asignado — silenciar la cláusula cuando no
+    // hay estacionamiento dejaría la duda de si se pactó tácitamente; decirlo por escrito
+    // (en cualquiera de los dos sentidos) protege a ambas partes por igual.
+    parking_text: contract.hasParking
+      ? 'EL ARRENDADOR otorga a EL ARRENDATARIO el uso de UN (1) cajón de estacionamiento dentro de EL INMUEBLE, en carácter accesorio y gratuito al arrendamiento. EL ARRENDADOR no asume el carácter de depositario ni se hace responsable por daños, robos, pérdidas o afectaciones a vehículos, sus accesorios o los objetos que en ellos se dejen.'
+      : 'EL INMUEBLE no cuenta con cajón de estacionamiento asignado a EL ARRENDATARIO en los términos de este contrato.',
     penalty_text: penalty.latePaymentPercentage
       ? `Las partes convienen, como pena convencional por el retraso en el pago de la renta, un recargo del ${penalty.latePaymentPercentage}% mensual sobre el monto adeudado, calculado por cada mes o fracción de retraso.${
           penalty.maxDamageCharge
@@ -186,6 +190,37 @@ export const buildContractVariables = (contract) => {
          este contrato para su registro ante la Oficina Rentística dentro de los
          ${tenancyLaw.registrationDeadlineDays} días siguientes a su firma (arts. 3 y 26).</p>`
       : '',
+
+    // Terminación anticipada VOLUNTARIA por EL ARRENDATARIO — distinta de la rescisión por
+    // incumplimiento (que ya cubre la cláusula de Causales de rescisión). No es válido
+    // pactar un aviso menor a 2 meses en Michoacán para vivienda: el art. 14 de la Ley
+    // Inquilinaria da ese plazo como derecho irrenunciable del arrendatario (art. 2) — un
+    // contrato que dijera "1 mes" ahí sería letra muerta frente al inquilino, y firmarlo
+    // así sin advertirlo sería peor que no tener la cláusula. Donde esa ley no aplica
+    // (Colima, o vivienda fuera de Michoacán) se pacta el mes de aviso solicitado.
+    early_termination_clause: tenancyLaw?.tenantMayTerminate
+      ? `<p class="clause"><span class="clause-number">Terminación anticipada por EL ARRENDATARIO.</span>
+         EL ARRENDATARIO podrá dar por terminado este contrato antes de su vencimiento dando aviso por
+         escrito a EL ARRENDADOR con ${tenancyLaw.tenantNoticeMonths} (dos) meses de anticipación, en
+         términos del artículo 14 de la ${tenancyLaw.name}, plazo que las partes no pueden acortar por
+         tratarse de un derecho irrenunciable (art. 2). De no darse el aviso con la anticipación señalada,
+         EL ARRENDATARIO resarcirá a EL ARRENDADOR con el importe de las rentas correspondientes al plazo
+         de aviso omitido, quedando para ello el depósito en garantía a disposición de EL ARRENDADOR,
+         además de los adeudos pendientes que en su caso existan.</p>`
+      : `<p class="clause"><span class="clause-number">Terminación anticipada por EL ARRENDATARIO.</span>
+         EL ARRENDATARIO podrá dar por terminado este contrato antes de su vencimiento dando aviso por
+         escrito a EL ARRENDADOR con al menos un mes de anticipación. De no darse el aviso con la
+         anticipación señalada, o de desocupar ${subject} sin cumplir con este requisito, el depósito en
+         garantía entregado conforme a la cláusula de depósito quedará a disposición de EL ARRENDADOR como
+         pena convencional, sin perjuicio de las demás acciones legales que correspondan.</p>`,
+
+    // Cláusula fija de silencio nocturno, aparte de las reglas de convivencia (que el admin
+    // puede personalizar por completo vía contract.convivanceRules): si el admin reemplaza
+    // el texto de convivencia, este límite específico no debe desaparecer con él.
+    noise_clause: `<p class="clause"><span class="clause-number">Silencio nocturno.</span>
+      Sin perjuicio de las reglas de convivencia pactadas, EL ARRENDATARIO se obliga a guardar silencio a
+      partir de las 23:00 y hasta las 07:00 horas, absteniéndose de música, ruido o cualquier actividad que
+      perturbe el descanso de los vecinos u ocupantes colindantes durante ese horario.</p>`,
   };
 };
 

@@ -223,6 +223,14 @@ GET    /me/tenant | /me/contracts | /me/payments | /me/settings
 PUT    /me/settings
 GET    /me/contracts/:id/pdf | /me/payments/:id/receipt
 
+POST   /me/reports                 ← inquilino reporta una incidencia
+GET    /me/reports                 ← inquilino ve sus propios reportes
+GET    /reports                    ← admin ve todos los reportes
+PUT    /reports/:id/status         ← admin cambia el estatus (dispara notificación al inquilino)
+
+GET    /me/notifications | /me/notifications/unread-count
+PUT    /me/notifications/read-all  ← mismo endpoint para admin e inquilino, cada quien ve las suyas
+
 GET    /health                 ← sin auth, usado por el healthcheck de deploy
 ```
 
@@ -411,6 +419,65 @@ Manual, no automática. `getContractsNeedingRenewal()` encuentra contratos `ACTI
 Formulario en `frontend/app/(app)/contracts/[id]/renew/page.tsx`: muestra el contrato original,
 permite editar duración/renta con botón "usar sugerencia", **requiere elegir representante**
 (el PDF no se puede generar sin uno).
+
+## Cláusulas adicionales de casa habitación (CASA_TEMPLATE y COAHUAYANA_TEMPLATE)
+
+Tres cláusulas se agregan siempre en `buildContractVariables()` (`pdfService.js`) y se insertan
+vía placeholder en ambas plantillas de vivienda — **no** en `LOCAL_TEMPLATE`. Usan el mismo
+patrón que `tenancy_law_text`: bloque HTML autocontenido con su propia etiqueta, insertado con
+sufijo "BIS" o sin ordinal fijo en vez de renumerar las cláusulas existentes.
+
+- **Terminación anticipada por EL ARRENDATARIO** (`early_termination_clause`) — **jurisdiction-aware
+  a propósito**: en Michoacán (vivienda, `tenancyLaw.tenantMayTerminate`) el aviso es de
+  **2 meses**, citando el art. 14 de la Ley Inquilinaria como derecho irrenunciable (art. 2). Un
+  contrato que pactara 1 mes ahí sería letra muerta frente al inquilino — no es una cláusula que
+  se pueda generalizar a "1 mes" sin verificar primero si hay una ley especial protegiendo un
+  plazo mayor. Fuera de esa jurisdicción (Colima, o vivienda sin ley especial) sí se pacta 1 mes.
+  En ambos casos, no dar el aviso deja el depósito a disposición del arrendador.
+- **Estacionamiento** (`parking_text`, condicionado a `Contract.hasParking`) — declara
+  explícitamente si hay o no cajón asignado, en cualquiera de los dos sentidos. Callar la
+  cláusula cuando no hay estacionamiento dejaría la duda de si se pactó tácitamente.
+  `hasParking` se establece en el wizard (checkbox "Establecer espacio de estacionamiento",
+  visible sólo para propiedades `HOUSE`) y se hereda en renovaciones igual que `waterIncluded`.
+- **Silencio nocturno** (`noise_clause`, 23:00–07:00, siempre presente) — deliberadamente
+  **aparte** de `convivance_rules` (que ya menciona ruido moderado desde las 22:00, pero es
+  texto que el admin puede sobrescribir por completo vía `contract.convivanceRules`). Si esta
+  regla viviera dentro de ese texto, un admin que personalizara la convivencia la borraría sin
+  querer.
+
+Como con cualquier cambio a `contractTemplates.js`, **hay que correr `npm run db:seed`** para que
+tome efecto — ver la nota de arriba sobre dónde vive el HTML real.
+
+## Reportes de mantenimiento y notificaciones in-app
+
+El inquilino reporta incidencias desde `/profile` (botón "Reportar incidencia" → modal con
+descripción). Dispara una notificación a **todos** los admins; cuando un admin cambia el estatus
+del reporte (`/settings/reports`), se notifica de vuelta al inquilino. Ambos lados usan
+notificaciones **in-app** (campana en `AppShell`, sondeo cada 60s) — no email, SMS ni WhatsApp.
+
+**Reutiliza infraestructura que ya existía migrada en el schema pero nunca se conectó a nada**:
+`MaintenanceReport` y `NotificationLog` estaban ahí desde la migración inicial, sin service, sin
+controller, sin ruta. En vez de crear modelos nuevos se conectaron los existentes:
+
+- `MaintenanceReport.status` se convirtió de `String` libre a un enum propio
+  (`MaintenanceReportStatus`: `REPORTED` / `IN_PROGRESS` / `RESOLVED`) para consistencia con el
+  resto del schema. `propertyId` ganó una relación real a `Property` (antes era un `String?`
+  suelto, sin FK). `priority` se dejó tal cual (sin UI todavía, no se pidió).
+- `propertyId` se resuelve **automáticamente** del contrato activo del inquilino al crear el
+  reporte (mismo patrón que `getMyTenant`) — no se le pide elegir la propiedad, ya vive implícita
+  en su contrato.
+- `NotificationLog.whatsappMessage` (`@db.Text NOT NULL`) se reusa como el texto de la
+  notificación in-app — es el único campo de texto que trae el modelo, y el nombre es un
+  remanente de un diseño original pensado para WhatsApp que nunca se conectó. Renombrarlo
+  hubiera sido una migración sin beneficio real; se documenta aquí para que no confunda.
+- `NotificationType` ganó `REPORT_STATUS_CHANGED` (nuevo); `MAINTENANCE_REPORT` ya existía y se
+  reusa para "nuevo reporte creado".
+- "Marcar como leídas" es de una sola pasada (`PUT /me/notifications/read-all`, marca todas las
+  no leídas del usuario) en vez de tracking por notificación individual — se dispara al abrir la
+  campana. Suficiente para el volumen de esta app; no hay endpoint de marcar una sola.
+
+`reportService.js` tiene el fan-out a admins (`prisma.user.findMany({ where: { role: 'ADMIN' } })`
++ `notificationLog.createMany`) y la notificación de vuelta al inquilino en `updateReportStatus`.
 
 ## Colorimetría y sistema de diseño
 

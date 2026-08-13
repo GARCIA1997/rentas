@@ -306,6 +306,7 @@ export interface Contract {
   monthlyRent: string;
   depositAmount: string;
   waterIncluded: boolean;
+  hasParking: boolean;
   depositReturnPolicy?: DepositReturnPolicy | null;
   penaltyRules?: PenaltyRules | null;
   inventory?: { name: string; condition?: string; notes?: string }[] | null;
@@ -324,7 +325,7 @@ export interface Contract {
   createdAt: string;
   updatedAt: string;
   tenant?: { id: string; fullName: string; idDocument?: string | null };
-  property?: { id: string; name: string; address: string; city: string };
+  property?: { id: string; name: string; address: string; city: string; propertyType?: 'HOUSE' | 'LOCAL' };
   representative?: { id: string; fullName: string; position?: string | null } | null;
   // Incumplimientos de normas de orden público detectados por el backend (p. ej. depósito
   // mayor al tope de la ley inquilinaria). Informativos: no impiden guardar el contrato.
@@ -342,6 +343,7 @@ export interface ContractInput {
   monthlyRent: number;
   depositAmount: number;
   waterIncluded: boolean;
+  hasParking: boolean;
   autoRenewal: boolean;
   penaltyRules?: PenaltyRules;
   depositReturnPolicy?: DepositReturnPolicy;
@@ -630,7 +632,54 @@ export const meApi = {
     downloadBlob(`${API_URL}/api/me/contracts/${id}/pdf`, token, `contrato-${id}.pdf`, 'No se pudo descargar el contrato'),
   downloadReceipt: (id: string, token: string) =>
     downloadBlob(`${API_URL}/api/me/payments/${id}/receipt`, token, `recibo-${id}.pdf`, 'No se pudo descargar el recibo'),
+  createReport: (description: string, token: string) =>
+    apiCall('/api/me/reports', { method: 'POST', body: JSON.stringify({ description }), token }) as Promise<MaintenanceReport>,
+  getMyReports: (token: string) => apiCall('/api/me/reports', { token }) as Promise<MaintenanceReport[]>,
+  getNotifications: (token: string) => apiCall('/api/me/notifications', { token }) as Promise<Notification[]>,
+  getUnreadNotificationCount: (token: string) =>
+    apiCall('/api/me/notifications/unread-count', { token }) as Promise<{ count: number }>,
+  markNotificationsAsRead: (token: string) =>
+    apiCall('/api/me/notifications/read-all', { method: 'PUT', token }),
 };
+
+// ---- Reportes de mantenimiento ----
+
+export type MaintenanceReportStatus = 'REPORTED' | 'IN_PROGRESS' | 'RESOLVED';
+
+export const maintenanceReportStatusLabels: Record<MaintenanceReportStatus, string> = {
+  REPORTED: 'Reportado',
+  IN_PROGRESS: 'En progreso',
+  RESOLVED: 'Resuelto',
+};
+
+export interface MaintenanceReport {
+  id: string;
+  tenantId: string;
+  propertyId?: string | null;
+  description: string;
+  status: MaintenanceReportStatus;
+  reportedDate: string;
+  completedDate?: string | null;
+  createdAt: string;
+  tenant?: { id: string; fullName: string; phone?: string | null };
+  property?: { id: string; name: string } | null;
+}
+
+export const reportsApi = {
+  list: (token: string) => apiCall('/api/reports', { token }) as Promise<MaintenanceReport[]>,
+  updateStatus: (id: string, status: MaintenanceReportStatus, token: string) =>
+    apiCall(`/api/reports/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }), token }) as Promise<MaintenanceReport>,
+};
+
+// ---- Notificaciones in-app ----
+
+export interface Notification {
+  id: string;
+  notificationType: 'PAYMENT_REMINDER' | 'PAYMENT_CONFIRMED' | 'CONTRACT_SIGNED' | 'REPORT_STATUS_CHANGED' | 'MAINTENANCE_REPORT';
+  whatsappMessage: string;
+  sentAt: string;
+  readAt?: string | null;
+}
 
 // ---- Dashboard ----
 

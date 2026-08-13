@@ -70,6 +70,7 @@ enum NotificationType {
   PAYMENT_REMINDER
   PAYMENT_CONFIRMED
   CONTRACT_SIGNED
+  REPORT_STATUS_CHANGED
   MAINTENANCE_REPORT
 }
 
@@ -124,6 +125,7 @@ model Property {
   owner                 User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   contracts             Contract[]
   rentPayments          RentPayment[]
+  maintenanceReports    MaintenanceReport[]
 
   @@index([ownerId])
   @@index([status])
@@ -179,6 +181,9 @@ model Contract {
   monthlyRent           Decimal     @db.Decimal(12, 2)
   depositAmount         Decimal     @db.Decimal(12, 2)
   waterIncluded         Boolean     @default(false)
+  // Dispara la cláusula de estacionamiento (1 cajón) en las plantillas de casa
+  // habitación — ver buildContractVariables en pdfService.js.
+  hasParking            Boolean     @default(false)
   depositReturnPolicy   Json?       // JSON for flexibility: {condition: "perfect/minor/major", percentage: 100}
   penaltyRules          Json?       // JSON: {latePaymentPenalty: 2, maxDamageCharge: 5000}
   terms                 Json?       // JSON: array of custom clauses
@@ -282,13 +287,21 @@ model RentPayment {
   @@index([status])
 }
 
+enum MaintenanceReportStatus {
+  REPORTED
+  IN_PROGRESS
+  RESOLVED
+}
+
 model MaintenanceReport {
   id                    String      @id @default(cuid())
   tenantId              String
+  // Se resuelve automáticamente del contrato activo del inquilino al crear el reporte —
+  // no se le pide elegir, ya vive implícito en su contrato.
   propertyId            String?
   description           String      @db.Text
-  priority              String      @default("normal") // low, normal, high
-  status                String      @default("reported") // reported, in_progress, completed
+  priority              String      @default("normal") // low, normal, high — sin UI todavía
+  status                MaintenanceReportStatus @default(REPORTED)
   reportedDate          DateTime    @default(now())
   completedDate         DateTime?
   createdAt             DateTime    @default(now())
@@ -296,8 +309,10 @@ model MaintenanceReport {
 
   // Relations
   tenant                Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  property              Property?   @relation(fields: [propertyId], references: [id], onDelete: SetNull)
 
   @@index([tenantId])
+  @@index([propertyId])
   @@index([status])
 }
 

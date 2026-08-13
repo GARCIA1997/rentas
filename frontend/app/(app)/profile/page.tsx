@@ -2,9 +2,19 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { meApi, MyTenant, Contract, RentPayment, getPaymentsDue, getScheduledPayments } from '@/lib/api';
+import {
+  meApi,
+  MyTenant,
+  Contract,
+  RentPayment,
+  MaintenanceReport,
+  maintenanceReportStatusLabels,
+  getPaymentsDue,
+  getScheduledPayments,
+} from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { useToast } from '@/components/ToastProvider';
+import { Modal } from '@/components/Modal';
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -36,11 +46,17 @@ function TenantProfile() {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [downloadingReceiptId, setDownloadingReceiptId] = useState<string | null>(null);
   const [paymentSegment, setPaymentSegment] = useState<'pending' | 'paid' | 'scheduled'>('pending');
+  const [reports, setReports] = useState<MaintenanceReport[]>([]);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportDescription, setReportDescription] = useState('');
+  const [isSubmittingReport, setIsSubmittingReport] = useState(false);
+
+  const loadReports = (authToken: string) => meApi.getMyReports(authToken).then(setReports);
 
   useEffect(() => {
     if (!token) return;
     setIsLoading(true);
-    Promise.all([meApi.getTenant(token), meApi.getContracts(token), meApi.getPayments(token)])
+    Promise.all([meApi.getTenant(token), meApi.getContracts(token), meApi.getPayments(token), loadReports(token)])
       .then(([tenantData, contractsData, paymentsData]) => {
         setTenant(tenantData);
         setContracts(contractsData);
@@ -48,6 +64,22 @@ function TenantProfile() {
       })
       .finally(() => setIsLoading(false));
   }, [token]);
+
+  const handleSubmitReport = async () => {
+    if (!token || !reportDescription.trim()) return;
+    setIsSubmittingReport(true);
+    try {
+      await meApi.createReport(reportDescription.trim(), token);
+      setReportDescription('');
+      setIsReportModalOpen(false);
+      await loadReports(token);
+      showToast('Incidencia reportada. El administrador fue notificado.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Error al reportar la incidencia', 'error');
+    } finally {
+      setIsSubmittingReport(false);
+    }
+  };
 
   const handleDownloadContract = async (id: string) => {
     if (!token) return;
@@ -256,6 +288,63 @@ function TenantProfile() {
           )}
         </div>
       )}
+
+      <div className="bg-surface rounded-2xl shadow-sm p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-heading font-semibold">Mis reportes</h3>
+          <button
+            onClick={() => setIsReportModalOpen(true)}
+            className="bg-primary hover:bg-primary-pressed text-white text-xs font-medium px-3 py-1.5 rounded-full"
+          >
+            Reportar incidencia
+          </button>
+        </div>
+        {reports.length === 0 ? (
+          <p className="text-muted text-sm text-center py-4">No has reportado ninguna incidencia.</p>
+        ) : (
+          <div className="space-y-2">
+            {reports.map((report) => (
+              <div key={report.id} className="py-3 border-b border-black/5 dark:border-white/10 last:border-0">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-heading text-sm flex-1">{report.description}</p>
+                  <span
+                    className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                      report.status === 'RESOLVED'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
+                        : report.status === 'IN_PROGRESS'
+                          ? 'bg-slate-100 text-slate-700 dark:bg-slate-700/30 dark:text-slate-300'
+                          : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+                    }`}
+                  >
+                    {maintenanceReportStatusLabels[report.status]}
+                  </span>
+                </div>
+                <p className="text-muted text-xs mt-1">{formatDate(report.createdAt)}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <Modal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} title="Reportar incidencia">
+        <p className="text-muted text-sm mb-3">
+          Describe el problema. El administrador recibirá una notificación de inmediato.
+        </p>
+        <textarea
+          value={reportDescription}
+          onChange={(e) => setReportDescription(e.target.value)}
+          rows={4}
+          placeholder="Ej: Fuga de agua en el baño principal..."
+          className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+        />
+        <button
+          onClick={handleSubmitReport}
+          disabled={isSubmittingReport || !reportDescription.trim()}
+          className="mt-4 w-full bg-primary hover:bg-primary-pressed text-white py-2.5 rounded-xl text-sm font-medium disabled:opacity-50"
+        >
+          {isSubmittingReport ? 'Enviando...' : 'Enviar reporte'}
+        </button>
+      </Modal>
     </div>
   );
 }

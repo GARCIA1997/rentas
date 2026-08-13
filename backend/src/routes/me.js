@@ -14,4 +14,11 @@ router.get('/payments/:id/receipt', meController.downloadReceipt);
 router.get('/settings', meController.getSettings);
 router.put('/settings', meController.updateSettings);
 
+router.post('/reports', meController.createReport);
+router.get('/reports', meController.getMyReports);
+
+router.get('/notifications', meController.getMyNotifications);
+router.get('/notifications/unread-count', meController.getUnreadNotificationCount);
+router.put('/notifications/read-all', meController.markNotificationsAsRead);
+
 export default router;

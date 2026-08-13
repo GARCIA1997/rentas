@@ -30,6 +30,7 @@ interface WizardState {
   monthlyRent: string;
   depositAmount: string;
   waterIncluded: boolean;
+  hasParking: boolean;
   representativeId: string;
   templateId: string;
   autoRenewal: boolean;
@@ -47,6 +48,7 @@ const emptyState: WizardState = {
   monthlyRent: '',
   depositAmount: '',
   waterIncluded: false,
+  hasParking: false,
   representativeId: '',
   templateId: '',
   autoRenewal: false,
@@ -172,6 +174,7 @@ export default function NewContractWizardPage() {
           monthlyRent: Number(form.monthlyRent),
           depositAmount: Number(form.depositAmount),
           waterIncluded: form.waterIncluded,
+          hasParking: form.hasParking,
           representativeId: form.representativeId || undefined,
           templateId: form.templateId || undefined,
           autoRenewal: form.autoRenewal,
@@ -527,6 +530,17 @@ export default function NewContractWizardPage() {
                 />
                 Renovación automática al finalizar
               </label>
+              {selectedProperty?.propertyType === 'HOUSE' && (
+                <label className="flex items-center gap-2 text-sm text-heading">
+                  <input
+                    type="checkbox"
+                    checked={form.hasParking}
+                    onChange={(e) => setForm({ ...form, hasParking: e.target.checked })}
+                    className="rounded"
+                  />
+                  Establecer espacio de estacionamiento
+                </label>
+              )}
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className={labelClass}>Penalización por retraso (%)</label>
@@ -583,6 +597,9 @@ export default function NewContractWizardPage() {
                 ['Renta mensual', `$${Number(form.monthlyRent || 0).toLocaleString('es-MX')}`],
                 ['Depósito', `$${Number(form.depositAmount || 0).toLocaleString('es-MX')}`],
                 ['Agua incluida', form.waterIncluded ? 'Sí' : 'No'],
+                ...(selectedProperty?.propertyType === 'HOUSE'
+                  ? [['Estacionamiento', form.hasParking ? 'Sí, 1 cajón' : 'No']]
+                  : []),
                 ['Representante', selectedRepresentative?.fullName ?? 'Sin asignar'],
                 ['Plantilla', selectedTemplate?.name ?? 'Sin plantilla'],
                 ['Renovación automática', form.autoRenewal ? 'Sí' : 'No'],
