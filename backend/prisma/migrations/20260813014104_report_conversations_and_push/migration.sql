@@ -1,8 +1,16 @@
 -- AlterEnum
+-- RESOLVED se renombra a CLOSED (mismo estado final del hilo, nombre nuevo) — el cast
+-- directo old::text::new falla si ya existen filas con status = 'RESOLVED' en la BD,
+-- así que se mapea explícitamente en vez de asumir coincidencia 1:1 de valores.
 BEGIN;
 CREATE TYPE "MaintenanceReportStatus_new" AS ENUM ('REPORTED', 'IN_PROGRESS', 'CLOSED');
 ALTER TABLE "MaintenanceReport" ALTER COLUMN "status" DROP DEFAULT;
-ALTER TABLE "MaintenanceReport" ALTER COLUMN "status" TYPE "MaintenanceReportStatus_new" USING ("status"::text::"MaintenanceReportStatus_new");
+ALTER TABLE "MaintenanceReport" ALTER COLUMN "status" TYPE "MaintenanceReportStatus_new" USING (
+  CASE "status"::text
+    WHEN 'RESOLVED' THEN 'CLOSED'
+    ELSE "status"::text
+  END
+)::"MaintenanceReportStatus_new";
 ALTER TYPE "MaintenanceReportStatus" RENAME TO "MaintenanceReportStatus_old";
 ALTER TYPE "MaintenanceReportStatus_new" RENAME TO "MaintenanceReportStatus";
 DROP TYPE "MaintenanceReportStatus_old";
