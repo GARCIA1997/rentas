@@ -95,6 +95,8 @@ model User {
   contractTemplates     ContractTemplate[]
   notificationLogs      NotificationLog[]
   representatives       Representative[]
+  reportMessages        ReportMessage[]
+  pushSubscriptions     PushSubscription[]
   createdUsers          User[]      @relation("UserCreatedBy")
   creatorUser           User?       @relation("UserCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   createdInvites        RegistrationInvite[] @relation("InviteCreator")
@@ -290,7 +292,7 @@ model RentPayment {
 enum MaintenanceReportStatus {
   REPORTED
   IN_PROGRESS
-  RESOLVED
+  CLOSED
 }
 
 model MaintenanceReport {
@@ -310,10 +312,44 @@ model MaintenanceReport {
   // Relations
   tenant                Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   property              Property?   @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  messages              ReportMessage[]
 
   @@index([tenantId])
   @@index([propertyId])
   @@index([status])
+}
+
+// El reporte es el asunto/mensaje inicial (description); toda la comunicación posterior
+// — de cualquiera de las dos partes — vive aquí como una conversación. Se bloquea añadir
+// mensajes nuevos cuando el reporte pasa a CLOSED (ver reportService.js).
+model ReportMessage {
+  id                    String      @id @default(cuid())
+  reportId              String
+  senderId              String      // User.id: puede ser un admin o el User vinculado al tenant
+  body                  String      @db.Text
+  createdAt             DateTime    @default(now())
+
+  report                MaintenanceReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  sender                User        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+// Suscripción del navegador a Web Push (estándar del navegador — PushManager/VAPID), NO
+// FCM/APNs directo. Un usuario puede tener varias (un dispositivo/navegador cada una);
+// `endpoint` identifica la suscripción de forma única por dispositivo+navegador.
+model PushSubscription {
+  id                    String      @id @default(cuid())
+  userId                String
+  endpoint              String      @db.Text
+  p256dh                String      @db.Text
+  auth                  String      @db.Text
+  createdAt             DateTime    @default(now())
+
+  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([endpoint])
+  @@index([userId])
 }
 
 model NotificationLog {

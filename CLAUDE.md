@@ -75,18 +75,27 @@ rentas/
 │   │   │   ├── tenants/             # listado + [id]/profile
 │   │   │   ├── contracts/           # listado + [id] detalle + [id]/renew + new (wizard)
 │   │   │   ├── payments/            # listado con segmentos (vencidos/próximos/pagados)
-│   │   │   ├── profile/             # perfil del inquilino (portal)
+│   │   │   ├── profile/             # perfil del inquilino (portal): tabs Perfil/Reportes,
+│   │   │   │   └── reports/[id]/    #   conversación de un reporte (lado inquilino)
+│   │   │   ├── tenants/[id]/reports/[reportId]/  # misma conversación, lado admin
 │   │   │   ├── settings/            # representantes + tema + perfil admin
-│   │   │   └── reports/
+│   │   │   │   └── reports/         #   inbox global de reportes (todos los tenants)
+│   │   │   └── reports/             # reportes financieros del admin — sin relación con
+│   │   │                            #   los reportes de mantenimiento de arriba, mismo
+│   │   │                            #   nombre por coincidencia de dominio
 │   │   ├── login/, register/        # fuera del route group, sin AppShell
 │   │   └── globals.css              # design tokens + utilidades de "glass" (ver Colorimetría)
 │   ├── components/                  # AppShell, Modal, TenantFormModal, ToastProvider, icons…
+│   │   └── ReportConversation.tsx   # chat compartido tenant/admin (ver Reportes de mantenimiento)
 │   ├── lib/
 │   │   ├── api.ts                   # ÚNICO punto de contacto con el backend — todo tipado aquí
 │   │   ├── authContext.tsx          # User type vive aquí; login/logout/refresh
 │   │   ├── themeContext.tsx         # claro/oscuro/sistema, persistido en localStorage
 │   │   └── formatDate.ts
-│   └── hooks/useAuth.ts
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   └── usePushNotifications.ts  # registra el service worker, suscribe/desuscribe Web Push
+│   └── public/sw.js                 # service worker: push + notificationclick (deep-link)
 │
 ├── docker-compose.yml                # dev: bind mounts + hot reload en los tres servicios
 ├── docker-compose.prod.yml           # prod: build real, sin bind mounts, puertos en 127.0.0.1
@@ -146,6 +155,14 @@ Frontend: `npm run dev`, `npm run build`, `npm run lint`, `npx tsc --noEmit`.
 - **`RegistrationInvite`** es el único camino para crear una cuenta — ver sección
   "Alta de cuentas" más abajo. `token` es de un solo uso (`usedAt`) y vence
   (`expiresAt`, 7 días); `tenantId` sólo aplica a invitaciones de `INQUILINO`.
+- **`MaintenanceReport` es el asunto de una conversación, no el mensaje completo.** El texto
+  inicial vive en `description`; todo lo posterior (de cualquiera de las dos partes) va en
+  `ReportMessage[]`. `senderId` en `ReportMessage` apunta a `User.id` (admin o el `User` ligado
+  al `Tenant`) — no hay un campo "role" propio en el mensaje, el rol se resuelve al leer vía la
+  relación a `User`. Ver la sección "Reportes de mantenimiento" más abajo.
+- **`PushSubscription` es 1:N con `User`**, no 1:1 — un mismo usuario puede tener varias
+  suscripciones activas (un navegador/dispositivo por suscripción). `endpoint` es único a nivel
+  de tabla porque es el identificador real de esa suscripción ante el navegador/push service.
 
 ## Autenticación y autorización
 
@@ -196,6 +213,7 @@ POST   /properties            PUT /properties/:id            DELETE /properties/
 
 GET    /tenants | /tenants/:id
 POST   /tenants                PUT /tenants/:id               DELETE /tenants/:id
+GET    /tenants/:id/reports        ← reportes de ese inquilino, para el admin (vía perfil)
 
 GET    /representatives | /representatives/:id
 POST   /representatives        PUT /representatives/:id       DELETE /representatives/:id
@@ -223,13 +241,20 @@ GET    /me/tenant | /me/contracts | /me/payments | /me/settings
 PUT    /me/settings
 GET    /me/contracts/:id/pdf | /me/payments/:id/receipt
 
-POST   /me/reports                 ← inquilino reporta una incidencia
+POST   /me/reports                 ← inquilino reporta una incidencia (crea la conversación)
 GET    /me/reports                 ← inquilino ve sus propios reportes
-GET    /reports                    ← admin ve todos los reportes
-PUT    /reports/:id/status         ← admin cambia el estatus (dispara notificación al inquilino)
+GET    /me/reports/:id             ← inquilino ve el detalle/hilo de un reporte propio
+POST   /me/reports/:id/messages    ← inquilino responde en el hilo (403 si está CLOSED)
+GET    /reports                    ← admin ve todos los reportes (inbox global, todas las propiedades)
+GET    /reports/:id                ← admin ve el detalle/hilo de un reporte
+POST   /reports/:id/messages       ← admin responde en el hilo (403 si está CLOSED)
+PUT    /reports/:id/status         ← admin cambia el estatus (REPORTED/IN_PROGRESS/CLOSED, notifica al inquilino)
 
 GET    /me/notifications | /me/notifications/unread-count
 PUT    /me/notifications/read-all  ← mismo endpoint para admin e inquilino, cada quien ve las suyas
+
+POST   /me/push-subscriptions      ← guarda una suscripción Web Push del dispositivo actual
+DELETE /me/push-subscriptions      ← la da de baja (body: { endpoint })
 
 GET    /health                 ← sin auth, usado por el healthcheck de deploy
 ```
@@ -448,36 +473,103 @@ sufijo "BIS" o sin ordinal fijo en vez de renumerar las cláusulas existentes.
 Como con cualquier cambio a `contractTemplates.js`, **hay que correr `npm run db:seed`** para que
 tome efecto — ver la nota de arriba sobre dónde vive el HTML real.
 
-## Reportes de mantenimiento y notificaciones in-app
+## Reportes de mantenimiento: conversación + Web Push
 
-El inquilino reporta incidencias desde `/profile` (botón "Reportar incidencia" → modal con
-descripción). Dispara una notificación a **todos** los admins; cuando un admin cambia el estatus
-del reporte (`/settings/reports`), se notifica de vuelta al inquilino. Ambos lados usan
-notificaciones **in-app** (campana en `AppShell`, sondeo cada 60s) — no email, SMS ni WhatsApp.
+El inquilino reporta incidencias desde el tab **Reportes** de `/profile` (aparte del tab Perfil,
+no mezclado con el resto — botón "+ Reportar incidencia" → crea el reporte y navega directo al
+hilo). Cada reporte **es una conversación**, no un campo de estatus estático: tenant y admin se
+responden ida y vuelta hasta que el admin la marca `CLOSED`, momento en el que se bloquea (403)
+cualquier mensaje nuevo de cualquiera de las dos partes — `assertNotClosed()` en
+`reportService.js` lo hace cumplir en el backend, no sólo en el UI. El primer "mensaje" del hilo
+es siempre `MaintenanceReport.description` (créditado al tenant); todo lo posterior vive en
+`ReportMessage[]`. `ReportConversation.tsx` es el componente de chat compartido entre
+`/profile/reports/[id]` (tenant) y `/tenants/[id]/reports/[reportId]` (admin) — mismo hilo,
+sólo cambia `viewerRole` (qué lado pinta cada burbuja) y un slot `headerExtra` (los botones de
+cambio de estatus, sólo del lado admin).
+
+**Navegación del admin: perfil del inquilino → reportes de ese inquilino**, no al revés. Desde
+`/tenants/:id/profile` hay una sección "Reportes" con la lista de conversaciones de ese tenant,
+cada una linkeando a `/tenants/:id/reports/:reportId`. `/settings/reports` sigue existiendo como
+inbox global de **todos** los tenants (útil para ver qué necesita atención de un vistazo), pero
+ya no tiene botones de estatus inline — cada fila es un link al mismo detalle con el hilo
+completo.
 
 **Reutiliza infraestructura que ya existía migrada en el schema pero nunca se conectó a nada**:
 `MaintenanceReport` y `NotificationLog` estaban ahí desde la migración inicial, sin service, sin
 controller, sin ruta. En vez de crear modelos nuevos se conectaron los existentes:
 
 - `MaintenanceReport.status` se convirtió de `String` libre a un enum propio
-  (`MaintenanceReportStatus`: `REPORTED` / `IN_PROGRESS` / `RESOLVED`) para consistencia con el
-  resto del schema. `propertyId` ganó una relación real a `Property` (antes era un `String?`
-  suelto, sin FK). `priority` se dejó tal cual (sin UI todavía, no se pidió).
+  (`MaintenanceReportStatus`: `REPORTED` / `IN_PROGRESS` / `CLOSED` — renombrado desde
+  `RESOLVED` para que "cerrado" describa el estado del hilo, no sólo que el problema físico ya se
+  resolvió) para consistencia con el resto del schema. `propertyId` ganó una relación real a
+  `Property` (antes era un `String?` suelto, sin FK). `priority` se dejó tal cual (sin UI
+  todavía, no se pidió).
 - `propertyId` se resuelve **automáticamente** del contrato activo del inquilino al crear el
   reporte (mismo patrón que `getMyTenant`) — no se le pide elegir la propiedad, ya vive implícita
   en su contrato.
 - `NotificationLog.whatsappMessage` (`@db.Text NOT NULL`) se reusa como el texto de la
-  notificación in-app — es el único campo de texto que trae el modelo, y el nombre es un
+  notificación in-app/push — es el único campo de texto que trae el modelo, y el nombre es un
   remanente de un diseño original pensado para WhatsApp que nunca se conectó. Renombrarlo
   hubiera sido una migración sin beneficio real; se documenta aquí para que no confunda.
 - `NotificationType` ganó `REPORT_STATUS_CHANGED` (nuevo); `MAINTENANCE_REPORT` ya existía y se
-  reusa para "nuevo reporte creado".
+  reusa para "nuevo reporte creado" y para cada mensaje nuevo del hilo.
 - "Marcar como leídas" es de una sola pasada (`PUT /me/notifications/read-all`, marca todas las
   no leídas del usuario) en vez de tracking por notificación individual — se dispara al abrir la
   campana. Suficiente para el volumen de esta app; no hay endpoint de marcar una sola.
 
-`reportService.js` tiene el fan-out a admins (`prisma.user.findMany({ where: { role: 'ADMIN' } })`
-+ `notificationLog.createMany`) y la notificación de vuelta al inquilino en `updateReportStatus`.
+`reportService.js` centraliza el fan-out en un helper `notify()`: crea el `NotificationLog`
+(in-app, lo que ve la campana) **y** llama a `sendPushToUsers()` (push real, ver abajo) con la
+misma URL de deep-link. Nuevo reporte → fan-out a todos los admins
+(`prisma.user.findMany({ where: { role: 'ADMIN' } })`); nuevo mensaje o cambio de estatus →
+notifica al otro lado de la conversación (admin↔tenant), nunca al propio emisor.
+
+### Web Push real (Push API del navegador + `web-push`)
+
+Esto es push de verdad — llega aunque la PWA esté cerrada — no el sondeo in-app de la campana
+(ese sigue existiendo aparte, cada 60s, y cubre "la tengo abierta pero no la miré"). Piezas:
+
+- **`backend/src/services/pushService.js`** — usa la librería `web-push` (npm). `sendPushToUser`
+  itera las `PushSubscription` del usuario y llama `webpush.sendNotification()`; si la respuesta
+  es 404/410 (suscripción vencida/revocada en el navegador) la borra de la tabla en vez de
+  reintentar. Todo el servicio está guardado detrás de un check `vapidConfigured` — si faltan las
+  env vars VAPID, la función no truena, simplemente no manda push (las notificaciones in-app
+  siguen funcionando normal). `sendPushToUsers()` es la que usa `reportService.js`.
+- **`PushSubscription`** (modelo nuevo) — `endpoint` (único), `p256dh`, `auth`, `userId`. Un
+  usuario puede tener varias (un dispositivo por suscripción). `POST/DELETE /me/push-subscriptions`
+  las gestiona.
+- **`frontend/public/sw.js`** — service worker mínimo, sin cache offline. Dos listeners: `push`
+  (pinta la notificación del sistema con `event.data.json()`) y `notificationclick` (busca una
+  ventana/tab ya abierta con `clients.matchAll` y hace `focus()` + `navigate()` a la URL del
+  deep-link; si no hay ninguna, abre una con `clients.openWindow()`). Esa URL es la que arma
+  `reportService.js` (`tenantReportUrl`/`adminReportUrl`) — **el push abre directo la
+  conversación**, no una página genérica de notificaciones.
+- **`frontend/hooks/usePushNotifications.ts`** — registra el service worker al montar, expone
+  `isSupported` (requiere `serviceWorker` + `PushManager` en el navegador **y**
+  `NEXT_PUBLIC_VAPID_PUBLIC_KEY` presente), `permission` (el valor real de
+  `Notification.permission` — en HTTP sin TLS o en un navegador que lo bloqueó queda `denied` y
+  el toggle lo refleja en vez de fallar en silencio), `isSubscribed`, y `subscribe()`/`unsubscribe()`
+  que hablan con `/me/push-subscriptions`. UI en `/settings` (toggle "Notificaciones push",
+  sólo visible si `isSupported`).
+
+**VAPID (Voluntary Application Server Identification)** — el par de llaves que identifica a este
+servidor ante los navegadores para poder mandarles push sin que nadie más pueda suplantarlo.
+`VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY`/`VAPID_SUBJECT` (backend) y
+`NEXT_PUBLIC_VAPID_PUBLIC_KEY` (frontend, **debe ser la misma pública** que el backend) — ver
+`.env.example` para cómo generarlas (`npx web-push generate-vapid-keys`). Documentadas ahí con
+detalle porque:
+
+- **Nunca reusar las llaves de desarrollo en producción** — son el equivalente a una identidad
+  del servidor; si se comparten entre entornos, un entorno puede leer/falsificar el otro.
+- **`NEXT_PUBLIC_VAPID_PUBLIC_KEY` se hornea en el build de Next** (como cualquier
+  `NEXT_PUBLIC_*`), así que en prod tiene que llegar como build ARG a `docker-compose.prod.yml`
+  (`frontend.build.args`), no sólo como env var en runtime — mismo patrón que
+  `NEXT_PUBLIC_API_URL`. Si sólo se pone en `environment:` sin pasar por `build.args`, el bundle
+  del navegador nunca la ve y `isSupported` queda en `false` sin error visible.
+- **Antes de operar con inquilinos reales, generar un par de llaves VAPID propio para el VPS**
+  y ponerlo en el `.env` de producción — igual que el recordatorio existente de que hay que
+  correr `db:seed` a mano tras cambiar una plantilla, esto es fácil de dejar en los valores de
+  desarrollo por descuido y que el push simplemente no llegue en producción, en silencio (cae al
+  camino sin-VAPID descrito arriba, que no falla, sólo no manda nada).
 
 ## Colorimetría y sistema de diseño
 
@@ -654,3 +746,9 @@ reales de inquilinos.
   dependencia: `docker compose exec backend npm install` y reiniciar el contenedor.
 - **`curl` dentro de un `while read` se come el stdin del loop** y sólo se procesa la primera
   línea. Pasó limpiando datos de prueba y quedó un registro sin borrar. Usar `curl < /dev/null`.
+- **Carpeta de ruta dinámica nueva agregada bajo `app/(app)/.../[algo]/` mientras el contenedor
+  del frontend ya estaba corriendo** → Next la compiló pero siguió sirviendo 404 para esa ruta
+  (pasó con `profile/reports/[id]/`). El watcher del dev server no siempre recoge una carpeta
+  anidada nueva bajo un segmento dinámico existente. Si una ruta nueva da 404 pese a que el
+  archivo existe y el resto del build está sano, `docker compose restart frontend` antes de
+  seguir debuggeando el código.

@@ -9,8 +9,12 @@
 #
 # Requiere un .env junto a este archivo (nunca versionado) con: DB_USER, DB_PASSWORD,
 # DB_NAME, DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, API_URL, FRONTEND_URL,
-# NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_NAME, y opcionalmente SEED_ADMIN_PHONE/
-# SEED_ADMIN_PASSWORD/SEED_ADMIN_FIRST_NAME/SEED_ADMIN_LAST_NAME para `npm run db:seed`.
+# NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_NAME, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY,
+# VAPID_SUBJECT, NEXT_PUBLIC_VAPID_PUBLIC_KEY (mismo valor que VAPID_PUBLIC_KEY —
+# generar con `docker compose exec backend npx web-push generate-vapid-keys --json`,
+# un par propio para prod, nunca reusar el de desarrollo), y opcionalmente
+# SEED_ADMIN_PHONE/SEED_ADMIN_PASSWORD/SEED_ADMIN_FIRST_NAME/SEED_ADMIN_LAST_NAME
+# para `npm run db:seed`.
 #
 # Los puertos de host (5433/4001/3001) son los que ya usa el despliegue actual en el VPS
 # compartido con Kredired — elegidos para no chocar con los suyos (3000/5432). Si se
@@ -54,6 +58,9 @@ services:
       API_PORT: 4000
       API_URL: ${API_URL}
       FRONTEND_URL: ${FRONTEND_URL}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_SUBJECT: ${VAPID_SUBJECT}
       SEED_ADMIN_PHONE: ${SEED_ADMIN_PHONE}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
       SEED_ADMIN_FIRST_NAME: ${SEED_ADMIN_FIRST_NAME}
@@ -86,12 +93,14 @@ services:
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
         NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+        NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${NEXT_PUBLIC_VAPID_PUBLIC_KEY}
     container_name: ksared_frontend
     restart: unless-stopped
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
       NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+      NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${NEXT_PUBLIC_VAPID_PUBLIC_KEY}
     ports:
       - "127.0.0.1:3001:3000"
     depends_on:

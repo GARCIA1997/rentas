@@ -2,62 +2,36 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/components/ToastProvider';
-import {
-  reportsApi,
-  MaintenanceReport,
-  MaintenanceReportStatus,
-  maintenanceReportStatusLabels,
-} from '@/lib/api';
+import { reportsApi, MaintenanceReport, MaintenanceReportStatus, maintenanceReportStatusLabels } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
-import { ArrowLeftIcon } from '@/components/icons';
+import { ArrowLeftIcon, ChevronRightIcon } from '@/components/icons';
 
 const statusColors: Record<MaintenanceReportStatus, string> = {
   REPORTED: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
   IN_PROGRESS: 'bg-slate-100 text-slate-700 dark:bg-slate-700/30 dark:text-slate-300',
-  RESOLVED: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
+  CLOSED: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
 };
 
-const STATUS_ORDER: MaintenanceReportStatus[] = ['REPORTED', 'IN_PROGRESS', 'RESOLVED'];
-
+// Listado global — la vía principal para llegar a la conversación de un tenant es
+// desde su propio perfil (/tenants/[id]/profile → Reportes), pero este inbox sirve
+// para ver de un vistazo qué necesita atención en todos los tenants a la vez.
 export default function ReportsPage() {
   const { token } = useAuth();
   const router = useRouter();
-  const { showToast } = useToast();
   const [reports, setReports] = useState<MaintenanceReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
-
-  const loadReports = async () => {
-    if (!token) return;
-    setIsLoading(true);
-    try {
-      setReports(await reportsApi.list(token));
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
-    loadReports();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
-  const handleStatusChange = async (id: string, status: MaintenanceReportStatus) => {
     if (!token) return;
-    setUpdatingId(id);
-    try {
-      const updated = await reportsApi.updateStatus(id, status, token);
-      setReports((prev) => prev.map((r) => (r.id === id ? updated : r)));
-      showToast('Estatus actualizado. Se notificó al inquilino.', 'success');
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Error al actualizar el estatus', 'error');
-    } finally {
-      setUpdatingId(null);
-    }
-  };
+    setIsLoading(true);
+    reportsApi
+      .list(token)
+      .then(setReports)
+      .finally(() => setIsLoading(false));
+  }, [token]);
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
@@ -71,8 +45,7 @@ export default function ReportsPage() {
 
       <h1 className="text-2xl font-bold text-heading mb-2">Reportes de inquilinos</h1>
       <p className="text-sm text-muted mb-6">
-        Incidencias reportadas desde el portal del inquilino. Al cambiar el estatus, se notifica al inquilino
-        dentro de la app.
+        Incidencias reportadas desde el portal del inquilino, de todas las propiedades.
       </p>
 
       {isLoading ? (
@@ -82,38 +55,25 @@ export default function ReportsPage() {
           <p className="text-muted text-sm">No hay reportes todavía.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {reports.map((report) => (
-            <div key={report.id} className="bg-surface rounded-2xl shadow-sm p-5">
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <div>
-                  <p className="text-heading font-semibold text-sm">{report.tenant?.fullName ?? '—'}</p>
-                  <p className="text-muted text-xs">
-                    {report.property?.name ?? 'Sin propiedad'} · {formatDate(report.createdAt)}
-                  </p>
-                </div>
-                <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[report.status]}`}>
-                  {maintenanceReportStatusLabels[report.status]}
-                </span>
+            <Link
+              key={report.id}
+              href={`/tenants/${report.tenantId}/reports/${report.id}`}
+              className="flex items-center gap-3 bg-surface rounded-2xl shadow-sm p-4 active:opacity-70 transition-opacity"
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-heading font-semibold text-sm truncate">{report.tenant?.fullName ?? '—'}</p>
+                <p className="text-muted text-xs truncate">
+                  {report.property?.name ?? 'Sin propiedad'} · {formatDate(report.createdAt)}
+                </p>
+                <p className="text-heading text-sm mt-1.5 truncate">{report.description}</p>
               </div>
-              <p className="text-heading text-sm mb-3">{report.description}</p>
-              <div className="flex gap-2">
-                {STATUS_ORDER.map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => handleStatusChange(report.id, status)}
-                    disabled={updatingId === report.id || report.status === status}
-                    className={`flex-1 text-xs font-medium py-2 rounded-lg border transition-colors disabled:opacity-40 ${
-                      report.status === status
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas'
-                    }`}
-                  >
-                    {maintenanceReportStatusLabels[status]}
-                  </button>
-                ))}
-              </div>
-            </div>
+              <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[report.status]}`}>
+                {maintenanceReportStatusLabels[report.status]}
+              </span>
+              <ChevronRightIcon className="w-4 h-4 text-muted shrink-0" />
+            </Link>
           ))}
         </div>
       )}

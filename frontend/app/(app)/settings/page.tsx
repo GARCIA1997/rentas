@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme, ThemePreference } from '@/lib/themeContext';
 import { useToast } from '@/components/ToastProvider';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { SunIcon, MoonIcon, DesktopIcon, ChevronRightIcon, UsersIcon, LogoutIcon, BellIcon, PlusIcon, AlertTriangleIcon } from '@/components/icons';
 import { apiCall, invitesApi } from '@/lib/api';
 
@@ -18,6 +19,7 @@ export default function SettingsPage() {
   const { user, logout, token } = useAuth();
   const { preference, setPreference } = useTheme();
   const { showToast } = useToast();
+  const push = usePushNotifications();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [adminInviteLink, setAdminInviteLink] = useState<string | null>(null);
@@ -55,6 +57,24 @@ export default function SettingsPage() {
     } catch (err) {
       setNotificationsEnabled(!enabled);
       showToast('Error al actualizar configuración', 'error');
+    }
+  };
+
+  const handleTogglePush = async () => {
+    if (push.permission === 'denied') {
+      showToast('Bloqueaste las notificaciones en el navegador — actívalas desde su configuración del sitio.', 'error');
+      return;
+    }
+    try {
+      if (push.isSubscribed) {
+        await push.unsubscribe();
+        showToast('Notificaciones push desactivadas', 'success');
+      } else {
+        await push.subscribe();
+        showToast('Notificaciones push activadas', 'success');
+      }
+    } catch {
+      showToast('Error al configurar las notificaciones push', 'error');
     }
   };
 
@@ -136,6 +156,37 @@ export default function SettingsPage() {
           </button>
         </div>
       </div>
+
+      {push.isSupported && (
+        <div className="bg-surface rounded-2xl shadow-sm p-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 flex-1">
+              <BellIcon className="w-5 h-5 text-muted" />
+              <div>
+                <p className="text-heading font-medium text-sm">Notificaciones push</p>
+                <p className="text-muted text-xs">
+                  {push.permission === 'denied'
+                    ? 'Bloqueadas en el navegador'
+                    : 'Avisos aunque la app esté cerrada'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleTogglePush}
+              disabled={push.isBusy}
+              className={`w-12 h-7 rounded-full transition-colors ${
+                push.isSubscribed ? 'bg-primary' : 'bg-black/10 dark:bg-white/10'
+              } relative disabled:opacity-50`}
+            >
+              <div
+                className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-transform ${
+                  push.isSubscribed ? 'right-1' : 'left-1'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      )}
 
       {user?.role === 'ADMIN' && (
         <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">

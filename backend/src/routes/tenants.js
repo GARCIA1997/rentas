@@ -10,6 +10,7 @@ router.get('/', tenantController.list);
 router.get('/:id', tenantController.getOne);
 router.get('/:id/ine-front', tenantController.getIneFront);
 router.get('/:id/ine-back', tenantController.getIneBack);
+router.get('/:id/reports', tenantController.getReports);
 router.post('/', tenantController.uploadIneImages, tenantController.create);
 router.put('/:id', tenantController.update);
 router.delete('/:id', tenantController.remove);

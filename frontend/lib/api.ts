@@ -239,6 +239,8 @@ export const tenantsApi = {
     apiCall(`/api/tenants/${id}`, { method: 'PUT', body: JSON.stringify(data), token }),
   remove: (id: string, token: string) => apiCall(`/api/tenants/${id}`, { method: 'DELETE', token }),
   ineImageUrl: (tenantId: string, side: 'front' | 'back') => `${API_URL}/api/tenants/${tenantId}/ine-${side}`,
+  getReports: (tenantId: string, token: string) =>
+    apiCall(`/api/tenants/${tenantId}/reports`, { token }) as Promise<MaintenanceReport[]>,
 };
 
 // ---- Representatives ----
@@ -635,22 +637,39 @@ export const meApi = {
   createReport: (description: string, token: string) =>
     apiCall('/api/me/reports', { method: 'POST', body: JSON.stringify({ description }), token }) as Promise<MaintenanceReport>,
   getMyReports: (token: string) => apiCall('/api/me/reports', { token }) as Promise<MaintenanceReport[]>,
+  getMyReportDetail: (id: string, token: string) =>
+    apiCall(`/api/me/reports/${id}`, { token }) as Promise<MaintenanceReport>,
+  addMyReportMessage: (id: string, body: string, token: string) =>
+    apiCall(`/api/me/reports/${id}/messages`, { method: 'POST', body: JSON.stringify({ body }), token }) as Promise<ReportMessage>,
   getNotifications: (token: string) => apiCall('/api/me/notifications', { token }) as Promise<Notification[]>,
   getUnreadNotificationCount: (token: string) =>
     apiCall('/api/me/notifications/unread-count', { token }) as Promise<{ count: number }>,
   markNotificationsAsRead: (token: string) =>
     apiCall('/api/me/notifications/read-all', { method: 'PUT', token }),
+  subscribePush: (subscription: PushSubscriptionJSON, token: string) =>
+    apiCall('/api/me/push-subscriptions', { method: 'POST', body: JSON.stringify(subscription), token }),
+  unsubscribePush: (endpoint: string, token: string) =>
+    apiCall('/api/me/push-subscriptions', { method: 'DELETE', body: JSON.stringify({ endpoint }), token }),
 };
 
-// ---- Reportes de mantenimiento ----
+// ---- Reportes de mantenimiento (conversación tenant ↔ admin) ----
 
-export type MaintenanceReportStatus = 'REPORTED' | 'IN_PROGRESS' | 'RESOLVED';
+export type MaintenanceReportStatus = 'REPORTED' | 'IN_PROGRESS' | 'CLOSED';
 
 export const maintenanceReportStatusLabels: Record<MaintenanceReportStatus, string> = {
   REPORTED: 'Reportado',
   IN_PROGRESS: 'En progreso',
-  RESOLVED: 'Resuelto',
+  CLOSED: 'Cerrado',
 };
+
+export interface ReportMessage {
+  id: string;
+  reportId: string;
+  senderId: string;
+  body: string;
+  createdAt: string;
+  sender?: { id: string; firstName: string; lastName: string; role: 'ADMIN' | 'INQUILINO' };
+}
 
 export interface MaintenanceReport {
   id: string;
@@ -661,12 +680,17 @@ export interface MaintenanceReport {
   reportedDate: string;
   completedDate?: string | null;
   createdAt: string;
-  tenant?: { id: string; fullName: string; phone?: string | null };
+  tenant?: { id: string; fullName: string; phone?: string | null; userId?: string | null };
   property?: { id: string; name: string } | null;
+  // Sólo presente en el detalle (GET .../reports/:id), no en los listados.
+  messages?: ReportMessage[];
 }
 
 export const reportsApi = {
   list: (token: string) => apiCall('/api/reports', { token }) as Promise<MaintenanceReport[]>,
+  getDetail: (id: string, token: string) => apiCall(`/api/reports/${id}`, { token }) as Promise<MaintenanceReport>,
+  addMessage: (id: string, body: string, token: string) =>
+    apiCall(`/api/reports/${id}/messages`, { method: 'POST', body: JSON.stringify({ body }), token }) as Promise<ReportMessage>,
   updateStatus: (id: string, status: MaintenanceReportStatus, token: string) =>
     apiCall(`/api/reports/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }), token }) as Promise<MaintenanceReport>,
 };

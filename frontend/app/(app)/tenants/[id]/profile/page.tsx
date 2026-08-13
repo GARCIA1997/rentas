@@ -18,14 +18,16 @@ import {
   getPaymentsDue,
   getScheduledPayments,
   paymentTypeLabels,
+  maintenanceReportStatusLabels,
   Tenant,
   Contract,
   RentPayment,
+  MaintenanceReport,
 } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { useToast } from '@/components/ToastProvider';
 import { useConfirm } from '@/components/ConfirmProvider';
-import { ArrowLeftIcon, PencilIcon, TrashIcon, BellIcon, BanknoteIcon, DownloadIcon, UndoIcon } from '@/components/icons';
+import { ArrowLeftIcon, PencilIcon, TrashIcon, BellIcon, BanknoteIcon, DownloadIcon, UndoIcon, ChevronRightIcon } from '@/components/icons';
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -52,6 +54,12 @@ const contractStatusColors: Record<Contract['status'], string> = {
   CANCELLED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
 };
 
+const reportStatusColors: Record<MaintenanceReport['status'], string> = {
+  CLOSED: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
+  IN_PROGRESS: 'bg-slate-100 text-slate-700 dark:bg-slate-700/30 dark:text-slate-300',
+  REPORTED: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
+};
+
 export default function TenantProfilePage() {
   const { token } = useAuth();
   const router = useRouter();
@@ -63,6 +71,7 @@ export default function TenantProfilePage() {
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [payments, setPayments] = useState<RentPayment[]>([]);
+  const [reports, setReports] = useState<MaintenanceReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [inePhotos, setInePhotos] = useState<{ front?: string; back?: string }>({});
@@ -119,14 +128,16 @@ export default function TenantProfilePage() {
     if (!options?.silent) setIsLoading(true);
     setError('');
     try {
-      const [tenantData, contractsData, paymentsData] = await Promise.all([
+      const [tenantData, contractsData, paymentsData, reportsData] = await Promise.all([
         tenantsApi.get(tenantId, token!),
         contractsApi.list(token!),
         rentPaymentsApi.list(token!),
+        tenantsApi.getReports(tenantId, token!),
       ]);
       setTenant(tenantData);
       setContracts(contractsData.filter((c) => c.tenantId === tenantId));
       setPayments(paymentsData.filter((p) => p.tenantId === tenantId));
+      setReports(reportsData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar datos');
     } finally {
@@ -309,6 +320,34 @@ export default function TenantProfilePage() {
           <Row label="Fecha de nacimiento" value={tenant.birthDate ? formatDate(tenant.birthDate) : '—'} />
           <Row label="Domicilio" value={tenant.address ?? '—'} />
           <Row label="Estado" value={tenant.status} />
+        </div>
+
+        <div className="bg-surface rounded-2xl shadow-sm p-5">
+          <h3 className="text-heading font-semibold mb-3">Reportes</h3>
+          {reports.length === 0 ? (
+            <p className="text-muted text-sm">Sin incidencias reportadas.</p>
+          ) : (
+            <div className="space-y-2">
+              {reports.map((report) => (
+                <Link
+                  key={report.id}
+                  href={`/tenants/${tenantId}/reports/${report.id}`}
+                  className="flex items-center gap-3 py-2.5 border-b border-black/5 dark:border-white/10 last:border-0 active:opacity-70 transition-opacity"
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-heading text-sm truncate">{report.description}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${reportStatusColors[report.status]}`}>
+                        {maintenanceReportStatusLabels[report.status]}
+                      </span>
+                      <span className="text-muted text-xs">{formatDate(report.createdAt)}</span>
+                    </div>
+                  </div>
+                  <ChevronRightIcon className="w-4 h-4 text-muted shrink-0" />
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         {(tenant.ineFrontUrl || tenant.ineBackUrl) && (

@@ -16,9 +16,14 @@ router.put('/settings', meController.updateSettings);
 
 router.post('/reports', meController.createReport);
 router.get('/reports', meController.getMyReports);
+router.get('/reports/:id', meController.getMyReportDetail);
+router.post('/reports/:id/messages', meController.addMyReportMessage);
 
 router.get('/notifications', meController.getMyNotifications);
 router.get('/notifications/unread-count', meController.getUnreadNotificationCount);
 router.put('/notifications/read-all', meController.markNotificationsAsRead);
+
+router.post('/push-subscriptions', meController.savePushSubscription);
+router.delete('/push-subscriptions', meController.removePushSubscription);
 
 export default router;

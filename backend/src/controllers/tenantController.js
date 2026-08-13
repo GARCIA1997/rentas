@@ -1,6 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import multer from 'multer';
 import * as tenantService from '../services/tenantService.js';
+import * as reportService from '../services/reportService.js';
 
 // Las fotos del INE llegan como multipart junto con los demás campos, no como JSON —
 // se guardan en memoria brevemente y tenantService las escribe a disco tras crear el
@@ -138,3 +139,13 @@ const sendIneImage = async (req, res, next, side) => {
 // demás en routes/tenants.js — nunca públicas, son fotos de identificación oficial.
 export const getIneFront = (req, res, next) => sendIneImage(req, res, next, 'front');
 export const getIneBack = (req, res, next) => sendIneImage(req, res, next, 'back');
+
+// Reportes de ESTE tenant — la vía principal del admin hacia sus conversaciones
+// (perfil del inquilino → sus reportes), aparte del listado global de /reports.
+export const getReports = async (req, res, next) => {
+  try {
+    res.json(await reportService.getTenantReports(req.params.id));
+  } catch (error) {
+    next(error);
+  }
+};
