@@ -1,6 +1,7 @@
 import * as meService from '../services/meService.js';
 import * as reportService from '../services/reportService.js';
 import * as notificationService from '../services/notificationService.js';
+import * as pushService from '../services/pushService.js';
 
 export const getTenant = async (req, res, next) => {
   try {
@@ -86,6 +87,40 @@ export const createReport = async (req, res, next) => {
 export const getMyReports = async (req, res, next) => {
   try {
     res.json(await reportService.getMyReports(req.user.id));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMyReportDetail = async (req, res, next) => {
+  try {
+    res.json(await reportService.getMyReportDetail(req.user.id, req.params.id));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addMyReportMessage = async (req, res, next) => {
+  try {
+    res.status(201).json(await reportService.addTenantMessage(req.user.id, req.params.id, req.body.body));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const savePushSubscription = async (req, res, next) => {
+  try {
+    await pushService.saveSubscription(req.user.id, req.body);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const removePushSubscription = async (req, res, next) => {
+  try {
+    await pushService.removeSubscription(req.body.endpoint);
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
