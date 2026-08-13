@@ -36,6 +36,7 @@
     "express-validator": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.2.0",
+    "node-cron": "^3.0.3",
     "puppeteer": "^22.6.2",
     "sharp": "^0.35.3",
     "web-push": "^3.6.7"

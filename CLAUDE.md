@@ -163,6 +163,10 @@ Frontend: `npm run dev`, `npm run build`, `npm run lint`, `npx tsc --noEmit`.
 - **`PushSubscription` es 1:N con `User`**, no 1:1 — un mismo usuario puede tener varias
   suscripciones activas (un navegador/dispositivo por suscripción). `endpoint` es único a nivel
   de tabla porque es el identificador real de esa suscripción ante el navegador/push service.
+- **`RentPayment.upcomingReminderSentAt`/`overdueReminderSentAt`** son la marca de "ya se
+  avisó" del cron de recordatorios de pago (ver sección "Recordatorios de pago" más abajo) —
+  sin ellos, cada corrida diaria reenviaría el mismo push. No confundir con `status`, que sólo
+  se recalcula al escribir el registro.
 
 ## Autenticación y autorización
 
@@ -570,6 +574,35 @@ detalle porque:
   correr `db:seed` a mano tras cambiar una plantilla, esto es fácil de dejar en los valores de
   desarrollo por descuido y que el push simplemente no llegue en producción, en silencio (cae al
   camino sin-VAPID descrito arriba, que no falla, sólo no manda nada).
+
+### Recordatorios de pago (cron + Web Push)
+
+`backend/src/scheduler.js` registra un cron con **`node-cron`** (`'0 9 * * *'`, zona
+`America/Mexico_City` — fija, sin horario de verano) que corre
+`paymentReminderService.sendPaymentReminders()` una vez al día. Se arranca sólo dentro
+del bloque `isEntryPoint` de `index.js` — igual que `app.listen()` — para que **no**
+se dispare al importar `app` en los tests ni en el smoke test.
+
+- Cada `RentPayment` recibe **como máximo dos** avisos en toda su vida: uno cuando
+  faltan ≤3 días para `dueDate` ("próximo a vencer") y otro si llega a vencerse sin
+  pagarse ("vencido") — nunca un recordatorio diario repetido. Los campos
+  `upcomingReminderSentAt`/`overdueReminderSentAt` en `RentPayment` son la marca de
+  "ya se avisó"; la corrida diaria sólo considera pagos donde el campo correspondiente
+  sigue `null`.
+- **Deliberadamente no usa `RentPayment.status`** para decidir qué está vencido:
+  `status` sólo se recalcula al escribir el registro (crear/editar, ver
+  `computeStatus()` en `rentPaymentService.js`), así que un pago sin tocar puede seguir
+  marcado `PENDING` mucho después de su fecha límite. El scheduler compara `dueDate`
+  contra la fecha actual directamente, igual que haría un `PUT` que lo tocara.
+  `paidDate: null` es el filtro de "todavía debe algo" — coherente con que el único
+  camino que marca un pago como pagado (`markAsPaid`) siempre pone `amountPaid` y
+  `paidDate` juntos, nunca uno sin el otro.
+- Sólo se notifica a tenants con cuenta vinculada (`tenant.userId` no nulo) — mismo
+  criterio que reportes. El deep-link del push apunta a `/dashboard` (ahí vive el
+  resumen "Próximo pago" del inquilino).
+- Reusa el mismo par notificación-in-app + Web Push que `reportService.js`
+  (`NotificationLog` + `sendPushToUsers`), bajo `NotificationType.PAYMENT_REMINDER`
+  (existía en el enum desde la migración inicial, sin conectar hasta ahora).
 
 ## Colorimetría y sistema de diseño
 

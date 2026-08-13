@@ -29,10 +29,16 @@ const tenantTabs: TabItem[] = [
   { href: '/settings', label: 'Más', Icon: MoreIcon },
 ];
 
+// Vistas de conversación de un reporte — pantalla completa estilo WhatsApp, sin el tab
+// bar inferior que de otro modo tapa el campo de texto. La salida es el botón "Volver"
+// propio de cada una de estas páginas, no la barra de navegación.
+const CHAT_ROUTE_PATTERN = /^\/(profile\/reports\/[^/]+|tenants\/[^/]+\/reports\/[^/]+)$/;
+
 export function AppShell({ children }: { children: ReactNode }) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const tabs = user?.role === 'ADMIN' ? adminTabs : tenantTabs;
+  const isChatRoute = CHAT_ROUTE_PATTERN.test(pathname ?? '');
 
   const isActive = (href: string) =>
     href === '/dashboard' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
@@ -109,37 +115,43 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 pb-28 sm:pb-8 px-4 sm:px-8 py-4 sm:py-6 max-w-5xl w-full mx-auto">
+        <main
+          className={`flex-1 ${isChatRoute ? 'pb-0' : 'pb-28'} sm:pb-8 px-4 sm:px-8 pt-4 sm:pt-6 max-w-5xl w-full mx-auto`}
+        >
           {children}
         </main>
       </div>
 
-      {/* Mobile bottom tab bar — floating glass capsule, inset from the edges */}
-      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-20 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
-        <div className="glass-chrome flex items-stretch h-16 rounded-full px-1.5 mx-auto max-w-md">
-          {tabs.map((tab) => {
-            const active = isActive(tab.href);
-            return (
-              <Link
-                key={tab.href}
-                href={tab.href}
-                className="flex-1 flex flex-col items-center justify-center gap-0.5 active:opacity-60 transition-opacity"
-              >
-                <span
-                  className={`flex items-center justify-center w-11 h-7 rounded-full transition-all ${
-                    active ? 'bg-primary/15 dark:bg-primary/25 animate-pill-in' : ''
-                  }`}
+      {/* Mobile bottom tab bar — floating glass capsule, inset from the edges.
+          Oculto en vistas de conversación (ver CHAT_ROUTE_PATTERN) para que no tape el
+          campo de texto del chat — la salida ahí es el botón "Volver" de cada página. */}
+      {!isChatRoute && (
+        <nav className="sm:hidden fixed bottom-0 inset-x-0 z-20 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+          <div className="glass-chrome flex items-stretch h-16 rounded-full px-1.5 mx-auto max-w-md">
+            {tabs.map((tab) => {
+              const active = isActive(tab.href);
+              return (
+                <Link
+                  key={tab.href}
+                  href={tab.href}
+                  className="flex-1 flex flex-col items-center justify-center gap-0.5 active:opacity-60 transition-opacity"
                 >
-                  <tab.Icon active={active} className={`w-[22px] h-[22px] ${active ? 'text-primary' : 'text-muted'}`} />
-                </span>
-                <span className={`text-[10px] leading-none ${active ? 'text-primary font-semibold' : 'text-muted'}`}>
-                  {tab.label}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+                  <span
+                    className={`flex items-center justify-center w-11 h-7 rounded-full transition-all ${
+                      active ? 'bg-primary/15 dark:bg-primary/25 animate-pill-in' : ''
+                    }`}
+                  >
+                    <tab.Icon active={active} className={`w-[22px] h-[22px] ${active ? 'text-primary' : 'text-muted'}`} />
+                  </span>
+                  <span className={`text-[10px] leading-none ${active ? 'text-primary font-semibold' : 'text-muted'}`}>
+                    {tab.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      )}
     </div>
   );
 }

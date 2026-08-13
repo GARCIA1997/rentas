@@ -99,11 +99,11 @@ export function ReportConversation({
       </div>
 
       {isClosed ? (
-        <p className="text-muted text-sm text-center py-3 bg-canvas rounded-xl">
+        <p className="text-muted text-sm text-center py-3 mb-[env(safe-area-inset-bottom)] bg-canvas rounded-xl">
           Esta conversación está cerrada.
         </p>
       ) : (
-        <div className="flex items-end gap-2 sticky bottom-0 bg-canvas pt-2">
+        <div className="flex items-end gap-2 sticky bottom-0 bg-canvas pt-2 pb-[env(safe-area-inset-bottom)]">
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}

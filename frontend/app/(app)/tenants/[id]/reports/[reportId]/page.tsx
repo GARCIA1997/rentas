@@ -68,7 +68,7 @@ export default function AdminReportDetailPage() {
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="flex flex-col h-[calc(100vh-8rem)] sm:h-[calc(100vh-6rem)]">
+      <div className="flex flex-col h-[calc(100dvh-env(safe-area-inset-top)-4.5rem)] sm:h-[calc(100vh-6rem)]">
         <button
           onClick={() => router.push(`/tenants/${tenantId}/profile`)}
           className="flex items-center gap-1.5 text-muted hover:text-heading text-sm mb-4 -ml-1 shrink-0"
