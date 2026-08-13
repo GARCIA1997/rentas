@@ -20,6 +20,7 @@ const termValidators = [
   body('monthlyRent').isFloat({ min: 0.01 }).withMessage('Monthly rent must be greater than 0'),
   body('depositAmount').isFloat({ min: 0 }).withMessage('Deposit amount cannot be negative'),
   body('waterIncluded').optional().isBoolean(),
+  body('hasParking').optional().isBoolean(),
   body('autoRenewal').optional().isBoolean(),
 ];
 

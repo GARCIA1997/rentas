@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { HomeIcon, BuildingIcon, UsersIcon, DocumentIcon, CashIcon, MoreIcon, UserCircleIcon } from './icons';
+import { NotificationBell } from './NotificationBell';
 
 interface TabItem {
   href: string;
@@ -41,10 +42,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Desktop sidebar — floating glass panel, inset from the edges */}
       <aside className="hidden sm:flex sm:flex-col w-64 shrink-0 p-3 sticky top-0 h-screen">
         <div className="glass-chrome flex flex-col flex-1 rounded-[28px] p-4">
-          <Link href="/dashboard" className="flex items-center gap-2.5 mb-6 px-2 pt-1">
-            <Image src="/iconksa.png" alt="KsaRed" width={32} height={32} className="h-8 w-8 rounded-[10px] shrink-0" priority />
-            <span className="font-semibold text-lg text-heading tracking-tight">KsaRed</span>
-          </Link>
+          <div className="flex items-center justify-between mb-6 px-2 pt-1">
+            <Link href="/dashboard" className="flex items-center gap-2.5">
+              <Image src="/iconksa.png" alt="KsaRed" width={32} height={32} className="h-8 w-8 rounded-[10px] shrink-0" priority />
+              <span className="font-semibold text-lg text-heading tracking-tight">KsaRed</span>
+            </Link>
+            <NotificationBell />
+          </div>
 
           <nav className="flex flex-col gap-1">
             {tabs
@@ -98,7 +102,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Image src="/iconksa.png" alt="KsaRed" width={28} height={28} className="h-7 w-7 rounded-[8px]" priority />
               <span className="font-semibold text-heading tracking-tight">KsaRed</span>
             </Link>
-            <span className="text-sm text-muted truncate max-w-[40%]">{user?.firstName}</span>
+            <div className="flex items-center gap-1">
+              <NotificationBell />
+              <span className="text-sm text-muted truncate max-w-[28vw]">{user?.firstName}</span>
+            </div>
           </div>
         </header>
 

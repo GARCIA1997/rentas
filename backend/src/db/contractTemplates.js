@@ -147,6 +147,10 @@ export const CASA_TEMPLATE = `<!DOCTYPE html>
   </p>
 
   <p class="clause">
+    <span class="clause-number">QUINTA BIS. Estacionamiento.</span> {{parking_text}}
+  </p>
+
+  <p class="clause">
     <span class="clause-number">SEXTA. Obligaciones de EL ARRENDADOR.</span> Conforme a la naturaleza del
     arrendamiento, EL ARRENDADOR se obliga a:
   </p>
@@ -175,6 +179,8 @@ export const CASA_TEMPLATE = `<!DOCTYPE html>
     <li>f) Devolver EL INMUEBLE al término del contrato en las mismas condiciones en que lo recibió, salvo el
     deterioro natural derivado del uso normal y del transcurso del tiempo.</li>
   </ul>
+
+  {{noise_clause}}
 
   <p class="clause">
     <span class="clause-number">OCTAVA. Prohibición de subarrendar y ceder.</span> EL ARRENDATARIO no podrá
@@ -212,6 +218,8 @@ export const CASA_TEMPLATE = `<!DOCTYPE html>
     como su uso para actividades contrarias a la ley o al orden público;</li>
     <li>g) El incumplimiento de cualquiera otra obligación pactada en este contrato.</li>
   </ul>
+
+  {{early_termination_clause}}
 
   <p class="clause">
     <span class="clause-number">DÉCIMA SEGUNDA. Terminación y entrega.</span> Al concluir la vigencia o al
@@ -507,6 +515,8 @@ export const COAHUAYANA_TEMPLATE = `<!DOCTYPE html>
   <p class="clause"><span class="clause-number">QUINTA.</span></p>
   {{convivance_rules}}
 
+  {{noise_clause}}
+
   <p class="clause">
     <span class="clause-number">SEXTA. Prohibiciones y subarrendamiento.</span> Queda estrictamente prohibido
     introducir o resguardar en EL INMUEBLE armas de fuego, narcóticos o sustancias ilícitas, así como
@@ -531,6 +541,8 @@ export const COAHUAYANA_TEMPLATE = `<!DOCTYPE html>
     las prohibiciones de la cláusula Sexta; y g) el incumplimiento de cualquiera otra obligación pactada.
     {{penalty_text}}
   </p>
+
+  {{early_termination_clause}}
 
   <p class="clause">
     <span class="clause-number">NOVENA. Terminación y entrega.</span> Al concluir la vigencia o al rescindirse
@@ -614,4 +626,6 @@ export const CONTRACT_VARIABLES = [
   'receipt_text',
   'tenancy_law_text',
   'legal_basis_text',
+  'early_termination_clause',
+  'noise_clause',
 ];

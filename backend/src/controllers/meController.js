@@ -1,4 +1,6 @@
 import * as meService from '../services/meService.js';
+import * as reportService from '../services/reportService.js';
+import * as notificationService from '../services/notificationService.js';
 
 export const getTenant = async (req, res, next) => {
   try {
@@ -68,6 +70,49 @@ export const updateSettings = async (req, res, next) => {
   try {
     const settings = await meService.updateMySettings(req.user.id, req.body);
     res.json(settings);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createReport = async (req, res, next) => {
+  try {
+    res.status(201).json(await reportService.createReport(req.user.id, req.body));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMyReports = async (req, res, next) => {
+  try {
+    res.json(await reportService.getMyReports(req.user.id));
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Notificaciones: mismo endpoint para admin e inquilino, cada quien ve las suyas —
+// NotificationLog.userId ya filtra por dueño, no hace falta split admin/tenant aquí.
+export const getMyNotifications = async (req, res, next) => {
+  try {
+    res.json(await notificationService.getMyNotifications(req.user.id));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUnreadNotificationCount = async (req, res, next) => {
+  try {
+    res.json({ count: await notificationService.getUnreadCount(req.user.id) });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const markNotificationsAsRead = async (req, res, next) => {
+  try {
+    await notificationService.markAllAsRead(req.user.id);
+    res.status(204).end();
   } catch (error) {
     next(error);
   }

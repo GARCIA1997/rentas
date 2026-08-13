@@ -164,6 +164,7 @@ export const createContract = async (data) => {
         monthlyRent: data.monthlyRent,
         depositAmount: data.depositAmount,
         waterIncluded: data.waterIncluded ?? false,
+        hasParking: data.hasParking ?? false,
         autoRenewal: data.autoRenewal ?? false,
         penaltyRules: data.penaltyRules ?? null,
         depositReturnPolicy: data.depositReturnPolicy ?? null,
@@ -192,6 +193,7 @@ export const updateContract = async (id, data) => {
     monthlyRent: data.monthlyRent,
     depositAmount: data.depositAmount,
     waterIncluded: data.waterIncluded,
+    hasParking: data.hasParking,
     autoRenewal: data.autoRenewal,
     penaltyRules: data.penaltyRules,
     depositReturnPolicy: data.depositReturnPolicy,
@@ -439,6 +441,7 @@ export const renewContract = async (previousContractId, data) => {
         monthlyRent,
         depositAmount: previousContract.depositAmount, // Inherit for reference, but won't charge
         waterIncluded: previousContract.waterIncluded,
+        hasParking: previousContract.hasParking,
         autoRenewal: previousContract.autoRenewal,
         penaltyRules: previousContract.penaltyRules,
         depositReturnPolicy: previousContract.depositReturnPolicy,

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme, ThemePreference } from '@/lib/themeContext';
 import { useToast } from '@/components/ToastProvider';
-import { SunIcon, MoonIcon, DesktopIcon, ChevronRightIcon, UsersIcon, LogoutIcon, BellIcon, PlusIcon } from '@/components/icons';
+import { SunIcon, MoonIcon, DesktopIcon, ChevronRightIcon, UsersIcon, LogoutIcon, BellIcon, PlusIcon, AlertTriangleIcon } from '@/components/icons';
 import { apiCall, invitesApi } from '@/lib/api';
 
 const themeOptions: { value: ThemePreference; label: string; Icon: typeof SunIcon }[] = [
@@ -148,6 +148,20 @@ export default function SettingsPage() {
               <div>
                 <p className="text-heading font-medium text-sm">Representantes</p>
                 <p className="text-muted text-xs">Quiénes firman los contratos</p>
+              </div>
+            </div>
+            <ChevronRightIcon className="w-5 h-5 text-muted" />
+          </Link>
+
+          <Link
+            href="/settings/reports"
+            className="flex items-center justify-between px-5 py-4 active:bg-canvas transition-colors border-b border-black/5 dark:border-white/10"
+          >
+            <div className="flex items-center gap-3">
+              <AlertTriangleIcon className="w-5 h-5 text-muted" />
+              <div>
+                <p className="text-heading font-medium text-sm">Reportes de inquilinos</p>
+                <p className="text-muted text-xs">Incidencias reportadas y su estatus</p>
               </div>
             </div>
             <ChevronRightIcon className="w-5 h-5 text-muted" />

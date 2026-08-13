@@ -52,6 +52,7 @@ interface EditFormState {
   monthlyRent: string;
   depositAmount: string;
   waterIncluded: boolean;
+  hasParking: boolean;
   autoRenewal: boolean;
   latePaymentPercentage: string;
   maxDamageCharge: string;
@@ -88,6 +89,7 @@ function ContractEditModal({
       monthlyRent: contract.monthlyRent,
       depositAmount: contract.depositAmount,
       waterIncluded: contract.waterIncluded,
+      hasParking: contract.hasParking,
       autoRenewal: contract.autoRenewal,
       latePaymentPercentage: contract.penaltyRules?.latePaymentPercentage?.toString() ?? '',
       maxDamageCharge: contract.penaltyRules?.maxDamageCharge?.toString() ?? '',
@@ -114,6 +116,7 @@ function ContractEditModal({
         monthlyRent: Number(form.monthlyRent),
         depositAmount: Number(form.depositAmount),
         waterIncluded: form.waterIncluded,
+        hasParking: form.hasParking,
         autoRenewal: form.autoRenewal,
         penaltyRules: {
           latePaymentPercentage: form.latePaymentPercentage ? Number(form.latePaymentPercentage) : undefined,
@@ -240,6 +243,17 @@ function ContractEditModal({
               />
               Renovación automática
             </label>
+            {contract.property?.propertyType === 'HOUSE' && (
+              <label className="flex items-center gap-2 text-sm text-heading">
+                <input
+                  type="checkbox"
+                  checked={form.hasParking}
+                  onChange={(e) => setForm({ ...form, hasParking: e.target.checked })}
+                  className="rounded"
+                />
+                Estacionamiento
+              </label>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -639,6 +653,9 @@ export default function ContractDetailPage() {
           <Row label="Renta mensual" value={`$${Number(contract.monthlyRent).toLocaleString('es-MX')}`} />
           <Row label="Depósito" value={`$${Number(contract.depositAmount).toLocaleString('es-MX')}`} />
           <Row label="Agua incluida" value={contract.waterIncluded ? 'Sí' : 'No'} />
+          {contract.property?.propertyType === 'HOUSE' && (
+            <Row label="Estacionamiento" value={contract.hasParking ? 'Sí, 1 cajón' : 'No'} />
+          )}
           <Row label="Renovación automática" value={contract.autoRenewal ? 'Sí' : 'No'} />
         </div>
 
