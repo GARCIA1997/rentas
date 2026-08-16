@@ -145,7 +145,7 @@ export const buildContractVariables = (contract) => {
     // hay estacionamiento dejaría la duda de si se pactó tácitamente; decirlo por escrito
     // (en cualquiera de los dos sentidos) protege a ambas partes por igual.
     parking_text: contract.hasParking
-      ? 'EL ARRENDADOR otorga a EL ARRENDATARIO el uso de UN (1) cajón de estacionamiento dentro de EL INMUEBLE, en carácter accesorio y gratuito al arrendamiento. EL ARRENDADOR no asume el carácter de depositario ni se hace responsable por daños, robos, pérdidas o afectaciones a vehículos, sus accesorios o los objetos que en ellos se dejen.'
+      ? 'EL ARRENDADOR otorga a EL ARRENDATARIO el uso de UN (1) cajón de estacionamiento dentro de EL INMUEBLE, en carácter accesorio y gratuito al arrendamiento. EL ARRENDATARIO se obliga a mantener libre y sin obstrucciones el acceso al cajón de estacionamiento en todo momento, de forma que no impida el tránsito o maniobra de otros vehículos dentro de EL INMUEBLE. EL ARRENDADOR no asume el carácter de depositario ni se hace responsable por daños, robos, pérdidas o afectaciones a vehículos, sus accesorios o los objetos que en ellos se dejen.'
       : 'EL INMUEBLE no cuenta con cajón de estacionamiento asignado a EL ARRENDATARIO en los términos de este contrato.',
     penalty_text: penalty.latePaymentPercentage
       ? `Las partes convienen, como pena convencional por el retraso en el pago de la renta, un recargo del ${penalty.latePaymentPercentage}% mensual sobre el monto adeudado, calculado por cada mes o fracción de retraso.${

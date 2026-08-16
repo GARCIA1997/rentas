@@ -465,7 +465,10 @@ sufijo "BIS" o sin ordinal fijo en vez de renumerar las cláusulas existentes.
   En ambos casos, no dar el aviso deja el depósito a disposición del arrendador.
 - **Estacionamiento** (`parking_text`, condicionado a `Contract.hasParking`) — declara
   explícitamente si hay o no cajón asignado, en cualquiera de los dos sentidos. Callar la
-  cláusula cuando no hay estacionamiento dejaría la duda de si se pactó tácitamente.
+  cláusula cuando no hay estacionamiento dejaría la duda de si se pactó tácitamente. Cuando
+  sí hay cajón, la cláusula también obliga a EL ARRENDATARIO a mantener el acceso libre y sin
+  obstrucciones — sin esa línea el cajón podía usarse para almacenar cosas u obstruir el paso
+  de otros vehículos sin que el contrato lo prohibiera explícitamente.
   `hasParking` se establece en el wizard (checkbox "Establecer espacio de estacionamiento",
   visible sólo para propiedades `HOUSE`) y se hereda en renovaciones igual que `waterIncluded`.
 - **Silencio nocturno** (`noise_clause`, 23:00–07:00, siempre presente) — deliberadamente
