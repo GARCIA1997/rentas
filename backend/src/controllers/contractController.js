@@ -3,18 +3,11 @@ import * as contractService from '../services/contractService.js';
 
 // Shared between create/update: the terms that can be set/edited.
 const termValidators = [
-  body('startDate')
-    .isISO8601()
-    .withMessage('Valid start date required')
-    .custom((value) => {
-      const date = new Date(value);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      if (date < today) {
-        throw new Error('Start date cannot be in the past');
-      }
-      return true;
-    }),
+  // Se permite el pasado a propósito: un uso real es dar de alta contratos que ya
+  // están vigentes en el mundo físico (renta cobrada desde antes de usar el sistema).
+  // buildPaymentSchedule() ya marca OVERDUE los pagos cuya dueDate cae en el pasado,
+  // así que no hay inconsistencia en generar el calendario de un contrato retroactivo.
+  body('startDate').isISO8601().withMessage('Valid start date required'),
   body('durationMonths').isInt({ min: 1, max: 360 }).withMessage('Duration must be between 1 and 360 months'),
   body('paymentDay').isInt({ min: 1, max: 31 }).withMessage('Payment day must be between 1 and 31'),
   body('monthlyRent').isFloat({ min: 0.01 }).withMessage('Monthly rent must be greater than 0'),
