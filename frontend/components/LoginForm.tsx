@@ -38,7 +38,7 @@ export function LoginForm() {
           placeholder="5551234567"
           maxLength={10}
           required
-          className="w-full px-4 py-2 border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-4 py-3 border border-line bg-surface text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
@@ -50,7 +50,7 @@ export function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           required
-          className="w-full px-4 py-2 border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-4 py-3 border border-line bg-surface text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
@@ -59,7 +59,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-pressed disabled:opacity-50"
+        className="w-full bg-accent text-white py-3 rounded-lg font-semibold hover:brightness-110 active:brightness-95 disabled:opacity-50"
       >
         {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </button>

@@ -2,150 +2,131 @@
 
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { HomeIcon, BuildingIcon, UsersIcon, DocumentIcon, CashIcon, MoreIcon, UserCircleIcon } from './icons';
+import { BrandLogo } from '@/components/BrandLogo';
 import { NotificationBell } from './NotificationBell';
 
 interface TabItem {
   href: string;
   label: string;
-  Icon: typeof HomeIcon;
+  icon: string; // nombre del ícono Material Symbols (igual que en los diseños de Stitch)
 }
 
+// Orden y nombres exactos de la tab bar de Stitch (regla global del sistema de diseño).
 const adminTabs: TabItem[] = [
-  { href: '/dashboard', label: 'Inicio', Icon: HomeIcon },
-  { href: '/properties', label: 'Propiedades', Icon: BuildingIcon },
-  { href: '/tenants', label: 'Inquilinos', Icon: UsersIcon },
-  { href: '/contracts', label: 'Contratos', Icon: DocumentIcon },
-  { href: '/payments', label: 'Pagos', Icon: CashIcon },
-  { href: '/settings', label: 'Más', Icon: MoreIcon },
+  { href: '/dashboard', label: 'Inicio', icon: 'home' },
+  { href: '/properties', label: 'Propiedades', icon: 'apartment' },
+  { href: '/tenants', label: 'Inquilinos', icon: 'group' },
+  { href: '/contracts', label: 'Contratos', icon: 'description' },
+  { href: '/payments', label: 'Pagos', icon: 'payments' },
+  { href: '/settings', label: 'Más', icon: 'more_horiz' },
 ];
 
 const tenantTabs: TabItem[] = [
-  { href: '/dashboard', label: 'Inicio', Icon: HomeIcon },
-  { href: '/profile', label: 'Perfil', Icon: UserCircleIcon },
-  { href: '/settings', label: 'Más', Icon: MoreIcon },
+  { href: '/dashboard', label: 'Inicio', icon: 'home' },
+  { href: '/profile', label: 'Perfil', icon: 'person' },
+  { href: '/settings', label: 'Más', icon: 'grid_view' },
 ];
 
-// Vistas de conversación de un reporte — pantalla completa estilo WhatsApp, sin el tab
-// bar inferior que de otro modo tapa el campo de texto. La salida es el botón "Volver"
-// propio de cada una de estas páginas, no la barra de navegación.
-const CHAT_ROUTE_PATTERN = /^\/(profile\/reports\/[^/]+|tenants\/[^/]+\/reports\/[^/]+)$/;
+// Vistas a pantalla completa sin tab bar (Stitch): conversación de un reporte, flujos
+// de asistente y captura del INE — su salida es el botón atrás de cada pantalla.
+const FULLSCREEN_ROUTE_PATTERN =
+  /^\/(profile\/reports\/[^/]+|tenants\/[^/]+\/reports\/[^/]+|contracts\/new|contracts\/[^/]+\/renew|tenants\/new)$/;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { user, logout } = useAuth();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '';
   const tabs = user?.role === 'ADMIN' ? adminTabs : tenantTabs;
-  const isChatRoute = CHAT_ROUTE_PATTERN.test(pathname ?? '');
+  const isFullscreen = FULLSCREEN_ROUTE_PATTERN.test(pathname);
 
   const isActive = (href: string) =>
     href === '/dashboard' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <div className="min-h-screen flex bg-canvas">
-      {/* Desktop sidebar — floating glass panel, inset from the edges */}
-      <aside className="hidden sm:flex sm:flex-col w-64 shrink-0 p-3 sticky top-0 h-screen">
-        <div className="glass-chrome flex flex-col flex-1 rounded-[28px] p-4">
-          <div className="flex items-center justify-between mb-6 px-2 pt-1">
-            <Link href="/dashboard" className="flex items-center gap-2.5">
-              <Image src="/iconksa.png" alt="KsaRed" width={32} height={32} className="h-8 w-8 rounded-[10px] shrink-0" priority />
-              <span className="font-semibold text-lg text-heading tracking-tight">KsaRed</span>
-            </Link>
-            <NotificationBell />
-          </div>
-
-          <nav className="flex flex-col gap-1">
-            {tabs
-              .filter((t) => t.href !== '/settings')
-              .map((tab) => {
-                const active = isActive(tab.href);
-                return (
-                  <Link
-                    key={tab.href}
-                    href={tab.href}
-                    className={`relative flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
-                      active
-                        ? 'text-primary bg-primary/12 dark:bg-primary/18'
-                        : 'text-muted hover:bg-black/[0.03] dark:hover:bg-white/[0.06] hover:text-heading'
-                    }`}
+    <div className="min-h-screen flex bg-[#F5F1E8]">
+      {/* Escritorio: Stitch sólo diseñó móvil; el sidebar usa la misma paleta y los mismos
+          íconos/estados que la tab bar para mantener la concordancia. */}
+      <aside className="hidden sm:flex sm:flex-col w-64 shrink-0 sticky top-0 h-screen bg-[#173A5F] text-white">
+        <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
+          <Link href="/dashboard">
+            <BrandLogo size="md" onDark />
+          </Link>
+          <NotificationBell onDark />
+        </div>
+        <nav className="flex flex-col gap-1 p-3">
+          {tabs
+            .filter((t) => t.href !== '/settings')
+            .map((tab) => {
+              const active = isActive(tab.href);
+              return (
+                <Link
+                  key={tab.href}
+                  href={tab.href}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-[8px] text-sm font-semibold transition-colors ${
+                    active ? 'bg-white/10 text-[#2D9E6B]' : 'text-white/70 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <span
+                    className="material-symbols-outlined text-[22px]"
+                    style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
                   >
-                    <tab.Icon active={active} className="w-5 h-5 shrink-0" />
-                    {tab.label}
-                  </Link>
-                );
-              })}
-          </nav>
-
-          <div className="mt-auto flex flex-col gap-1 pt-4 border-t border-black/[0.06] dark:border-white/[0.08]">
-            <Link
-              href="/settings"
-              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
-                isActive('/settings')
-                  ? 'text-primary bg-primary/12 dark:bg-primary/18'
-                  : 'text-muted hover:bg-black/[0.03] dark:hover:bg-white/[0.06] hover:text-heading'
-              }`}
-            >
-              <MoreIcon active={isActive('/settings')} className="w-5 h-5 shrink-0" />
-              Configuración
-            </Link>
-            <button
-              onClick={logout}
-              className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-colors text-left"
-            >
-              Cerrar sesión
-            </button>
-          </div>
+                    {tab.icon}
+                  </span>
+                  {tab.label}
+                </Link>
+              );
+            })}
+        </nav>
+        <div className="mt-auto flex flex-col gap-1 p-3 border-t border-white/10">
+          <Link
+            href="/settings"
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-[8px] text-sm font-semibold transition-colors ${
+              isActive('/settings') ? 'bg-white/10 text-[#2D9E6B]' : 'text-white/70 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[22px]">settings</span>
+            Configuración
+          </Link>
+          <button
+            onClick={logout}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-[8px] text-sm font-semibold text-red-300 hover:bg-red-500/10 text-left"
+          >
+            <span className="material-symbols-outlined text-[22px]">logout</span>
+            Cerrar sesión
+          </button>
         </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile top bar */}
-        <header className="sm:hidden sticky top-0 z-20 glass-chrome pt-[env(safe-area-inset-top)]">
-          <div className="flex items-center justify-between h-14 px-4">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <Image src="/iconksa.png" alt="KsaRed" width={28} height={28} className="h-7 w-7 rounded-[8px]" priority />
-              <span className="font-semibold text-heading tracking-tight">KsaRed</span>
-            </Link>
-            <div className="flex items-center gap-1">
-              <NotificationBell />
-              <span className="text-sm text-muted truncate max-w-[28vw]">{user?.firstName}</span>
-            </div>
-          </div>
-        </header>
-
-        <main
-          className={`flex-1 ${isChatRoute ? 'pb-0' : 'pb-28'} sm:pb-8 px-4 sm:px-8 pt-4 sm:pt-6 max-w-5xl w-full mx-auto`}
-        >
-          {children}
-        </main>
+        {/* En móvil cada pantalla pinta su propio encabezado azul (como en Stitch). */}
+        <main className={`flex-1 w-full ${isFullscreen ? '' : 'pb-20 sm:pb-0'}`}>{children}</main>
       </div>
 
-      {/* Mobile bottom tab bar — floating glass capsule, inset from the edges.
-          Oculto en vistas de conversación (ver CHAT_ROUTE_PATTERN) para que no tape el
-          campo de texto del chat — la salida ahí es el botón "Volver" de cada página. */}
-      {!isChatRoute && (
-        <nav className="sm:hidden fixed bottom-0 inset-x-0 z-20 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
-          <div className="glass-chrome flex items-stretch h-16 rounded-full px-1.5 mx-auto max-w-md">
+      {/* Tab bar inferior — markup de Stitch (pantalla "Listado de Contratos"). */}
+      {!isFullscreen && (
+        <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center bg-white border-t border-[#A7B0BB]/30 shadow-[0_-2px_8px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]">
+          <div className="w-full max-w-[420px] flex justify-around items-center px-1 py-1.5">
             {tabs.map((tab) => {
               const active = isActive(tab.href);
               return (
                 <Link
                   key={tab.href}
                   href={tab.href}
-                  className="flex-1 flex flex-col items-center justify-center gap-0.5 active:opacity-60 transition-opacity"
+                  className={
+                    active
+                      ? 'flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-1 px-2 active:scale-95'
+                      : 'flex flex-col items-center justify-center text-[#A7B0BB] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95'
+                  }
                 >
                   <span
-                    className={`flex items-center justify-center w-11 h-7 rounded-full transition-all ${
-                      active ? 'bg-primary/15 dark:bg-primary/25 animate-pill-in' : ''
-                    }`}
+                    className="material-symbols-outlined text-[22px]"
+                    style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
                   >
-                    <tab.Icon active={active} className={`w-[22px] h-[22px] ${active ? 'text-primary' : 'text-muted'}`} />
+                    {tab.icon}
                   </span>
-                  <span className={`text-[10px] leading-none ${active ? 'text-primary font-semibold' : 'text-muted'}`}>
-                    {tab.label}
-                  </span>
+                  <span className="font-sans text-[10px] mt-0.5">{tab.label}</span>
+                  <span className={`w-1 h-1 rounded-full mt-0.5 ${active ? 'bg-[#2D9E6B]' : 'bg-transparent'}`}></span>
                 </Link>
               );
             })}

@@ -17,19 +17,20 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
-const VARIANT_STYLES: Record<ToastVariant, { icon: typeof CheckCircleIcon; iconClass: string }> = {
-  success: { icon: CheckCircleIcon, iconClass: 'text-emerald-600 dark:text-emerald-400' },
-  error: { icon: XCircleIcon, iconClass: 'text-red-600 dark:text-red-400' },
-  info: { icon: InfoIcon, iconClass: 'text-primary' },
+const VARIANT_STYLES: Record<ToastVariant, { icon: typeof CheckCircleIcon; iconClass: string; barClass: string }> = {
+  success: { icon: CheckCircleIcon, iconClass: 'text-accent', barClass: 'bg-accent' },
+  error: { icon: XCircleIcon, iconClass: 'text-red-600 dark:text-red-400', barClass: 'bg-red-600' },
+  info: { icon: InfoIcon, iconClass: 'text-[#173A5F] dark:text-[#A7B0BB]', barClass: 'bg-[#173A5F] dark:bg-[#A7B0BB]' },
 };
 
 const AUTO_DISMISS_MS = 5000;
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }) {
-  const { icon: Icon, iconClass } = VARIANT_STYLES[toast.variant];
+  const { icon: Icon, iconClass, barClass } = VARIANT_STYLES[toast.variant];
 
   return (
-    <div className="glass-chrome pointer-events-auto flex items-start gap-3 rounded-2xl px-4 py-3.5 w-full animate-toast-in">
+    <div className="relative overflow-hidden bg-surface border border-line shadow-lg pointer-events-auto flex items-start gap-3 rounded-lg pl-5 pr-4 py-3.5 w-full animate-toast-in">
+      <span className={`absolute left-0 inset-y-0 w-1 ${barClass}`} />
       <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${iconClass}`} />
       <p className="flex-1 text-sm text-heading leading-snug">{toast.message}</p>
       <button

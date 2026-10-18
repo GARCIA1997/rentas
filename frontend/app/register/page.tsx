@@ -1,8 +1,8 @@
 'use client';
 
+import { BrandLogo } from '@/components/BrandLogo';
 import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { getInvite, InviteDetails } from '@/lib/api';
@@ -192,7 +192,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-canvas flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-surface rounded-lg shadow-xl p-8">
-        <Image src="/logoksa.png" alt="KsaRed" width={96} height={96} className="mx-auto mb-2" priority />
+        <div className="flex justify-center mb-3"><BrandLogo size="lg" /></div>
         <Suspense fallback={<p className="text-center text-muted">Cargando...</p>}>
           <RegisterContent />
         </Suspense>

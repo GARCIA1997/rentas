@@ -1,0 +1,328 @@
+
+{/* Mobile Wrapper (~390px) */}
+<div className="w-full max-w-[420px] bg-[#fdf9f0] min-h-screen flex flex-col relative pb-28">
+{/* Encabezado superior institucional KsaRed */}
+<header className="bg-[#173a5f] text-[#ffffff] w-full shadow-sm sticky top-0 z-40">
+{/* Barra de marca y perfil */}
+<div className="flex justify-between items-center w-full px-4 py-3">
+{/* Logo KsaRed oficial */}
+<div className="flex items-center gap-2">
+<img alt="Isotipo KsaRed" className="w-7 h-7 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIPbGEAmrtI0Eraz66Gczj5fxU67MDg8hFiTdqNH-vAUltQLKOEJrX0Rfz5F1lxFgaA9qN3j7KWdaUlVY4pWwdoks7hKmDTktOibbzw6al2A2diiSiUD_LzAPztQmXxL6JVYwArMV4XhrrUd7pSOCn499UBO-iu4NUj3FHApLWCO_HYrlB3JGZtPT8TmbtiKIMMTSwu4xiWB5x49tum-SWGyQkZp6intz30fx8WhHZglAHlt1Xyir8EWNpMXpV8SAN8mKDxjjXkm48" />
+<span className="font-sans text-headline-md tracking-tight text-white font-bold">
+            Ksar<span className="text-[#2D9E6B]">ed</span>
+</span>
+</div>
+{/* Acciones: Notificaciones y Avatar */}
+<div className="flex items-center gap-3">
+<button aria-label="Notificaciones" className="relative p-1 text-white hover:opacity-90 active:scale-95 transition-transform">
+<span className="material-symbols-outlined text-[24px]">notifications</span>
+<span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173a5f]"></span>
+</button>
+<div className="w-8 h-8 rounded-full bg-[#e6e2d9] border border-white/20 flex items-center justify-center overflow-hidden">
+<span className="font-sans text-label-md text-[#002445] font-bold">MA</span>
+</div>
+</div>
+</div>
+{/* Título de sección y Buscador integrado en header plano */}
+<div className="px-4 pb-4 pt-1">
+<h1 className="font-sans text-headline-sm text-white font-semibold">Contratos de Arrendamiento</h1>
+<p className="font-sans text-body-sm text-[#A7B0BB] mt-0.5">16 contratos registrados · 14 activos</p>
+{/* Barra de búsqueda y botón filtros */}
+<div className="mt-3 flex items-center gap-2">
+<div className="relative flex-1">
+<span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[20px] text-[#43474e]">search</span>
+<input className="w-full bg-white text-[#1c1c16] placeholder:text-[#A7B0BB] text-body-md font-sans pl-10 pr-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-[#2D9E6B] focus:outline-none shadow-sm" placeholder="Buscar por inquilino, folio..." type="search" />
+</div>
+<button aria-label="Filtrar" className="bg-[#1c456f] text-white p-2 rounded-lg hover:bg-opacity-90 active:scale-95 transition-transform flex items-center justify-center h-10 w-10 shrink-0">
+<span className="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+</div>
+</header>
+{/* Contenido principal */}
+<main className="px-4 py-4 space-y-4 flex-1">
+{/* Alerta ámbar de contratos por vencer */}
+<div className="bg-[#FFF8E7] border border-[#F3DEB2] rounded-lg p-3 flex items-center justify-between gap-3 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+<div className="flex items-start gap-2.5">
+<span className="material-symbols-outlined text-[#D9822B] text-[22px] shrink-0 mt-0.5">schedule</span>
+<div>
+<h2 className="font-sans text-label-md text-[#945600] font-bold">2 contratos por renovar</h2>
+<p className="font-sans text-body-sm text-[#B36B00]">Vencen en los próximos 30 días</p>
+</div>
+</div>
+<button className="px-2.5 py-1 text-label-sm font-sans bg-white border border-[#D9822B] text-[#D9822B] font-semibold rounded-lg shrink-0 hover:bg-[#FFF3D6] active:scale-95 transition">
+          Ver
+        </button>
+</div>
+{/* Chips de filtro horizontales scrollables */}
+<div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-none">
+<button className="bg-[#173a5f] text-white px-3 py-1.5 rounded-lg font-sans text-label-md shrink-0 shadow-sm">
+          Todos (16)
+        </button>
+<button className="bg-white text-[#002445] border border-[#A7B0BB]/40 px-3 py-1.5 rounded-lg font-sans text-label-md shrink-0 hover:border-[#173a5f] transition">
+          Activos (12)
+        </button>
+<button className="bg-white text-[#002445] border border-[#A7B0BB]/40 px-3 py-1.5 rounded-lg font-sans text-label-md shrink-0 hover:border-[#173a5f] transition">
+          Por renovar (2)
+        </button>
+<button className="bg-white text-[#002445] border border-[#A7B0BB]/40 px-3 py-1.5 rounded-lg font-sans text-label-md shrink-0 hover:border-[#173a5f] transition">
+          Borrador (1)
+        </button>
+<button className="bg-white text-[#002445] border border-[#A7B0BB]/40 px-3 py-1.5 rounded-lg font-sans text-label-md shrink-0 hover:border-[#173a5f] transition">
+          Cancelados (1)
+        </button>
+</div>
+{/* Tarjeta 1 (Por renovar) */}
+<article className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.05)]">
+<div className="flex items-center justify-between pb-3 border-b border-[#A7B0BB]/20">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[18px] text-[#43474e]">description</span>
+<span className="font-sans text-label-md text-[#43474e] font-bold">CTR-2023-042</span>
+</div>
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#FEF3C7] text-[#92400E]">
+            Por renovar
+          </span>
+</div>
+<div className="mt-3 flex items-start gap-3">
+<div className="w-10 h-10 rounded-full bg-[#173A5F]/10 text-[#002445] font-bold flex items-center justify-center shrink-0 font-sans text-label-md">
+            RC
+          </div>
+<div className="flex-1 min-w-0">
+<h3 className="font-sans text-headline-sm text-[#1c1c16] font-semibold truncate">Roberto Corona M.</h3>
+<p className="font-sans text-body-sm text-[#43474e] flex items-center gap-1 mt-0.5 truncate">
+<span className="material-symbols-outlined text-[16px] text-[#A7B0BB]">apartment</span>
+              Casa Sauces #12, Fracc. Los Sauces
+            </p>
+</div>
+</div>
+<div className="mt-3 bg-[#f7f3ea] rounded-lg p-2.5 space-y-1.5 border border-[#A7B0BB]/20">
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#43474e]">Vigencia:</span>
+<span className="text-[#1c1c16] font-medium">01 Nov 2023 – 31 Oct 2024</span>
+</div>
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#D9822B] font-medium flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">warning</span> Vence en 14 días
+            </span>
+<span className="text-[#002445] font-bold text-label-lg font-sans">$18,500 MXN<span className="text-xs font-normal text-[#43474e]">/mes</span></span>
+</div>
+</div>
+<div className="mt-3 flex gap-2">
+<button className="w-full bg-[#173a5f] text-white py-2 rounded-lg font-sans text-label-md font-semibold hover:opacity-95 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span>Ver detalle</span>
+<span className="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</article>
+{/* Tarjeta 2 (Activo) */}
+<article className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.05)]">
+<div className="flex items-center justify-between pb-3 border-b border-[#A7B0BB]/20">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[18px] text-[#43474e]">description</span>
+<span className="font-sans text-label-md text-[#43474e] font-bold">CTR-2024-089</span>
+</div>
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#E8F5E9] text-[#2D9E6B]">
+            Activo
+          </span>
+</div>
+<div className="mt-3 flex items-start gap-3">
+<div className="w-10 h-10 rounded-full bg-[#2D9E6B]/15 text-[#2D9E6B] font-bold flex items-center justify-center shrink-0 font-sans text-label-md">
+            AT
+          </div>
+<div className="flex-1 min-w-0">
+<h3 className="font-sans text-headline-sm text-[#1c1c16] font-semibold truncate">Ana Torres</h3>
+<p className="font-sans text-body-sm text-[#43474e] flex items-center gap-1 mt-0.5 truncate">
+<span className="material-symbols-outlined text-[16px] text-[#A7B0BB]">apartment</span>
+              Torre Vista Norte, Depto. 402
+            </p>
+</div>
+</div>
+<div className="mt-3 bg-[#f7f3ea] rounded-lg p-2.5 space-y-1.5 border border-[#A7B0BB]/20">
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#43474e]">Vigencia:</span>
+<span className="text-[#1c1c16] font-medium">01 Feb 2024 – 31 Ene 2025</span>
+</div>
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#2D9E6B] font-medium">Faltan 3 meses</span>
+<span className="text-[#002445] font-bold text-label-lg font-sans">$18,500 MXN<span className="text-xs font-normal text-[#43474e]">/mes</span></span>
+</div>
+</div>
+<div className="mt-3 flex gap-2">
+<button className="w-full bg-[#173a5f] text-white py-2 rounded-lg font-sans text-label-md font-semibold hover:opacity-95 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span>Ver detalle</span>
+<span className="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</article>
+{/* Tarjeta 3 (Activo) */}
+<article className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.05)]">
+<div className="flex items-center justify-between pb-3 border-b border-[#A7B0BB]/20">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[18px] text-[#43474e]">description</span>
+<span className="font-sans text-label-md text-[#43474e] font-bold">CTR-2024-104</span>
+</div>
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#E8F5E9] text-[#2D9E6B]">
+            Activo
+          </span>
+</div>
+<div className="mt-3 flex items-start gap-3">
+<div className="w-10 h-10 rounded-full bg-[#173A5F]/10 text-[#002445] font-bold flex items-center justify-center shrink-0 font-sans text-label-md">
+            VG
+          </div>
+<div className="flex-1 min-w-0">
+<h3 className="font-sans text-headline-sm text-[#1c1c16] font-semibold truncate">Valeria Guzmán S.</h3>
+<p className="font-sans text-body-sm text-[#43474e] flex items-center gap-1 mt-0.5 truncate">
+<span className="material-symbols-outlined text-[16px] text-[#A7B0BB]">apartment</span>
+              Depto. Torre Real 402
+            </p>
+</div>
+</div>
+<div className="mt-3 bg-[#f7f3ea] rounded-lg p-2.5 space-y-1.5 border border-[#A7B0BB]/20">
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#43474e]">Vigencia:</span>
+<span className="text-[#1c1c16] font-medium">15 Abr 2024 – 14 Abr 2025</span>
+</div>
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#43474e]">12 meses de contrato</span>
+<span className="text-[#002445] font-bold text-label-lg font-sans">$12,000 MXN<span className="text-xs font-normal text-[#43474e]">/mes</span></span>
+</div>
+</div>
+<div className="mt-3 flex gap-2">
+<button className="w-full bg-[#173a5f] text-white py-2 rounded-lg font-sans text-label-md font-semibold hover:opacity-95 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span>Ver detalle</span>
+<span className="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</article>
+{/* Tarjeta 4 (Por renovar) */}
+<article className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.05)]">
+<div className="flex items-center justify-between pb-3 border-b border-[#A7B0BB]/20">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[18px] text-[#43474e]">description</span>
+<span className="font-sans text-label-md text-[#43474e] font-bold">CTR-2023-118</span>
+</div>
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#FEF3C7] text-[#92400E]">
+            Por renovar
+          </span>
+</div>
+<div className="mt-3 flex items-start gap-3">
+<div className="w-10 h-10 rounded-full bg-[#D9822B]/15 text-[#D9822B] font-bold flex items-center justify-center shrink-0 font-sans text-label-md">
+            RG
+          </div>
+<div className="flex-1 min-w-0">
+<h3 className="font-sans text-headline-sm text-[#1c1c16] font-semibold truncate">Roberto Gómez</h3>
+<p className="font-sans text-body-sm text-[#43474e] flex items-center gap-1 mt-0.5 truncate">
+<span className="material-symbols-outlined text-[16px] text-[#A7B0BB]">storefront</span>
+              Local Comercial 3B - Plaza Central
+            </p>
+</div>
+</div>
+<div className="mt-3 bg-[#f7f3ea] rounded-lg p-2.5 space-y-1.5 border border-[#A7B0BB]/20">
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#43474e]">Vigencia:</span>
+<span className="text-[#1c1c16] font-medium">01 Dic 2023 – 30 Nov 2024</span>
+</div>
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#D9822B] font-medium flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">warning</span> Vence en 26 días
+            </span>
+<span className="text-[#002445] font-bold text-label-lg font-sans">$8,200 MXN<span className="text-xs font-normal text-[#43474e]">/mes</span></span>
+</div>
+</div>
+<div className="mt-3 flex gap-2">
+<button className="w-full bg-[#173a5f] text-white py-2 rounded-lg font-sans text-label-md font-semibold hover:opacity-95 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span>Ver detalle</span>
+<span className="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</article>
+{/* Tarjeta 5 (Borrador) */}
+<article className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.05)]">
+<div className="flex items-center justify-between pb-3 border-b border-[#A7B0BB]/20">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[18px] text-[#43474e]">description</span>
+<span className="font-sans text-label-md text-[#43474e] font-bold">CTR-2024-BORR</span>
+</div>
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#ECEFF1] text-[#455A64]">
+            Borrador
+          </span>
+</div>
+<div className="mt-3 flex items-start gap-3">
+<div className="w-10 h-10 rounded-full bg-[#f1eee5] text-[#43474e] font-bold flex items-center justify-center shrink-0 font-sans text-label-md">
+            CM
+          </div>
+<div className="flex-1 min-w-0">
+<h3 className="font-sans text-headline-sm text-[#1c1c16] font-semibold truncate">Pendiente de firma</h3>
+<p className="font-sans text-body-sm text-[#43474e] flex items-center gap-1 mt-0.5 truncate">
+<span className="material-symbols-outlined text-[16px] text-[#A7B0BB]">warehouse</span>
+              Bodega El Trapiche 04 · Carlos Mendoza
+            </p>
+</div>
+</div>
+<div className="mt-3 bg-[#f7f3ea] rounded-lg p-2.5 space-y-1.5 border border-[#A7B0BB]/20">
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#43474e]">Vigencia propuesta:</span>
+<span className="text-[#1c1c16] font-medium">01 Dic 2024 – 30 Nov 2025</span>
+</div>
+<div className="flex justify-between items-center text-body-sm font-sans">
+<span className="text-[#43474e]">Depósito pendiente</span>
+<span className="text-[#002445] font-bold text-label-lg font-sans">$24,000 MXN<span className="text-xs font-normal text-[#43474e]">/mes</span></span>
+</div>
+</div>
+<div className="mt-3 flex gap-2">
+<button className="w-full bg-[#173a5f] text-white py-2 rounded-lg font-sans text-label-md font-semibold hover:opacity-95 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span>Ver detalle</span>
+<span className="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</article>
+</main>
+{/* Botón flotante verde de acción (FAB) */}
+<div className="fixed bottom-20 right-4 max-w-[420px] z-40">
+<button className="bg-[#2D9E6B] text-white px-4 py-3 rounded-lg shadow-md font-sans text-label-lg font-semibold flex items-center gap-2 hover:bg-[#25855A] active:scale-95 transition-transform">
+<span className="material-symbols-outlined text-[20px]">add</span>
+<span>Nuevo contrato</span>
+</button>
+</div>
+{/* Tab Bar Inferior Administrador (Exactamente 6 destinos KsaRed) */}
+<nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-center bg-white border-t border-[#A7B0BB]/30 shadow-[0_-2px_8px_rgba(0,0,0,0.05)]">
+<div className="w-full max-w-[420px] flex justify-around items-center px-1 py-1.5">
+{/* 1. Inicio */}
+<a className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]">home</span>
+<span className="font-sans text-[10px] mt-0.5">Inicio</span>
+<span className="w-1 h-1 rounded-full bg-transparent mt-0.5"></span>
+</a>
+{/* 2. Propiedades */}
+<a className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]">apartment</span>
+<span className="font-sans text-[10px] mt-0.5">Propiedades</span>
+<span className="w-1 h-1 rounded-full bg-transparent mt-0.5"></span>
+</a>
+{/* 3. Inquilinos */}
+<a className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]">group</span>
+<span className="font-sans text-[10px] mt-0.5">Inquilinos</span>
+<span className="w-1 h-1 rounded-full bg-transparent mt-0.5"></span>
+</a>
+{/* 4. Contratos (ACTIVO - Verde #2D9E6B con punto de 4px) */}
+<a className="flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-1 px-2 active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]" style={{fontVariationSettings: '\'FILL\' 1'}}>description</span>
+<span className="font-sans text-[10px] mt-0.5">Contratos</span>
+<span className="w-1 h-1 rounded-full bg-[#2D9E6B] mt-0.5"></span>
+</a>
+{/* 5. Pagos */}
+<a className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]">payments</span>
+<span className="font-sans text-[10px] mt-0.5">Pagos</span>
+<span className="w-1 h-1 rounded-full bg-transparent mt-0.5"></span>
+</a>
+{/* 6. Más */}
+<a className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]">more_horiz</span>
+<span className="font-sans text-[10px] mt-0.5">Más</span>
+<span className="w-1 h-1 rounded-full bg-transparent mt-0.5"></span>
+</a>
+</div>
+</nav>
+</div>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KsaRed - Más y Configuración</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-container": "#007349",
+            "secondary-fixed": "#8cf8bd",
+            "surface-dim": "#dddad1",
+            "on-tertiary-fixed": "#141c25",
+            "on-tertiary-container": "#9ba4ae",
+            "on-secondary-fixed": "#002112",
+            "error": "#ba1a1a",
+            "tertiary-fixed": "#dae3ef",
+            "surface-tint": "#416087",
+            "surface-container": "#f1eee5",
+            "secondary": "#006c45",
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#31302b",
+            "outline-variant": "#c3c6cf",
+            "surface-container-high": "#ece8df",
+            "on-secondary-fixed-variant": "#005233",
+            "primary": "#002445",
+            "on-surface": "#1c1c16",
+            "outline": "#73777f",
+            "on-primary-fixed-variant": "#28486e",
+            "secondary-fixed-dim": "#70dba2",
+            "secondary-container": "#8cf8bd",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e6e2d9",
+            "background": "#fdf9f0",
+            "surface-bright": "#fdf9f0",
+            "error-container": "#ffdad6",
+            "surface-variant": "#e6e2d9",
+            "on-error": "#ffffff",
+            "surface-container-low": "#f7f3ea",
+            "primary-fixed": "#d3e4ff",
+            "inverse-primary": "#a9c9f5",
+            "primary-fixed-dim": "#a9c9f5",
+            "inverse-on-surface": "#f4f0e7",
+            "tertiary-container": "#313a43",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#fdf9f0",
+            "primary-container": "#173a5f",
+            "on-tertiary-fixed-variant": "#3f4851",
+            "on-primary-container": "#85a4cf",
+            "on-primary-fixed": "#001c38",
+            "tertiary-fixed-dim": "#bec7d3",
+            "tertiary": "#1c242d",
+            "on-background": "#1c1c16",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#43474e"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "body-md": ["Montserrat"],
+            "headline-md": ["Montserrat"],
+            "label-lg": ["Montserrat"],
+            "label-md": ["Montserrat"],
+            "body-lg": ["Montserrat"],
+            "headline-lg": ["Montserrat"],
+            "label-sm": ["Montserrat"],
+            "headline-sm": ["Montserrat"],
+            "body-sm": ["Montserrat"]
+          },
+          "fontSize": {
+            "body-md": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "headline-md": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "600" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "600" }],
+            "body-lg": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "2.25rem", "fontWeight": "700" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "fontWeight": "500" }],
+            "headline-sm": ["1.125rem", { "lineHeight": "1.5rem", "fontWeight": "600" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Toggle Switch Custom */
+    .switch-checkbox:checked + .switch-label {
+      background-color: #2D9E6B;
+    }
+    .switch-checkbox:checked + .switch-label .switch-dot {
+      transform: translateX(1.25rem);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md antialiased min-h-screen flex justify-center selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Mobile View Container: 390px Optimized Native View -->
+<div class="w-full max-w-[390px] min-h-screen bg-surface flex flex-col relative pb-24 shadow-2xl">
+<!-- 1. ENCABEZADO INSTITUCIONAL KSARED (Straight bottom edge, no curved border) -->
+<header class="bg-primary-container text-on-primary w-full px-space-md h-16 fixed top-0 left-0 max-w-[390px] mx-auto z-50 flex items-center justify-between border-b border-primary-container/20">
+<!-- Logo Oficial KsaRed: Isotipo de 3 piezas geométricas a 45° + Texto Montserrat -->
+<div class="flex items-center gap-2 select-none">
+<!-- SVG Oficial Isotipo KsaRed (Bloque azul marino, diagonal marfil, diagonal verde #2D9E6B) -->
+<svg class="w-7 h-7" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<!-- Bloque vertical izquierdo -->
+<polygon fill="#1C3F66" points="12,14 42,14 42,86 12,86"></polygon>
+<!-- Diagonal superior (marfil-gris) -->
+<polygon fill="#EAE5DA" points="42,50 82,14 96,14 56,50"></polygon>
+<!-- Diagonal inferior verde corporativo (#2D9E6B) -->
+<polygon fill="#2D9E6B" points="42,50 64,28 92,60 92,86 52,86"></polygon>
+</svg>
+<!-- Tipografía Institucional Ksared -->
+<div class="flex items-baseline tracking-tight">
+<span class="font-headline-md text-headline-md font-bold text-on-primary">Ksar</span>
+<span class="font-headline-md text-headline-md font-bold text-[#2D9E6B]">ed</span>
+</div>
+</div>
+<!-- Notificaciones y Avatar -->
+<div class="flex items-center gap-3">
+<!-- Campana blanca con punto verde de 4px -->
+<button aria-label="Notificaciones" class="relative p-1.5 text-on-primary hover:opacity-90 active:scale-95 transition-transform flex items-center justify-center" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-[5px] h-[5px] bg-[#2D9E6B] rounded-full ring-2 ring-primary-container"></span>
+</button>
+<!-- Avatar circular Mariana Silva -->
+<div class="w-8 h-8 rounded-full overflow-hidden border border-on-primary/30 flex items-center justify-center bg-primary text-on-primary font-label-md text-label-md">
+<img class="w-full h-full object-cover" data-alt="A polished professional headshot of Mariana Silva, an executive property manager, smiling softly against a pristine neutral architectural interior background with bright daylight and clean geometric lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7UE8bW5ofxWM5oQkwm9zqKsYB7tvWMVd-Kg5ue7AMALcORJJjg1ezHncxVkVJhtVe46GmkXGa6lx6AG1Co-G1BJiYwGbo_s5evS7NTIOnG_fpAM-vrXbcD-yoLZp-paaCDdpVk4o97MTszUArxRD3MwDKr0psMjmEK42l8z6tb2qZluBOjROSPpivO7QhGZXfs2uJxA3v_kWMuwufA1mlo22g0RPMxUJPbOpW_Y2v5rSbcxmD0uvcZTKgtEPJ9CnKE_oLp-UMSrcH"/>
+</div>
+</div>
+</header>
+<!-- CONTENT CANVAS (Scrollable vertical list with 16px lateral margin) -->
+<main class="flex-1 px-space-md pt-20 pb-4 flex flex-col gap-4">
+<!-- Breadcrumb / Título contextual de sección -->
+<div class="pt-1 flex items-center justify-between">
+<div>
+<span class="font-label-md text-label-md text-outline tracking-wider uppercase font-semibold">Panel Administrador</span>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary-container">Más y Configuración</h1>
+</div>
+<span class="px-2.5 py-1 bg-surface-container rounded-lg text-primary-container font-label-md text-label-md font-semibold border border-outline-variant/30 flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-[#2D9E6B]"></span>
+          Online
+        </span>
+</div>
+<!-- 2. TARJETA CUENTA (Perfil del Administrador) -->
+<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-space-md shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-surface-container-high bg-primary-fixed flex items-center justify-center text-primary font-bold text-headline-sm">
+<img class="w-full h-full object-cover" data-alt="Close up portrait photograph of Mariana Silva, dressed in clean corporate navy smart casual attire, professional confident smile, bright clean office background with subtle warm tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP86YtjOS-Q9giFpQxP9LiemFVOJz2Qz2bhroQDHVVk91LKG3_Zz14fuorp1NweeEMligmdsqh2NGYkaXy1Dyc9NEIwM9F2nDRWqKyl78jGrHU0aXrUrvxUC41GwFRud70F3Q_PLqAjszCypMU0RhoavLtTNobRaTYoA4F0yzxbxCr-l8KmQvQfJemfG7KPgbMQqkvR3kKo_HG9Vi4qLT4Bn6v8jWjxEOqO-L-mK4q9_vZqJPmSZib1t212p-i5bbvjXSoKVzifR8Y"/>
+</div>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#2D9E6B] border-2 border-white rounded-full"></span>
+</div>
+<div class="flex flex-col">
+<h2 class="font-headline-sm text-headline-sm text-primary-container font-bold leading-snug">Mariana Silva</h2>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="inline-block px-2 py-0.5 rounded-lg text-label-sm font-label-sm font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B]">
+                  Administrador General
+                </span>
+</div>
+</div>
+</div>
+<button class="text-primary-container font-label-md text-label-md font-semibold hover:opacity-80 transition-opacity flex items-center gap-0.5" type="button">
+            Editar
+            <span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/20 grid grid-cols-1 gap-2 text-outline">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary-container" data-icon="mail">mail</span>
+<span class="font-body-sm text-body-sm text-on-surface select-all">m.silva@ksared.com</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary-container" data-icon="call">call</span>
+<span class="font-body-sm text-body-sm text-on-surface select-all">+52 55 1234 5678</span>
+</div>
+</div>
+</div>
+<!-- 3. SECCIÓN APARIENCIA (Selector de 3 opciones) -->
+<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="palette">palette</span>
+</div>
+<h3 class="font-label-lg text-label-lg font-bold text-primary-container">Apariencia</h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Tema visual</span>
+</div>
+<!-- Chips Segmentados de 3 opciones (Regla de diseño: Activo azul sólido #173A5F) -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container p-1 rounded-lg">
+<button class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="light_mode">light_mode</span>
+<span>Claro</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-on-surface-variant hover:text-primary-container font-label-md text-label-md font-medium transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="dark_mode">dark_mode</span>
+<span>Oscuro</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-on-surface-variant hover:text-primary-container font-label-md text-label-md font-medium transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings_suggest">settings_suggest</span>
+<span>Sistema</span>
+</button>
+</div>
+</div>
+<!-- 4. SECCIÓN NOTIFICACIONES (Toggles corporativos) -->
+<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-space-md shadow-sm">
+<div class="flex items-center gap-2 mb-3">
+<div class="w-7 h-7 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="notifications_active">notifications_active</span>
+</div>
+<h3 class="font-label-lg text-label-lg font-bold text-primary-container">Notificaciones</h3>
+</div>
+<div class="divide-y divide-outline-variant/20">
+<!-- Toggle 1: Notificaciones in-app -->
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex flex-col pr-2">
+<span class="font-label-md text-label-md text-primary-container font-semibold">Notificaciones in-app</span>
+<span class="font-body-sm text-body-sm text-outline">Bandeja interna de actividades y cobros</span>
+</div>
+<div class="relative inline-block w-11 h-6 align-middle select-none">
+<input checked="" class="switch-checkbox absolute opacity-0 w-0 h-0 pointer-events-none" id="toggle-inapp" type="checkbox"/>
+<label class="switch-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer transition-colors duration-200" for="toggle-inapp">
+<span class="switch-dot block h-5 w-5 rounded-full bg-white shadow transform translate-x-0.5 translate-y-0.5 transition-transform duration-200"></span>
+</label>
+</div>
+</div>
+<!-- Toggle 2: Notificaciones push -->
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex flex-col pr-2">
+<span class="font-label-md text-label-md text-primary-container font-semibold">Notificaciones push</span>
+<span class="font-body-sm text-body-sm text-outline">Avisos aunque la app esté cerrada</span>
+</div>
+<div class="relative inline-block w-11 h-6 align-middle select-none">
+<input checked="" class="switch-checkbox absolute opacity-0 w-0 h-0 pointer-events-none" id="toggle-push" type="checkbox"/>
+<label class="switch-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer transition-colors duration-200" for="toggle-push">
+<span class="switch-dot block h-5 w-5 rounded-full bg-white shadow transform translate-x-0.5 translate-y-0.5 transition-transform duration-200"></span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- 5. SECCIÓN GESTIÓN Y REPORTES (Lista con chevrons) -->
+<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-space-md shadow-sm">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-7 h-7 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="monitoring">monitoring</span>
+</div>
+<h3 class="font-label-lg text-label-lg font-bold text-primary-container">Gestión y Reportes</h3>
+</div>
+<div class="divide-y divide-outline-variant/20">
+<!-- Fila 1: Representantes -->
+<a class="py-3 flex items-center justify-between hover:bg-surface-container-low/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="badge">badge</span>
+</div>
+<span class="font-label-md text-label-md font-semibold text-primary-container">Representantes legales</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+<!-- Fila 2: Reportes de inquilinos con badge ámbar -->
+<a class="py-3 flex items-center justify-between hover:bg-surface-container-low/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="assignment_late">assignment_late</span>
+</div>
+<span class="font-label-md text-label-md font-semibold text-primary-container">Reportes de inquilinos</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm font-semibold bg-[#D9822B]/15 text-[#D9822B]">
+                2 pendientes
+              </span>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</div>
+</a>
+<!-- Fila 3: Reportes financieros -->
+<a class="py-3 flex items-center justify-between hover:bg-surface-container-low/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="query_stats">query_stats</span>
+</div>
+<span class="font-label-md text-label-md font-semibold text-primary-container">Reportes financieros (MXN)</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+<!-- Fila 4: Invitar administrador -->
+<a class="py-3 flex items-center justify-between hover:bg-surface-container-low/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="person_add">person_add</span>
+</div>
+<span class="font-label-md text-label-md font-semibold text-primary-container">Invitar administrador</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+</div>
+</div>
+<!-- 6. ACCIÓN DE CIERRE & METADATA -->
+<div class="mt-2 flex flex-col items-center gap-3">
+<!-- Botón destructivo según reglas globales: contorno rojo, fondo blanco, 8px de esquina -->
+<button class="w-full h-12 bg-surface-container-lowest border border-[#C0392B] text-[#C0392B] hover:bg-[#ffdad6]/20 active:scale-95 transition-all rounded-lg font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+          Cerrar sesión
+        </button>
+<p class="font-body-sm text-body-sm text-outline text-center">
+          KsaRed v2.4.0 · Gestión Inteligente de Propiedades
+        </p>
+</div>
+</main>
+<!-- 7. TAB BAR INFERIOR - ADMINISTRADOR (6 Ítems exactos, orden estricto, "Más" ACTIVO) -->
+<!-- Prohibido border-t: usamos una sombra sutil de elevación plana y división limpia -->
+<nav class="fixed bottom-0 left-0 max-w-[390px] mx-auto w-full z-50 h-16 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(23,58,95,0.06)] flex justify-between items-center px-1">
+<!-- 1. Inicio -->
+<a class="flex flex-col items-center justify-center flex-1 h-full text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</a>
+<!-- 2. Propiedades -->
+<a class="flex flex-col items-center justify-center flex-1 h-full text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="apartment">apartment</span>
+<span class="font-label-sm text-label-sm">Propiedades</span>
+</a>
+<!-- 3. Inquilinos -->
+<a class="flex flex-col items-center justify-center flex-1 h-full text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm">Inquilinos</span>
+</a>
+<!-- 4. Contratos -->
+<a class="flex flex-col items-center justify-center flex-1 h-full text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="description">description</span>
+<span class="font-label-sm text-label-sm">Contratos</span>
+</a>
+<!-- 5. Pagos -->
+<a class="flex flex-col items-center justify-center flex-1 h-full text-outline hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="payments">payments</span>
+<span class="font-label-sm text-label-sm">Pagos</span>
+</a>
+<!-- 6. Más -> ESTADO ACTIVO (Verde corporativo #2D9E6B con punto indicador de 4px debajo) -->
+<a class="flex flex-col items-center justify-center flex-1 h-full text-[#2D9E6B] font-semibold relative transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="more_horiz" style="font-variation-settings: 'FILL' 1;">more_horiz</span>
+<span class="font-label-sm text-label-sm font-semibold">Más</span>
+<!-- Indicador de 4px posicionado inmediatamente debajo -->
+<span class="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+</a>
+</nav>
+</div>
+</body></html>

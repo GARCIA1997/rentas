@@ -1,0 +1,267 @@
+
+{/* ==================== SECCIÓN 1: PANTALLA PRINCIPAL CON HOJA INFERIOR ==================== */}
+<div className="w-[390px] min-h-[844px] bg-[#F5F1E8] shadow-2xl rounded-[32px] overflow-hidden flex flex-col relative border border-[#DDD9CF]">
+{/* BARRA SUPERIOR DE ESTADO CELULAR */}
+<div className="bg-[#173A5F] text-white px-6 pt-3 pb-2 flex justify-between items-center text-xs font-semibold select-none">
+<span>9:41</span>
+<div className="flex items-center space-x-1.5">
+<span className="material-symbols-outlined text-[15px]">signal_cellular_alt</span>
+<span className="material-symbols-outlined text-[15px]">wifi</span>
+<span className="material-symbols-outlined text-[15px]">battery_full</span>
+</div>
+</div>
+{/* ENCABEZADO AZUL PLANO REGLAS GLOBALES KSARED */}
+<header className="bg-[#173A5F] px-4 py-3 flex items-center justify-between border-none">
+<div className="flex items-center space-x-3">
+<button aria-label="Volver" className="text-white flex items-center justify-center p-1 rounded-custom active:bg-white/10">
+<span className="material-symbols-outlined text-[22px]">arrow_back</span>
+</button>
+<div className="flex items-center space-x-2">
+{/* Isotipo maestro tricolor */}
+<svg className="w-6 h-6 shrink-0" fill="none" viewBox="0 0 365 320">
+<path d="M50 49 L130 130 L130 222 L50 292 Z" fill="#FFFFFF"></path>
+<path d="M137 130 L220 49 L315 49 L137 224 Z" fill="#DDD9CF"></path>
+<path d="M153 214 L208 162 L333 292 L229 292 Z" fill="#2D9E6B"></path>
+</svg>
+<span className="text-lg font-bold tracking-tight text-white flex items-center">
+            Ksar<span className="text-[#2D9E6B]">ed</span>
+</span>
+</div>
+</div>
+<div className="flex items-center space-x-3">
+<div className="relative">
+<span className="material-symbols-outlined text-white text-[22px]">notifications</span>
+<span className="absolute top-0 right-0 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+</div>
+<div className="w-8 h-8 rounded-full bg-white/20 border border-white/30 overflow-hidden flex items-center justify-center text-xs text-white font-bold">
+<img alt="Avatar Administradora" className="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg" />
+</div>
+</div>
+</header>
+{/* FONDO ATENUADO: PERFIL DE INQUILINO (Ana Torres) */}
+<div className="flex-1 px-4 py-4 space-y-4 opacity-40 pointer-events-none select-none filter blur-[0.4px]">
+{/* Ficha rápida inquilino */}
+<div className="bg-white p-4 rounded-custom border border-[#E2DEC9] shadow-sm flex items-start justify-between">
+<div className="flex items-center space-x-3">
+<div className="w-12 h-12 rounded-custom bg-[#173A5F] text-white flex items-center justify-center font-bold text-lg">
+            AT
+          </div>
+<div>
+<div className="flex items-center space-x-2">
+<h2 className="font-bold text-base text-[#173A5F]">Ana Torres Morales</h2>
+<span className="text-[11px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B] px-2 py-0.5 rounded-custom">Activa</span>
+</div>
+<p className="text-xs text-[#173A5F]/70 mt-0.5">Torre Vista Norte, Depto. 402</p>
+<p className="text-[11px] text-[#A7B0BB]">Contrato: CTR-2023-089</p>
+</div>
+</div>
+</div>
+{/* Tarjeta datos básicos */}
+<div className="bg-white p-4 rounded-custom border border-[#E2DEC9] space-y-3">
+<h3 className="text-xs font-bold uppercase tracking-wider text-[#173A5F]/60">Información de contacto</h3>
+<div className="flex items-center justify-between text-xs py-1 border-b border-[#F5F1E8]">
+<span className="text-[#A7B0BB]">Teléfono</span>
+<span className="font-semibold text-[#173A5F]">+52 55 4912 3840</span>
+</div>
+<div className="flex items-center justify-between text-xs py-1 border-b border-[#F5F1E8]">
+<span className="text-[#A7B0BB]">Email</span>
+<span className="font-semibold text-[#173A5F]">a.torres@empresa.mx</span>
+</div>
+<div className="flex items-center justify-between text-xs py-1 border-b border-[#F5F1E8]">
+<span className="text-[#A7B0BB]">CURP</span>
+<span className="font-semibold text-[#173A5F]">TOMA890412HDFRR02</span>
+</div>
+<div className="flex items-center justify-between text-xs py-1">
+<span className="text-[#A7B0BB]">Renta mensual</span>
+<span className="font-bold text-[#2D9E6B]">$18,500 MXN</span>
+</div>
+</div>
+</div>
+{/* OVERLAY OSCURECIDO */}
+<div className="absolute inset-0 bg-[#0F2A4D]/60 z-30 transition-opacity"></div>
+{/* BOTTOM SHEET: EDITAR INQUILINO */}
+<div className="absolute inset-x-0 bottom-0 z-40 bg-white rounded-t-[20px] shadow-[0_-8px_30px_rgba(23,58,95,0.25)] flex flex-col max-h-[88%] border-t border-[#E2DEC9] animate-in fade-in slide-in-from-bottom duration-300">
+{/* ASA GRIS Y HEADER DE LA HOJA */}
+<div className="pt-3 pb-3 px-5 border-b border-[#F5F1E8] relative flex-shrink-0">
+{/* Asa gris */}
+<div className="w-12 h-1.5 bg-[#A7B0BB]/50 rounded-full mx-auto mb-3"></div>
+<div className="flex items-center justify-between">
+<div className="flex items-center space-x-2">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">manage_accounts</span>
+<h1 className="text-lg font-bold text-[#173A5F] tracking-tight">Editar inquilino</h1>
+</div>
+<button className="w-8 h-8 flex items-center justify-center rounded-custom hover:bg-[#F5F1E8] text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+<span className="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<p className="text-xs text-[#A7B0BB] mt-0.5">Expediente ID: INQ-8492 • Torre Vista Norte 402</p>
+</div>
+{/* CONTENIDO SCROLLABLE DE CAMPOS */}
+<div className="overflow-y-auto px-5 py-4 space-y-4 text-xs">
+{/* Estado (Segmented Control Activo / Inactivo) */}
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">Estado del inquilino</label>
+<div className="bg-[#F5F1E8] p-1 rounded-custom flex items-center border border-[#E2DEC9]">
+<button className="flex-1 py-2 rounded-custom bg-[#2D9E6B] text-white font-semibold flex items-center justify-center space-x-1.5 shadow-sm" type="button">
+<span className="w-2 h-2 rounded-full bg-white"></span>
+<span>Activo</span>
+</button>
+<button className="flex-1 py-2 rounded-custom text-[#173A5F]/70 font-medium hover:text-[#173A5F] flex items-center justify-center space-x-1.5 transition-colors" type="button">
+<span className="w-2 h-2 rounded-full bg-[#A7B0BB]"></span>
+<span>Inactivo</span>
+</button>
+</div>
+</div>
+{/* Nombre completo */}
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">
+            Nombre completo <span className="text-red-500">*</span>
+</label>
+<div className="relative">
+<span className="material-symbols-outlined absolute left-3 top-2.5 text-[#A7B0BB] text-[18px]">person</span>
+<input className="w-full bg-white border border-[#E2DEC9] rounded-custom pl-9 pr-3 py-2 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B] focus:ring-1 focus:ring-[#2D9E6B]" type="text" value="Ana Torres Morales" />
+</div>
+</div>
+{/* Fila: Teléfono y Correo */}
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">
+            Teléfono de contacto <span className="text-red-500">*</span>
+</label>
+<div className="flex space-x-2">
+<div className="flex items-center px-2.5 bg-[#F5F1E8] border border-[#E2DEC9] rounded-custom text-[11px] font-semibold text-[#173A5F] space-x-1">
+<span>🇲🇽 +52</span>
+</div>
+<input className="flex-1 bg-white border border-[#E2DEC9] rounded-custom px-3 py-2 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B] focus:ring-1 focus:ring-[#2D9E6B]" type="tel" value="55 4912 3840" />
+</div>
+</div>
+{/* Email */}
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">
+            Correo electrónico <span className="text-red-500">*</span>
+</label>
+<div className="relative">
+<span className="material-symbols-outlined absolute left-3 top-2.5 text-[#A7B0BB] text-[18px]">mail</span>
+<input className="w-full bg-white border border-[#E2DEC9] rounded-custom pl-9 pr-3 py-2 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B] focus:ring-1 focus:ring-[#2D9E6B]" type="email" value="a.torres@empresa.mx" />
+</div>
+</div>
+{/* Clave de elector & CURP (Grid 2 columnas) */}
+<div className="grid grid-cols-2 gap-3">
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">Clave de elector</label>
+<input className="w-full bg-white border border-[#E2DEC9] rounded-custom px-3 py-2 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B] uppercase font-mono" type="text" value="TRMRAN89041209M100" />
+</div>
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">CURP</label>
+<input className="w-full bg-white border border-[#E2DEC9] rounded-custom px-3 py-2 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B] uppercase font-mono" type="text" value="TOMA890412HDFRR02" />
+</div>
+</div>
+{/* Fecha de nacimiento */}
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">Fecha de nacimiento</label>
+<div className="relative">
+<span className="material-symbols-outlined absolute left-3 top-2.5 text-[#A7B0BB] text-[18px]">calendar_today</span>
+<input className="w-full bg-white border border-[#E2DEC9] rounded-custom pl-9 pr-3 py-2 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B]" type="date" value="1989-04-12" />
+</div>
+</div>
+{/* Domicilio */}
+<div className="space-y-1.5">
+<label className="block text-xs font-semibold text-[#173A5F]">Domicilio particular / fiscal</label>
+<div className="relative">
+<span className="material-symbols-outlined absolute left-3 top-2.5 text-[#A7B0BB] text-[18px]">location_on</span>
+<input className="w-full bg-white border border-[#E2DEC9] rounded-custom pl-9 pr-3 py-2 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B]" type="text" value="Av. Paseo de la Reforma 402, Depto. 4B, Cuauhtémoc, CDMX" />
+</div>
+</div>
+{/* Notas internas (multilínea) */}
+<div className="space-y-1.5 pb-2">
+<div className="flex items-center justify-between">
+<label className="block text-xs font-semibold text-[#173A5F]">Notas internas de administración</label>
+<span className="text-[10px] text-[#A7B0BB]">Visible solo para admins</span>
+</div>
+<textarea className="w-full bg-[#F5F1E8]/50 border border-[#E2DEC9] rounded-custom p-3 text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#2D9E6B] resize-none" placeholder="Registra antecedentes, acuerdos especiales o puntualidad de cobros..." rows="3">Inquilina puntual con pagos al día mediante SPEI BBVA. Solicitó cambio de monomando en lavabo principal en octubre 2024.</textarea>
+</div>
+</div>
+{/* PIE FIJO: ACCIONES CON REGLAS GLOBALES */}
+<div className="p-4 bg-white border-t border-[#E2DEC9] flex items-center space-x-3 flex-shrink-0">
+{/* Cancelar contorno gris */}
+<button className="flex-1 py-2.5 px-4 rounded-custom border border-[#A7B0BB] text-[#173A5F] font-semibold text-xs text-center hover:bg-[#F5F1E8] active:scale-95 transition-all" type="button">
+          Cancelar
+        </button>
+{/* Guardar cambios verde sólido */}
+<button className="flex-1 py-2.5 px-4 rounded-custom bg-[#2D9E6B] hover:bg-[#25855A] text-white font-semibold text-xs text-center shadow-sm active:scale-95 transition-all flex items-center justify-center space-x-1.5" type="button">
+<span className="material-symbols-outlined text-[17px]">check</span>
+<span>Guardar cambios</span>
+</button>
+</div>
+</div>
+{/* TAB BAR INFERIOR DE ADMINISTRADOR (6 DESTINOS OFICIALES) */}
+<nav className="bg-white border-t border-[#A7B0BB]/30 h-16 flex items-center justify-around px-2 z-20 flex-shrink-0">
+<div className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 cursor-pointer">
+<span className="material-symbols-outlined text-[20px]">dashboard</span>
+<span className="text-[10px] font-medium mt-0.5">Inicio</span>
+</div>
+<div className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 cursor-pointer">
+<span className="material-symbols-outlined text-[20px]">apartment</span>
+<span className="text-[10px] font-medium mt-0.5">Propiedades</span>
+</div>
+{/* Inquilinos ACTIVO con punto verde de 4px debajo */}
+<div className="flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-1 cursor-pointer relative">
+<span className="material-symbols-outlined text-[20px] fill-1">group</span>
+<span className="text-[10px] font-semibold mt-0.5">Inquilinos</span>
+<span className="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+</div>
+<div className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 cursor-pointer">
+<span className="material-symbols-outlined text-[20px]">description</span>
+<span className="text-[10px] font-medium mt-0.5">Contratos</span>
+</div>
+<div className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 cursor-pointer">
+<span className="material-symbols-outlined text-[20px]">payments</span>
+<span className="text-[10px] font-medium mt-0.5">Pagos</span>
+</div>
+<div className="flex flex-col items-center justify-center text-[#A7B0BB] py-1 cursor-pointer">
+<span className="material-symbols-outlined text-[20px]">more_horiz</span>
+<span className="text-[10px] font-medium mt-0.5">Más</span>
+</div>
+</nav>
+</div>
+{/* ==================== SECCIÓN 2: VARIANTE DE REFERENCIA - DIÁLOGO CENTRADO CERRAR REPORTE ==================== */}
+<div className="w-[390px] flex flex-col items-center">
+<div className="w-full flex items-center justify-between mb-2 px-1">
+<span className="text-[11px] font-bold tracking-wider uppercase text-[#173A5F]/70 flex items-center space-x-1">
+<span className="w-2 h-2 rounded-full bg-[#2D9E6B]"></span>
+<span>Variante de referencia • Diálogo de confirmación</span>
+</span>
+<span className="text-[10px] font-semibold text-[#A7B0BB] bg-white px-2 py-0.5 rounded-custom border border-[#DDD9CF]">Modal flotante</span>
+</div>
+{/* SIMULADOR DIÁLOGO CENTRADO */}
+<div className="w-[390px] h-[340px] bg-[#0F2A4D]/70 rounded-[24px] p-4 flex items-center justify-center relative overflow-hidden shadow-xl border border-[#DDD9CF]">
+{/* Fondo decorativo sutil de conversación deshabilitada */}
+<div className="absolute inset-0 p-4 opacity-15 pointer-events-none flex flex-col justify-end space-y-2">
+<div className="self-end bg-white w-48 h-8 rounded-custom"></div>
+<div className="self-start bg-white w-56 h-10 rounded-custom"></div>
+<div className="self-end bg-white w-40 h-8 rounded-custom"></div>
+</div>
+{/* TARJETA DEL DIÁLOGO */}
+<div className="w-[320px] bg-white rounded-custom p-5 shadow-2xl border border-[#E2DEC9] z-10 text-center animate-in zoom-in-95 duration-200">
+{/* ÍCONO VERDE DE CHECK EN CONTENEDOR CIRCULAR */}
+<div className="w-12 h-12 rounded-full bg-[#2D9E6B]/15 text-[#2D9E6B] flex items-center justify-center mx-auto mb-3">
+<span className="material-symbols-outlined text-[28px] font-bold">check_circle</span>
+</div>
+{/* TÍTULO */}
+<h3 className="text-base font-bold text-[#173A5F]">¿Cerrar reporte?</h3>
+{/* DESCRIPCIÓN VERBATIM */}
+<p className="text-xs text-[#173A5F]/80 leading-relaxed mt-2 mb-5 px-1 font-medium">
+          Al cerrar, ni tú ni el inquilino podrán enviar más mensajes en esta incidencia de mantenimiento.
+        </p>
+{/* BOTONES: CANCELAR (CONTORNO) Y CERRAR REPORTE (VERDE SÓLIDO) */}
+<div className="flex items-center space-x-2.5">
+<button className="flex-1 py-2.5 px-3 rounded-custom border border-[#A7B0BB] text-[#173A5F] font-semibold text-xs hover:bg-[#F5F1E8] active:scale-95 transition-all" type="button">
+            Cancelar
+          </button>
+<button className="flex-1 py-2.5 px-3 rounded-custom bg-[#2D9E6B] hover:bg-[#25855A] text-white font-semibold text-xs shadow-sm active:scale-95 transition-all flex items-center justify-center space-x-1" type="button">
+<span className="material-symbols-outlined text-[16px]">task_alt</span>
+<span>Cerrar reporte</span>
+</button>
+</div>
+</div>
+</div>
+</div>

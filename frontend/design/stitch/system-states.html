@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ksared — Estados del sistema (Móvil 390px)</title>
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Material Symbols Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#173A5F',
+              green: '#2D9E6B',
+              cream: '#F5F1E8',
+              gray: '#A7B0BB',
+              border: '#E2DEC9',
+              darkbg: '#0F2A4D'
+            }
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          borderRadius: {
+            'card': '8px',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #ECE7DC;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-6 text-slate-800 antialiased">
+
+  <!-- Mobile Container (390px width) -->
+  <main class="w-full max-w-[390px] bg-[#F5F1E8] shadow-2xl rounded-2xl overflow-hidden border border-brand-border flex flex-col relative">
+
+    <!-- Top App Bar / Encabezado azul plano con borde recto y REGLAS GLOBALES -->
+    <header class="bg-[#173A5F] px-4 py-3 flex items-center justify-between z-30 shrink-0">
+      <div class="flex items-center space-x-2">
+        <!-- Isotipo SVG maestro 3 piezas geométricas (sin caja, sin recortar) -->
+        <svg class="w-7 h-7 shrink-0" viewBox="0 0 365 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Pieza vertical/triangular izquierda azul claro/blanco sobre fondo oscuro -->
+          <path d="M50 49 L130 130 L130 222 L50 292 Z" fill="#F5F1E8" />
+          <!-- Pieza diagonal superior marfil/crema suave -->
+          <path d="M137 130 L220 49 L315 49 L137 224 Z" fill="#DDD9CF" />
+          <!-- Pieza diagonal inferior verde corporativo #2D9E6B -->
+          <path d="M153 214 L208 162 L333 292 L229 292 Z" fill="#2D9E6B" />
+        </svg>
+        <!-- Logotipo: "Ksar" en blanco y "ed" en verde corporativo #2D9E6B -->
+        <span class="text-xl font-bold tracking-tight select-none">
+          <span class="text-white">Ksar</span><span class="text-[#2D9E6B]">ed</span>
+        </span>
+      </div>
+
+      <!-- Iconografía encabezado: campana con punto verde y perfil -->
+      <div class="flex items-center space-x-3">
+        <div class="relative flex items-center justify-center text-white">
+          <span class="material-symbols-outlined text-[22px]">notifications</span>
+          <span class="absolute top-0 right-0 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-[#204670] border border-[#305986] flex items-center justify-center text-white text-xs font-bold">
+          MS
+        </div>
+      </div>
+    </header>
+
+    <!-- Sub-header informativo con badge de guía -->
+    <div class="bg-[#173A5F] px-4 pb-3 pt-0 text-white flex items-center justify-between border-b border-[#234b75]">
+      <div>
+        <h1 class="text-sm font-bold text-white tracking-tight">Estados del Sistema</h1>
+        <p class="text-[11px] text-[#A7B0BB]">Catálogo normativo de alertas y diálogos</p>
+      </div>
+      <span class="bg-[#2D9E6B]/20 text-[#2D9E6B] text-[10px] font-semibold px-2 py-0.5 rounded border border-[#2D9E6B]/30">
+        4 Variantes
+      </span>
+    </div>
+
+    <!-- Scrollable Content con las 4 tarjetas de estados -->
+    <div class="flex-1 p-3.5 space-y-4 overflow-y-auto">
+
+      <!-- ==========================================
+           1. ESTADO: SESIÓN EXPIRADA
+           Diálogo centrado "Tu sesión expiró"
+           - Ícono de candado azul
+           - Botón azul "Iniciar sesión de nuevo"
+           ========================================== -->
+      <section class="bg-white rounded-[8px] p-4 shadow-sm border border-brand-border/70 relative">
+        <div class="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#173A5F] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#173A5F]"></span>
+            01. Diálogo de Autenticación
+          </span>
+          <span class="text-[10px] font-medium text-slate-400">Modal crítico</span>
+        </div>
+
+        <div class="text-center py-2 px-1">
+          <!-- Ícono candado azul corporativo en contenedor suave -->
+          <div class="w-13 h-13 mx-auto w-12 h-12 rounded-full bg-[#173A5F]/10 flex items-center justify-center mb-3">
+            <span class="material-symbols-outlined text-[#173A5F] text-[28px]">lock_clock</span>
+          </div>
+
+          <h3 class="text-base font-bold text-[#173A5F] mb-1">Tu sesión expiró</h3>
+          <p class="text-xs text-slate-600 leading-relaxed mb-4 max-w-[280px] mx-auto">
+            Por seguridad de tus expedientes e inquilinos, la sesión se cerró tras 15 minutos de inactividad.
+          </p>
+
+          <!-- Botón azul sólido según REGLAS GLOBALES ("Ver ficha"/"Siguiente"/acción principal institucional) -->
+          <button class="w-full bg-[#173A5F] hover:bg-[#122f4d] active:scale-[0.98] transition-all text-white font-semibold text-xs py-2.5 px-4 rounded-[8px] shadow-sm flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">login</span>
+            Iniciar sesión de nuevo
+          </button>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           2. ESTADO: SIN CONEXIÓN (BANNER SUPERIOR)
+           Banner ámbar "Sin conexión — mostrando datos guardados"
+           - Botón "Reintentar"
+           ========================================== -->
+      <section class="bg-white rounded-[8px] p-4 shadow-sm border border-brand-border/70">
+        <div class="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            02. Banner de Conectividad
+          </span>
+          <span class="text-[10px] font-medium text-slate-400">Sticky / Alerta</span>
+        </div>
+
+        <!-- Componente Banner Ámbar / Alerta -->
+        <div class="bg-amber-50 border border-amber-300/80 rounded-[8px] p-3 text-amber-950 flex flex-col space-y-2.5">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-full bg-amber-100 border border-amber-300 shrink-0 flex items-center justify-center text-amber-800 mt-0.5">
+              <span class="material-symbols-outlined text-[18px]">wifi_off</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                <p class="text-xs font-bold text-amber-900 leading-snug">Sin conexión</p>
+              </div>
+              <p class="text-[11px] text-amber-800 leading-tight mt-0.5">
+                Mostrando datos guardados localmente. Los cobros y contratos se sincronizarán al reconectar.
+              </p>
+            </div>
+          </div>
+
+          <!-- Acción Reintentar con botón tipo contorno/outline de alta visibilidad -->
+          <div class="flex justify-end pt-1">
+            <button class="bg-white hover:bg-amber-100 active:scale-95 transition-all border border-amber-400 text-amber-900 font-semibold text-[11px] py-1.5 px-3 rounded-[8px] flex items-center gap-1.5 shadow-2xs">
+              <span class="material-symbols-outlined text-[15px]">refresh</span>
+              Reintentar
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           3. ESTADO: PERMISO DE CÁMARA DENEGADO
+           Para escaneo del INE
+           - Ícono de cámara tachada
+           - Texto explicando cómo habilitarlo en ajustes
+           - Botón "Capturar manualmente" (contorno gris)
+           - Botón "Abrir ajustes" (azul sólido)
+           ========================================== -->
+      <section class="bg-white rounded-[8px] p-4 shadow-sm border border-brand-border/70">
+        <div class="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#173A5F] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#173A5F]"></span>
+            03. Validación INE / Hardware
+          </span>
+          <span class="text-[10px] font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">Permiso requerido</span>
+        </div>
+
+        <div class="text-center pt-1 pb-2">
+          <!-- Ícono cámara tachada -->
+          <div class="w-12 h-12 mx-auto rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center mb-2.5">
+            <span class="material-symbols-outlined text-[#173A5F] text-[26px]">no_photography</span>
+          </div>
+
+          <h3 class="text-sm font-bold text-[#173A5F] mb-1">Permiso de cámara denegado</h3>
+          <p class="text-xs text-slate-600 leading-relaxed mb-3 px-1">
+            Para escanear el frente y reverso del INE automáticamente, Ksared necesita acceso a la cámara. Ve a <span class="font-semibold text-slate-800">Ajustes &gt; Privacidad &gt; Cámara</span> y actívalo.
+          </p>
+
+          <!-- Botones: "Capturar manualmente" (contorno gris) y "Abrir ajustes" (azul sólido) -->
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <button class="w-full bg-white hover:bg-slate-50 active:scale-[0.98] transition-all border border-[#A7B0BB] text-slate-700 font-semibold text-xs py-2 px-2.5 rounded-[8px] flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-[16px] text-slate-500">edit_document</span>
+              Capturar manual
+            </button>
+            <button class="w-full bg-[#173A5F] hover:bg-[#122f4d] active:scale-[0.98] transition-all text-white font-semibold text-xs py-2 px-2.5 rounded-[8px] shadow-sm flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">settings</span>
+              Abrir ajustes
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           4. ESTADO: ¿SALIR SIN GUARDAR?
+           Del asistente de contrato
+           - Ícono ámbar
+           - Botón "Seguir editando" (contorno gris)
+           - Botón "Salir" (rojo destructivo)
+           ========================================== -->
+      <section class="bg-white rounded-[8px] p-4 shadow-sm border border-brand-border/70">
+        <div class="flex items-center justify-between mb-3 border-b border-gray-100 pb-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            04. Diálogo de Abandono (Asistente)
+          </span>
+          <span class="text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">Prevención</span>
+        </div>
+
+        <div class="text-center pt-1 pb-1">
+          <!-- Ícono ámbar en contenedor circular suave -->
+          <div class="w-12 h-12 mx-auto rounded-full bg-amber-100/80 border border-amber-200 flex items-center justify-center mb-2.5">
+            <span class="material-symbols-outlined text-amber-600 text-[26px]">warning</span>
+          </div>
+
+          <h3 class="text-sm font-bold text-slate-900 mb-1">¿Salir sin guardar?</h3>
+          <p class="text-xs text-slate-600 leading-relaxed mb-3.5 px-2">
+            Tienes cambios sin confirmar en las cláusulas del contrato. Si sales ahora, se perderán los datos capturados en este paso.
+          </p>
+
+          <!-- Botones: "Seguir editando" (contorno gris) y "Salir" (rojo destructivo) -->
+          <div class="grid grid-cols-2 gap-2">
+            <button class="w-full bg-white hover:bg-slate-50 active:scale-[0.98] transition-all border border-[#A7B0BB] text-slate-700 font-semibold text-xs py-2 px-2 rounded-[8px] flex items-center justify-center gap-1">
+              Seguir editando
+            </button>
+            <button class="w-full bg-rose-600 hover:bg-rose-700 active:scale-[0.98] transition-all text-white font-semibold text-xs py-2 px-2 rounded-[8px] shadow-sm flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">logout</span>
+              Salir
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pie informativo de especificación técnica -->
+      <div class="text-center pt-2 pb-1">
+        <p class="text-[10px] text-[#A7B0BB] flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined text-[13px] text-[#2D9E6B]">verified</span>
+          Cumple NOM-151 y Sistema de Diseño Ksared Corporativo
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Tab Bar Inferior / Exactamente 6 destinos Administrador (REGLAS GLOBALES) -->
+    <!-- Fondo blanco, borde superior gris suave, inactivo #A7B0BB, activo #2D9E6B semibold con punto verde de 4px debajo -->
+    <nav class="bg-white border-t border-[#A7B0BB]/30 px-1 py-1.5 flex items-center justify-around z-30 shrink-0">
+      
+      <!-- 1. Inicio (Activo para contexto general) -->
+      <a href="#inicio" class="flex flex-col items-center justify-center w-14 py-0.5 group">
+        <span class="material-symbols-outlined text-[#2D9E6B] text-[20px]">grid_view</span>
+        <span class="text-[10px] font-semibold text-[#2D9E6B] leading-none mt-1">Inicio</span>
+        <!-- Punto verde indicador de 4px debajo -->
+        <span class="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+      </a>
+
+      <!-- 2. Propiedades -->
+      <a href="#propiedades" class="flex flex-col items-center justify-center w-14 py-0.5 group">
+        <span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-slate-600 text-[20px]">apartment</span>
+        <span class="text-[10px] font-normal text-[#A7B0BB] group-hover:text-slate-600 leading-none mt-1">Propiedades</span>
+        <span class="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      <!-- 3. Inquilinos -->
+      <a href="#inquilinos" class="flex flex-col items-center justify-center w-14 py-0.5 group">
+        <span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-slate-600 text-[20px]">group</span>
+        <span class="text-[10px] font-normal text-[#A7B0BB] group-hover:text-slate-600 leading-none mt-1">Inquilinos</span>
+        <span class="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      <!-- 4. Contratos -->
+      <a href="#contratos" class="flex flex-col items-center justify-center w-14 py-0.5 group">
+        <span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-slate-600 text-[20px]">description</span>
+        <span class="text-[10px] font-normal text-[#A7B0BB] group-hover:text-slate-600 leading-none mt-1">Contratos</span>
+        <span class="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      <!-- 5. Pagos -->
+      <a href="#pagos" class="flex flex-col items-center justify-center w-14 py-0.5 group">
+        <span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-slate-600 text-[20px]">payments</span>
+        <span class="text-[10px] font-normal text-[#A7B0BB] group-hover:text-slate-600 leading-none mt-1">Pagos</span>
+        <span class="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      <!-- 6. Más -->
+      <a href="#mas" class="flex flex-col items-center justify-center w-14 py-0.5 group">
+        <span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-slate-600 text-[20px]">more_horiz</span>
+        <span class="text-[10px] font-normal text-[#A7B0BB] group-hover:text-slate-600 leading-none mt-1">Más</span>
+        <span class="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+    </nav>
+
+  </main>
+
+</body>
+</html>

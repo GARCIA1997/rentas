@@ -1,0 +1,165 @@
+
+{/* Mobile Container strictly 390px width */}
+<div className="w-full max-w-[390px] min-h-screen flex flex-col relative px-4 pt-3">
+{/* TopAppBar as dictated by Shared Components and specific screen rules */}
+<header className="flex justify-between items-center w-full px-1 py-2 max-w-md mx-auto border-none">
+{/* Back Navigation Button */}
+<button aria-label="Regresar" className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all duration-150 text-white" type="button">
+<span className="material-symbols-outlined text-white text-[22px]">arrow_back</span>
+</button>
+{/* Category Text / Screen Type */}
+<div className="flex flex-col items-center">
+<span className="font-sans text-label-sm tracking-widest text-[#F5F1E8]/90 font-bold uppercase">PORTAL INQUILINO</span>
+</div>
+{/* Help Action */}
+<button aria-label="Ayuda" className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all duration-150 text-white" type="button">
+<span className="material-symbols-outlined text-white text-[22px]">help_outline</span>
+</button>
+</header>
+{/* Brand Identity Section (Above the card) */}
+<div className="flex flex-col items-center justify-center pt-3 pb-5 text-center">
+{/* Ksared Official Logo (Without enclosing box or border) */}
+<div className="flex items-center gap-2.5 justify-center">
+{/* 3-Piece Geometry Isotype */}
+<img alt="KsaRed Isotipo" className="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2dPFmQ06CkegC8IU7IuBqWbQiu3k-Bfyx4l2BmIs6Hj5LuysbV95bXhclNLsXmMOjwUHLx2ahu95LcXYk_aW49PFgV14zq7JcOjDkgspH8mhx2mAVQBvaXLILjNfS8kpL_zJZv165nwa_b_Q148B8Bfy3El5R4v137PlEmXZLd8VHxmqmthO7wftKoBBh-HYksj05kBmrtwkp77ALWgsRZ4a7PlygtY565cFKIHV8Od6EvxIH9olXB5FpQXA1_In6N2Kf6Dn8-v8f" />
+{/* Brand Wordmark: "Ksar" white, "ed" in green #2D9E6B */}
+<span className="font-sans text-headline-lg font-bold tracking-tight text-white leading-none">
+          Ksar<span className="text-[#2D9E6B]">ed</span>
+</span>
+</div>
+{/* Slogan */}
+<p className="font-sans text-body-sm text-[#F5F1E8]/85 font-medium mt-1.5 tracking-normal">
+        Gestión inteligente de propiedades
+      </p>
+</div>
+{/* Main Content Card (Solid Pure White, 16px rounded corners, flat subtle shadow) */}
+<main className="w-full bg-[#ffffff] rounded-2xl shadow-[0_4px_20px_rgba(23,58,95,0.08)] border border-[#E2E6EA] p-5 flex flex-col gap-4">
+{/* Card Header with Pill Badge */}
+<div className="flex flex-col gap-1.5">
+<div className="flex items-center justify-between">
+{/* Active Invitation Badge (Pill with 15% green bg + solid green text) */}
+<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2D9E6B]/15 text-[#2D9E6B] font-sans text-label-sm font-bold tracking-wide">
+<span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+            INVITACIÓN ACTIVA
+          </span>
+<span className="font-sans text-label-sm text-[#73777f] flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">schedule</span> 7 días
+          </span>
+</div>
+<h1 className="font-sans text-headline-md font-bold text-[#173a5f] mt-1">
+          Activa tu cuenta
+        </h1>
+<p className="font-sans text-body-sm text-[#73777f]">
+          Te invitó tu administrador a formar parte del condominio.
+        </p>
+</div>
+{/* Verified Data Notice */}
+<div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5F1E8] border border-[#E2E6EA] text-[#173a5f]">
+<span className="material-symbols-outlined text-[#2D9E6B] text-[18px]">verified_user</span>
+<span className="font-sans text-label-sm font-medium text-[#173a5f]">
+          Datos verificados por tu administrador
+        </span>
+</div>
+{/* Pre-filled Read-only Fields */}
+<div className="flex flex-col gap-3">
+{/* Field 1: Full Name */}
+<div className="flex flex-col gap-1">
+<label className="font-sans text-label-sm font-semibold text-[#173a5f] flex items-center justify-between">
+<span>Nombre completo</span>
+<span className="text-xs text-[#73777f] font-normal">Solo lectura</span>
+</label>
+<div className="flex items-center justify-between px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E6EA] rounded-lg">
+<div className="flex items-center gap-2.5">
+<span className="material-symbols-outlined text-[#73777f] text-[18px]">lock</span>
+<span className="font-sans text-body-md font-bold text-[#173a5f]">Ana Torres</span>
+</div>
+<span className="material-symbols-outlined text-[#2D9E6B] text-[20px]" style={{fontVariationSettings: '\'FILL\' 1'}}>check_circle</span>
+</div>
+</div>
+{/* Field 2: Phone Number */}
+<div className="flex flex-col gap-1">
+<label className="font-sans text-label-sm font-semibold text-[#173a5f] flex items-center justify-between">
+<span>Teléfono registrado</span>
+<span className="text-xs text-[#73777f] font-normal">Solo lectura</span>
+</label>
+<div className="flex items-center justify-between px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E6EA] rounded-lg">
+<div className="flex items-center gap-2.5">
+{/* Mexico Flag Representation / Dial code */}
+<div className="flex items-center gap-1.5 pr-2 border-r border-[#E2E6EA]">
+<span className="text-xs font-bold text-[#173a5f]">🇲🇽 +52</span>
+</div>
+<span className="font-sans text-body-md font-bold text-[#173a5f] tracking-wide">313 000 9995</span>
+</div>
+<div className="flex items-center gap-1 text-[#73777f]">
+<span className="material-symbols-outlined text-[18px]">lock</span>
+</div>
+</div>
+</div>
+</div>
+<div className="border-t border-[#E2E6EA] my-0.5"></div>
+{/* Password Creation Form */}
+<form className="flex flex-col gap-3.5">
+{/* Field 3: Contraseña */}
+<div className="flex flex-col gap-1">
+<div className="flex items-center justify-between">
+<label className="font-sans text-label-sm font-semibold text-[#173a5f]" htmlFor="password">Crea una contraseña</label>
+<span className="text-xs text-[#2D9E6B] font-semibold">Segura</span>
+</div>
+<div className="relative flex items-center">
+<input className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-[#A7B0BB]/60 rounded-lg font-sans text-body-md text-[#173a5f] focus:outline-none focus:ring-1 focus:ring-[#2D9E6B] focus:border-[#2D9E6B] pr-10 tracking-wide" id="password" placeholder="Mínimo 8 caracteres" type="password" value="KsaRed2025!" />
+<button aria-label="Mostrar contraseña" className="absolute right-3 text-[#73777f] hover:text-[#173a5f] transition-colors" type="button">
+<span className="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+{/* Password Strength Indicator (4 segments - Strong level highlighted in #2D9E6B) */}
+<div className="flex flex-col gap-1 mt-1">
+<div className="grid grid-cols-4 gap-1.5 h-1.5 w-full">
+<div className="bg-[#2D9E6B] rounded-full h-full"></div>
+<div className="bg-[#2D9E6B] rounded-full h-full"></div>
+<div className="bg-[#2D9E6B] rounded-full h-full"></div>
+<div className="bg-[#2D9E6B] rounded-full h-full"></div>
+</div>
+<div className="flex items-center justify-between text-xs text-[#73777f]">
+<span>Incluye letras, números y símbolo</span>
+<span className="text-[#2D9E6B] font-bold">100%</span>
+</div>
+</div>
+</div>
+{/* Field 4: Confirmar contraseña */}
+<div className="flex flex-col gap-1">
+<label className="font-sans text-label-sm font-semibold text-[#173a5f]" htmlFor="confirm-password">Confirmar contraseña</label>
+<div className="relative flex items-center">
+<input className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-[#2D9E6B] rounded-lg font-sans text-body-md text-[#173a5f] focus:outline-none focus:ring-1 focus:ring-[#2D9E6B] pr-16 tracking-wide" id="confirm-password" placeholder="Repite tu contraseña" type="password" value="KsaRed2025!" />
+<div className="absolute right-3 flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[#2D9E6B] text-[18px]" style={{fontVariationSettings: '\'FILL\' 1'}}>check_circle</span>
+<button aria-label="Mostrar contraseña" className="text-[#73777f] hover:text-[#173a5f] transition-colors" type="button">
+<span className="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+{/* Terms and Conditions Checkbox */}
+<label className="flex items-start gap-2.5 cursor-pointer mt-1 select-none">
+<input checked="" className="mt-0.5 rounded border-[#A7B0BB] text-[#2D9E6B] focus:ring-[#2D9E6B] w-4 h-4 cursor-pointer" type="checkbox" />
+<span className="font-sans text-body-sm text-[#43474e] leading-snug">
+            Acepto los <a className="text-[#173A5F] font-semibold underline decoration-1" href="#">Términos de Servicio</a> y el <a className="text-[#173A5F] font-semibold underline decoration-1" href="#">Aviso de Privacidad</a> de KsaRed.
+          </span>
+</label>
+{/* Main Confirmation Button (Verde #2D9E6B sólido, esquinas 8px) */}
+<button className="w-full mt-2 py-3 px-4 bg-[#2D9E6B] hover:bg-[#25855A] active:scale-[0.99] text-white font-sans text-label-lg font-bold rounded-lg shadow-sm transition-all duration-150 flex items-center justify-center gap-2" type="submit">
+<span>Crear cuenta</span>
+<span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</form>
+</main>
+{/* Card Footer & Security Credentials */}
+<footer className="flex flex-col items-center justify-center gap-2 mt-4 px-2 text-center pb-4">
+<p className="font-sans text-body-sm text-[#F5F1E8]/75 font-medium">
+        El enlace es de un solo uso y vence en 7 días
+      </p>
+<div className="flex items-center justify-center gap-1.5 text-xs text-[#F5F1E8]/60 font-medium">
+<span className="material-symbols-outlined text-[15px] text-[#2D9E6B]">enhanced_encryption</span>
+<span>Conexión cifrada de alta seguridad 256-bit • KsaRed PropTech</span>
+</div>
+</footer>
+</div>

@@ -10,7 +10,7 @@ import { BellIcon } from './icons';
 // (reportes + cambios de estatus) no justifica una conexión persistente.
 const POLL_INTERVAL_MS = 60_000;
 
-export function NotificationBell() {
+export function NotificationBell({ onDark = false }: { onDark?: boolean }) {
   const { token } = useAuth();
   const [count, setCount] = useState(0);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -54,9 +54,9 @@ export function NotificationBell() {
       <button
         onClick={handleToggle}
         aria-label="Notificaciones"
-        className="relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+        className={`relative w-9 h-9 flex items-center justify-center rounded-full transition-colors ${onDark ? 'hover:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}
       >
-        <BellIcon className="w-5 h-5 text-muted" />
+        <BellIcon className={`w-5 h-5 ${onDark ? 'text-white' : 'text-muted'}`} />
         {count > 0 && (
           <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500" />
         )}

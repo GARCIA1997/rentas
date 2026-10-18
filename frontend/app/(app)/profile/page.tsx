@@ -164,19 +164,19 @@ function TenantProfile() {
       {/* Perfil / Reportes — separados a propósito: reportes es una conversación en curso,
           no un dato de consulta como el resto del perfil, y mezclarlos en un solo scroll
           largo lo hacía difícil de encontrar. */}
-      <div className="flex bg-canvas rounded-xl p-1 gap-1">
+      <div className="flex border-b border-line">
         <button
           onClick={() => setTab('perfil')}
-          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-            tab === 'perfil' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+          className={`flex-1 py-2.5 -mb-px border-b-2 text-sm font-medium transition-colors ${
+            tab === 'perfil' ? 'border-accent text-heading font-semibold' : 'border-transparent text-muted hover:text-heading'
           }`}
         >
           Perfil
         </button>
         <button
           onClick={() => setTab('reportes')}
-          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-            tab === 'reportes' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+          className={`flex-1 py-2.5 -mb-px border-b-2 text-sm font-medium transition-colors ${
+            tab === 'reportes' ? 'border-accent text-heading font-semibold' : 'border-transparent text-muted hover:text-heading'
           }`}
         >
           Reportes {openReports > 0 && `(${openReports})`}
@@ -249,27 +249,27 @@ function TenantProfile() {
               <h3 className="text-heading font-semibold mb-4">Historial de pagos</h3>
 
               {/* Segmented control */}
-              <div className="flex bg-canvas rounded-xl p-1 mb-4 gap-1">
+              <div className="flex border-b border-line mb-4 gap-1">
                 <button
                   onClick={() => setPaymentSegment('pending')}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                    paymentSegment === 'pending' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                  className={`flex-1 py-2.5 -mb-px border-b-2 text-sm font-medium transition-colors ${
+                    paymentSegment === 'pending' ? 'border-accent text-heading font-semibold' : 'border-transparent text-muted hover:text-heading'
                   }`}
                 >
                   Por pagar {pendingPayments.length > 0 && `(${pendingPayments.length})`}
                 </button>
                 <button
                   onClick={() => setPaymentSegment('paid')}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                    paymentSegment === 'paid' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                  className={`flex-1 py-2.5 -mb-px border-b-2 text-sm font-medium transition-colors ${
+                    paymentSegment === 'paid' ? 'border-accent text-heading font-semibold' : 'border-transparent text-muted hover:text-heading'
                   }`}
                 >
                   Pagados {paidPayments.length > 0 && `(${paidPayments.length})`}
                 </button>
                 <button
                   onClick={() => setPaymentSegment('scheduled')}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                    paymentSegment === 'scheduled' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+                  className={`flex-1 py-2.5 -mb-px border-b-2 text-sm font-medium transition-colors ${
+                    paymentSegment === 'scheduled' ? 'border-accent text-heading font-semibold' : 'border-transparent text-muted hover:text-heading'
                   }`}
                 >
                   Programados {scheduledPayments.length > 0 && `(${scheduledPayments.length})`}

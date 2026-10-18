@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KsaRed - Perfil de Inquilino</title>
+<!-- Google Fonts: Montserrat -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration as mandated -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#173A5F',
+              green: '#2D9E6B',
+              ivory: '#F5F1E8',
+              neutral: '#A7B0BB',
+              neutralLight: '#E8ECF1',
+              border: '#DDD9CF',
+              white: '#FFFFFF',
+              darkText: '#0F263E'
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Montserrat"],
+            display: ["Montserrat"],
+            body: ["Montserrat"],
+            label: ["Montserrat"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #F5F1E8;
+      color: #173A5F;
+      -webkit-font-smoothing: antialiased;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+    /* Estilo corporativo plano KsaRed: esquinas 8px, sin glassmorphism, sin blur */
+    .card-ksared {
+      background-color: #FFFFFF;
+      border: 1px solid #DDD9CF;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(23, 58, 95, 0.04);
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col bg-[#F5F1E8] antialiased pb-24">
+<!-- TopAppBar (Cabecera Corporativa KsaRed) -->
+<header class="bg-[#173A5F] text-white sticky top-0 z-40 w-full px-4 py-3 shadow-sm border-b border-[#A7B0BB]/20">
+<div class="max-w-md mx-auto flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="text-white hover:opacity-80 active:scale-95 transition-all p-1 flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<img alt="KsaRed Isotipo" class="h-6 w-auto object-contain brightness-0 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJj4-vMNjOCuR241_Ou_i5lDfQvUEJ4MQ5qz9qr_SkmiN0Ai1vqc3rqOtSmNegLX31AUxOpGibZXET0GBPbZ05IudC4eRNpx2zu_uNdz1eqz_OFN9CgxNJzjehCbR-rLAZMkEEx-BDLSYwvksH15Bw9JPs48c7FFT0tHCkZQhCR7ngAMdESJ7yVlup6FUB5FzjEBNeYLf344seLTN-7vWPTbyZ-rOuiV-MiYH-7lz0HSmmqz7LKx_ddYjqoT0ZZ6oDSlFJqgxi7Lan"/>
+<h1 class="font-headline font-bold text-lg tracking-tight text-white">Perfil de Inquilino</h1>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Compartir perfil" class="text-white hover:opacity-80 active:scale-95 p-1.5 rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button aria-label="Más opciones" class="text-white hover:opacity-80 active:scale-95 p-1.5 rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Contenedor Principal (Mobile Width Max-w-md) -->
+<main class="w-full max-w-md mx-auto px-4 pt-4 flex-1 flex flex-col gap-4">
+<!-- 2. Cabecera del Inquilino (Profile Header) -->
+<section class="card-ksared p-4 bg-white">
+<div class="flex items-start gap-3.5">
+<!-- Avatar y Badge -->
+<div class="relative shrink-0">
+<div class="w-16 h-16 rounded-lg bg-[#173A5F] text-white flex items-center justify-center font-headline font-bold text-xl border-2 border-white shadow-sm overflow-hidden">
+<span class="tracking-wide">AT</span>
+</div>
+<span class="absolute -bottom-1 -right-1 bg-[#2D9E6B] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs border border-white">
+<span class="material-symbols-outlined text-[10px] fill">check_circle</span>
+            Activo
+          </span>
+</div>
+<!-- Info principal -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<h2 class="font-headline font-bold text-xl text-[#173A5F] truncate">Ana Torres</h2>
+<span class="shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#2D9E6B]/10 text-[#2D9E6B] border border-[#2D9E6B]/25">
+              Inquilina Activa
+            </span>
+</div>
+<div class="flex items-center gap-1.5 mt-1 text-xs text-[#173A5F]/80 font-medium">
+<span class="material-symbols-outlined text-sm text-[#2D9E6B]">apartment</span>
+<span class="truncate">Torre Vista Norte #402</span>
+</div>
+<p class="text-[11px] text-[#A7B0BB] mt-0.5">Contrato: CTR-2023-089 • ID: INQ-8492</p>
+</div>
+</div>
+<!-- Barra de Acciones y Contacto Rápido -->
+<div class="grid grid-cols-4 gap-2 mt-4 pt-3.5 border-t border-[#DDD9CF]/80">
+<!-- Llamar -->
+<a class="flex flex-col items-center justify-center p-2 rounded-lg bg-[#F5F1E8] hover:bg-[#DDD9CF]/50 active:scale-95 transition-all group" href="tel:+525549123840">
+<span class="material-symbols-outlined text-[#173A5F] group-hover:text-[#2D9E6B] text-lg mb-0.5">call</span>
+<span class="text-[10px] font-semibold text-[#173A5F]">Llamar</span>
+</a>
+<!-- WhatsApp / Mensaje -->
+<a class="flex flex-col items-center justify-center p-2 rounded-lg bg-[#2D9E6B]/10 hover:bg-[#2D9E6B]/20 active:scale-95 transition-all text-[#2D9E6B]" href="#">
+<span class="material-symbols-outlined text-lg mb-0.5">chat</span>
+<span class="text-[10px] font-semibold">Mensaje</span>
+</a>
+<!-- Editar -->
+<button class="flex flex-col items-center justify-center p-2 rounded-lg bg-[#173A5F]/5 hover:bg-[#173A5F]/10 active:scale-95 transition-all text-[#173A5F]" type="button">
+<span class="material-symbols-outlined text-lg mb-0.5">edit</span>
+<span class="text-[10px] font-semibold">Editar</span>
+</button>
+<!-- Eliminar / Archivar -->
+<button class="flex flex-col items-center justify-center p-2 rounded-lg bg-rose-50 hover:bg-rose-100/70 active:scale-95 transition-all text-rose-700" type="button">
+<span class="material-symbols-outlined text-lg mb-0.5">delete</span>
+<span class="text-[10px] font-semibold">Eliminar</span>
+</button>
+</div>
+</section>
+<!-- 3. Sistema de Tabs Planas -->
+<nav aria-label="Pestañas de inquilino" class="flex border-b border-[#DDD9CF] bg-white rounded-lg px-2 pt-1 shadow-xs">
+<button class="relative flex-1 py-2.5 text-center text-xs font-semibold text-[#173A5F] border-b-[3px] border-[#2D9E6B] transition-colors">
+        Resumen
+      </button>
+<button class="flex-1 py-2.5 text-center text-xs font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors flex items-center justify-center gap-1">
+<span>Pagos</span>
+<span class="inline-flex items-center justify-center bg-[#F5F1E8] text-[#173A5F] text-[10px] font-bold px-1.5 py-0.2 rounded-full">2</span>
+</button>
+<button class="flex-1 py-2.5 text-center text-xs font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        Contratos
+      </button>
+<button class="flex-1 py-2.5 text-center text-xs font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors flex items-center justify-center gap-1">
+<span>Reportes</span>
+<span class="inline-flex items-center justify-center bg-[#2D9E6B]/15 text-[#2D9E6B] text-[10px] font-bold px-1.5 py-0.2 rounded-full">1</span>
+</button>
+</nav>
+<!-- 4. Contenido Pestaña Resumen -->
+<div class="flex flex-col gap-3.5">
+<!-- Tarjeta: Datos personales -->
+<section class="card-ksared p-4">
+<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-[#DDD9CF]/80">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-[#173A5F]/10 text-[#173A5F]">
+<span class="material-symbols-outlined text-base text-[#173A5F]">badge</span>
+</span>
+<h3 class="font-headline font-semibold text-sm text-[#173A5F]">Datos personales</h3>
+</div>
+<span class="text-[11px] font-medium text-[#2D9E6B] flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs fill">verified</span> Expediente 100%
+          </span>
+</div>
+<div class="space-y-3 text-xs">
+<!-- Fila Teléfono -->
+<div class="flex items-center justify-between py-0.5">
+<div class="text-[#A7B0BB] flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-[#A7B0BB]">phone_iphone</span>
+<span>Teléfono</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-semibold text-[#173A5F]">+52 55 4912 3840</span>
+<button aria-label="Copiar teléfono" class="text-[#A7B0BB] hover:text-[#2D9E6B] active:scale-90 transition-transform" type="button">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Fila Correo -->
+<div class="flex items-center justify-between py-0.5">
+<div class="text-[#A7B0BB] flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-[#A7B0BB]">mail</span>
+<span>Correo electrónico</span>
+</div>
+<span class="font-semibold text-[#173A5F] truncate max-w-[190px]">a.torres@empresa.mx</span>
+</div>
+<!-- Fila Documento -->
+<div class="flex items-center justify-between py-0.5">
+<div class="text-[#A7B0BB] flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-[#A7B0BB]">fingerprint</span>
+<span>Identificación</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-semibold text-[#173A5F]">INE / IFE</span>
+<span class="bg-[#2D9E6B]/10 text-[#2D9E6B] font-bold text-[10px] px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[10px] fill">check</span> Verificado
+              </span>
+</div>
+</div>
+<!-- Ocupación -->
+<div class="flex items-center justify-between py-0.5">
+<div class="text-[#A7B0BB] flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-[#A7B0BB]">work</span>
+<span>Ocupación</span>
+</div>
+<span class="font-semibold text-[#173A5F] text-right">Diseñadora Sr. (Tech Labs)</span>
+</div>
+<!-- Contacto Emergencia -->
+<div class="pt-2 border-t border-[#DDD9CF]/60">
+<div class="text-[11px] text-[#A7B0BB] mb-1 font-medium">Contacto de emergencia</div>
+<div class="flex items-center justify-between bg-[#F5F1E8] p-2 rounded-lg">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-[#173A5F]">emergency</span>
+<div>
+<div class="font-semibold text-[#173A5F] text-[11px]">Roberto Torres <span class="font-normal text-[#A7B0BB]">(Padre)</span></div>
+<div class="text-[10px] text-[#173A5F]/80">+52 55 8123 4567</div>
+</div>
+</div>
+<a class="p-1 rounded bg-white text-[#2D9E6B] hover:bg-[#2D9E6B] hover:text-white transition-colors" href="tel:+525581234567">
+<span class="material-symbols-outlined text-sm">call</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Tarjeta: Detalles del arrendamiento -->
+<section class="card-ksared p-4">
+<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-[#DDD9CF]/80">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-[#2D9E6B]/10 text-[#2D9E6B]">
+<span class="material-symbols-outlined text-base text-[#2D9E6B]">apartment</span>
+</span>
+<h3 class="font-headline font-semibold text-sm text-[#173A5F]">Detalles del arrendamiento</h3>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2D9E6B] bg-[#2D9E6B]/10 px-2 py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span> Al corriente
+          </span>
+</div>
+<div class="space-y-2.5 text-xs">
+<div>
+<div class="text-[11px] text-[#A7B0BB] font-medium">Inmueble asignado</div>
+<div class="font-semibold text-[#173A5F] text-sm mt-0.5">Torre Vista Norte, Depto. 402</div>
+<div class="text-[11px] text-[#A7B0BB]">Col. Roma Norte, Cuauhtémoc, CDMX</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#DDD9CF]/60">
+<div class="bg-[#F5F1E8] p-2.5 rounded-lg">
+<div class="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Renta Mensual</div>
+<div class="text-sm font-bold text-[#173A5F] mt-0.5">$18,500 <span class="text-[10px] font-medium text-[#A7B0BB]">MXN</span></div>
+<div class="text-[10px] text-[#2D9E6B] font-medium mt-0.5 flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">event_available</span> Día 05 c/mes
+              </div>
+</div>
+<div class="bg-[#F5F1E8] p-2.5 rounded-lg">
+<div class="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Próximo Cobro</div>
+<div class="text-sm font-bold text-[#173A5F] mt-0.5">05 Nov 2024</div>
+<div class="text-[10px] text-[#173A5F]/80 font-medium mt-0.5 flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px] text-[#173A5F]">schedule</span> En 9 días
+              </div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 text-[11px]">
+<span class="text-[#A7B0BB]">Depósito en garantía:</span>
+<span class="font-semibold text-[#173A5F]">$18,500 MXN (Resguardado 100%)</span>
+</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-[#A7B0BB]">Vigencia de contrato:</span>
+<span class="font-semibold text-[#173A5F]">01 Feb 2024 – 31 Ene 2025</span>
+</div>
+</div>
+</section>
+<!-- Tarjeta: Notas de administración -->
+<section class="card-ksared p-4 bg-white">
+<div class="flex items-center justify-between pb-2 mb-2">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-[#173A5F]/10 text-[#173A5F]">
+<span class="material-symbols-outlined text-base">sticky_note_2</span>
+</span>
+<h3 class="font-headline font-semibold text-sm text-[#173A5F]">Notas de administración</h3>
+</div>
+<button class="text-xs font-semibold text-[#2D9E6B] hover:text-[#173A5F] flex items-center gap-0.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">add</span> Añadir nota
+          </button>
+</div>
+<div class="bg-[#F5F1E8] p-3 rounded-lg border border-[#DDD9CF]">
+<p class="text-xs text-[#173A5F]/90 leading-relaxed font-normal">
+            "Excelente historial de pago puntual. Solicitó cambio de cerradura inteligente autorizada el mes pasado. Depósito en garantía completo."
+          </p>
+<div class="mt-2 pt-1.5 border-t border-[#DDD9CF]/60 flex items-center justify-between text-[10px] text-[#A7B0BB]">
+<span>Registrado por: Administrador General</span>
+<span>18 Oct 2024</span>
+</div>
+</div>
+</section>
+<!-- Tarjeta: Acceso al portal inquilino -->
+<section class="card-ksared p-4">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-[#2D9E6B]/10 text-[#2D9E6B]">
+<span class="material-symbols-outlined text-base text-[#2D9E6B]">vpn_key</span>
+</span>
+<h3 class="font-headline font-semibold text-sm text-[#173A5F]">Acceso al portal inquilino</h3>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-[#2D9E6B] ring-4 ring-[#2D9E6B]/20"></span>
+</div>
+<p class="text-xs text-[#173A5F]/80">
+          Estado: <strong class="text-[#2D9E6B]">Activo</strong> • Última sesión: hoy a las 10:14 hrs
+        </p>
+<div class="mt-3 flex gap-2">
+<button class="flex-1 py-2 px-3 text-xs font-semibold text-[#173A5F] bg-[#F5F1E8] hover:bg-[#DDD9CF] active:scale-95 transition-all rounded-lg border border-[#DDD9CF] flex items-center justify-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-sm">lock_reset</span> Reenviar credenciales
+          </button>
+<button class="py-2 px-3 text-xs font-semibold text-white bg-[#173A5F] hover:opacity-90 active:scale-95 transition-all rounded-lg flex items-center justify-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm">admin_panel_settings</span> Permisos
+          </button>
+</div>
+</section>
+</div>
+</main>
+<!-- 5. Barra de navegación inferior (BottomNavBar con especificaciones del JSON & Design System) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-white shadow-[0_-2px_8px_rgba(0,0,0,0.05)] border-t border-[#A7B0BB]/30">
+<div class="max-w-md mx-auto flex justify-around items-center px-2 py-1.5">
+<!-- Inicio (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#A7B0BB] py-1 hover:text-[#173A5F] active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="font-label text-xs font-medium">Inicio</span>
+</a>
+<!-- Propiedades (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#A7B0BB] py-1 hover:text-[#173A5F] active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">apartment</span>
+<span class="font-label text-xs font-medium">Propiedades</span>
+</a>
+<!-- Inquilinos (ACTIVO: Destino actual de la pantalla de perfil) -->
+<a class="flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-2xl fill">group</span>
+<span class="font-label text-xs font-medium">Inquilinos</span>
+</a>
+<!-- Contratos (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#A7B0BB] py-1 hover:text-[#173A5F] active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">description</span>
+<span class="font-label text-xs font-medium">Contratos</span>
+</a>
+<!-- Pagos (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#A7B0BB] py-1 hover:text-[#173A5F] active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">payments</span>
+<span class="font-label text-xs font-medium">Pagos</span>
+</a>
+</div>
+</nav>
+</body></html>

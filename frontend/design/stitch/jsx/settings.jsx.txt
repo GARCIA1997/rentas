@@ -1,0 +1,252 @@
+
+{/* Mobile View Container: 390px Optimized Native View */}
+<div className="w-full max-w-[390px] min-h-screen bg-[#fdf9f0] flex flex-col relative pb-24 shadow-2xl">
+{/* 1. ENCABEZADO INSTITUCIONAL KSARED (Straight bottom edge, no curved border) */}
+<header className="bg-[#173a5f] text-[#ffffff] w-full px-space-md h-16 fixed top-0 left-0 max-w-[390px] mx-auto z-50 flex items-center justify-between border-b border-[#173a5f]/20">
+{/* Logo Oficial KsaRed: Isotipo de 3 piezas geométricas a 45° + Texto Montserrat */}
+<div className="flex items-center gap-2 select-none">
+{/* SVG Oficial Isotipo KsaRed (Bloque azul marino, diagonal marfil, diagonal verde #2D9E6B) */}
+<svg className="w-7 h-7" fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+{/* Bloque vertical izquierdo */}
+<polygon fill="#1C3F66" points="12,14 42,14 42,86 12,86"></polygon>
+{/* Diagonal superior (marfil-gris) */}
+<polygon fill="#EAE5DA" points="42,50 82,14 96,14 56,50"></polygon>
+{/* Diagonal inferior verde corporativo (#2D9E6B) */}
+<polygon fill="#2D9E6B" points="42,50 64,28 92,60 92,86 52,86"></polygon>
+</svg>
+{/* Tipografía Institucional Ksared */}
+<div className="flex items-baseline tracking-tight">
+<span className="font-sans text-headline-md font-bold text-[#ffffff]">Ksar</span>
+<span className="font-sans text-headline-md font-bold text-[#2D9E6B]">ed</span>
+</div>
+</div>
+{/* Notificaciones y Avatar */}
+<div className="flex items-center gap-3">
+{/* Campana blanca con punto verde de 4px */}
+<button aria-label="Notificaciones" className="relative p-1.5 text-[#ffffff] hover:opacity-90 active:scale-95 transition-transform flex items-center justify-center" type="button">
+<span className="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span className="absolute top-1.5 right-1.5 w-[5px] h-[5px] bg-[#2D9E6B] rounded-full ring-2 ring-[#173a5f]"></span>
+</button>
+{/* Avatar circular Mariana Silva */}
+<div className="w-8 h-8 rounded-full overflow-hidden border border-[#ffffff]/30 flex items-center justify-center bg-[#002445] text-[#ffffff] font-sans text-label-md">
+<img className="w-full h-full object-cover" data-alt="A polished professional headshot of Mariana Silva, an executive property manager, smiling softly against a pristine neutral architectural interior background with bright daylight and clean geometric lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7UE8bW5ofxWM5oQkwm9zqKsYB7tvWMVd-Kg5ue7AMALcORJJjg1ezHncxVkVJhtVe46GmkXGa6lx6AG1Co-G1BJiYwGbo_s5evS7NTIOnG_fpAM-vrXbcD-yoLZp-paaCDdpVk4o97MTszUArxRD3MwDKr0psMjmEK42l8z6tb2qZluBOjROSPpivO7QhGZXfs2uJxA3v_kWMuwufA1mlo22g0RPMxUJPbOpW_Y2v5rSbcxmD0uvcZTKgtEPJ9CnKE_oLp-UMSrcH" />
+</div>
+</div>
+</header>
+{/* CONTENT CANVAS (Scrollable vertical list with 16px lateral margin) */}
+<main className="flex-1 px-space-md pt-20 pb-4 flex flex-col gap-4">
+{/* Breadcrumb / Título contextual de sección */}
+<div className="pt-1 flex items-center justify-between">
+<div>
+<span className="font-sans text-label-md text-[#73777f] tracking-wider uppercase font-semibold">Panel Administrador</span>
+<h1 className="font-sans text-headline-sm font-bold text-[#173a5f]">Más y Configuración</h1>
+</div>
+<span className="px-2.5 py-1 bg-[#f1eee5] rounded-lg text-[#173a5f] font-sans text-label-md font-semibold border border-[#c3c6cf]/30 flex items-center gap-1">
+<span className="w-2 h-2 rounded-full bg-[#2D9E6B]"></span>
+          Online
+        </span>
+</div>
+{/* 2. TARJETA CUENTA (Perfil del Administrador) */}
+<div className="bg-[#ffffff] border border-[#c3c6cf]/40 rounded-lg p-space-md shadow-sm">
+<div className="flex items-start justify-between">
+<div className="flex items-center gap-3">
+<div className="relative">
+<div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#ece8df] bg-[#d3e4ff] flex items-center justify-center text-[#002445] font-bold text-headline-sm">
+<img className="w-full h-full object-cover" data-alt="Close up portrait photograph of Mariana Silva, dressed in clean corporate navy smart casual attire, professional confident smile, bright clean office background with subtle warm tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP86YtjOS-Q9giFpQxP9LiemFVOJz2Qz2bhroQDHVVk91LKG3_Zz14fuorp1NweeEMligmdsqh2NGYkaXy1Dyc9NEIwM9F2nDRWqKyl78jGrHU0aXrUrvxUC41GwFRud70F3Q_PLqAjszCypMU0RhoavLtTNobRaTYoA4F0yzxbxCr-l8KmQvQfJemfG7KPgbMQqkvR3kKo_HG9Vi4qLT4Bn6v8jWjxEOqO-L-mK4q9_vZqJPmSZib1t212p-i5bbvjXSoKVzifR8Y" />
+</div>
+<span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#2D9E6B] border-2 border-white rounded-full"></span>
+</div>
+<div className="flex flex-col">
+<h2 className="font-sans text-headline-sm text-[#173a5f] font-bold leading-snug">Mariana Silva</h2>
+<div className="flex items-center gap-1 mt-0.5">
+<span className="inline-block px-2 py-0.5 rounded-lg text-label-sm font-sans font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B]">
+                  Administrador General
+                </span>
+</div>
+</div>
+</div>
+<button className="text-[#173a5f] font-sans text-label-md font-semibold hover:opacity-80 transition-opacity flex items-center gap-0.5" type="button">
+            Editar
+            <span className="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div className="mt-4 pt-3 border-t border-[#c3c6cf]/20 grid grid-cols-1 gap-2 text-[#73777f]">
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[18px] text-[#173a5f]" data-icon="mail">mail</span>
+<span className="font-sans text-body-sm text-[#1c1c16] select-all">m.silva@ksared.com</span>
+</div>
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[18px] text-[#173a5f]" data-icon="call">call</span>
+<span className="font-sans text-body-sm text-[#1c1c16] select-all">+52 55 1234 5678</span>
+</div>
+</div>
+</div>
+{/* 3. SECCIÓN APARIENCIA (Selector de 3 opciones) */}
+<div className="bg-[#ffffff] border border-[#c3c6cf]/40 rounded-lg p-space-md shadow-sm">
+<div className="flex items-center justify-between mb-3">
+<div className="flex items-center gap-2">
+<div className="w-7 h-7 rounded-lg bg-[#173a5f]/10 flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="palette">palette</span>
+</div>
+<h3 className="font-sans text-label-lg font-bold text-[#173a5f]">Apariencia</h3>
+</div>
+<span className="font-sans text-label-sm text-[#73777f]">Tema visual</span>
+</div>
+{/* Chips Segmentados de 3 opciones (Regla de diseño: Activo azul sólido #173A5F) */}
+<div className="grid grid-cols-3 gap-2 bg-[#f1eee5] p-1 rounded-lg">
+<button className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg bg-[#173a5f] text-[#ffffff] font-sans text-label-md font-semibold shadow-sm transition-all" type="button">
+<span className="material-symbols-outlined text-[16px]" data-icon="light_mode">light_mode</span>
+<span>Claro</span>
+</button>
+<button className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-[#43474e] hover:text-[#173a5f] font-sans text-label-md font-medium transition-colors" type="button">
+<span className="material-symbols-outlined text-[16px]" data-icon="dark_mode">dark_mode</span>
+<span>Oscuro</span>
+</button>
+<button className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-[#43474e] hover:text-[#173a5f] font-sans text-label-md font-medium transition-colors" type="button">
+<span className="material-symbols-outlined text-[16px]" data-icon="settings_suggest">settings_suggest</span>
+<span>Sistema</span>
+</button>
+</div>
+</div>
+{/* 4. SECCIÓN NOTIFICACIONES (Toggles corporativos) */}
+<div className="bg-[#ffffff] border border-[#c3c6cf]/40 rounded-lg p-space-md shadow-sm">
+<div className="flex items-center gap-2 mb-3">
+<div className="w-7 h-7 rounded-lg bg-[#173a5f]/10 flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="notifications_active">notifications_active</span>
+</div>
+<h3 className="font-sans text-label-lg font-bold text-[#173a5f]">Notificaciones</h3>
+</div>
+<div className="divide-y divide-[#c3c6cf]/20">
+{/* Toggle 1: Notificaciones in-app */}
+<div className="py-2.5 flex items-center justify-between">
+<div className="flex flex-col pr-2">
+<span className="font-sans text-label-md text-[#173a5f] font-semibold">Notificaciones in-app</span>
+<span className="font-sans text-body-sm text-[#73777f]">Bandeja interna de actividades y cobros</span>
+</div>
+<div className="relative inline-block w-11 h-6 align-middle select-none">
+<input checked="" className="switch-checkbox absolute opacity-0 w-0 h-0 pointer-events-none" id="toggle-inapp" type="checkbox" />
+<label className="switch-label block overflow-hidden h-6 rounded-full bg-[#c3c6cf] cursor-pointer transition-colors duration-200" htmlFor="toggle-inapp">
+<span className="switch-dot block h-5 w-5 rounded-full bg-white shadow transform translate-x-0.5 translate-y-0.5 transition-transform duration-200"></span>
+</label>
+</div>
+</div>
+{/* Toggle 2: Notificaciones push */}
+<div className="py-2.5 flex items-center justify-between">
+<div className="flex flex-col pr-2">
+<span className="font-sans text-label-md text-[#173a5f] font-semibold">Notificaciones push</span>
+<span className="font-sans text-body-sm text-[#73777f]">Avisos aunque la app esté cerrada</span>
+</div>
+<div className="relative inline-block w-11 h-6 align-middle select-none">
+<input checked="" className="switch-checkbox absolute opacity-0 w-0 h-0 pointer-events-none" id="toggle-push" type="checkbox" />
+<label className="switch-label block overflow-hidden h-6 rounded-full bg-[#c3c6cf] cursor-pointer transition-colors duration-200" htmlFor="toggle-push">
+<span className="switch-dot block h-5 w-5 rounded-full bg-white shadow transform translate-x-0.5 translate-y-0.5 transition-transform duration-200"></span>
+</label>
+</div>
+</div>
+</div>
+</div>
+{/* 5. SECCIÓN GESTIÓN Y REPORTES (Lista con chevrons) */}
+<div className="bg-[#ffffff] border border-[#c3c6cf]/40 rounded-lg p-space-md shadow-sm">
+<div className="flex items-center gap-2 mb-2">
+<div className="w-7 h-7 rounded-lg bg-[#173a5f]/10 flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="monitoring">monitoring</span>
+</div>
+<h3 className="font-sans text-label-lg font-bold text-[#173a5f]">Gestión y Reportes</h3>
+</div>
+<div className="divide-y divide-[#c3c6cf]/20">
+{/* Fila 1: Representantes */}
+<a className="py-3 flex items-center justify-between hover:bg-[#f7f3ea]/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div className="flex items-center gap-3">
+<div className="w-8 h-8 rounded-lg bg-[#f1eee5] flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="badge">badge</span>
+</div>
+<span className="font-sans text-label-md font-semibold text-[#173a5f]">Representantes legales</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f]" data-icon="chevron_right">chevron_right</span>
+</a>
+{/* Fila 2: Reportes de inquilinos con badge ámbar */}
+<a className="py-3 flex items-center justify-between hover:bg-[#f7f3ea]/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div className="flex items-center gap-3">
+<div className="w-8 h-8 rounded-lg bg-[#f1eee5] flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="assignment_late">assignment_late</span>
+</div>
+<span className="font-sans text-label-md font-semibold text-[#173a5f]">Reportes de inquilinos</span>
+</div>
+<div className="flex items-center gap-2">
+<span className="px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#D9822B]/15 text-[#D9822B]">
+                2 pendientes
+              </span>
+<span className="material-symbols-outlined text-[#73777f]" data-icon="chevron_right">chevron_right</span>
+</div>
+</a>
+{/* Fila 3: Reportes financieros */}
+<a className="py-3 flex items-center justify-between hover:bg-[#f7f3ea]/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div className="flex items-center gap-3">
+<div className="w-8 h-8 rounded-lg bg-[#f1eee5] flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="query_stats">query_stats</span>
+</div>
+<span className="font-sans text-label-md font-semibold text-[#173a5f]">Reportes financieros (MXN)</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f]" data-icon="chevron_right">chevron_right</span>
+</a>
+{/* Fila 4: Invitar administrador */}
+<a className="py-3 flex items-center justify-between hover:bg-[#f7f3ea]/60 active:scale-[0.99] transition-all rounded px-1 -mx-1" href="#">
+<div className="flex items-center gap-3">
+<div className="w-8 h-8 rounded-lg bg-[#f1eee5] flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="person_add">person_add</span>
+</div>
+<span className="font-sans text-label-md font-semibold text-[#173a5f]">Invitar administrador</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f]" data-icon="chevron_right">chevron_right</span>
+</a>
+</div>
+</div>
+{/* 6. ACCIÓN DE CIERRE & METADATA */}
+<div className="mt-2 flex flex-col items-center gap-3">
+{/* Botón destructivo según reglas globales: contorno rojo, fondo blanco, 8px de esquina */}
+<button className="w-full h-12 bg-[#ffffff] border border-[#C0392B] text-[#C0392B] hover:bg-[#ffdad6]/20 active:scale-95 transition-all rounded-lg font-sans text-label-lg font-semibold flex items-center justify-center gap-2" type="button">
+<span className="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+          Cerrar sesión
+        </button>
+<p className="font-sans text-body-sm text-[#73777f] text-center">
+          KsaRed v2.4.0 · Gestión Inteligente de Propiedades
+        </p>
+</div>
+</main>
+{/* 7. TAB BAR INFERIOR - ADMINISTRADOR (6 Ítems exactos, orden estricto, "Más" ACTIVO) */}
+{/* Prohibido border-t: usamos una sombra sutil de elevación plana y división limpia */}
+<nav className="fixed bottom-0 left-0 max-w-[390px] mx-auto w-full z-50 h-16 bg-[#ffffff] shadow-[0_-2px_10px_rgba(23,58,95,0.06)] flex justify-between items-center px-1">
+{/* 1. Inicio */}
+<a className="flex flex-col items-center justify-center flex-1 h-full text-[#73777f] hover:text-[#173a5f] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]" data-icon="home">home</span>
+<span className="font-sans text-label-sm">Inicio</span>
+</a>
+{/* 2. Propiedades */}
+<a className="flex flex-col items-center justify-center flex-1 h-full text-[#73777f] hover:text-[#173a5f] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]" data-icon="apartment">apartment</span>
+<span className="font-sans text-label-sm">Propiedades</span>
+</a>
+{/* 3. Inquilinos */}
+<a className="flex flex-col items-center justify-center flex-1 h-full text-[#73777f] hover:text-[#173a5f] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]" data-icon="group">group</span>
+<span className="font-sans text-label-sm">Inquilinos</span>
+</a>
+{/* 4. Contratos */}
+<a className="flex flex-col items-center justify-center flex-1 h-full text-[#73777f] hover:text-[#173a5f] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]" data-icon="description">description</span>
+<span className="font-sans text-label-sm">Contratos</span>
+</a>
+{/* 5. Pagos */}
+<a className="flex flex-col items-center justify-center flex-1 h-full text-[#73777f] hover:text-[#173a5f] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]" data-icon="payments">payments</span>
+<span className="font-sans text-label-sm">Pagos</span>
+</a>
+{/* 6. Más -> ESTADO ACTIVO (Verde corporativo #2D9E6B con punto indicador de 4px debajo) */}
+<a className="flex flex-col items-center justify-center flex-1 h-full text-[#2D9E6B] font-semibold relative transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]" data-icon="more_horiz" style={{fontVariationSettings: '\'FILL\' 1'}}>more_horiz</span>
+<span className="font-sans text-label-sm font-semibold">Más</span>
+{/* Indicador de 4px posicionado inmediatamente debajo */}
+<span className="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+</a>
+</nav>
+</div>

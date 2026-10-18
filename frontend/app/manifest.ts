@@ -13,8 +13,8 @@ export default function manifest(): MetadataRoute.Manifest {
     // cuando la PWA está instalada (display standalone); en una pestaña normal no hay
     // forma de bloquear la rotación, así que el layout sigue siendo responsive.
     orientation: 'portrait',
-    background_color: '#f8fafc',
-    theme_color: '#0d9488',
+    background_color: '#F5F1E8',
+    theme_color: '#173A5F',
     icons: [
       {
         src: '/icon-192.png',

@@ -120,13 +120,13 @@ export default function ContractsPage() {
       )}
 
       {/* Segmented control */}
-      <div className="flex bg-canvas rounded-xl p-1 mb-6">
+      <div className="flex border-b border-line mb-6">
         {(Object.keys(segmentLabels) as Segment[]).map((key) => (
           <button
             key={key}
             onClick={() => setSegment(key)}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-              segment === key ? 'bg-surface shadow-sm text-heading' : 'text-muted'
+            className={`flex-1 py-2.5 -mb-px border-b-2 text-sm font-medium transition-colors ${
+              segment === key ? 'border-accent text-heading font-semibold' : 'border-transparent text-muted hover:text-heading'
             }`}
           >
             {segmentLabels[key]} {counts[key] > 0 && `(${counts[key]})`}

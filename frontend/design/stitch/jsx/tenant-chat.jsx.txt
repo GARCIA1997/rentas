@@ -1,0 +1,196 @@
+
+{/* Mobile Frame Container strictly 390px width */}
+<main className="w-full max-w-[390px] min-h-screen sm:min-h-[844px] bg-[#fdf9f0] flex flex-col relative shadow-md overflow-hidden border-x border-[#c3c6cf]/30">
+{/* TOP APP BAR (Shared Components JSON Anchor with Custom Expansion) */}
+{/* JSON keys translated: style_bg_color, style_primary_color, style_separation_logic, style_shell_layout */}
+<header className="bg-[#173a5f] text-[#ffffff] border-b border-[#c3c6cf]/30 flex flex-col w-full sticky top-0 z-50 shadow-none">
+{/* Upper Action Row (Navigation + Status) */}
+<div className="flex justify-between items-center w-full px-4 pt-3 pb-2">
+{/* Return Link */}
+<a className="flex items-center gap-1.5 text-[#ffffff] hover:opacity-90 active:scale-[0.98] transition-all" href="#">
+<span className="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+<span className="font-sans text-label-md">Mis reportes</span>
+</a>
+{/* Trailing Action: Status Badge */}
+<div className="flex items-center gap-2">
+<div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#8cf8bd]/20 rounded-full border border-[#70dba2]/40">
+<span className="w-2 h-2 rounded-full bg-[#70dba2] animate-pulse"></span>
+<span className="font-sans text-label-sm font-semibold text-[#8cf8bd]">En progreso</span>
+</div>
+{/* Ticket original shortcut icon */}
+<button aria-label="Ver detalles del caso" className="w-8 h-8 rounded-lg flex items-center justify-center text-[#ffffff] hover:bg-white/10 active:scale-95 transition-all" type="button">
+<span className="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+</button>
+</div>
+</div>
+{/* Lower Case Headline */}
+<div className="px-4 pb-3 pt-0.5">
+<h1 className="font-sans text-headline-sm text-[#ffffff] font-bold tracking-tight">Reporte #1048</h1>
+<p className="font-sans text-body-sm text-[#ffffff]/80 truncate">Fuga en monomando lavabo · Depto. 402</p>
+</div>
+</header>
+{/* CONTENT CANVAS (Scrollable conversation & summary cards) */}
+<div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-4 no-scrollbar pb-36" id="chatScrollArea">
+{/* 3. RESUMEN SUPERIOR COMPACTO DE LA INCIDENCIA */}
+<section className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/30 p-3.5 shadow-none">
+<div className="flex items-start justify-between gap-2 border-b border-[#c3c6cf]/20 pb-2.5 mb-2.5">
+<div className="flex items-center gap-2">
+<div className="w-7 h-7 rounded-lg bg-[#f1eee5] flex items-center justify-center text-[#173a5f]">
+<span className="material-symbols-outlined text-[18px]" data-icon="plumbing">plumbing</span>
+</div>
+<div>
+<span className="font-sans text-label-sm text-[#43474e] block uppercase tracking-wider">Categoría</span>
+<span className="font-sans text-label-md text-[#173a5f] font-semibold">Plomería &amp; Baño</span>
+</div>
+</div>
+<a className="font-sans text-label-sm text-[#006c45] hover:underline flex items-center gap-0.5 pt-0.5" href="#">
+<span>Ver ticket original</span>
+<span className="material-symbols-outlined text-[14px]" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+<div className="grid grid-cols-2 gap-2 text-left">
+<div className="bg-[#f7f3ea] rounded-lg p-2 border border-[#c3c6cf]/20">
+<span className="font-sans text-body-sm text-[#43474e] block">Apertura</span>
+<span className="font-sans text-label-md text-[#1c1c16] font-medium">24 Oct · 09:15 hrs</span>
+</div>
+<div className="bg-[#f7f3ea] rounded-lg p-2 border border-[#c3c6cf]/20">
+<span className="font-sans text-body-sm text-[#43474e] block">Técnico asignado</span>
+<span className="font-sans text-label-md text-[#1c1c16] font-medium truncate block">Javier Morales</span>
+</div>
+</div>
+</section>
+{/* FECHA SEPARADOR TIPO PÍLDORA */}
+<div className="flex justify-center my-2">
+<span className="bg-[#ece8df] text-[#43474e] px-3 py-1 rounded-full font-sans text-label-sm border border-[#c3c6cf]/30">
+          Jueves, 24 de Octubre
+        </span>
+</div>
+{/* MENSAJE 1: INQUILINO (YO - DERECHA) */}
+<div className="flex flex-col items-end w-full pl-8">
+<div className="bg-[#173a5f] text-[#ffffff] rounded-lg rounded-br-none p-3 shadow-none max-w-[90%] space-y-2.5">
+<p className="font-sans text-body-md leading-relaxed text-left text-[#ffffff]">
+            Hola, buen día. Desde anoche noté que la llave del monomando del baño principal tiene un goteo constante y la presión bajó un poco.
+          </p>
+{/* Evidencia Fotográfica Adjunta */}
+<div className="bg-black/20 rounded-lg p-2 flex items-center gap-2.5 border border-white/10 hover:bg-black/30 transition-colors cursor-pointer">
+<div className="w-10 h-10 rounded bg-white/10 flex-shrink-0 flex items-center justify-center overflow-hidden relative">
+<img className="w-full h-full object-cover" data-alt="Close up photograph showing a polished chrome bathroom sink mixer faucet dripping clear water droplets into an elegant white ceramic basin, with subtle natural morning lighting casting soft reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Ur0CWpKBI6R4oS3xXh4CSykuuC--iyrDDWiVECYbi0SiyMaozKDWtCmHt1dRW-_5Dgypx62BCM_q4S-S7kVsZvMG47HviIUmoIUKsP-GqGg1SfdZiOfeIBy_EoJxUkXlUt60nqYf7zqF-o10aJm9n32dPJBvGs72ZBqtgBhPqjzxdlNVbSwKYm1nBsNiXWSxez4-oZQx0IvxnhYjMYK4fL8S0YZyNgVI6F_BCN8ZMNfmMRL6c6ahu2Rge-F6a7Lunvk4aMwCKtuF" />
+</div>
+<div className="flex-1 min-w-0 text-left">
+<span className="font-sans text-label-sm text-[#ffffff] font-medium block truncate">foto_evidencia_fuga.jpg</span>
+<span className="font-sans text-body-sm text-[#ffffff]/70 block">1.8 MB · Imagen</span>
+</div>
+<span className="material-symbols-outlined text-[18px] text-[#ffffff]/80" data-icon="visibility">visibility</span>
+</div>
+</div>
+{/* Meta info inquilino */}
+<div className="flex items-center gap-1 mt-1 pr-1">
+<span className="font-sans text-body-sm text-[#43474e]">09:18 hrs</span>
+<span className="font-sans text-body-sm text-[#43474e]">·</span>
+<span className="font-sans text-label-sm text-[#006c45] font-medium">Leído</span>
+<span className="material-symbols-outlined text-[14px] text-[#006c45] fill-1" data-icon="done_all" data-weight="fill">done_all</span>
+</div>
+</div>
+{/* MENSAJE 2: ADMIN KS (IZQUIERDA) */}
+<div className="flex items-start gap-2.5 pr-8">
+{/* Avatar KsaRed Admin */}
+<div className="w-8 h-8 rounded-lg bg-[#173a5f] text-[#ffffff] flex-shrink-0 flex items-center justify-center font-sans text-label-md font-bold tracking-tight border border-[#c3c6cf]/30">
+          KS
+        </div>
+<div className="flex flex-col items-start w-full">
+<div className="bg-[#ffffff] text-[#1c1c16] border border-[#c3c6cf]/30 rounded-lg rounded-tl-none p-3 shadow-none max-w-[95%]">
+<span className="font-sans text-label-sm font-semibold text-[#173a5f] block mb-1">KsaRed Admin</span>
+<p className="font-sans text-body-md text-[#1c1c16] leading-relaxed">
+              Hola Ana, gracias por reportarlo de inmediato y por la fotografía. Ya hemos registrado la incidencia bajo el folio <strong className="font-sans text-[#002445] font-semibold">#REP-1048</strong>.
+            </p>
+</div>
+<span className="font-sans text-body-sm text-[#43474e] mt-1 pl-1">09:23 hrs</span>
+</div>
+</div>
+{/* MENSAJE 3: ADMIN KS (IZQUIERDA) */}
+<div className="flex items-start gap-2.5 pr-8">
+<div className="w-8 h-8 rounded-lg bg-[#173a5f] text-[#ffffff] flex-shrink-0 flex items-center justify-center font-sans text-label-md font-bold border border-[#c3c6cf]/30">
+          KS
+        </div>
+<div className="flex flex-col items-start w-full">
+<div className="bg-[#ffffff] text-[#1c1c16] border border-[#c3c6cf]/30 rounded-lg rounded-tl-none p-3 shadow-none max-w-[95%]">
+<span className="font-sans text-label-sm font-semibold text-[#173a5f] block mb-1">KsaRed Admin</span>
+<p className="font-sans text-body-md text-[#1c1c16] leading-relaxed">
+              El técnico Javier Morales está en el condominio atendiendo otro departamento y puede pasar hoy entre las 11:30 y 12:00 hrs para reemplazar el empaque o cartucho cerámico. ¿Te encuentras en el departamento a esa hora?
+            </p>
+</div>
+<span className="font-sans text-body-sm text-[#43474e] mt-1 pl-1">09:25 hrs</span>
+</div>
+</div>
+{/* 5. NOTIFICACIÓN INFORMATIVA INTERMEDIA DE ESTADO */}
+<div className="my-2 bg-[#ffffff] rounded-lg border-l-4 border-l-[#006c45] border-y border-r border-[#c3c6cf]/30 p-2.5 shadow-none flex items-center gap-2.5">
+<div className="w-7 h-7 rounded-full bg-[#8cf8bd]/30 flex items-center justify-center flex-shrink-0 text-[#006c45]">
+<span className="material-symbols-outlined text-[18px]" data-icon="engineering">engineering</span>
+</div>
+<div className="flex-1 min-w-0">
+<p className="font-sans text-label-md text-[#173a5f] font-semibold truncate">
+            Técnico Javier Morales asignado
+          </p>
+<p className="font-sans text-body-sm text-[#43474e]">
+            Visita programada hoy 11:30 hrs
+          </p>
+</div>
+<span className="material-symbols-outlined text-[16px] text-[#c3c6cf]" data-icon="schedule">schedule</span>
+</div>
+{/* MENSAJE 4: INQUILINO (YO - DERECHA) */}
+<div className="flex flex-col items-end w-full pl-8">
+<div className="bg-[#173a5f] text-[#ffffff] rounded-lg rounded-br-none p-3 shadow-none max-w-[90%]">
+<p className="font-sans text-body-md leading-relaxed text-left text-[#ffffff]">
+            Perfecto, sí estaré aquí a las 11:30 hrs para recibir al técnico. Muchas gracias por la pronta atención.
+          </p>
+</div>
+<div className="flex items-center gap-1 mt-1 pr-1">
+<span className="font-sans text-body-sm text-[#43474e]">09:28 hrs</span>
+<span className="font-sans text-body-sm text-[#43474e]">·</span>
+<span className="font-sans text-label-sm text-[#73777f] font-medium">Enviado</span>
+<span className="material-symbols-outlined text-[14px] text-[#73777f] fill-1" data-icon="done_all" data-weight="fill">done_all</span>
+</div>
+</div>
+</div>
+{/* 6. BARRA INFERIOR FIJA (DOCKED INPUT BAR & CLOSED TICKET TOGGLE DEMO) */}
+<footer className="absolute bottom-0 left-0 right-0 bg-[#ffffff] border-t border-[#c3c6cf]/30 z-40 transition-all duration-200">
+{/* Interactive ticket state switcher for reviewer demonstration */}
+<div className="bg-[#f7f3ea] px-4 py-1.5 flex items-center justify-between border-b border-[#c3c6cf]/20">
+<span className="font-sans text-label-sm text-[#43474e]">Simulador de estado:</span>
+<button className="font-sans text-label-sm text-[#173a5f] hover:underline font-semibold flex items-center gap-1" id="toggleClosedBtn" type="button">
+<span id="toggleText">Probar vista cerrada</span>
+<span className="material-symbols-outlined text-[14px]" data-icon="swap_horiz">swap_horiz</span>
+</button>
+</div>
+{/* ESTADO ACTIVO: Chat input bar */}
+<div className="p-3 pb-6 flex items-center gap-2" id="activeInputBar">
+{/* Botón adjuntar archivo / foto */}
+<button aria-label="Adjuntar foto o archivo" className="w-10 h-10 rounded-lg flex items-center justify-center text-[#173a5f] hover:bg-[#f1eee5] active:scale-95 transition-all border border-[#c3c6cf]/40 flex-shrink-0" type="button">
+<span className="material-symbols-outlined text-[20px]" data-icon="attach_file">attach_file</span>
+</button>
+{/* Campo de entrada de texto */}
+<div className="flex-1 relative">
+<input className="w-full bg-[#f7f3ea] border border-[#c3c6cf]/40 rounded-lg px-3 py-2 text-[#1c1c16] font-sans text-body-md placeholder:text-[#73777f] focus:outline-none focus:border-[#173a5f] focus:ring-1 focus:ring-[#173a5f] transition-all" id="chatInput" placeholder="Escribe un mensaje..." type="text" />
+</div>
+{/* Botón verde corporativo KsaRed (#2D9E6B / secondary) */}
+<button className="bg-[#006c45] text-[#ffffff] px-3.5 h-10 rounded-lg font-sans text-label-md flex items-center justify-center gap-1 hover:opacity-90 active:scale-95 transition-all flex-shrink-0" id="sendBtn" type="button">
+<span>Enviar</span>
+<span className="material-symbols-outlined text-[18px]" data-icon="send">send</span>
+</button>
+</div>
+{/* ESTADO CERRADO: Aviso gris centrado y sobrio (inicialmente oculto) */}
+<div className="hidden p-4 pb-7 text-center bg-[#f1eee5]" id="closedTicketBar">
+<div className="flex items-center justify-center gap-1.5 text-[#43474e]">
+<span className="material-symbols-outlined text-[18px] text-[#73777f]" data-icon="lock">lock</span>
+<p className="font-sans text-label-md text-[#43474e] font-medium">
+            Esta conversación está cerrada
+          </p>
+</div>
+<p className="font-sans text-body-sm text-[#73777f] mt-0.5">
+          El ticket fue completado con éxito. Si requieres nueva asistencia, crea un nuevo reporte.
+        </p>
+</div>
+</footer>
+</main>
+{/* Inline Script for UI State Toggle Demo */}
+

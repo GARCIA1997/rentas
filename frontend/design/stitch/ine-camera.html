@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ksared — Captura del INE (Frente)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Montserrat font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Material Symbols Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              blue: '#173A5F',
+              green: '#2D9E6B',
+              darkBg: '#09131F',
+              cream: '#F5F1E8',
+              neutral: '#A7B0BB',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+    
+    /* Efecto de visor de cámara simulada */
+    .camera-feed {
+      background: radial-gradient(circle at 50% 45%, #18283a 0%, #0d1722 55%, #070b10 100%);
+    }
+
+    /* Animación suave de barrido / escaneo */
+    @keyframes scanline {
+      0% { top: 6%; opacity: 0.15; }
+      50% { opacity: 0.85; }
+      100% { top: 92%; opacity: 0.15; }
+    }
+    .scan-beam {
+      animation: scanline 3s ease-in-out infinite alternate;
+    }
+  </style>
+</head>
+<body class="bg-black text-white antialiased flex justify-center items-center min-h-screen">
+
+  <!-- Mobile screen container (390px x 844px typical iPhone ratio) -->
+  <div class="relative w-[390px] h-[844px] camera-feed overflow-hidden flex flex-col justify-between shadow-2xl rounded-none">
+    
+    <!-- Pattern de cuadrícula sutil de cámara fotográfica -->
+    <div class="absolute inset-0 pointer-events-none opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:48px_48px]"></div>
+
+    <!-- Status Bar iOS simulada -->
+    <div class="relative z-30 flex justify-between items-center px-7 pt-3.5 text-xs font-semibold tracking-tight text-white/90">
+      <span>9:41</span>
+      <div class="flex items-center space-x-2">
+        <span class="material-symbols-outlined text-[15px]">signal_cellular_alt</span>
+        <span class="material-symbols-outlined text-[15px]">wifi</span>
+        <span class="material-symbols-outlined text-[17px] rotate-90">battery_full</span>
+      </div>
+    </div>
+
+    <!-- Header superior de controles (Cerrar X, Indicador de Paso, Linterna) -->
+    <div class="relative z-30 px-5 pt-3 pb-2 flex items-center justify-between">
+      <!-- Botón Cerrar (X) -->
+      <button type="button" aria-label="Cerrar cámara" class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white active:scale-95 transition-transform">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+
+      <!-- Título de etapa / Badge centrado -->
+      <div class="text-center px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
+        <span class="text-xs font-semibold tracking-wide text-white flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#2D9E6B] animate-pulse"></span>
+          Frente del INE <span class="text-white/40">·</span> <span class="text-[#2D9E6B]">Paso 1 de 2</span>
+        </span>
+      </div>
+
+      <!-- Botón Linterna (Flash) -->
+      <button type="button" aria-label="Activar linterna" class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white active:scale-95 hover:text-[#2D9E6B] transition-all">
+        <span class="material-symbols-outlined text-[22px]">flashlight_on</span>
+      </button>
+    </div>
+
+    <!-- Indicador de instrucción superior -->
+    <div class="relative z-20 text-center px-6 mt-1">
+      <h1 class="text-[17px] font-bold text-white tracking-tight">Coloca la credencial dentro del marco</h1>
+      <p class="text-xs text-white/70 font-medium mt-1">Gira tu credencial 90° en posición vertical</p>
+    </div>
+
+    <!-- Zona Central: Marco guía vertical grande (para credencial INE rotada 90°) -->
+    <div class="relative z-20 flex-1 flex items-center justify-center px-8 py-2">
+      <!-- Contenedor del marco vertical: relación de aspecto proporcional de tarjeta INE (85.6mm x 53.98mm girada ~ 1.58 ratio) -->
+      <div class="relative w-[240px] h-[380px] rounded-lg">
+        
+        <!-- Sombra externa / máscara oscura circundante simulada con box-shadow masivo -->
+        <div class="absolute inset-0 rounded-lg shadow-[0_0_0_9999px_rgba(5,10,18,0.72)] pointer-events-none"></div>
+
+        <!-- Borde guía translúcido punteado o continuo fino -->
+        <div class="absolute inset-0 rounded-lg border border-white/20 pointer-events-none"></div>
+
+        <!-- Esquinas verdes #2D9E6B prominentes -->
+        <!-- Superior Izquierda -->
+        <div class="absolute -top-1 -left-1 w-8 h-8 border-t-[4px] border-l-[4px] border-[#2D9E6B] rounded-tl-lg pointer-events-none"></div>
+        <!-- Superior Derecha -->
+        <div class="absolute -top-1 -right-1 w-8 h-8 border-t-[4px] border-r-[4px] border-[#2D9E6B] rounded-tr-lg pointer-events-none"></div>
+        <!-- Inferior Izquierda -->
+        <div class="absolute -bottom-1 -left-1 w-8 h-8 border-b-[4px] border-l-[4px] border-[#2D9E6B] rounded-bl-lg pointer-events-none"></div>
+        <!-- Inferior Derecha -->
+        <div class="absolute -bottom-1 -right-1 w-8 h-8 border-b-[4px] border-r-[4px] border-[#2D9E6B] rounded-br-lg pointer-events-none"></div>
+
+        <!-- Línea láser de escaneo animada suave -->
+        <div class="scan-beam absolute left-2 right-2 h-[2px] bg-gradient-to-r from-transparent via-[#2D9E6B] to-transparent pointer-events-none shadow-[0_0_12px_#2D9E6B]"></div>
+
+        <!-- Silueta esquemática sutil de la credencial girada 90° (Guía visual para el usuario) -->
+        <div class="absolute inset-4 border border-dashed border-white/15 rounded flex flex-col justify-between p-3 pointer-events-none">
+          <!-- Zona superior de la tarjeta girada (Foto / Escudo de México) -->
+          <div class="flex justify-between items-start opacity-35">
+            <div class="w-12 h-14 border border-white/30 rounded flex flex-col items-center justify-center">
+              <span class="material-symbols-outlined text-lg text-white/50">person</span>
+              <span class="text-[7px] text-white/60 font-semibold mt-0.5">FOTO</span>
+            </div>
+            <div class="flex flex-col items-end space-y-1">
+              <div class="w-16 h-1.5 bg-white/30 rounded-full"></div>
+              <div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
+              <div class="w-14 h-1.5 bg-white/20 rounded-full"></div>
+            </div>
+          </div>
+
+          <!-- Centro con ícono de orientación / giro 90° -->
+          <div class="flex flex-col items-center justify-center my-auto py-2 bg-black/20 rounded backdrop-blur-[2px]">
+            <span class="material-symbols-outlined text-[#2D9E6B] text-2xl animate-pulse">screen_rotation</span>
+            <span class="text-[9px] font-bold tracking-wider text-white/80 uppercase mt-1">Girar credencial</span>
+            <span class="text-[8px] text-white/50 font-medium">Orientación vertical</span>
+          </div>
+
+          <!-- Zona inferior de la tarjeta girada (Huella / Firma / Código) -->
+          <div class="flex justify-between items-end opacity-35">
+            <div class="space-y-1">
+              <div class="w-20 h-1.5 bg-white/25 rounded-full"></div>
+              <div class="w-16 h-1.5 bg-white/20 rounded-full"></div>
+              <div class="w-24 h-1 bg-white/15 rounded-full"></div>
+            </div>
+            <div class="w-8 h-10 border border-white/30 rounded flex items-center justify-center">
+              <span class="material-symbols-outlined text-sm text-white/50">fingerprint</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sensor / Medidor de autoenfoque en esquinas interiores -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 border border-[#2D9E6B]/40 pointer-events-none flex items-center justify-center">
+          <div class="w-1.5 h-1.5 bg-[#2D9E6B] rounded-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Área de feedback / sugerencia de iluminación -->
+    <div class="relative z-20 flex justify-center items-center px-6 mb-2">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-white/80 text-[11px] font-medium shadow-sm">
+        <span class="material-symbols-outlined text-sm text-[#2D9E6B]">lightbulb</span>
+        <span>Evita reflejos y sombras sobre el texto</span>
+      </div>
+    </div>
+
+    <!-- Sección Inferior: Controles de disparo y captura manual (SIN tab bar) -->
+    <div class="relative z-30 pb-9 pt-3 px-8 flex flex-col items-center bg-gradient-to-t from-black via-black/80 to-transparent">
+      
+      <!-- Controles de disparo fotográfico -->
+      <div class="w-full flex items-center justify-between max-w-[280px] mb-4">
+        <!-- Botón Galería / Importar archivo -->
+        <button type="button" aria-label="Subir desde galería" class="w-12 h-12 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white active:scale-95 transition-transform hover:bg-white/20">
+          <span class="material-symbols-outlined text-2xl">photo_library</span>
+        </button>
+
+        <!-- Botón Disparador Circular Blanco con Anillo Verde #2D9E6B -->
+        <div class="relative flex items-center justify-center">
+          <!-- Anillo exterior verde #2D9E6B de 4px con espacio de respiración -->
+          <div class="w-[78px] h-[78px] rounded-full border-[3.5px] border-[#2D9E6B] flex items-center justify-center p-1 shadow-[0_0_15px_rgba(45,158,107,0.4)]">
+            <!-- Botón disparador blanco sólido interior -->
+            <button type="button" aria-label="Tomar foto de la credencial" class="w-full h-full rounded-full bg-white hover:bg-gray-100 active:scale-90 transition-all duration-150 shadow-md flex items-center justify-center">
+              <div class="w-3 h-3 rounded-full bg-[#2D9E6B]/30"></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Indicador de Detección Automática activa -->
+        <div class="w-12 h-12 rounded-full bg-white/10 border border-white/15 flex flex-col items-center justify-center text-white/90" title="Detección automática activa">
+          <span class="material-symbols-outlined text-[20px] text-[#2D9E6B]">document_scanner</span>
+          <span class="text-[8px] font-bold text-white/70 uppercase -mt-0.5">AUTO</span>
+        </div>
+      </div>
+
+      <!-- Enlace "Capturar manualmente" -->
+      <button type="button" class="text-sm font-semibold text-white/85 hover:text-[#2D9E6B] active:text-[#2D9E6B] transition-colors py-1 px-3 flex items-center gap-1.5 focus:outline-none">
+        <span>Capturar manualmente</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </button>
+
+      <!-- Barra de inicio de iPhone / Home Indicator -->
+      <div class="w-32 h-1 bg-white/30 rounded-full mt-4"></div>
+    </div>
+
+  </div>
+
+</body>
+</html>

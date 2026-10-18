@@ -1,0 +1,26 @@
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f7f3ea;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Brand exact flat colors */
+    .brand-navy { color: #173A5F; }
+    .bg-brand-navy { background-color: #173A5F; }
+    .border-brand-navy { border-color: #173A5F; }
+    .brand-green { color: #2D9E6B; }
+    .bg-brand-green { background-color: #2D9E6B; }
+    .border-brand-green { border-color: #2D9E6B; }
+    .border-sand { border-color: #E2E6EA; }
+  
+
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  

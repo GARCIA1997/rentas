@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ksared — Mi Perfil (Portal del Inquilino)</title>
+<!-- Google Fonts: Montserrat -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed-dim": "#bec7d3",
+            "secondary": "#006c45",
+            "primary-fixed-dim": "#a9c9f5",
+            "on-error-container": "#93000a",
+            "inverse-primary": "#a9c9f5",
+            "surface-container-low": "#f7f3ea",
+            "inverse-on-surface": "#f4f0e7",
+            "on-tertiary-container": "#9ba4ae",
+            "on-primary-fixed": "#001c38",
+            "on-secondary-container": "#007349",
+            "on-error": "#ffffff",
+            "surface-container-high": "#ece8df",
+            "inverse-surface": "#31302b",
+            "error": "#ba1a1a",
+            "secondary-container": "#8cf8bd",
+            "on-secondary-fixed": "#002112",
+            "on-surface": "#1c1c16",
+            "primary-container": "#173a5f",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface": "#fdf9f0",
+            "background": "#fdf9f0",
+            "on-primary-fixed-variant": "#28486e",
+            "surface-bright": "#fdf9f0",
+            "secondary-fixed": "#8cf8bd",
+            "tertiary": "#1c242d",
+            "surface-dim": "#dddad1",
+            "on-background": "#1c1c16",
+            "secondary-fixed-dim": "#70dba2",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#43474e",
+            "on-tertiary-fixed-variant": "#3f4851",
+            "tertiary-fixed": "#dae3ef",
+            "surface-container-lowest": "#ffffff",
+            "surface-tint": "#416087",
+            "outline-variant": "#c3c6cf",
+            "primary-fixed": "#d3e4ff",
+            "surface-container-highest": "#e6e2d9",
+            "on-primary-container": "#85a4cf",
+            "primary": "#002445",
+            "on-secondary-fixed-variant": "#005233",
+            "tertiary-container": "#313a43",
+            "outline": "#73777f",
+            "surface-container": "#f1eee5",
+            "on-primary": "#ffffff",
+            "surface-variant": "#e6e2d9",
+            "on-tertiary-fixed": "#141c25"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "2rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "margin": "1rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "body-md": ["Montserrat"],
+            "label-md": ["Montserrat"],
+            "body-sm": ["Montserrat"],
+            "headline-md": ["Montserrat"],
+            "body-lg": ["Montserrat"],
+            "label-sm": ["Montserrat"],
+            "headline-sm": ["Montserrat"],
+            "headline-lg": ["Montserrat"],
+            "label-lg": ["Montserrat"]
+          },
+          "fontSize": {
+            "body-md": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "600" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "400" }],
+            "headline-md": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "body-lg": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "fontWeight": "500" }],
+            "headline-sm": ["1.125rem", { "lineHeight": "1.5rem", "fontWeight": "600" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "2.25rem", "fontWeight": "700" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#F5F1E8] text-on-surface flex justify-center min-h-screen antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Mobile Container: 390px fixed preview width simulation for pixel-perfect fidelity -->
+<div class="w-full max-w-[390px] min-h-screen bg-[#F5F1E8] flex flex-col relative pb-24 shadow-sm border-x border-[#DDD9CF]/40">
+<!-- TOP INSTITUTIONAL APP BAR -->
+<header class="bg-[#173A5F] text-on-primary w-full flex-none sticky top-0 z-40 border-none shadow-none">
+<div class="h-14 px-4 flex items-center justify-between">
+<!-- Official Isotype + Typography Ksared Logo -->
+<div class="flex items-center space-x-2.5">
+<!-- Geometric 3-piece Ksared Isotype -->
+<svg class="w-7 h-7 flex-shrink-0" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<!-- Vertical main chevron left in ivory-grey/navy -->
+<polygon fill="#FFFFFF" opacity="0.95" points="12,12 36,44 36,68 12,100"></polygon>
+<!-- Diagonal top right in ivory/grey -->
+<polygon fill="#DDD9CF" points="38,40 68,12 88,12 48,54"></polygon>
+<!-- Diagonal bottom right accent green #2D9E6B -->
+<polygon fill="#2D9E6B" points="46,58 72,90 92,90 56,46"></polygon>
+</svg>
+<div class="text-[1.3rem] font-bold tracking-tight select-none">
+<span class="text-white">Ksar</span><span class="text-[#2D9E6B]">ed</span>
+</div>
+</div>
+<!-- Right action cluster: Notification with 4-6px green dot & Avatar -->
+<div class="flex items-center space-x-3.5">
+<!-- Notification Bell -->
+<button aria-label="Notificaciones" class="relative p-1 text-white hover:opacity-80 transition-opacity" type="button">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+</button>
+<!-- Inquilino Avatar: Ana Torres -->
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/40 flex-shrink-0">
+<img alt="Ana Torres" class="w-full h-full object-cover" data-alt="Professional modern warm portrait of Ana Torres smiling, a young female tenant with natural lighting in a bright, minimalist apartment environment with subtle beige and deep navy corporate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjP6D0e2gACrOkVUt2XjseSXB9sk-QOwcZV9I1BZ12_-AgQuCMbq-EdkRdTo1k3cxJ96ilNMhrW-AgEblFXY2Lb3JkUvqYeafj7Y8KziK4fuMCDj_7JlKus6ezTEOdS_SMVNqo_HdS5HDYYZWcyDC2bky-ViJQ5gcPGWVN8uvaJnhJGlxrb1z6tlU7muZMn5HeHXZsnyeDoS30WyKcgVVbadaMQ6efHPshqzg9mXOGwdMzi2LODRMuV3nLQrN9m_Kj2eGrOI_IwywT"/>
+</div>
+</div>
+</div>
+<!-- Tenant Subheader & Unit Indicator -->
+<div class="px-4 pb-3 pt-1 border-t border-white/10 flex justify-between items-end">
+<div>
+<span class="block text-[0.6875rem] font-semibold uppercase tracking-wider text-on-primary-container">PORTAL INQUILINO</span>
+<h1 class="text-white text-[1.125rem] font-bold leading-tight mt-0.5">Mi Perfil</h1>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center text-[0.75rem] text-[#F5F1E8] font-medium bg-white/10 px-2.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1 text-[#2D9E6B]">apartment</span>
+            Torre Vista Norte #402
+          </span>
+</div>
+</div>
+</header>
+<!-- PAGE TABS -->
+<nav class="bg-surface-container-lowest border-b border-outline-variant/40 w-full px-4 flex space-x-6 sticky top-24 z-30">
+<!-- Inactive Tab: Perfil -->
+<button class="py-3 text-[0.875rem] font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors relative" type="button">
+        Perfil
+      </button>
+<!-- Active Tab: Reportes (1) -->
+<button class="py-3 text-[0.875rem] font-bold text-[#173A5F] relative flex items-center space-x-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-[#2D9E6B]" type="button">
+<span>Reportes</span>
+<span class="text-[0.6875rem] font-semibold bg-[#F5F1E8] text-[#173A5F] px-1.5 py-0.5 rounded-full border border-outline-variant/30">1</span>
+</button>
+</nav>
+<!-- MAIN SCROLLABLE CONTENT CANVAS -->
+<main class="flex-1 px-4 pt-4 pb-6 space-y-4">
+<!-- Action Button: + Reportar incidencia -->
+<button class="w-full bg-[#2D9E6B] text-white h-12 rounded-lg font-semibold text-[0.875rem] flex items-center justify-center space-x-2 active:scale-[0.99] hover:bg-[#26875b] transition-all shadow-none" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Reportar incidencia</span>
+</button>
+<!-- Context Metric Banner: Status Counts -->
+<section class="bg-surface-container-lowest rounded-lg p-3.5 border border-[#A7B0BB]/30 flex items-center justify-between">
+<div>
+<span class="text-[0.6875rem] font-semibold text-[#73777F] uppercase tracking-wide">Mantenimiento</span>
+<p class="text-[0.875rem] font-bold text-[#173A5F] mt-0.5">Seguimiento de Incidencias</p>
+</div>
+<div class="flex items-center space-x-2">
+<div class="text-center px-2.5 py-1 bg-[#F5F1E8] rounded-lg">
+<span class="block text-[0.875rem] font-bold text-[#173A5F]">1</span>
+<span class="block text-[0.625rem] text-[#73777F] font-medium">En curso</span>
+</div>
+<div class="text-center px-2.5 py-1 bg-[#F5F1E8] rounded-lg">
+<span class="block text-[0.875rem] font-bold text-[#73777F]">2</span>
+<span class="block text-[0.625rem] text-[#73777F] font-medium">Cerrados</span>
+</div>
+</div>
+</section>
+<!-- INCIDENT CARDS LIST -->
+<div class="space-y-3">
+<!-- Tarjeta 1: En progreso (#REP-1048) -->
+<article class="bg-surface-container-lowest rounded-lg border border-[#A7B0BB]/35 p-3.5 flex flex-col justify-between hover:border-[#173A5F]/40 transition-colors cursor-pointer group">
+<div class="flex items-start justify-between mb-1.5">
+<div class="flex items-center space-x-2">
+<span class="text-[0.6875rem] font-semibold text-[#173A5F] bg-[#E8EFF6] px-2 py-0.5 rounded">#REP-1048</span>
+<!-- Pill Badge: En progreso -->
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[0.6875rem] font-semibold bg-[#E8EFF6] text-[#173A5F]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#173A5F] mr-1.5"></span>
+                En progreso
+              </span>
+</div>
+<span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-[#173A5F] transition-colors text-[20px]">chevron_right</span>
+</div>
+<h2 class="text-[0.875rem] font-bold text-[#173A5F] leading-snug">
+            Fuga en monomando lavabo principal
+          </h2>
+<p class="text-[0.75rem] text-[#43474E] mt-1 line-clamp-2 leading-relaxed">
+            Desde anoche noté que la llave del monomando del baño principal tiene un goteo constante y la presión bajó sensiblemente...
+          </p>
+<div class="mt-3 pt-2.5 border-t border-[#DDD9CF]/50 flex items-center justify-between text-[0.6875rem] text-[#73777F]">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>24 Oct 2024 · 09:15 hrs</span>
+</div>
+<span class="text-[#2D9E6B] font-semibold">Técnico asignado</span>
+</div>
+</article>
+<!-- Tarjeta 2: Reportado (#REP-1052) -->
+<article class="bg-surface-container-lowest rounded-lg border border-[#A7B0BB]/35 p-3.5 flex flex-col justify-between hover:border-[#D9822B]/50 transition-colors cursor-pointer group">
+<div class="flex items-start justify-between mb-1.5">
+<div class="flex items-center space-x-2">
+<span class="text-[0.6875rem] font-semibold text-[#73777F] bg-[#F5F1E8] px-2 py-0.5 rounded">#REP-1052</span>
+<!-- Pill Badge: Reportado (Ámbar) -->
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[0.6875rem] font-semibold bg-[#FEF3C7] text-[#B45309]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#B45309] mr-1.5"></span>
+                Reportado
+              </span>
+</div>
+<span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-[#173A5F] transition-colors text-[20px]">chevron_right</span>
+</div>
+<h2 class="text-[0.875rem] font-bold text-[#173A5F] leading-snug">
+            Revisión de chapa electrónica
+          </h2>
+<p class="text-[0.75rem] text-[#43474E] mt-1 line-clamp-2 leading-relaxed">
+            La cerradura digital emite un pitido de batería baja al ingresar con el código y se desactiva ocasionalmente el cerrojo...
+          </p>
+<div class="mt-3 pt-2.5 border-t border-[#DDD9CF]/50 flex items-center justify-between text-[0.6875rem] text-[#73777F]">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>28 Oct 2024 · 14:30 hrs</span>
+</div>
+<span class="text-[#B45309] font-medium">Por revisar</span>
+</div>
+</article>
+<!-- Tarjeta 3: Cerrado (#REP-0994) -->
+<article class="bg-surface-container-lowest rounded-lg border border-[#A7B0BB]/35 p-3.5 flex flex-col justify-between opacity-85 hover:opacity-100 transition-opacity cursor-pointer group">
+<div class="flex items-start justify-between mb-1.5">
+<div class="flex items-center space-x-2">
+<span class="text-[0.6875rem] font-semibold text-[#73777F] bg-[#F5F1E8] px-2 py-0.5 rounded">#REP-0994</span>
+<!-- Pill Badge: Cerrado (Gris) -->
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[0.6875rem] font-semibold bg-[#F1EEE5] text-[#73777F]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#73777F] mr-1.5"></span>
+                Cerrado
+              </span>
+</div>
+<span class="material-symbols-outlined text-[#A7B0BB] group-hover:text-[#173A5F] transition-colors text-[20px]">chevron_right</span>
+</div>
+<h2 class="text-[0.875rem] font-bold text-[#43474E] leading-snug">
+            Cambio de filtro purificador
+          </h2>
+<p class="text-[0.75rem] text-[#73777F] mt-1 line-clamp-2 leading-relaxed">
+            Mantenimiento preventivo semestral programado para el sistema de agua filtrada de cocina realizado satisfactoriamente.
+          </p>
+<div class="mt-3 pt-2.5 border-t border-[#DDD9CF]/50 flex items-center justify-between text-[0.6875rem] text-[#73777F]">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>15 Sep 2024</span>
+</div>
+<span class="text-[#73777F]">Atendido por técnico</span>
+</div>
+</article>
+</div>
+<!-- Institutional Support Helper Card -->
+<div class="bg-[#F1EEE5] rounded-lg p-3 flex items-center justify-between border border-[#DDD9CF]">
+<div class="flex items-center space-x-2.5">
+<span class="material-symbols-outlined text-[#173A5F] text-[20px]">support_agent</span>
+<div>
+<p class="text-[0.75rem] font-bold text-[#173A5F]">¿Emergencia en tu inmueble?</p>
+<p class="text-[0.6875rem] text-[#43474E]">Comunícate a la administración 24/7</p>
+</div>
+</div>
+<button class="px-2.5 py-1 text-[0.6875rem] font-semibold text-[#173A5F] bg-white rounded border border-[#A7B0BB]/50 hover:bg-white/80 transition-colors" type="button">
+          Llamar
+        </button>
+</div>
+</main>
+<!-- FIXED TENANT BOTTOM NAVIGATION BAR (Strict 3 Items from JSON) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] h-16 bg-surface-container-lowest border-t border-outline-variant dark:border-outline flex justify-around items-center px-space-md z-50">
+<!-- Tab 1: Inicio (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-tertiary-container dark:text-on-surface-variant pt-1 pb-1 hover:text-secondary transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="text-label-sm font-label-sm mt-0.5">Inicio</span>
+</a>
+<!-- Tab 2: Perfil (ACTIVE - Exact mapping to "Mi Perfil", green text + 4px dot below) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed font-semibold pt-1 pb-1 relative after:content-[''] after:w-1 after:h-1 after:bg-secondary dark:after:bg-secondary-fixed after:rounded-full after:mt-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-sm font-label-sm mt-0.5">Perfil</span>
+</a>
+<!-- Tab 3: Más (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-tertiary-container dark:text-on-surface-variant pt-1 pb-1 hover:text-secondary transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">more_horiz</span>
+<span class="text-label-sm font-label-sm mt-0.5">Más</span>
+</a>
+</nav>
+</div>
+</body></html>

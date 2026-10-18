@@ -1,0 +1,353 @@
+
+{/* Mobile View Container: Centered on larger viewports with native mobile max-width */}
+<div className="w-full max-w-md mx-auto min-h-screen bg-[#fdf9f0] flex flex-col pb-28 relative shadow-[0_0_20px_rgba(23,58,95,0.06)]">
+{/* TopAppBar (Shared Component Implementation) */}
+<header className="bg-[#173a5f] text-[#ffffff] flex justify-between items-center w-full px-space-md py-space-sm h-14 sticky top-0 z-40 shadow-none">
+<div className="flex items-center gap-3">
+<button aria-label="Volver" className="p-1.5 rounded text-[#ffffff] hover:bg-[#002445] active:scale-95 transition-all" type="button">
+<span className="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div>
+<h1 className="text-headline-sm font-sans font-bold text-[#ffffff] leading-tight">Contrato CTR-2024-012</h1>
+<p className="text-[11px] font-medium text-[#85a4cf]">Detalle de Contrato</p>
+</div>
+</div>
+<div className="flex items-center gap-1">
+<button aria-label="Compartir" className="p-1.5 rounded text-[#ffffff] hover:bg-[#002445] active:scale-95 transition-all" type="button">
+<span className="material-symbols-outlined text-[22px]">share</span>
+</button>
+<button aria-label="Opciones" className="p-1.5 rounded text-[#ffffff] hover:bg-[#002445] active:scale-95 transition-all" type="button">
+<span className="material-symbols-outlined text-[22px]">more_vert</span>
+</button>
+</div>
+</header>
+{/* Sub-header Status Stripe */}
+<section className="bg-[#f7f3ea] px-4 py-2.5 border-b border-[#c3c6cf]/30 flex items-center justify-between">
+<div className="flex items-center gap-2">
+<span className="text-label-md font-sans text-[#43474e]">Estado actual:</span>
+{/* Badge Verde Oficial Activo */}
+<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B]">
+<span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B] mr-1.5"></span>
+          Activo
+        </span>
+</div>
+<div className="text-[11px] font-medium text-[#73777f]">
+        Folio: #KSR-9842
+      </div>
+</section>
+{/* Main Content Canvas */}
+<main className="px-4 pt-3.5 space-y-3.5 flex-1">
+{/* 2. Aviso Legal Ámbar (Alerta Art. 15 Michoacán) */}
+<article className="bg-[#FFFBEB] border border-[#FDE68A] rounded-lg p-3.5 shadow-[0_1px_2px_rgba(217,130,43,0.06)] flex items-start gap-3">
+<span className="material-symbols-outlined text-[#D9822B] text-[22px] flex-shrink-0 mt-0.5" style={{fontVariationSettings: '\'FILL\' 1'}}>warning</span>
+<div className="flex-1">
+<h2 className="text-label-lg font-sans text-[#92400E] font-bold">Observación Jurídica Detectada</h2>
+<p className="text-body-sm font-sans text-[#92400E] mt-0.5 leading-snug">
+            El depósito excede el tope legal (Ley Inquilinaria de Michoacán, art. 15). El monto registrado equivale a 2 meses en lugar del máximo permitido.
+          </p>
+<div className="mt-2 flex items-center gap-2">
+<button className="text-[11px] font-semibold text-[#92400E] underline hover:text-[#78350F]" type="button">
+              Ver recomendación contractual →
+            </button>
+</div>
+</div>
+</article>
+{/* 3. Tarjeta: Partes del Contrato */}
+<article className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+<div className="flex items-center justify-between pb-2 mb-3 border-b border-[#f1eee5]">
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">groups</span>
+<h2 className="text-label-lg font-sans text-[#173A5F]">Partes del Contrato</h2>
+</div>
+<span className="text-label-sm font-sans text-[#73777f]">2 Personas</span>
+</div>
+<div className="space-y-3.5">
+{/* Arrendador */}
+<div className="flex items-start justify-between bg-[#f7f3ea]/60 rounded p-2.5 border border-[#c3c6cf]/30">
+<div className="flex items-start gap-2.5">
+<div className="w-9 h-9 rounded-lg bg-[#173a5f] text-[#ffffff] flex items-center justify-center font-bold text-xs">
+                KS
+              </div>
+<div>
+<span className="text-[10px] uppercase font-bold tracking-wider text-[#73777f]">Arrendador / Apoderado</span>
+<p className="text-body-md font-sans font-semibold text-[#1c1c16]">Administradora Mariana Silva</p>
+<p className="text-body-sm font-sans text-[#43474e] text-[11px]">KsaRed Inmobiliaria S.A. de C.V.</p>
+</div>
+</div>
+<a aria-label="Llamar a Mariana" className="p-1 text-[#173A5F] hover:bg-[#f1eee5] rounded" href="tel:+525549120000">
+<span className="material-symbols-outlined text-[18px]">call</span>
+</a>
+</div>
+{/* Inquilino */}
+<div className="flex items-start justify-between bg-[#f7f3ea]/60 rounded p-2.5 border border-[#c3c6cf]/30">
+<div className="flex items-start gap-2.5">
+<div className="w-9 h-9 rounded-lg bg-[#2D9E6B] text-white flex items-center justify-center font-bold text-xs">
+                AT
+              </div>
+<div>
+<span className="text-[10px] uppercase font-bold tracking-wider text-[#2D9E6B]">Inquilino Titular</span>
+<p className="text-body-md font-sans font-semibold text-[#1c1c16]">Ana Torres Morales</p>
+<p className="text-body-sm font-sans text-[#43474e] text-[11px]">+52 55 4912 3840 • RFC: TOMA890412HR4</p>
+</div>
+</div>
+<div className="flex items-center gap-1">
+<a aria-label="WhatsApp inquilino" className="p-1 text-[#2D9E6B] hover:bg-[#f1eee5] rounded" href="https://wa.me/525549123840">
+<span className="material-symbols-outlined text-[18px]">chat</span>
+</a>
+<a aria-label="Llamar a inquilino" className="p-1 text-[#173A5F] hover:bg-[#f1eee5] rounded" href="tel:+525549123840">
+<span className="material-symbols-outlined text-[18px]">call</span>
+</a>
+</div>
+</div>
+</div>
+</article>
+{/* 4. Tarjeta: Inmueble Arrendado */}
+<article className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+<div className="flex items-center justify-between pb-2 mb-3 border-b border-[#f1eee5]">
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">apartment</span>
+<h2 className="text-label-lg font-sans text-[#173A5F]">Inmueble Arrendado</h2>
+</div>
+<span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B]">
+            Habitacional
+          </span>
+</div>
+<div className="flex gap-3">
+<div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-[#f1eee5] border border-[#c3c6cf]/30">
+<img className="w-full h-full object-cover" data-alt="Modern residential apartment building exterior under clear blue sky with sleek balconies, warm neutral tones, concrete elements, and clean geometric lines matching corporate architectural property management style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhowyCy_aYYSLvgUDPt7TZANrvFmWnwLwmUPrjISypQsWRciF34L47dIcFz3sMUTf8Vz-pooPwuL87-dwQNhXV7OlBtcWlwiCXZEuXIVKgW7QIzRcTZJSKGV0NUpQhMZCZ6ETjGXBg0PfOIAtUvHVziK2bDygpZp_UcnOyY0hdLqhUPwAPvRjrmY_N7rcK53aQLN1hbYsH6w77-1mfUNjq5s97GoW20Dn4ia_l7Ngb4JTf7XwhiGY6rk087CdIkhnuK3ECsOgOj306" />
+</div>
+<div className="flex-1 flex flex-col justify-between">
+<div>
+<h3 className="text-body-md font-sans font-bold text-[#1c1c16]">Depto. Torre Real 402</h3>
+<p className="text-body-sm font-sans text-[#43474e] flex items-center gap-1 mt-0.5">
+<span className="material-symbols-outlined text-[14px] text-[#73777f]">location_on</span>
+                Fracc. Real Bugambilias, Villa de Álvarez
+              </p>
+</div>
+<div className="flex items-center gap-3 pt-1 text-[11px] font-medium text-[#73777f]">
+<span className="flex items-center gap-1"><span className="material-symbols-outlined text-[13px]">bed</span> 2 Rec</span>
+<span className="flex items-center gap-1"><span className="material-symbols-outlined text-[13px]">bathtub</span> 2 Baños</span>
+<span className="flex items-center gap-1"><span className="material-symbols-outlined text-[13px]">square_foot</span> 88 m²</span>
+</div>
+</div>
+</div>
+</article>
+{/* 5. Tarjeta: Términos del Arrendamiento */}
+<article className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+<div className="flex items-center justify-between pb-2 mb-3 border-b border-[#f1eee5]">
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">contract</span>
+<h2 className="text-label-lg font-sans text-[#173A5F]">Términos del Arrendamiento</h2>
+</div>
+<span className="text-label-sm font-sans text-[#73777f]">12 meses</span>
+</div>
+<div className="grid grid-cols-2 gap-3 mb-3.5">
+<div className="p-2.5 rounded bg-[#f7f3ea] border border-[#c3c6cf]/30">
+<span className="text-[10px] font-medium text-[#73777f] block">Renta mensual</span>
+<span className="text-headline-sm font-sans font-bold text-[#173A5F]">$18,500</span>
+<span className="text-[10px] text-[#73777f] block">MXN / mes</span>
+</div>
+<div className="p-2.5 rounded bg-[#f7f3ea] border border-[#c3c6cf]/30">
+<span className="text-[10px] font-medium text-[#73777f] block">Depósito en garantía</span>
+<span className="text-headline-sm font-sans font-bold text-[#D9822B]">$37,000</span>
+<span className="text-[10px] text-[#D9822B] font-medium block">2 meses (en revisión)</span>
+</div>
+</div>
+<dl className="space-y-2 text-body-sm font-sans">
+<div className="flex justify-between py-1 border-b border-[#f1eee5]">
+<dt className="text-[#43474e] flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[15px] text-[#73777f]">event_available</span>
+              Fecha de inicio
+            </dt>
+<dd className="font-semibold text-[#1c1c16]">01 Feb 2024</dd>
+</div>
+<div className="flex justify-between py-1 border-b border-[#f1eee5]">
+<dt className="text-[#43474e] flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[15px] text-[#73777f]">event_busy</span>
+              Fecha de término
+            </dt>
+<dd className="font-semibold text-[#1c1c16]">31 Ene 2025</dd>
+</div>
+<div className="flex justify-between py-1 border-b border-[#f1eee5]">
+<dt className="text-[#43474e] flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[15px] text-[#73777f]">today</span>
+              Día de corte y pago
+            </dt>
+<dd className="font-semibold text-[#1c1c16]">Día 05 de cada mes</dd>
+</div>
+</dl>
+{/* Servicios y amenidades incluidas */}
+<div className="mt-3.5 pt-3 border-t border-[#f1eee5]">
+<span className="text-[11px] font-bold uppercase tracking-wider text-[#73777f] block mb-2">Servicios y Cláusulas Clave</span>
+<div className="flex flex-wrap gap-1.5">
+<span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium bg-[#f1eee5] text-[#173A5F]">
+<span className="material-symbols-outlined text-[14px] text-[#2D9E6B]">check_circle</span>
+              Agua incluida
+            </span>
+<span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium bg-[#f1eee5] text-[#173A5F]">
+<span className="material-symbols-outlined text-[14px] text-[#2D9E6B]">check_circle</span>
+              Estacionamiento (1 cajón techado)
+            </span>
+<span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-medium bg-[#f1eee5] text-[#173A5F]">
+<span className="material-symbols-outlined text-[14px] text-[#2D9E6B]">autorenew</span>
+              Renovación automática activada
+            </span>
+</div>
+</div>
+</article>
+{/* 6. Tarjeta: Calendario de Pagos */}
+<article className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+<div className="flex items-center justify-between pb-2 mb-2 border-b border-[#f1eee5]">
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">payments</span>
+<h2 className="text-label-lg font-sans text-[#173A5F]">Calendario de Pagos</h2>
+</div>
+<span className="text-label-sm font-sans font-semibold text-[#2D9E6B]">4 de 12 meses pagados</span>
+</div>
+{/* Barra de Progreso 33.3% */}
+<div className="my-3">
+<div className="flex justify-between text-[11px] font-medium text-[#73777f] mb-1.5">
+<span>Progreso del ciclo anual</span>
+<span className="font-bold text-[#173A5F]">33.3% ($74,000 / $222,000 MXN)</span>
+</div>
+<div className="w-full h-2.5 bg-[#E5E7EB] rounded-full overflow-hidden">
+<div className="h-full bg-[#2D9E6B] rounded-full" style={{width: '33.33%'}}></div>
+</div>
+</div>
+{/* Grid de Meses */}
+<div className="grid grid-cols-4 gap-2 pt-1">
+{/* Feb: Pagado */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#2D9E6B]/30 bg-[#2D9E6B]/5">
+<span className="text-[11px] font-bold text-[#173A5F]">Feb</span>
+<span className="text-[9px] font-semibold text-[#2D9E6B] mt-0.5">Pagado</span>
+</div>
+{/* Mar: Pagado */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#2D9E6B]/30 bg-[#2D9E6B]/5">
+<span className="text-[11px] font-bold text-[#173A5F]">Mar</span>
+<span className="text-[9px] font-semibold text-[#2D9E6B] mt-0.5">Pagado</span>
+</div>
+{/* Abr: Pagado */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#2D9E6B]/30 bg-[#2D9E6B]/5">
+<span className="text-[11px] font-bold text-[#173A5F]">Abr</span>
+<span className="text-[9px] font-semibold text-[#2D9E6B] mt-0.5">Pagado</span>
+</div>
+{/* May: Pagado */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#2D9E6B]/30 bg-[#2D9E6B]/5">
+<span className="text-[11px] font-bold text-[#173A5F]">May</span>
+<span className="text-[9px] font-semibold text-[#2D9E6B] mt-0.5">Pagado</span>
+</div>
+{/* Jun: Próximo (Ámbar) */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#D9822B] bg-[#FFFBEB] relative">
+<span className="text-[11px] font-bold text-[#92400E]">Jun</span>
+<span className="text-[9px] font-bold text-[#D9822B] mt-0.5">Próximo</span>
+</div>
+{/* Jul: Pendiente */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#c3c6cf]/40 bg-[#f7f3ea]">
+<span className="text-[11px] font-medium text-[#73777f]">Jul</span>
+<span className="text-[9px] text-[#73777f] mt-0.5">Pendiente</span>
+</div>
+{/* Ago: Pendiente */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#c3c6cf]/40 bg-[#f7f3ea]">
+<span className="text-[11px] font-medium text-[#73777f]">Ago</span>
+<span className="text-[9px] text-[#73777f] mt-0.5">Pendiente</span>
+</div>
+{/* Sep: Pendiente */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#c3c6cf]/40 bg-[#f7f3ea]">
+<span className="text-[11px] font-medium text-[#73777f]">Sep</span>
+<span className="text-[9px] text-[#73777f] mt-0.5">Pendiente</span>
+</div>
+{/* Oct: Pendiente */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#c3c6cf]/40 bg-[#f7f3ea]">
+<span className="text-[11px] font-medium text-[#73777f]">Oct</span>
+<span className="text-[9px] text-[#73777f] mt-0.5">Pendiente</span>
+</div>
+{/* Nov: Pendiente */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#c3c6cf]/40 bg-[#f7f3ea]">
+<span className="text-[11px] font-medium text-[#73777f]">Nov</span>
+<span className="text-[9px] text-[#73777f] mt-0.5">Pendiente</span>
+</div>
+{/* Dic: Pendiente */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#c3c6cf]/40 bg-[#f7f3ea]">
+<span className="text-[11px] font-medium text-[#73777f]">Dic</span>
+<span className="text-[9px] text-[#73777f] mt-0.5">Pendiente</span>
+</div>
+{/* Ene: Pendiente */}
+<div className="flex flex-col items-center justify-center p-2 rounded border border-[#c3c6cf]/40 bg-[#f7f3ea]">
+<span className="text-[11px] font-medium text-[#73777f]">Ene</span>
+<span className="text-[9px] text-[#73777f] mt-0.5">Pendiente</span>
+</div>
+</div>
+</article>
+{/* 7. Sección de Acciones de Gestión (Botones con esquinas de 8px) */}
+<section className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.04)] space-y-2.5">
+<h2 className="text-label-md font-sans uppercase tracking-wider text-[#73777f] mb-2">Acciones Administrativas</h2>
+{/* Botón Positivo: Marcar como firmado */}
+<button className="w-full h-11 rounded-lg bg-[#2D9E6B] hover:bg-[#25855A] active:scale-[0.98] transition-all text-white font-semibold text-body-md flex items-center justify-center gap-2 shadow-none" type="button">
+<span className="material-symbols-outlined text-[20px]">draw</span>
+          Marcar como firmado
+        </button>
+{/* Botón Navegación/Flujo: Descargar PDF */}
+<button className="w-full h-11 rounded-lg bg-[#173A5F] hover:bg-[#122e4c] active:scale-[0.98] transition-all text-white font-semibold text-body-md flex items-center justify-center gap-2 shadow-none" type="button">
+<span className="material-symbols-outlined text-[20px]">download</span>
+          Descargar PDF del Contrato
+        </button>
+<div className="grid grid-cols-2 gap-2.5 pt-1">
+{/* Enviar por WhatsApp */}
+<button className="h-10 rounded-lg border border-[#A7B0BB] bg-transparent hover:bg-[#f1eee5] active:scale-[0.98] transition-all text-[#173A5F] font-medium text-body-sm flex items-center justify-center gap-1.5" type="button">
+<span className="material-symbols-outlined text-[18px]">chat</span>
+            Enviar WhatsApp
+          </button>
+{/* Renovar */}
+<button className="h-10 rounded-lg border border-[#A7B0BB] bg-transparent hover:bg-[#f1eee5] active:scale-[0.98] transition-all text-[#173A5F] font-medium text-body-sm flex items-center justify-center gap-1.5" type="button">
+<span className="material-symbols-outlined text-[18px]">cached</span>
+            Renovar Contrato
+          </button>
+</div>
+{/* Botón Destructivo: Cancelar Contrato */}
+<button className="w-full h-10 mt-1 rounded-lg border border-[#C0392B] bg-transparent hover:bg-red-50 active:scale-[0.98] transition-all text-[#C0392B] font-semibold text-body-sm flex items-center justify-center gap-2" type="button">
+<span className="material-symbols-outlined text-[18px]">cancel</span>
+          Cancelar contrato
+        </button>
+</section>
+{/* Pie de auditoría sutil */}
+<div className="text-center py-2 text-[11px] text-[#73777f]">
+        Última modificación: 18 May 2024 • Registrado por Mariana Silva
+      </div>
+</main>
+{/* BottomNavBar (Shared Component: Admin mode with exact 6 destinations as per guidelines) */}
+{/* Activo estricto: 'Contratos' (description) con texto e ícono verde #2D9E6B y punto indicador de 4px debajo */}
+<nav aria-label="Navegación principal" className="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-50 flex justify-around items-center px-1 py-1.5 border-t border-[#A7B0BB]/30 bg-[#ffffff]">
+{/* 1. Inicio */}
+<a className="flex flex-col items-center justify-center text-[#73777f] py-space-xs flex-1 transition-colors hover:text-[#006c45]" href="#inicio">
+<span className="material-symbols-outlined text-[22px]">home</span>
+<span className="text-label-sm font-sans mt-0.5">Inicio</span>
+</a>
+{/* 2. Propiedades */}
+<a className="flex flex-col items-center justify-center text-[#73777f] py-space-xs flex-1 transition-colors hover:text-[#006c45]" href="#propiedades">
+<span className="material-symbols-outlined text-[22px]">apartment</span>
+<span className="text-label-sm font-sans mt-0.5">Propiedades</span>
+</a>
+{/* 3. Inquilinos */}
+<a className="flex flex-col items-center justify-center text-[#73777f] py-space-xs flex-1 transition-colors hover:text-[#006c45]" href="#inquilinos">
+<span className="material-symbols-outlined text-[22px]">group</span>
+<span className="text-label-sm font-sans mt-0.5">Inquilinos</span>
+</a>
+{/* 4. Contratos (ACTIVO - Mandato de la vista actual) */}
+<a className="flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-space-xs flex-1 relative" href="#contratos">
+<span className="material-symbols-outlined text-[22px]" style={{fontVariationSettings: '\'FILL\' 1'}}>description</span>
+<span className="text-label-sm font-sans text-[#2D9E6B] font-semibold mt-0.5">Contratos</span>
+{/* Punto indicador verde oficial de 4px */}
+<span className="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+</a>
+{/* 5. Pagos */}
+<a className="flex flex-col items-center justify-center text-[#73777f] py-space-xs flex-1 transition-colors hover:text-[#006c45]" href="#pagos">
+<span className="material-symbols-outlined text-[22px]">payments</span>
+<span className="text-label-sm font-sans mt-0.5">Pagos</span>
+</a>
+{/* 6. Más */}
+<a className="flex flex-col items-center justify-center text-[#73777f] py-space-xs flex-1 transition-colors hover:text-[#006c45]" href="#mas">
+<span className="material-symbols-outlined text-[22px]">more_horiz</span>
+<span className="text-label-sm font-sans mt-0.5">Más</span>
+</a>
+</nav>
+</div>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ksared — Registro por invitación (inquilino)</title>
+<!-- Google Fonts: Montserrat -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline": "#73777f",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#e6e2d9",
+            "surface-container-high": "#ece8df",
+            "primary-container": "#173a5f",
+            "on-primary": "#ffffff",
+            "surface-bright": "#fdf9f0",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#a9c9f5",
+            "on-error-container": "#93000a",
+            "primary-fixed": "#d3e4ff",
+            "primary": "#002445",
+            "inverse-on-surface": "#f4f0e7",
+            "surface-tint": "#416087",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#002112",
+            "on-primary-fixed": "#001c38",
+            "on-primary-fixed-variant": "#28486e",
+            "secondary": "#006c45",
+            "on-tertiary-container": "#9ba4ae",
+            "on-secondary-fixed-variant": "#005233",
+            "on-secondary-container": "#007349",
+            "tertiary": "#1c242d",
+            "error": "#ba1a1a",
+            "on-surface": "#1c1c16",
+            "background": "#fdf9f0",
+            "on-background": "#1c1c16",
+            "secondary-fixed": "#8cf8bd",
+            "tertiary-container": "#313a43",
+            "surface-dim": "#dddad1",
+            "surface-container": "#f1eee5",
+            "on-tertiary-fixed-variant": "#3f4851",
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#31302b",
+            "surface": "#fdf9f0",
+            "surface-container-low": "#f7f3ea",
+            "secondary-fixed-dim": "#70dba2",
+            "on-tertiary-fixed": "#141c25",
+            "on-surface-variant": "#43474e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed": "#dae3ef",
+            "outline-variant": "#c3c6cf",
+            "surface-container-highest": "#e6e2d9",
+            "on-primary-container": "#85a4cf",
+            "inverse-primary": "#a9c9f5",
+            "secondary-container": "#8cf8bd",
+            "tertiary-fixed-dim": "#bec7d3"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem"
+          },
+          "fontFamily": {
+            "label-md": ["Montserrat"],
+            "headline-sm": ["Montserrat"],
+            "headline-lg": ["Montserrat"],
+            "headline-md": ["Montserrat"],
+            "body-lg": ["Montserrat"],
+            "label-sm": ["Montserrat"],
+            "label-lg": ["Montserrat"],
+            "body-md": ["Montserrat"],
+            "body-sm": ["Montserrat"]
+          },
+          "fontSize": {
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "600" }],
+            "headline-sm": ["1.125rem", { "lineHeight": "1.5rem", "fontWeight": "600" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "2.25rem", "fontWeight": "700" }],
+            "headline-md": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "body-lg": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "fontWeight": "500" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "600" }],
+            "body-md": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    
+    /* Institutional 45-degree geometric watermark background */
+    .bg-ksared-pattern {
+      background-color: #173A5F;
+      background-image: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.035) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(255, 255, 255, 0.035) 25%, transparent 25%),
+        linear-gradient(315deg, rgba(45, 158, 107, 0.04) 25%, transparent 25%),
+        linear-gradient(45deg, rgba(255, 255, 255, 0.035) 25%, transparent 25%);
+      background-size: 56px 56px;
+      background-position: 0 0, 28px 0, 28px -28px, 0px 28px;
+    }
+  </style>
+</head>
+<body class="bg-ksared-pattern text-on-surface antialiased min-h-screen flex flex-col justify-start items-center selection:bg-secondary selection:text-white pb-8">
+<!-- Mobile Container strictly 390px width -->
+<div class="w-full max-w-[390px] min-h-screen flex flex-col relative px-4 pt-3">
+<!-- TopAppBar as dictated by Shared Components and specific screen rules -->
+<header class="flex justify-between items-center w-full px-1 py-2 max-w-md mx-auto border-none">
+<!-- Back Navigation Button -->
+<button aria-label="Regresar" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all duration-150 text-white" type="button">
+<span class="material-symbols-outlined text-white text-[22px]">arrow_back</span>
+</button>
+<!-- Category Text / Screen Type -->
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm tracking-widest text-[#F5F1E8]/90 font-bold uppercase">PORTAL INQUILINO</span>
+</div>
+<!-- Help Action -->
+<button aria-label="Ayuda" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all duration-150 text-white" type="button">
+<span class="material-symbols-outlined text-white text-[22px]">help_outline</span>
+</button>
+</header>
+<!-- Brand Identity Section (Above the card) -->
+<div class="flex flex-col items-center justify-center pt-3 pb-5 text-center">
+<!-- Ksared Official Logo (Without enclosing box or border) -->
+<div class="flex items-center gap-2.5 justify-center">
+<!-- 3-Piece Geometry Isotype -->
+<img alt="KsaRed Isotipo" class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2dPFmQ06CkegC8IU7IuBqWbQiu3k-Bfyx4l2BmIs6Hj5LuysbV95bXhclNLsXmMOjwUHLx2ahu95LcXYk_aW49PFgV14zq7JcOjDkgspH8mhx2mAVQBvaXLILjNfS8kpL_zJZv165nwa_b_Q148B8Bfy3El5R4v137PlEmXZLd8VHxmqmthO7wftKoBBh-HYksj05kBmrtwkp77ALWgsRZ4a7PlygtY565cFKIHV8Od6EvxIH9olXB5FpQXA1_In6N2Kf6Dn8-v8f"/>
+<!-- Brand Wordmark: "Ksar" white, "ed" in green #2D9E6B -->
+<span class="font-headline-lg text-headline-lg font-bold tracking-tight text-white leading-none">
+          Ksar<span class="text-[#2D9E6B]">ed</span>
+</span>
+</div>
+<!-- Slogan -->
+<p class="font-body-sm text-body-sm text-[#F5F1E8]/85 font-medium mt-1.5 tracking-normal">
+        Gestión inteligente de propiedades
+      </p>
+</div>
+<!-- Main Content Card (Solid Pure White, 16px rounded corners, flat subtle shadow) -->
+<main class="w-full bg-surface-container-lowest rounded-2xl shadow-[0_4px_20px_rgba(23,58,95,0.08)] border border-[#E2E6EA] p-5 flex flex-col gap-4">
+<!-- Card Header with Pill Badge -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<!-- Active Invitation Badge (Pill with 15% green bg + solid green text) -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2D9E6B]/15 text-[#2D9E6B] font-label-sm text-label-sm font-bold tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+            INVITACIÓN ACTIVA
+          </span>
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 7 días
+          </span>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary-container mt-1">
+          Activa tu cuenta
+        </h1>
+<p class="font-body-sm text-body-sm text-outline">
+          Te invitó tu administrador a formar parte del condominio.
+        </p>
+</div>
+<!-- Verified Data Notice -->
+<div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5F1E8] border border-[#E2E6EA] text-primary-container">
+<span class="material-symbols-outlined text-[#2D9E6B] text-[18px]">verified_user</span>
+<span class="font-label-sm text-label-sm font-medium text-primary-container">
+          Datos verificados por tu administrador
+        </span>
+</div>
+<!-- Pre-filled Read-only Fields -->
+<div class="flex flex-col gap-3">
+<!-- Field 1: Full Name -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold text-primary-container flex items-center justify-between">
+<span>Nombre completo</span>
+<span class="text-xs text-outline font-normal">Solo lectura</span>
+</label>
+<div class="flex items-center justify-between px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E6EA] rounded-lg">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-outline text-[18px]">lock</span>
+<span class="font-body-md text-body-md font-bold text-primary-container">Ana Torres</span>
+</div>
+<span class="material-symbols-outlined text-[#2D9E6B] text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Field 2: Phone Number -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold text-primary-container flex items-center justify-between">
+<span>Teléfono registrado</span>
+<span class="text-xs text-outline font-normal">Solo lectura</span>
+</label>
+<div class="flex items-center justify-between px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E6EA] rounded-lg">
+<div class="flex items-center gap-2.5">
+<!-- Mexico Flag Representation / Dial code -->
+<div class="flex items-center gap-1.5 pr-2 border-r border-[#E2E6EA]">
+<span class="text-xs font-bold text-primary-container">🇲🇽 +52</span>
+</div>
+<span class="font-body-md text-body-md font-bold text-primary-container tracking-wide">313 000 9995</span>
+</div>
+<div class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-[#E2E6EA] my-0.5"></div>
+<!-- Password Creation Form -->
+<form class="flex flex-col gap-3.5" onsubmit="event.preventDefault();">
+<!-- Field 3: Contraseña -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm font-semibold text-primary-container" for="password">Crea una contraseña</label>
+<span class="text-xs text-[#2D9E6B] font-semibold">Segura</span>
+</div>
+<div class="relative flex items-center">
+<input class="w-full px-3.5 py-2.5 bg-surface-container-lowest border border-[#A7B0BB]/60 rounded-lg font-body-md text-body-md text-primary-container focus:outline-none focus:ring-1 focus:ring-[#2D9E6B] focus:border-[#2D9E6B] pr-10 tracking-wide" id="password" placeholder="Mínimo 8 caracteres" type="password" value="KsaRed2025!"/>
+<button aria-label="Mostrar contraseña" class="absolute right-3 text-outline hover:text-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- Password Strength Indicator (4 segments - Strong level highlighted in #2D9E6B) -->
+<div class="flex flex-col gap-1 mt-1">
+<div class="grid grid-cols-4 gap-1.5 h-1.5 w-full">
+<div class="bg-[#2D9E6B] rounded-full h-full"></div>
+<div class="bg-[#2D9E6B] rounded-full h-full"></div>
+<div class="bg-[#2D9E6B] rounded-full h-full"></div>
+<div class="bg-[#2D9E6B] rounded-full h-full"></div>
+</div>
+<div class="flex items-center justify-between text-xs text-outline">
+<span>Incluye letras, números y símbolo</span>
+<span class="text-[#2D9E6B] font-bold">100%</span>
+</div>
+</div>
+</div>
+<!-- Field 4: Confirmar contraseña -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold text-primary-container" for="confirm-password">Confirmar contraseña</label>
+<div class="relative flex items-center">
+<input class="w-full px-3.5 py-2.5 bg-surface-container-lowest border border-[#2D9E6B] rounded-lg font-body-md text-body-md text-primary-container focus:outline-none focus:ring-1 focus:ring-[#2D9E6B] pr-16 tracking-wide" id="confirm-password" placeholder="Repite tu contraseña" type="password" value="KsaRed2025!"/>
+<div class="absolute right-3 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[#2D9E6B] text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<button aria-label="Mostrar contraseña" class="text-outline hover:text-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Terms and Conditions Checkbox -->
+<label class="flex items-start gap-2.5 cursor-pointer mt-1 select-none">
+<input checked="" class="mt-0.5 rounded border-[#A7B0BB] text-[#2D9E6B] focus:ring-[#2D9E6B] w-4 h-4 cursor-pointer" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+            Acepto los <a class="text-[#173A5F] font-semibold underline decoration-1" href="#">Términos de Servicio</a> y el <a class="text-[#173A5F] font-semibold underline decoration-1" href="#">Aviso de Privacidad</a> de KsaRed.
+          </span>
+</label>
+<!-- Main Confirmation Button (Verde #2D9E6B sólido, esquinas 8px) -->
+<button class="w-full mt-2 py-3 px-4 bg-[#2D9E6B] hover:bg-[#25855A] active:scale-[0.99] text-white font-label-lg text-label-lg font-bold rounded-lg shadow-sm transition-all duration-150 flex items-center justify-center gap-2" type="submit">
+<span>Crear cuenta</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</form>
+</main>
+<!-- Card Footer & Security Credentials -->
+<footer class="flex flex-col items-center justify-center gap-2 mt-4 px-2 text-center pb-4">
+<p class="font-body-sm text-body-sm text-[#F5F1E8]/75 font-medium">
+        El enlace es de un solo uso y vence en 7 días
+      </p>
+<div class="flex items-center justify-center gap-1.5 text-xs text-[#F5F1E8]/60 font-medium">
+<span class="material-symbols-outlined text-[15px] text-[#2D9E6B]">enhanced_encryption</span>
+<span>Conexión cifrada de alta seguridad 256-bit • KsaRed PropTech</span>
+</div>
+</footer>
+</div>
+</body></html>

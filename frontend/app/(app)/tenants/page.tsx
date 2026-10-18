@@ -1,142 +1,223 @@
 'use client';
+
+// Markup portado de Stitch: design/stitch/tenants.html ("Directorio de Inquilinos").
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { tenantsApi, Tenant } from '@/lib/api';
-import { ChevronRightIcon } from '@/components/icons';
+import { MainHeader } from '@/components/StitchHeader';
 
-const statusLabels: Record<Tenant['status'], string> = {
-  ACTIVE: 'Activo',
-  EVICTED: 'Desalojado',
-  MOVED_OUT: 'Mudanza',
-};
-
-const statusColors: Record<Tenant['status'], string> = {
-  ACTIVE: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  EVICTED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  MOVED_OUT: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-};
+type Filter = 'ALL' | 'CONTRACT' | 'NO_PORTAL';
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase();
+const waLink = (phone: string) => `https://wa.me/52${phone.replace(/\D/g, '').slice(-10)}`;
 
 export default function TenantsPage() {
   const { token } = useAuth();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-
-  const loadData = async () => {
-    if (!token) return;
-    setIsLoading(true);
-    try {
-      setTenants(await tenantsApi.list(token));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar inquilinos');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [filter, setFilter] = useState<Filter>('ALL');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!token) return;
+    setIsLoading(true);
+    tenantsApi
+      .list(token)
+      .then(setTenants)
+      .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar inquilinos'))
+      .finally(() => setIsLoading(false));
   }, [token]);
+
+  const withContract = tenants.filter((t) => (t.contracts?.length ?? 0) > 0);
+  const noPortal = tenants.filter((t) => !t.userId);
+  const chips: { key: Filter; label: string; count: number }[] = [
+    { key: 'ALL', label: 'Todos', count: tenants.length },
+    { key: 'CONTRACT', label: 'Con contrato', count: withContract.length },
+    { key: 'NO_PORTAL', label: 'Sin cuenta portal', count: noPortal.length },
+  ];
+
+  const q = query.trim().toLowerCase();
+  const list = (filter === 'ALL' ? tenants : filter === 'CONTRACT' ? withContract : noPortal).filter((t) =>
+    q ? `${t.fullName} ${t.phone ?? ''} ${t.contracts?.[0]?.property?.name ?? ''}`.toLowerCase().includes(q) : true
+  );
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-heading">Inquilinos</h1>
+      <MainHeader>
+        {/* SUB-CABECERA / TÍTULO DE SECCIÓN */}
+        <div className="pt-4 pb-3 sm:pt-0">
+          <div className="flex items-center justify-between mb-1">
+            <h1 className="text-xl font-bold tracking-tight">Directorio de Inquilinos</h1>
+            <span className="text-xs bg-[#2D9E6B]/20 text-[#2D9E6B] font-semibold px-2 py-0.5 rounded-full border border-[#2D9E6B]/40">
+              {tenants.length} registrados
+            </span>
+          </div>
+          <p className="text-xs text-white/80">Gestión de accesos al portal, contratos y contactos</p>
+        </div>
+      </MainHeader>
+
+      <div className="max-w-md sm:max-w-5xl mx-auto w-full">
+        {/* BUSCADOR */}
+        <div className="px-4 -mt-3 relative z-10">
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#A7B0BB] text-[20px]">search</span>
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              type="text"
+              placeholder="Buscar por nombre, teléfono o propiedad..."
+              className="w-full bg-white text-[#173A5F] placeholder-[#A7B0BB] text-xs font-medium pl-9 pr-3 py-2.5 rounded-[8px] border border-[#A7B0BB]/30 focus:outline-none focus:border-[#2D9E6B] shadow-sm"
+            />
+          </div>
+        </div>
+
+        {/* CHIPS DE FILTRO */}
+        <div className="px-4 mt-3">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs">
+            {chips.map((c) => (
+              <button
+                key={c.key}
+                onClick={() => setFilter(c.key)}
+                className={
+                  filter === c.key
+                    ? 'bg-[#173A5F] text-white font-semibold px-3.5 py-1.5 rounded-[8px] whitespace-nowrap shadow-sm'
+                    : 'bg-white text-[#173A5F] hover:bg-white/80 font-medium px-3.5 py-1.5 rounded-[8px] border border-[#A7B0BB]/30 whitespace-nowrap shadow-sm'
+                }
+              >
+                {c.label} ({c.count})
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* LISTA DE TARJETAS */}
+        <main className="px-4 mt-3 pb-24 sm:pb-8">
+          {error && <div className="mb-3 bg-red-50 border border-red-200 rounded-[8px] p-3 text-xs text-red-700">{error}</div>}
+          {isLoading ? (
+            <p className="text-xs text-[#A7B0BB]">Cargando...</p>
+          ) : list.length === 0 ? (
+            <div className="bg-white rounded-[8px] border border-[#A7B0BB]/30 p-6 text-center text-xs text-[#A7B0BB]">
+              {tenants.length === 0 ? 'Aún no hay inquilinos registrados.' : 'Ningún inquilino coincide con la búsqueda.'}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {list.map((t) => {
+                const contract = t.contracts?.[0];
+                const isActive = t.status === 'ACTIVE';
+                return (
+                  <article
+                    key={t.id}
+                    className={`rounded-[8px] border border-[#A7B0BB]/30 p-3.5 shadow-sm hover:shadow transition-shadow ${isActive ? 'bg-white' : 'bg-[#F5F1E8]/60'}`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className={`w-11 h-11 rounded-full text-white flex items-center justify-center font-bold text-sm flex-shrink-0 ${
+                            isActive ? 'bg-[#173A5F] ring-2 ring-[#2D9E6B]/30' : 'bg-[#A7B0BB]'
+                          }`}
+                        >
+                          {initials(t.fullName)}
+                        </div>
+                        <div className="min-w-0">
+                          <h2 className="text-sm font-bold text-[#173A5F] truncate">{t.fullName}</h2>
+                          <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5">
+                            <span className="material-symbols-outlined text-[14px]">phone</span>
+                            {t.phone ?? 'Sin teléfono'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                        {isActive ? (
+                          <span className="inline-flex items-center gap-1 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[11px] font-semibold px-2 py-0.5 rounded-[8px]">
+                            <span className="w-1.5 h-1.5 bg-[#2D9E6B] rounded-full"></span>
+                            Activo
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 bg-[#A7B0BB]/20 text-[#586270] text-[11px] font-semibold px-2 py-0.5 rounded-[8px]">
+                            <span className="w-1.5 h-1.5 bg-[#A7B0BB] rounded-full"></span>
+                            {t.status === 'EVICTED' ? 'Desalojado' : 'Finalizado'}
+                          </span>
+                        )}
+                        {t.userId ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] text-[#2D9E6B] font-medium bg-[#F5F1E8] px-1.5 py-0.5 rounded-[6px]" title="Cuenta activa en portal">
+                            <span className="material-symbols-outlined text-[13px] fill text-[#2D9E6B]">key</span>
+                            Portal On
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] text-[#D97706] font-medium bg-[#FEF3C7] px-1.5 py-0.5 rounded-[6px]" title="Sin cuenta en portal">
+                            <span className="material-symbols-outlined text-[13px]">key_off</span>
+                            Sin portal
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="mt-3 pt-2.5 border-t border-[#A7B0BB]/20 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 text-[#173A5F] font-medium truncate mr-2">
+                        <span className="material-symbols-outlined text-[16px] text-[#173A5F]">apartment</span>
+                        <span className="truncate">{contract?.property?.name ?? 'Sin contrato activo'}</span>
+                      </div>
+                      {contract && (
+                        <span className="text-[11px] font-semibold text-[#173A5F] bg-[#F5F1E8] px-2 py-0.5 rounded-[6px] whitespace-nowrap">
+                          {contract.property.city}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-2.5 flex items-center gap-2">
+                      <Link
+                        href={`/tenants/${t.id}/profile`}
+                        className="flex-1 bg-[#173A5F] text-white text-xs font-semibold py-1.5 px-3 rounded-[8px] text-center hover:opacity-90 active:scale-95 transition-all"
+                      >
+                        Ver perfil
+                      </Link>
+                      {t.phone && (
+                        <>
+                          <a
+                            href={`tel:${t.phone}`}
+                            className="p-1.5 text-[#173A5F] hover:bg-[#F5F1E8] rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center"
+                            aria-label="Llamar"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">call</span>
+                          </a>
+                          <a
+                            href={waLink(t.phone)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 text-[#2D9E6B] hover:bg-[#2D9E6B]/10 rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center"
+                            aria-label="WhatsApp"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">chat</span>
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* FAB */}
+      <div className="fixed bottom-20 sm:bottom-6 right-4 z-40 pointer-events-none">
         <Link
           href="/tenants/new"
-          className="bg-primary hover:bg-primary-pressed text-white px-4 py-2.5 rounded-xl text-sm font-medium self-start sm:self-auto active:opacity-80"
+          className="pointer-events-auto inline-flex items-center gap-2 bg-[#2D9E6B] hover:bg-[#25875a] active:scale-95 text-white font-bold text-xs px-4 py-3 rounded-full shadow-lg shadow-[#2D9E6B]/30 transition-all"
         >
-          + Nuevo inquilino
+          <span className="material-symbols-outlined text-[18px]">person_add</span>
+          <span>+ Nuevo inquilino</span>
         </Link>
       </div>
-      <p className="text-sm text-muted -mt-4 mb-6">
-        Escanea el INE para llenar los datos automáticamente, o captúralos a mano. La propiedad y la fecha de
-        ingreso se asignan al crear su contrato. Toca un inquilino para ver su perfil completo, editarlo o
-        eliminarlo.
-      </p>
-
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-sm text-red-800 dark:text-red-400 mb-6">
-          {error}
-        </div>
-      )}
-
-      {isLoading ? (
-        <p className="text-muted">Cargando...</p>
-      ) : tenants.length === 0 ? (
-        <div className="bg-surface rounded-2xl p-8 text-center text-muted">No hay inquilinos registrados.</div>
-      ) : (
-        <>
-          {/* Mobile: cards */}
-          <div className="sm:hidden space-y-3">
-            {tenants.map((tenant) => {
-              const currentProperty = tenant.contracts?.[0]?.property;
-              return (
-                <Link
-                  key={tenant.id}
-                  href={`/tenants/${tenant.id}/profile`}
-                  className="flex items-center gap-3 bg-surface rounded-2xl shadow-sm p-4 active:opacity-70 transition-opacity"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-heading font-semibold truncate">{tenant.fullName}</p>
-                      <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[tenant.status]}`}>
-                        {statusLabels[tenant.status]}
-                      </span>
-                    </div>
-                    <p className="text-muted text-sm truncate">{tenant.phone || 'Sin teléfono'}</p>
-                    {currentProperty && (
-                      <p className="text-xs text-muted mt-1 truncate">Vive en: {currentProperty.name}</p>
-                    )}
-                  </div>
-                  <ChevronRightIcon className="w-5 h-5 text-muted shrink-0" />
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Desktop: table */}
-          <div className="hidden sm:block bg-surface rounded-2xl shadow-sm overflow-hidden overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-canvas text-muted text-left">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Nombre</th>
-                  <th className="px-4 py-3 font-medium">Teléfono</th>
-                  <th className="px-4 py-3 font-medium">Propiedad actual</th>
-                  <th className="px-4 py-3 font-medium">Estado</th>
-                  <th className="px-4 py-3 font-medium text-right">Perfil</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/5 dark:divide-white/10">
-                {tenants.map((tenant) => (
-                  <tr
-                    key={tenant.id}
-                    onClick={() => (window.location.href = `/tenants/${tenant.id}/profile`)}
-                    className="cursor-pointer hover:bg-black/[0.02] dark:hover:bg-white/[0.03]"
-                  >
-                    <td className="px-4 py-3 text-heading font-medium">{tenant.fullName}</td>
-                    <td className="px-4 py-3 text-muted">{tenant.phone ?? '—'}</td>
-                    <td className="px-4 py-3 text-muted">{tenant.contracts?.[0]?.property.name ?? '—'}</td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[tenant.status]}`}>
-                        {statusLabels[tenant.status]}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <Link href={`/tenants/${tenant.id}/profile`} className="text-primary hover:underline">
-                        Ver perfil →
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
     </ProtectedRoute>
   );
 }
