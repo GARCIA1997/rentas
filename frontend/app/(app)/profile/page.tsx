@@ -162,7 +162,7 @@ function TenantProfile() {
               className={
                 tab === t
                   ? "py-3 text-[0.875rem] font-bold text-[#173A5F] relative flex items-center space-x-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-[#2D9E6B]"
-                  : 'py-3 text-[0.875rem] font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors relative flex items-center space-x-1.5'
+                  : 'py-3 text-[0.875rem] font-medium text-[#73777f] hover:text-[#173A5F] transition-colors relative flex items-center space-x-1.5'
               }
             >
               <span>{t === 'perfil' ? 'Perfil' : 'Reportes'}</span>
@@ -179,7 +179,7 @@ function TenantProfile() {
           <p className="text-xs text-[#73777F]">Cargando...</p>
         ) : !tenant ? (
           <div className={`${card} text-center`}>
-            <span className="material-symbols-outlined text-[36px] text-[#A7B0BB]">link_off</span>
+            <span className="material-symbols-outlined text-[36px] text-[#73777f]">link_off</span>
             <p className="text-xs text-[#43474E] mt-1">
               Tu cuenta aún no está vinculada a ningún contrato. Contacta al administrador si crees que esto es un error.
             </p>
@@ -371,7 +371,7 @@ function TenantProfile() {
             </section>
             {reports.length === 0 ? (
               <div className={`${card} text-center`}>
-                <span className="material-symbols-outlined text-[36px] text-[#A7B0BB]">task_alt</span>
+                <span className="material-symbols-outlined text-[36px] text-[#73777f]">task_alt</span>
                 <p className="text-xs text-[#73777F] mt-1">No has reportado ninguna incidencia.</p>
               </div>
             ) : (
@@ -393,7 +393,7 @@ function TenantProfile() {
               <div className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[20px] text-[#173A5F]">apartment</span>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-[#A7B0BB] tracking-wider">Inmueble asignado</div>
+                  <div className="text-[10px] uppercase font-bold text-[#73777f] tracking-wider">Inmueble asignado</div>
                   <div className="text-xs font-bold text-[#173A5F]">{tenant.currentProperty.name}</div>
                 </div>
               </div>
@@ -410,7 +410,7 @@ function TenantProfile() {
                 <span>Descripción de la incidencia</span>
                 <span className="text-rose-500 font-bold">*</span>
               </label>
-              <span className="text-[11px] text-[#A7B0BB]">{reportDescription.length} / 500</span>
+              <span className="text-[11px] text-[#73777f]">{reportDescription.length} / 500</span>
             </div>
             <textarea
               id="descripcion-incidencia"

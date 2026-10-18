@@ -164,7 +164,7 @@ export default function PaymentsPage() {
         {/* Buscador */}
         <div className="mt-3.5 flex gap-2">
           <div className="relative flex-1">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#A7B0BB] text-[18px]">search</span>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#73777f] text-[18px]">search</span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -212,9 +212,9 @@ export default function PaymentsPage() {
         {error && <div className="bg-[#FEE2E2] border border-[#FECACA] rounded-[8px] p-3 text-xs text-[#DC2626]">{error}</div>}
 
         {isLoading ? (
-          <p className="text-xs text-[#A7B0BB]">Cargando pagos...</p>
+          <p className="text-xs text-[#73777f]">Cargando pagos...</p>
         ) : list.length === 0 ? (
-          <div className="bg-white rounded-[8px] p-6 border border-[#E2E8F0] text-center text-xs text-[#A7B0BB]">
+          <div className="bg-white rounded-[8px] p-6 border border-[#E2E8F0] text-center text-xs text-[#73777f]">
             {segment === 'overdue' ? 'Sin pagos vencidos.' : segment === 'upcoming' ? 'No hay pagos próximos.' : 'Aún no hay pagos registrados.'}
           </div>
         ) : (
@@ -236,7 +236,7 @@ export default function PaymentsPage() {
                         <span className="material-symbols-outlined text-[#173A5F] text-[16px]">apartment</span>
                         <h3 className="font-sans font-bold text-sm text-[#173A5F] truncate">{p.property?.name ?? '—'}</h3>
                       </div>
-                      <p className="text-xs text-[#A7B0BB] flex items-center gap-1 font-medium">
+                      <p className="text-xs text-[#73777f] flex items-center gap-1 font-medium">
                         <span className="material-symbols-outlined text-[14px]">person</span>
                         {p.tenant?.fullName ?? '—'}
                       </p>
@@ -259,19 +259,19 @@ export default function PaymentsPage() {
 
                   <div className={`mt-3 pt-2.5 border-t border-[#F5F1E8] flex items-center justify-between ${isOverdue ? 'pl-1' : ''}`}>
                     <div>
-                      <span className="text-[10px] text-[#A7B0BB] uppercase font-semibold tracking-wider block">Pago</span>
+                      <span className="text-[10px] text-[#73777f] uppercase font-semibold tracking-wider block">Pago</span>
                       <span className="text-xs font-mono font-medium text-[#173A5F]">{folio}</span>
                     </div>
                     <div className="text-right">
                       <span
                         className={`text-[10px] uppercase font-semibold tracking-wider block ${
-                          isPaid ? 'text-[#2D9E6B]' : isOverdue ? 'text-[#DC2626]' : 'text-[#A7B0BB]'
+                          isPaid ? 'text-[#2D9E6B]' : isOverdue ? 'text-[#DC2626]' : 'text-[#73777f]'
                         }`}
                       >
                         {isPaid ? 'Liquidado' : Number(p.amountPaid) > 0 ? `Abonado ${money(p.amountPaid)}` : 'Monto renta'}
                       </span>
                       <span className={`font-sans text-base font-bold ${isPaid ? 'text-[#2D9E6B]' : isOverdue ? 'text-[#DC2626]' : 'text-[#173A5F]'}`}>
-                        {money(p.amountDue)} <span className="text-xs font-medium text-[#A7B0BB]">MXN</span>
+                        {money(p.amountDue)} <span className="text-xs font-medium text-[#73777f]">MXN</span>
                       </span>
                     </div>
                   </div>
@@ -345,7 +345,7 @@ export default function PaymentsPage() {
             </div>
             <div>
               <h4 className="font-sans font-bold text-xs text-[#173A5F]">Reporte contable mensual</h4>
-              <p className="text-[11px] text-[#A7B0BB]">Ingresos, por cobrar y exportación CSV</p>
+              <p className="text-[11px] text-[#73777f]">Ingresos, por cobrar y exportación CSV</p>
             </div>
           </div>
           <Link

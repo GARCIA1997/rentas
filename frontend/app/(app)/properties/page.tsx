@@ -8,6 +8,7 @@ import { PropertyFormModal } from '@/components/PropertyFormModal';
 import { useAuth } from '@/hooks/useAuth';
 import { propertiesApi, Property } from '@/lib/api';
 import { MainHeader } from '@/components/StitchHeader';
+import { Fab } from '@/components/Fab';
 
 type Filter = 'ALL' | 'HOUSE' | 'LOCAL' | 'OCUPADA' | 'LIBRE';
 const money = (n: number | string) => `$${Number(n).toLocaleString('es-MX')}`;
@@ -87,18 +88,18 @@ export default function PropertiesPage() {
           <div className="flex items-baseline justify-between gap-2">
             <div>
               <h1 className="font-sans text-2xl font-bold tracking-tight text-white">Propiedades</h1>
-              <p className="font-sans text-xs font-medium text-[#A7B0BB] mt-0.5">{properties.length} inmuebles en gestión activa</p>
+              <p className="font-sans text-xs font-medium text-[#73777f] mt-0.5">{properties.length} inmuebles en gestión activa</p>
             </div>
             <div className="flex items-center space-x-1.5 bg-[#0E253D]/80 border border-[#A7B0BB]/25 px-2.5 py-1 rounded-lg shrink-0">
               <span className="w-2 h-2 rounded-full bg-[#2D9E6B]"></span>
               <span className="text-[11px] font-semibold text-white/90">{occupied} Ocupadas</span>
-              <span className="text-[11px] text-[#A7B0BB] font-medium">· {free} Libres</span>
+              <span className="text-[11px] text-[#73777f] font-medium">· {free} Libres</span>
             </div>
           </div>
           {/* Search Bar */}
           <div className="mt-4 flex items-center space-x-2">
             <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#A7B0BB]">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#73777f]">
                 <span className="material-symbols-outlined text-[20px]">search</span>
               </div>
               <input
@@ -136,9 +137,9 @@ export default function PropertiesPage() {
       <main className="flex-1 px-4 py-4 max-w-md sm:max-w-5xl mx-auto w-full">
         {error && <div className="mb-3 bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-700">{error}</div>}
         {isLoading ? (
-          <p className="text-xs text-[#A7B0BB]">Cargando...</p>
+          <p className="text-xs text-[#73777f]">Cargando...</p>
         ) : list.length === 0 ? (
-          <div className="bg-white rounded-lg border border-[#A7B0BB]/25 p-6 text-center text-xs text-[#A7B0BB]">
+          <div className="bg-white rounded-lg border border-[#A7B0BB]/25 p-6 text-center text-xs text-[#73777f]">
             {properties.length === 0 ? 'Aún no tienes propiedades.' : 'Ninguna propiedad coincide con el filtro.'}
           </div>
         ) : (
@@ -176,17 +177,17 @@ export default function PropertiesPage() {
                   <div className="p-4 flex-1 flex flex-col justify-between">
                     <div>
                       <h2 className="font-sans font-bold text-base text-[#173A5F]">{p.name}</h2>
-                      <div className="flex items-center text-xs text-[#A7B0BB] mt-1">
+                      <div className="flex items-center text-xs text-[#73777f] mt-1">
                         <span className="material-symbols-outlined text-[16px] mr-1 text-[#2D9E6B]">location_on</span>
                         <span className="font-medium text-slate-600">
                           {p.address}, {p.city}
                         </span>
                       </div>
                       <div className="mt-3.5 pb-3 border-b border-[#A7B0BB]/15 flex items-baseline justify-between">
-                        <span className="text-xs text-[#A7B0BB] font-medium">{p.status === 'OCUPADA' ? 'Canon mensual' : 'Canon estimado'}</span>
+                        <span className="text-xs text-[#73777f] font-medium">{p.status === 'OCUPADA' ? 'Renta mensual' : 'Renta estimada'}</span>
                         <div className="text-right">
                           <span className="font-sans font-bold text-lg text-[#173A5F]">{money(p.rentalPrice)}</span>
-                          <span className="text-xs text-[#A7B0BB] font-medium"> MXN / mes</span>
+                          <span className="text-xs text-[#73777f] font-medium"> MXN / mes</span>
                         </div>
                       </div>
                       {occupant ? (
@@ -197,7 +198,7 @@ export default function PropertiesPage() {
                             </div>
                             <div>
                               <p className="text-xs font-semibold text-[#173A5F] leading-tight">{occupant.fullName}</p>
-                              <p className="text-[10px] text-[#A7B0BB]">Inquilino actual</p>
+                              <p className="text-[10px] text-[#73777f]">Inquilino actual</p>
                             </div>
                           </div>
                         </div>
@@ -207,7 +208,7 @@ export default function PropertiesPage() {
                             <span className="material-symbols-outlined text-[18px] text-amber-600">real_estate_agent</span>
                             <div>
                               <p className="text-xs font-semibold text-[#173A5F] leading-tight">Disponible</p>
-                              <p className="text-[10px] text-[#A7B0BB]">Sin contrato activo</p>
+                              <p className="text-[10px] text-[#73777f]">Sin contrato activo</p>
                             </div>
                           </div>
                           <Link
@@ -235,17 +236,7 @@ export default function PropertiesPage() {
           </div>
         )}
       </main>
-
-      {/* FLOATING ACTION BUTTON (FAB) */}
-      <div className="fixed bottom-20 sm:bottom-6 right-4 z-40">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-[#2D9E6B] text-white font-semibold text-xs px-4 py-3 rounded-lg shadow-lg hover:bg-[#258257] active:scale-95 transition-all duration-150 flex items-center space-x-1.5 tracking-wide"
-        >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          <span>Nueva propiedad</span>
-        </button>
-      </div>
+      <Fab icon="add" label="Nueva propiedad" onClick={() => setIsModalOpen(true)} />
 
       <PropertyFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSaved={loadProperties} />
     </ProtectedRoute>

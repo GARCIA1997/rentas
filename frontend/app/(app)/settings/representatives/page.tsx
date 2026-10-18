@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { representativesApi, Representative, RepresentativeInput } from '@/lib/api';
 import { useToast } from '@/components/ToastProvider';
 import { useConfirm } from '@/components/ConfirmProvider';
+import { Fab } from '@/components/Fab';
 
 const emptyForm: RepresentativeInput = {
   fullName: '',
@@ -131,7 +132,7 @@ export default function RepresentativesPage() {
           <p className="text-xs text-[#73777f]">Cargando...</p>
         ) : representatives.length === 0 ? (
           <div className="bg-white border border-[#DDD9CF] rounded-lg p-6 text-center">
-            <span className="material-symbols-outlined text-[36px] text-[#A7B0BB]">badge</span>
+            <span className="material-symbols-outlined text-[36px] text-[#73777f]">badge</span>
             <p className="text-xs text-[#586270] mt-1">No hay representantes registrados. Sin uno no se puede generar el PDF de un contrato.</p>
           </div>
         ) : (
@@ -167,15 +168,15 @@ export default function RepresentativesPage() {
                 </div>
                 <div className="mt-3 pt-3 border-t border-[#DDD9CF]/60 grid grid-cols-1 gap-2 text-xs">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[#A7B0BB] font-medium">Identificación:</span>
+                    <span className="text-[#73777f] font-medium">Identificación:</span>
                     <span className="font-semibold text-[#173A5F] tracking-wide select-all font-mono truncate">{rep.idDocument || '—'}</span>
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[#A7B0BB] font-medium">Teléfono:</span>
+                    <span className="text-[#73777f] font-medium">Teléfono:</span>
                     <span className="font-semibold text-[#173A5F] select-all">{rep.phone || '—'}</span>
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[#A7B0BB] font-medium">Correo:</span>
+                    <span className="text-[#73777f] font-medium">Correo:</span>
                     <span className="font-medium text-[#586270] truncate">{rep.email || '—'}</span>
                   </div>
                 </div>
@@ -204,16 +205,7 @@ export default function RepresentativesPage() {
         )}
       </main>
 
-      <div className="fixed bottom-20 sm:bottom-6 right-4 z-40">
-        <button
-          onClick={openCreateModal}
-          type="button"
-          className="inline-flex items-center gap-2 bg-[#2D9E6B] hover:bg-[#25875a] active:scale-95 text-white font-bold text-xs px-4 py-3 rounded-full shadow-lg shadow-[#2D9E6B]/30 transition-all"
-        >
-          <span className="material-symbols-outlined text-[18px]">person_add</span>
-          <span>Nuevo representante</span>
-        </button>
-      </div>
+      <Fab icon="person_add" label="Nuevo representante" onClick={openCreateModal} />
 
       <Modal
           isOpen={isModalOpen}

@@ -210,7 +210,7 @@ export default function TenantProfilePage() {
     return (
       <ProtectedRoute requiredRole="ADMIN">
         <DetailHeader title="Perfil de Inquilino" backHref="/tenants" />
-        <p className="px-4 pt-4 text-xs text-[#A7B0BB]">Cargando...</p>
+        <p className="px-4 pt-4 text-xs text-[#73777f]">Cargando...</p>
       </ProtectedRoute>
     );
   }
@@ -260,14 +260,14 @@ export default function TenantProfilePage() {
   const statusBadge: Record<Contract['status'], string> = {
     DRAFT: 'bg-amber-50 text-amber-700',
     ACTIVE: 'bg-[#2D9E6B]/10 text-[#2D9E6B]',
-    EXPIRED: 'bg-[#F5F1E8] text-[#A7B0BB]',
+    EXPIRED: 'bg-[#F5F1E8] text-[#73777f]',
     AUTO_RENEWAL_PENDING: 'bg-amber-50 text-amber-700',
     CANCELLED: 'bg-rose-50 text-rose-700',
   };
   const reportBadge: Record<MaintenanceReport['status'], string> = {
     REPORTED: 'bg-amber-50 text-amber-700',
     IN_PROGRESS: 'bg-[#173A5F]/10 text-[#173A5F]',
-    CLOSED: 'bg-[#F5F1E8] text-[#A7B0BB]',
+    CLOSED: 'bg-[#F5F1E8] text-[#73777f]',
   };
   const TABS = [
     { key: 'resumen' as const, label: 'Resumen', count: 0, countClass: '' },
@@ -306,7 +306,7 @@ export default function TenantProfilePage() {
                 <span className="material-symbols-outlined text-sm text-[#2D9E6B]">apartment</span>
                 <span className="truncate">{activeContract?.property?.name ?? 'Sin contrato activo'}</span>
               </div>
-              <p className="text-[11px] text-[#A7B0BB] mt-0.5">
+              <p className="text-[11px] text-[#73777f] mt-0.5">
                 {tenant.status === 'ACTIVE' ? 'Inquilino activo' : tenant.status === 'EVICTED' ? 'Desalojado' : 'Finalizado'}
                 {tenant.userId ? ' • Portal activo' : ' • Sin cuenta en portal'}
               </p>
@@ -359,7 +359,7 @@ export default function TenantProfilePage() {
               className={
                 tab === t.key
                   ? 'relative flex-1 py-2.5 text-center text-xs font-semibold text-[#173A5F] border-b-[3px] border-[#2D9E6B] transition-colors flex items-center justify-center gap-1'
-                  : 'flex-1 py-2.5 text-center text-xs font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors flex items-center justify-center gap-1'
+                  : 'flex-1 py-2.5 text-center text-xs font-medium text-[#73777f] hover:text-[#173A5F] transition-colors flex items-center justify-center gap-1'
               }
             >
               <span>{t.label}</span>
@@ -397,8 +397,8 @@ export default function TenantProfilePage() {
                   { icon: 'home_pin', label: 'Domicilio', value: tenant.address },
                 ].map((row) => (
                   <div key={row.label} className="flex items-center justify-between py-0.5 gap-3">
-                    <div className="text-[#A7B0BB] flex items-center gap-1.5 shrink-0">
-                      <span className="material-symbols-outlined text-sm text-[#A7B0BB]">{row.icon}</span>
+                    <div className="text-[#73777f] flex items-center gap-1.5 shrink-0">
+                      <span className="material-symbols-outlined text-sm text-[#73777f]">{row.icon}</span>
                       <span>{row.label}</span>
                     </div>
                     <div className="flex items-center gap-2 min-w-0">
@@ -410,7 +410,7 @@ export default function TenantProfilePage() {
                             navigator.clipboard.writeText(row.value as string);
                             showToast('Teléfono copiado', 'success');
                           }}
-                          className="text-[#A7B0BB] hover:text-[#2D9E6B] active:scale-90 transition-transform"
+                          className="text-[#73777f] hover:text-[#2D9E6B] active:scale-90 transition-transform"
                           type="button"
                         >
                           <span className="material-symbols-outlined text-sm">content_copy</span>
@@ -444,22 +444,22 @@ export default function TenantProfilePage() {
                 </div>
                 <div className="space-y-2.5 text-xs">
                   <div>
-                    <div className="text-[11px] text-[#A7B0BB] font-medium">Inmueble asignado</div>
+                    <div className="text-[11px] text-[#73777f] font-medium">Inmueble asignado</div>
                     <div className="font-semibold text-[#173A5F] text-sm mt-0.5">{activeContract.property?.name ?? '—'}</div>
-                    {activeContract.property?.city && <div className="text-[11px] text-[#A7B0BB]">{activeContract.property.city}</div>}
+                    {activeContract.property?.city && <div className="text-[11px] text-[#73777f]">{activeContract.property.city}</div>}
                   </div>
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#DDD9CF]/60">
                     <div className="bg-[#F5F1E8] p-2.5 rounded-lg">
-                      <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Renta Mensual</div>
+                      <div className="text-[10px] text-[#73777f] uppercase font-bold tracking-wider">Renta Mensual</div>
                       <div className="text-sm font-bold text-[#173A5F] mt-0.5">
-                        {money(activeContract.monthlyRent)} <span className="text-[10px] font-medium text-[#A7B0BB]">MXN</span>
+                        {money(activeContract.monthlyRent)} <span className="text-[10px] font-medium text-[#73777f]">MXN</span>
                       </div>
                       <div className="text-[10px] text-[#2D9E6B] font-medium mt-0.5 flex items-center gap-0.5">
                         <span className="material-symbols-outlined text-[11px]">event_available</span> Día {activeContract.paymentDay} c/mes
                       </div>
                     </div>
                     <div className="bg-[#F5F1E8] p-2.5 rounded-lg">
-                      <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Próximo Cobro</div>
+                      <div className="text-[10px] text-[#73777f] uppercase font-bold tracking-wider">Próximo Cobro</div>
                       <div className="text-sm font-bold text-[#173A5F] mt-0.5">{nextPayment ? formatDate(nextPayment.dueDate) : '—'}</div>
                       {nextPayment && (
                         <div className="text-[10px] text-[#173A5F]/80 font-medium mt-0.5 flex items-center gap-0.5">
@@ -470,11 +470,11 @@ export default function TenantProfilePage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between pt-1 text-[11px]">
-                    <span className="text-[#A7B0BB]">Depósito en garantía:</span>
+                    <span className="text-[#73777f]">Depósito en garantía:</span>
                     <span className="font-semibold text-[#173A5F]">{money(activeContract.depositAmount)} MXN</span>
                   </div>
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-[#A7B0BB]">Vigencia de contrato:</span>
+                    <span className="text-[#73777f]">Vigencia de contrato:</span>
                     <span className="font-semibold text-[#173A5F]">
                       {formatDate(activeContract.startDate)} – {activeContract.endDate ? formatDate(activeContract.endDate) : '—'}
                     </span>
@@ -523,7 +523,7 @@ export default function TenantProfilePage() {
                         <a key={side} href={inePhotos[side]} target="_blank" rel="noopener noreferrer" className="block">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={inePhotos[side]} alt={side === 'front' ? 'Frente del INE' : 'Reverso del INE'} className="w-full rounded-lg border border-[#DDD9CF]" />
-                          <p className="text-[10px] text-[#A7B0BB] text-center mt-1">{side === 'front' ? 'Frente' : 'Reverso'}</p>
+                          <p className="text-[10px] text-[#73777f] text-center mt-1">{side === 'front' ? 'Frente' : 'Reverso'}</p>
                         </a>
                       )
                   )}
@@ -582,16 +582,16 @@ export default function TenantProfilePage() {
           <div className="flex flex-col gap-3.5">
             <div className="grid grid-cols-2 gap-2">
               <div className="card-ksared p-3">
-                <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Puntualidad</div>
+                <div className="text-[10px] text-[#73777f] uppercase font-bold tracking-wider">Puntualidad</div>
                 <div className="text-xl font-bold text-[#173A5F] mt-0.5">{punctualityPercent}%</div>
                 <div className="text-[10px] text-[#2D9E6B] font-medium">
                   {punctualPayments.length}/{paidPayments.length} puntuales
                 </div>
               </div>
               <div className="card-ksared p-3">
-                <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Pagos</div>
+                <div className="text-[10px] text-[#73777f] uppercase font-bold tracking-wider">Pagos</div>
                 <div className="text-xl font-bold text-[#173A5F] mt-0.5">{paidPayments.length}</div>
-                <div className="text-[10px] text-[#A7B0BB] font-medium">de {payments.length} registrados</div>
+                <div className="text-[10px] text-[#73777f] font-medium">de {payments.length} registrados</div>
               </div>
             </div>
 
@@ -618,7 +618,7 @@ export default function TenantProfilePage() {
             </nav>
 
             {listToShow.length === 0 ? (
-              <div className="card-ksared p-6 text-center text-xs text-[#A7B0BB]">
+              <div className="card-ksared p-6 text-center text-xs text-[#73777f]">
                 {segment === 'paid' ? 'Aún no hay pagos registrados.' : 'Sin pagos en esta sección.'}
               </div>
             ) : (
@@ -632,7 +632,7 @@ export default function TenantProfilePage() {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="text-sm font-bold text-[#173A5F]">{formatDate(isPaid ? payment.paidDate ?? payment.dueDate : payment.dueDate)}</p>
-                        <p className="text-[11px] text-[#A7B0BB]">
+                        <p className="text-[11px] text-[#73777f]">
                           {payment.paymentType ? paymentTypeLabels[payment.paymentType] : 'Renta'}
                           {payment.paymentNumber && ` · ${payment.paymentNumber}/${payment.totalPaymentsInContract}`}
                           {!isPaid && Number(payment.amountPaid) > 0 && ` · abonado ${money(payment.amountPaid)}`}
@@ -703,7 +703,7 @@ export default function TenantProfilePage() {
         {tab === 'contratos' && (
           <div className="flex flex-col gap-3.5">
             {sortedContracts.length === 0 ? (
-              <div className="card-ksared p-6 text-center text-xs text-[#A7B0BB]">Sin contratos registrados todavía.</div>
+              <div className="card-ksared p-6 text-center text-xs text-[#73777f]">Sin contratos registrados todavía.</div>
             ) : (
               sortedContracts.map((c) => (
                 <Link key={c.id} href={`/contracts/${c.id}`} className="card-ksared p-3.5 flex items-center justify-between gap-3">
@@ -712,13 +712,13 @@ export default function TenantProfilePage() {
                       <span className="material-symbols-outlined text-[16px] text-[#173A5F]">description</span>
                       <p className="text-sm font-bold text-[#173A5F] truncate">{c.property?.name ?? '—'}</p>
                     </div>
-                    <p className="text-[11px] text-[#A7B0BB] mt-0.5">
+                    <p className="text-[11px] text-[#73777f] mt-0.5">
                       {formatDate(c.startDate)} – {c.endDate ? formatDate(c.endDate) : '—'} · {money(c.monthlyRent)}/mes
                     </p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${statusBadge[c.status]}`}>{contractStatusLabels[c.status]}</span>
-                    <span className="material-symbols-outlined text-[18px] text-[#A7B0BB]">chevron_right</span>
+                    <span className="material-symbols-outlined text-[18px] text-[#73777f]">chevron_right</span>
                   </div>
                 </Link>
               ))
@@ -729,7 +729,7 @@ export default function TenantProfilePage() {
         {tab === 'reportes' && (
           <div className="flex flex-col gap-3.5">
             {reports.length === 0 ? (
-              <div className="card-ksared p-6 text-center text-xs text-[#A7B0BB]">Sin incidencias reportadas.</div>
+              <div className="card-ksared p-6 text-center text-xs text-[#73777f]">Sin incidencias reportadas.</div>
             ) : (
               reports.map((report) => (
                 <Link key={report.id} href={`/tenants/${tenantId}/reports/${report.id}`} className="card-ksared p-3.5 flex items-center gap-3">
@@ -739,10 +739,10 @@ export default function TenantProfilePage() {
                       <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${reportBadge[report.status]}`}>
                         {maintenanceReportStatusLabels[report.status]}
                       </span>
-                      <span className="text-[11px] text-[#A7B0BB]">{formatDate(report.createdAt)}</span>
+                      <span className="text-[11px] text-[#73777f]">{formatDate(report.createdAt)}</span>
                     </div>
                   </div>
-                  <span className="material-symbols-outlined text-[18px] text-[#A7B0BB] shrink-0">chevron_right</span>
+                  <span className="material-symbols-outlined text-[18px] text-[#73777f] shrink-0">chevron_right</span>
                 </Link>
               ))
             )}

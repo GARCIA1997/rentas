@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { contractsApi, Contract, ContractRenewalAlert } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
 import { MainHeader } from '@/components/StitchHeader';
+import { Fab } from '@/components/Fab';
 
 type Filter = 'ALL' | 'ACTIVE' | 'RENEW' | 'DRAFT' | 'FINISHED' | 'CANCELLED';
 const money = (n: number | string) => `$${Number(n).toLocaleString('es-MX')}`;
@@ -80,8 +81,8 @@ export default function ContractsPage() {
       <MainHeader>
         <div className="pt-1 sm:pt-0">
           <h1 className="font-sans text-headline-sm text-white font-semibold mt-3 sm:mt-0">Contratos de Arrendamiento</h1>
-          <p className="font-sans text-body-sm text-[#A7B0BB] mt-0.5">
-            {contracts.length} contratos registrados · {activeCount} activos
+          <p className="font-sans text-body-sm text-[#73777f] mt-0.5">
+            {contracts.length} {contracts.length === 1 ? 'contrato registrado' : 'contratos registrados'} · {activeCount} {activeCount === 1 ? 'activo' : 'activos'}
           </p>
           <div className="mt-3 flex items-center gap-2">
             <div className="relative flex-1">
@@ -89,7 +90,7 @@ export default function ContractsPage() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full bg-white text-[#1c1c16] placeholder:text-[#A7B0BB] text-body-md font-sans pl-10 pr-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-[#2D9E6B] focus:outline-none shadow-sm"
+                className="w-full bg-white text-[#1c1c16] placeholder:text-[#73777f] text-body-md font-sans pl-10 pr-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-[#2D9E6B] focus:outline-none shadow-sm"
                 placeholder="Buscar por inquilino, propiedad, folio..."
                 type="search"
               />
@@ -140,9 +141,9 @@ export default function ContractsPage() {
         </div>
 
         {isLoading ? (
-          <p className="text-body-sm text-[#A7B0BB]">Cargando...</p>
+          <p className="text-body-sm text-[#73777f]">Cargando...</p>
         ) : list.length === 0 ? (
-          <div className="bg-white rounded-lg border border-[#A7B0BB]/30 p-6 text-center text-body-sm text-[#A7B0BB]">
+          <div className="bg-white rounded-lg border border-[#A7B0BB]/30 p-6 text-center text-body-sm text-[#73777f]">
             {contracts.length === 0 ? 'Aún no hay contratos registrados.' : 'Ningún contrato coincide con el filtro.'}
           </div>
         ) : (
@@ -171,7 +172,7 @@ export default function ContractsPage() {
                     <div className="flex-1 min-w-0">
                       <h3 className="font-sans text-headline-sm text-[#1c1c16] font-semibold truncate">{c.tenant?.fullName ?? 'Pendiente'}</h3>
                       <p className="font-sans text-body-sm text-[#43474e] flex items-center gap-1 mt-0.5 truncate">
-                        <span className="material-symbols-outlined text-[16px] text-[#A7B0BB]">apartment</span>
+                        <span className="material-symbols-outlined text-[16px] text-[#73777f]">apartment</span>
                         {c.property?.name ?? '—'}
                       </p>
                     </div>
@@ -222,17 +223,7 @@ export default function ContractsPage() {
           </div>
         )}
       </main>
-
-      {/* FAB */}
-      <div className="fixed bottom-20 sm:bottom-6 right-4 z-40">
-        <Link
-          href="/contracts/new"
-          className="bg-[#2D9E6B] text-white font-semibold text-xs px-4 py-3 rounded-lg shadow-lg hover:bg-[#258257] active:scale-95 transition-all duration-150 flex items-center space-x-1.5"
-        >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          <span>Nuevo contrato</span>
-        </Link>
-      </div>
+      <Fab icon="add" label="Nuevo contrato" href="/contracts/new" />
     </ProtectedRoute>
   );
 }

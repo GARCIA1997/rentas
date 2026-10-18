@@ -40,7 +40,7 @@ export function Modal({
                 </div>
               )}
               <h2 className="text-xl font-bold text-[#173A5F] tracking-tight">{title}</h2>
-              {subtitle && <p className="text-xs text-[#A7B0BB] font-semibold mt-0.5">{subtitle}</p>}
+              {subtitle && <p className="text-xs text-[#73777f] font-semibold mt-0.5">{subtitle}</p>}
             </div>
             <button
               onClick={onClose}
