@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/lib/authContext";
 import { ThemeProvider } from "@/lib/themeContext";
 import { ToastProvider } from "@/components/ToastProvider";
@@ -17,8 +17,8 @@ const themeInitScript = `
 })();
 `;
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
 });
 
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d9488",
+  themeColor: "#173A5F",
   viewportFit: "cover",
   width: "device-width",
   initialScale: 1,
@@ -53,12 +53,18 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* Íconos de los diseños de Stitch */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+        />
       </head>
-      <body className="min-h-full flex flex-col bg-canvas text-heading">
+      <body className="min-h-full flex flex-col bg-[#F5F1E8] text-[#173A5F]">
         <ThemeProvider>
           <ToastProvider>
             <ConfirmProvider>

@@ -1,13 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ReportConversation } from '@/components/ReportConversation';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ToastProvider';
 import { meApi, MaintenanceReport } from '@/lib/api';
-import { ArrowLeftIcon } from '@/components/icons';
 
 // Refresco ligero mientras la conversación está abierta — no es tiempo real (no hay
 // WebSockets en esta app), pero evita que una respuesta del admin quede sin verse hasta
@@ -16,7 +15,6 @@ const POLL_INTERVAL_MS = 15_000;
 
 export default function TenantReportDetailPage() {
   const { token } = useAuth();
-  const router = useRouter();
   const params = useParams();
   const reportId = params?.id as string;
   const { showToast } = useToast();
@@ -54,23 +52,13 @@ export default function TenantReportDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="flex flex-col h-[calc(100dvh-env(safe-area-inset-top)-4.5rem)] sm:h-[calc(100vh-6rem)]">
-        <button
-          onClick={() => router.push('/profile')}
-          className="flex items-center gap-1.5 text-muted hover:text-heading text-sm mb-4 -ml-1 shrink-0"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Mis reportes
-        </button>
-
-        {isLoading ? (
-          <p className="text-muted">Cargando...</p>
-        ) : !report ? (
-          <p className="text-muted">No se encontró el reporte.</p>
+        {isLoading || !report ? (
+          <p className="p-4 text-xs text-[#73777f]">{isLoading ? 'Cargando...' : 'No se encontró el reporte.'}</p>
         ) : (
-          <ReportConversation report={report} viewerRole="INQUILINO" onSend={handleSend} />
+          <ReportConversation report={report} viewerRole="INQUILINO" onSend={handleSend}
+            backHref={"/profile?tab=reportes"}
+            backLabel={"Mis reportes"} />
         )}
-      </div>
     </ProtectedRoute>
   );
 }

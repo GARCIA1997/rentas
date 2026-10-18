@@ -116,13 +116,15 @@ export const generateReceiptPdf = async (id) => {
   return generatePdfBuffer(html);
 };
 
-// Get overdue payments (dueDate in the past and status is OVERDUE)
+// Pagos vencidos: dueDate en el pasado y no pagados. No se filtra por status === 'OVERDUE'
+// porque status sólo se recalcula al escribir el registro (ver computeStatus) y un pago sin
+// tocar sigue en PENDING después de vencer.
 export const getOverduePayments = async () => {
   const now = new Date();
   return prisma.rentPayment.findMany({
     where: {
       dueDate: { lt: now },
-      status: 'OVERDUE'
+      status: { not: 'PAID' }
     },
     include: includeRelations,
     orderBy: { dueDate: 'asc' }
@@ -138,7 +140,7 @@ export const getUpcomingPayments = async (daysAhead = 7) => {
     where: {
       AND: [
         { dueDate: { gte: now, lte: futureDate } },
-        { status: { in: ['PENDING'] } }
+        { status: { not: 'PAID' } }
       ]
     },
     include: includeRelations,

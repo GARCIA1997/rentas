@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ksared — Nuevo inquilino: Revisión de datos leídos del INE</title>
+<!-- Material Symbols Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Montserrat Font Family -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#8cf8bd",
+            "surface": "#fdf9f0",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#85a4cf",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-container": "#9ba4ae",
+            "on-primary-fixed-variant": "#28486e",
+            "on-error": "#ffffff",
+            "tertiary": "#1c242d",
+            "on-surface-variant": "#43474e",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "surface-bright": "#fdf9f0",
+            "secondary-fixed": "#8cf8bd",
+            "on-surface": "#1c1c16",
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#006c45",
+            "surface-variant": "#e6e2d9",
+            "background": "#fdf9f0",
+            "on-background": "#1c1c16",
+            "tertiary-fixed": "#dae3ef",
+            "error": "#ba1a1a",
+            "primary-fixed": "#d3e4ff",
+            "on-secondary-container": "#007349",
+            "surface-container-highest": "#e6e2d9",
+            "surface-dim": "#dddad1",
+            "on-secondary-fixed": "#002112",
+            "inverse-surface": "#31302b",
+            "on-secondary-fixed-variant": "#005233",
+            "primary-container": "#173a5f",
+            "primary-fixed-dim": "#a9c9f5",
+            "outline-variant": "#c3c6cf",
+            "surface-container-low": "#f7f3ea",
+            "outline": "#73777f",
+            "tertiary-fixed-dim": "#bec7d3",
+            "on-tertiary-fixed": "#141c25",
+            "inverse-primary": "#a9c9f5",
+            "on-primary-fixed": "#001c38",
+            "surface-container-high": "#ece8df",
+            "surface-container": "#f1eee5",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#313a43",
+            "on-tertiary-fixed-variant": "#3f4851",
+            "inverse-on-surface": "#f4f0e7",
+            "surface-tint": "#416087",
+            "primary": "#002445",
+            "secondary-fixed-dim": "#70dba2"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "space-md": "1rem",
+            "gutter": "1rem",
+            "margin": "1rem",
+            "space-sm": "0.5rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Montserrat"],
+            "headline-md": ["Montserrat"],
+            "body-md": ["Montserrat"],
+            "body-lg": ["Montserrat"],
+            "label-lg": ["Montserrat"],
+            "headline-lg": ["Montserrat"],
+            "label-sm": ["Montserrat"],
+            "label-md": ["Montserrat"],
+            "body-sm": ["Montserrat"]
+          },
+          "fontSize": {
+            "headline-sm": ["1.125rem", { "lineHeight": "1.5rem", "fontWeight": "600" }],
+            "headline-md": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "body-md": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "body-lg": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "600" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "2.25rem", "fontWeight": "700" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "fontWeight": "500" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "600" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f7f3ea;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Brand exact flat colors */
+    .brand-navy { color: #173A5F; }
+    .bg-brand-navy { background-color: #173A5F; }
+    .border-brand-navy { border-color: #173A5F; }
+    .brand-green { color: #2D9E6B; }
+    .bg-brand-green { background-color: #2D9E6B; }
+    .border-brand-green { border-color: #2D9E6B; }
+    .border-sand { border-color: #E2E6EA; }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased flex justify-center min-h-screen py-0 sm:py-6">
+<!-- Mobile Screen Container 390px -->
+<div class="w-full max-w-[390px] bg-surface flex flex-col min-h-screen sm:min-h-[844px] shadow-sm relative pb-10">
+<!-- 1. TopAppBar (Shared Component Standard: Navy Blue Flat Header) -->
+<header class="fixed top-0 left-0 right-0 max-w-[390px] mx-auto z-50 flex items-center justify-between px-4 h-16 bg-primary-container text-on-primary border-b border-primary-container">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 active:opacity-80 transition-opacity" type="button">
+<span class="material-symbols-outlined text-white text-2xl">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline-sm text-headline-sm text-white leading-tight">Nuevo inquilino</h1>
+<span class="font-label-sm text-label-sm text-on-primary-container tracking-wide">Paso 2 de 2 · Validación INE</span>
+</div>
+</div>
+<button aria-label="Ayuda" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 active:opacity-80 transition-opacity" type="button">
+<span class="material-symbols-outlined text-white text-2xl">help_outline</span>
+</button>
+</header>
+<!-- Content Area (with pt-16 to offset fixed header) -->
+<main class="pt-20 px-4 flex flex-col gap-4">
+<!-- 2. Banner Informativo Sutil -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant/40 p-3.5 flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-secondary-container/30 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined brand-green text-xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-tertiary font-medium leading-snug">
+            Verifica y confirma la información extraída automáticamente de la credencial para votar.
+          </p>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">
+            Los datos marcados con MRZ provienen del código biométrico.
+          </p>
+</div>
+</section>
+<!-- 3. Sección 'Documento escaneado' con Miniaturas INE -->
+<section class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg brand-navy font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-lg brand-navy">badge</span>
+            Documento escaneado
+          </span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm brand-green font-medium">
+<span class="material-symbols-outlined text-base brand-green" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            2 de 2 procesadas
+          </span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Tarjeta Frente -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant/40 p-2.5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-md text-label-md brand-navy font-semibold">Frente</span>
+<span class="w-2 h-2 rounded-full bg-brand-green"></span>
+</div>
+<!-- Simulación INE Frente con Placeholder Foto -->
+<div class="relative w-full h-24 rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container-low mb-2">
+<img class="w-full h-full object-cover" data-alt="A clean, close-up photograph of the front of a Mexican INE credential card resting flat on a neutral background under bright balanced architectural office lighting. The card features a clear citizen portrait in high resolution, holographic security micro-patterns in subdued green and gray, and official typography in deep corporate navy. Sharp focus and modern flat professional styling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOaf7nAPbKiOTXV2Tp7fj88PFsOTZej_P6UguKOnVmO3sWA33xVkctiVulE1fPlirM_S3SE3126c1Uw4HNJY2jh4dXth3nAUjwjK10p-94RwO2yb9PJvu1WqD4rQEC1RJ6Vjfi9btliSNXebmBOpaqlugdwuFdwv66krQIOevAQRv-S1syewp0pg-V5TmpVecM3ri8Z_Lrlu0CGNsbhD7WmJCMpMbPgqXlRVQn0XBGiiKeObYC3x9X3AP3Exwt9AYK75ZHknYs7wtI"/>
+<div class="absolute bottom-1 right-1 bg-primary-container/85 px-1.5 py-0.5 rounded text-[9px] font-semibold text-white tracking-wider">
+                  OCR OK
+                </div>
+</div>
+</div>
+<button class="inline-flex items-center justify-center gap-1 w-full py-1.5 rounded-lg border border-outline-variant text-tertiary hover:bg-surface-container active:opacity-80 transition-opacity font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-sm text-outline">refresh</span>
+              Repetir
+            </button>
+</div>
+<!-- Tarjeta Reverso -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant/40 p-2.5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-md text-label-md brand-navy font-semibold">Reverso</span>
+<span class="w-2 h-2 rounded-full bg-brand-green"></span>
+</div>
+<!-- Simulación INE Reverso con Placeholder Foto -->
+<div class="relative w-full h-24 rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container-low mb-2">
+<img class="w-full h-full object-cover" data-alt="A realistic detailed close-up shot of the reverse side of a Mexican voter ID card, displaying optical barcode lines, fingerprint graphic element, and prominent MRZ code strips. Balanced crisp documentary lighting with corporate navy, crisp paper white, and muted forest green hues, capturing an authentic flat identification document aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn1u2nbcCzpEtegK4U3Vcw8fev7sh9yhCzT96AxL_fVpl2S93_k6YaSLUtJpmmXs_vLeteQTbAeSzXQ2WN3ObbYPWN8XWqgbY6b93o5BvUaoBRYEoK_LQsnqLtczqqoNR6prhXw-Nh847m_N8Mf53g5bZRGECCzXHUdO90hELWHAdaWA78zIKADO6WFfHh5HO5J6r8numTkMU07Akud7yZQysB_361Ih_ZlMgv8WF1TDqWnFpQjvQW3QiO7USVRS3FCnik-6BA0L2Y"/>
+<div class="absolute bottom-1 right-1 bg-brand-green/90 px-1.5 py-0.5 rounded text-[9px] font-semibold text-white tracking-wider">
+                  MRZ OK
+                </div>
+</div>
+</div>
+<button class="inline-flex items-center justify-center gap-1 w-full py-1.5 rounded-lg border border-outline-variant text-tertiary hover:bg-surface-container active:opacity-80 transition-opacity font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-sm text-outline">refresh</span>
+              Repetir
+            </button>
+</div>
+</div>
+</section>
+<!-- 4. Formulario Editable de Datos Extraídos -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant/40 p-4 flex flex-col gap-3.5">
+<!-- Header Formulario -->
+<div class="flex items-center justify-between border-b border-surface-container pb-2.5">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm brand-navy font-semibold">Datos personales</h2>
+<span class="bg-surface-container px-2 py-0.5 rounded-full font-label-sm text-label-sm text-outline font-semibold">5 / 6 listos</span>
+</div>
+<span class="font-label-sm text-label-sm brand-navy font-medium flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm">edit_note</span>
+            Editable
+          </span>
+</div>
+<!-- Campo 1: Nombre Completo -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-tertiary font-semibold" for="inp-nombre">Nombre completo (apellidos primero)</label>
+<span class="bg-secondary-container/40 text-secondary border border-secondary-container font-label-sm text-[10px] px-2 py-0.5 rounded-full font-semibold">
+              MRZ
+            </span>
+</div>
+<div class="relative">
+<input class="w-full h-11 px-3 bg-surface-container-low border border-outline-variant/60 rounded-lg font-body-md text-body-md text-tertiary font-medium focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-nombre" type="text" value="GUTIÉRREZ MENDOZA, SOFÍA VALERIA"/>
+<span class="absolute right-3 top-3 material-symbols-outlined text-base brand-green" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Campo 2: CURP -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-tertiary font-semibold" for="inp-curp">CURP</label>
+<span class="bg-secondary-container/40 text-secondary border border-secondary-container font-label-sm text-[10px] px-2 py-0.5 rounded-full font-semibold">
+              MRZ
+            </span>
+</div>
+<div class="relative">
+<input class="w-full h-11 px-3 uppercase tracking-wider bg-surface-container-low border border-outline-variant/60 rounded-lg font-body-md text-body-md text-tertiary font-semibold focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-curp" type="text" value="GUMS940815MDFRND04"/>
+<span class="absolute right-3 top-3 material-symbols-outlined text-base brand-green" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Dos Columnas: Nacimiento & Clave de Elector -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Campo 3: Fecha de Nacimiento -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-tertiary font-semibold truncate" for="inp-fnac">F. Nacimiento</label>
+<span class="bg-secondary-container/40 text-secondary border border-secondary-container font-label-sm text-[10px] px-1.5 py-0.5 rounded-full font-semibold">
+                MRZ
+              </span>
+</div>
+<input class="w-full h-11 px-3 bg-surface-container-low border border-outline-variant/60 rounded-lg font-body-md text-body-md text-tertiary font-medium focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-fnac" type="text" value="15 / 08 / 1994"/>
+<span class="font-label-sm text-label-sm text-outline">30 años</span>
+</div>
+<!-- Campo 4: Clave de Elector -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-tertiary font-semibold truncate" for="inp-clave">Clave Elector</label>
+<span class="bg-primary-fixed text-primary border border-primary-fixed-dim font-label-sm text-[10px] px-1.5 py-0.5 rounded-full font-semibold">
+                Frente
+              </span>
+</div>
+<input class="w-full h-11 px-2.5 uppercase font-medium bg-surface-container-low border border-outline-variant/60 rounded-lg font-body-md text-body-md text-tertiary focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-clave" type="text" value="GTMDSO94081509M100"/>
+<span class="font-label-sm text-label-sm text-outline">Sección 0914</span>
+</div>
+</div>
+<!-- Campo 5: Domicilio (Con Alerta Ámbar) -->
+<div class="flex flex-col gap-1 pt-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-tertiary font-semibold" for="inp-domicilio">Domicilio particular</label>
+<span class="bg-amber-100 text-amber-800 border border-amber-300 font-label-sm text-[10px] px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+              Requerido
+            </span>
+</div>
+<!-- Banner Alerta Ámbar Suave -->
+<div class="bg-amber-50 border border-amber-200 rounded-lg p-2.5 flex items-start gap-2">
+<span class="material-symbols-outlined text-amber-600 text-base mt-0.5">warning</span>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-amber-900 font-semibold leading-tight">No se pudo leer, complétalo</p>
+<p class="font-body-sm text-body-sm text-amber-800/80 leading-normal">El texto del reverso no cuenta con nitidez suficiente para extraer calle y colonia.</p>
+</div>
+</div>
+<textarea class="w-full p-3 bg-surface-container-lowest border-2 border-amber-300 rounded-lg font-body-md text-body-md text-tertiary placeholder:text-outline-variant focus:outline-none focus:border-brand-navy transition-colors resize-none" id="inp-domicilio" placeholder="Ingresa calle, número exterior, colonia, C.P. y ciudad..." rows="2"></textarea>
+</div>
+<!-- Campo 6: Teléfono de Contacto (Manual) -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-tertiary font-semibold" for="inp-tel">Teléfono (obligatorio) <span class="text-error">*</span></label>
+<span class="bg-surface-container-highest text-tertiary border border-outline-variant font-label-sm text-[10px] px-2 py-0.5 rounded-full font-semibold">
+              Manual
+            </span>
+</div>
+<div class="flex gap-2">
+<!-- Prefijo México -->
+<div class="flex items-center gap-1.5 px-3 bg-surface-container-low border border-outline-variant/60 rounded-lg shrink-0">
+<span class="text-base">🇲🇽</span>
+<span class="font-body-md text-body-md text-tertiary font-semibold">+52</span>
+</div>
+<!-- Input Numérico -->
+<input class="flex-1 h-11 px-3 bg-surface-container-low border border-outline-variant/60 rounded-lg font-body-md text-body-md text-tertiary font-medium focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-tel" type="tel" value="55 1234 5678"/>
+</div>
+<span class="font-body-sm text-body-sm text-outline">Se enviará el contrato y accesos a este número por WhatsApp.</span>
+</div>
+</section>
+<!-- 5. Botones de Acción -->
+<section class="flex flex-col gap-2.5 pt-2 pb-6">
+<!-- Botón Positivo Verde Oficial -->
+<button class="w-full h-12 bg-brand-green hover:bg-[#26885b] text-white font-label-lg text-label-lg font-semibold rounded-lg flex items-center justify-center gap-2 active:opacity-90 transition-all shadow-none" type="button">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check</span>
+          Guardar inquilino
+        </button>
+<!-- Botón Secundario Cancelar -->
+<button class="w-full py-2.5 text-center font-label-lg text-label-lg text-outline hover:text-tertiary active:opacity-75 transition-colors" type="button">
+          Cancelar y descartar
+        </button>
+<!-- Sello de Privacidad KsaRed -->
+<div class="flex items-center justify-center gap-1.5 pt-1 text-outline">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="font-label-sm text-[11px]">Validación biométrica encriptada bajo estándares NOM-151</span>
+</div>
+</section>
+</main>
+</div>
+</body></html>

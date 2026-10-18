@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useCallback, useContext, useRef, useState, ReactNode } from 'react';
-import { CheckCircleIcon, XCircleIcon, InfoIcon } from './icons';
 
 export type ToastVariant = 'success' | 'error' | 'info';
 
@@ -17,28 +16,32 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
-const VARIANT_STYLES: Record<ToastVariant, { icon: typeof CheckCircleIcon; iconClass: string }> = {
-  success: { icon: CheckCircleIcon, iconClass: 'text-emerald-600 dark:text-emerald-400' },
-  error: { icon: XCircleIcon, iconClass: 'text-red-600 dark:text-red-400' },
-  info: { icon: InfoIcon, iconClass: 'text-primary' },
+// Toasts de Stitch (design/stitch/toasts.html): tarjeta blanca, barra lateral de 4px e ícono en círculo tenue.
+const VARIANT_STYLES: Record<ToastVariant, { icon: string; title: string; circle: string; bar: string }> = {
+  success: { icon: 'check_circle', title: 'Listo', circle: 'bg-[#2D9E6B]/15 text-[#2D9E6B]', bar: 'bg-[#2D9E6B]' },
+  error: { icon: 'error', title: 'Algo salió mal', circle: 'bg-[#D32F2F]/15 text-[#D32F2F]', bar: 'bg-[#D32F2F]' },
+  info: { icon: 'info', title: 'Aviso', circle: 'bg-[#173A5F]/10 text-[#173A5F]', bar: 'bg-[#173A5F]' },
 };
 
 const AUTO_DISMISS_MS = 5000;
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }) {
-  const { icon: Icon, iconClass } = VARIANT_STYLES[toast.variant];
-
+  const v = VARIANT_STYLES[toast.variant];
   return (
-    <div className="glass-chrome pointer-events-auto flex items-start gap-3 rounded-2xl px-4 py-3.5 w-full animate-toast-in">
-      <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${iconClass}`} />
-      <p className="flex-1 text-sm text-heading leading-snug">{toast.message}</p>
-      <button
-        onClick={onDismiss}
-        className="shrink-0 text-muted hover:text-heading w-6 h-6 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors -mt-0.5 -mr-1"
-        aria-label="Cerrar"
-      >
-        ×
-      </button>
+    <div className="bg-white rounded-lg shadow-md border border-[#E2DDD2] flex items-stretch overflow-hidden pointer-events-auto w-full animate-toast-in">
+      <div className={`w-1 flex-shrink-0 ${v.bar}`}></div>
+      <div className="p-3 flex items-start space-x-2.5 flex-1 min-w-0">
+        <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${v.circle}`}>
+          <span className="material-symbols-outlined text-[18px]">{v.icon}</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-bold text-[#173A5F]">{v.title}</p>
+          <p className="text-[11px] text-[#475569] leading-snug mt-0.5">{toast.message}</p>
+        </div>
+        <button onClick={onDismiss} className="text-[#A7B0BB] hover:text-[#173A5F] p-0.5 transition active:scale-90 flex-shrink-0" aria-label="Cerrar">
+          <span className="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
     </div>
   );
 }

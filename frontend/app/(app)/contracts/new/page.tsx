@@ -16,10 +16,11 @@ import {
   Representative,
   ContractTemplateSummary,
 } from '@/lib/api';
-import { ArrowLeftIcon, CheckCircleIcon } from '@/components/icons';
 import { useToast } from '@/components/ToastProvider';
 
 const STEP_LABELS = ['Inquilino', 'Propiedad y fechas', 'Renta y depósito', 'Firma y plantilla', 'Condiciones', 'Revisión'];
+// Etiquetas cortas del stepper horizontal de Stitch (contract-wizard.html).
+const STEP_SHORT = ['Inquilino', 'Inmueble', 'Renta', 'Firma', 'Cláusulas', 'Revisión'];
 
 interface WizardState {
   tenantId: string;
@@ -60,8 +61,8 @@ const emptyState: WizardState = {
 const emptyTenantForm: TenantInput = { fullName: '', phone: '', email: '', idDocument: '', status: 'ACTIVE' };
 
 const inputClass =
-  'w-full px-3 py-2.5 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-xl focus:outline-none focus:ring-2 focus:ring-primary';
-const labelClass = 'block text-sm font-medium text-heading mb-1.5';
+  'w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all';
+const labelClass = 'block text-xs font-bold text-[#173A5F] mb-1.5';
 
 export default function NewContractWizardPage() {
   const { token } = useAuth();
@@ -211,10 +212,12 @@ export default function NewContractWizardPage() {
   if (createdContractId) {
     return (
       <ProtectedRoute requiredRole="ADMIN">
-        <div className="max-w-lg mx-auto text-center py-12">
-          <CheckCircleIcon className="w-16 h-16 text-primary mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-heading mb-2">Contrato creado</h1>
-          <p className="text-muted mb-8">
+        <div className="max-w-md mx-auto text-center px-4 py-16">
+          <div className="w-16 h-16 rounded-full bg-[#2D9E6B]/15 flex items-center justify-center mx-auto mb-4">
+            <span className="material-symbols-outlined fill text-[#2D9E6B] text-[40px]">task_alt</span>
+          </div>
+          <h1 className="text-2xl font-bold text-[#173A5F] mb-2">Contrato creado</h1>
+          <p className="text-[#586270] mb-8">
             Se generó el calendario completo de pagos mensuales para este contrato. Ya puedes generar el PDF para
             imprimir y firmar.
           </p>
@@ -222,13 +225,13 @@ export default function NewContractWizardPage() {
             <button
               onClick={handleGeneratePdfNow}
               disabled={isGeneratingPdf || !form.templateId}
-              className="bg-primary hover:bg-primary-pressed text-white py-3 rounded-xl text-sm font-medium disabled:opacity-50"
+              className="bg-[#2D9E6B] hover:bg-[#25855a] text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
             >
               {isGeneratingPdf ? 'Generando...' : 'Generar PDF ahora'}
             </button>
             <button
               onClick={() => router.push('/contracts')}
-              className="text-muted py-3 rounded-xl text-sm font-medium hover:bg-surface"
+              className="text-[#586270] py-3 rounded-lg text-sm font-medium hover:bg-white"
             >
               Ir a Contratos
             </button>
@@ -241,35 +244,78 @@ export default function NewContractWizardPage() {
   if (isLoadingData) {
     return (
       <ProtectedRoute requiredRole="ADMIN">
-        <p className="text-muted">Cargando...</p>
+        <p className="p-4 text-xs text-[#73777f]">Cargando...</p>
       </ProtectedRoute>
     );
   }
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="max-w-xl mx-auto">
-        <button
-          onClick={() => (step === 0 ? router.push('/contracts') : setStep(step - 1))}
-          className="flex items-center gap-1.5 text-muted hover:text-heading text-sm mb-4 -ml-1"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          {step === 0 ? 'Contratos' : STEP_LABELS[step - 1]}
-        </button>
+      {/* Markup portado de Stitch: design/stitch/contract-wizard.html (pantalla de tarea, sin tab bar) */}
+      <div className="min-h-[100dvh] flex flex-col bg-[#fdf9f0]">
+        <header className="bg-[#173a5f] text-[#ffffff] w-full sticky top-0 z-30 border-b border-[#002445] pt-[env(safe-area-inset-top)]">
+          <div className="max-w-xl mx-auto flex items-center gap-3 px-4 py-3 h-14">
+            <button
+              aria-label="Regresar"
+              type="button"
+              onClick={() => (step === 0 ? router.push('/contracts') : setStep(step - 1))}
+              className="text-[#ffffff] p-1.5 rounded-lg hover:bg-[#002445] transition-opacity active:opacity-90 flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div>
+              <h1 className="text-headline-sm font-sans text-[#ffffff] leading-tight font-semibold tracking-tight">Nuevo contrato</h1>
+              <p className="text-label-sm font-sans text-[#85a4cf] font-medium">
+                Paso {step + 1} de {STEP_LABELS.length}: {STEP_LABELS[step]}
+              </p>
+            </div>
+          </div>
+        </header>
 
-        {/* Progress bar */}
-        <div className="flex gap-1.5 mb-2">
-          {STEP_LABELS.map((_, i) => (
-            <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? 'bg-primary' : 'bg-black/10 dark:bg-white/10'}`} />
-          ))}
-        </div>
-        <p className="text-xs text-muted mb-6">
-          Paso {step + 1} de {STEP_LABELS.length}
-        </p>
+        <nav aria-label="Progreso del contrato" className="bg-[#ffffff] border-b border-[#e6e2d9] px-2 py-3.5">
+          <div className="max-w-xl mx-auto flex items-center justify-between">
+            {STEP_SHORT.map((label, i) => {
+              const done = i < step;
+              const active = i === step;
+              return (
+                <div key={label} className="flex flex-col items-center flex-1 min-w-0">
+                  <div className="flex items-center w-full">
+                    <span className={`w-full h-0.5 ${i === 0 ? 'bg-transparent' : i <= step ? 'bg-[#2D9E6B]' : 'bg-[#c3c6cf]'}`}></span>
+                    {done ? (
+                      <div className="w-6 h-6 rounded-full bg-[#2D9E6B] text-[#ffffff] flex items-center justify-center shrink-0 ring-2 ring-[#8cf8bd]">
+                        <span className="material-symbols-outlined text-[15px]">check</span>
+                      </div>
+                    ) : active ? (
+                      <div className="w-6 h-6 rounded-full bg-[#173a5f] text-[#ffffff] flex items-center justify-center text-label-sm font-sans font-bold shrink-0 ring-4 ring-[#d3e4ff]">
+                        {i + 1}
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-[#ece8df] border border-[#c3c6cf] text-[#43474e] flex items-center justify-center text-label-sm font-sans shrink-0">
+                        {i + 1}
+                      </div>
+                    )}
+                    <span className={`w-full h-0.5 ${i === STEP_SHORT.length - 1 ? 'bg-transparent' : i < step ? 'bg-[#2D9E6B]' : 'bg-[#c3c6cf]'}`}></span>
+                  </div>
+                  <span
+                    className={`text-[10px] font-sans mt-1 tracking-tight truncate max-w-full ${
+                      done ? 'font-medium text-[#2D9E6B]' : active ? 'font-bold text-[#173a5f]' : 'font-medium text-[#73777f]'
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </nav>
 
-        <h1 className="text-xl font-bold text-heading mb-5">{STEP_LABELS[step]}</h1>
+        <main className="flex-1 w-full max-w-xl mx-auto px-4 py-4">
+        <h2 className="text-sm font-bold text-[#173A5F] mb-3 flex items-center gap-2">
+          <span className="material-symbols-outlined text-[#2D9E6B] text-[20px]">history_edu</span>
+          {STEP_LABELS[step]}
+        </h2>
 
-        <div className="bg-surface rounded-2xl shadow-sm p-5 space-y-4">
+        <div className="bg-white rounded-[8px] border border-[#DDD9CF] shadow-[0_1px_3px_rgba(23,58,95,0.04)] p-4 space-y-4">
           {/* Step 0: Tenant */}
           {step === 0 && (
             <>
@@ -284,27 +330,27 @@ export default function NewContractWizardPage() {
                   />
                   <div className="max-h-72 overflow-y-auto -mx-1 px-1 space-y-2">
                     {filteredTenants.length === 0 ? (
-                      <p className="text-muted text-sm py-4 text-center">Sin resultados.</p>
+                      <p className="text-[#586270] text-sm py-4 text-center">Sin resultados.</p>
                     ) : (
                       filteredTenants.map((tenant) => (
                         <button
                           key={tenant.id}
                           onClick={() => setForm((prev) => ({ ...prev, tenantId: tenant.id }))}
-                          className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${
+                          className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                             form.tenantId === tenant.id
-                              ? 'border-primary bg-primary/10'
-                              : 'border-black/10 dark:border-white/10 hover:bg-canvas'
+                              ? 'border-[#2D9E6B] bg-[#2D9E6B]/10'
+                              : 'border-[#A7B0BB]/30 hover:bg-[#F5F1E8]'
                           }`}
                         >
-                          <p className="text-heading font-medium text-sm">{tenant.fullName}</p>
-                          <p className="text-muted text-xs">{tenant.phone || 'Sin teléfono'}</p>
+                          <p className="text-[#173A5F] font-medium text-sm">{tenant.fullName}</p>
+                          <p className="text-[#586270] text-xs">{tenant.phone || 'Sin teléfono'}</p>
                         </button>
                       ))
                     )}
                   </div>
                   <button
                     onClick={() => setShowNewTenantForm(true)}
-                    className="w-full text-primary text-sm font-medium py-2.5 rounded-xl border border-dashed border-primary/40 hover:bg-primary/5"
+                    className="w-full text-[#2D9E6B] text-sm font-medium py-2.5 rounded-lg border border-dashed border-[#2D9E6B]/40 hover:bg-[#2D9E6B]/5"
                   >
                     + Crear inquilino nuevo
                   </button>
@@ -350,18 +396,18 @@ export default function NewContractWizardPage() {
                       className={inputClass}
                     />
                   </div>
-                  {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
+                  {error && <p className="text-red-600 text-sm">{error}</p>}
                   <div className="flex gap-3">
                     <button
                       onClick={() => setShowNewTenantForm(false)}
-                      className="flex-1 py-2.5 rounded-xl text-sm font-medium text-muted hover:bg-canvas"
+                      className="flex-1 py-2.5 rounded-lg text-sm font-medium text-[#586270] hover:bg-[#F5F1E8]"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleCreateTenant}
                       disabled={!newTenant.fullName || isCreatingTenant}
-                      className="flex-1 bg-primary hover:bg-primary-pressed text-white py-2.5 rounded-xl text-sm font-medium disabled:opacity-50"
+                      className="flex-1 bg-[#2D9E6B] hover:bg-[#25855a] text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
                     >
                       {isCreatingTenant ? 'Creando...' : 'Crear y seleccionar'}
                     </button>
@@ -387,7 +433,7 @@ export default function NewContractWizardPage() {
                   ))}
                 </select>
                 {selectedProperty?.status === 'OCUPADA' && (
-                  <p className="text-amber-600 dark:text-amber-400 text-xs mt-1.5">
+                  <p className="text-amber-600 text-xs mt-1.5">
                     Esta propiedad ya figura como ocupada. Verifica que no tenga otro contrato activo vigente.
                   </p>
                 )}
@@ -423,7 +469,7 @@ export default function NewContractWizardPage() {
                   onChange={(e) => setForm({ ...form, paymentDay: e.target.value })}
                   className={inputClass}
                 />
-                <p className="text-xs text-muted mt-1">Los pagos se vencen en este día de cada mes</p>
+                <p className="text-xs text-[#586270] mt-1">Los pagos se vencen en este día de cada mes</p>
               </div>
             </>
           )}
@@ -432,7 +478,7 @@ export default function NewContractWizardPage() {
           {step === 2 && (
             <>
               {selectedProperty && (
-                <p className="text-xs text-muted bg-canvas rounded-lg px-3 py-2">
+                <p className="text-xs text-[#586270] bg-[#F5F1E8] rounded-lg px-3 py-2">
                   Precio de lista de {selectedProperty.name}: ${Number(selectedProperty.rentalPrice).toLocaleString('es-MX')}
                   /mes. Puedes ajustar la renta pactada para este contrato específico.
                 </p>
@@ -461,7 +507,7 @@ export default function NewContractWizardPage() {
                   />
                 </div>
               </div>
-              <label className="flex items-center gap-2 text-sm text-heading">
+              <label className="flex items-center gap-2 text-sm text-[#173A5F]">
                 <input
                   type="checkbox"
                   checked={form.waterIncluded}
@@ -470,7 +516,7 @@ export default function NewContractWizardPage() {
                 />
                 Agua incluida en la renta
               </label>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-[#586270]">
                 Se creará automáticamente un pago mensual pendiente por este monto durante todo el plazo del
                 contrato.
               </p>
@@ -495,7 +541,7 @@ export default function NewContractWizardPage() {
                   ))}
                 </select>
                 {representatives.length === 0 && (
-                  <p className="text-muted text-xs mt-1.5">
+                  <p className="text-[#586270] text-xs mt-1.5">
                     No hay representantes activos. Puedes agregarlos en Configuración → Representantes.
                   </p>
                 )}
@@ -521,7 +567,7 @@ export default function NewContractWizardPage() {
           {/* Step 4: Conditions */}
           {step === 4 && (
             <>
-              <label className="flex items-center gap-2 text-sm text-heading">
+              <label className="flex items-center gap-2 text-sm text-[#173A5F]">
                 <input
                   type="checkbox"
                   checked={form.autoRenewal}
@@ -531,7 +577,7 @@ export default function NewContractWizardPage() {
                 Renovación automática al finalizar
               </label>
               {selectedProperty?.propertyType === 'HOUSE' && (
-                <label className="flex items-center gap-2 text-sm text-heading">
+                <label className="flex items-center gap-2 text-sm text-[#173A5F]">
                   <input
                     type="checkbox"
                     checked={form.hasParking}
@@ -604,46 +650,54 @@ export default function NewContractWizardPage() {
                 ['Plantilla', selectedTemplate?.name ?? 'Sin plantilla'],
                 ['Renovación automática', form.autoRenewal ? 'Sí' : 'No'],
               ].map(([label, value]) => (
-                <div key={label} className="flex justify-between py-2 border-b border-black/5 dark:border-white/10 last:border-0 text-sm">
-                  <span className="text-muted">{label}</span>
-                  <span className="text-heading font-medium text-right">{value}</span>
+                <div key={label} className="flex justify-between py-2 border-b border-[#A7B0BB]/30 last:border-0 text-sm">
+                  <span className="text-[#586270]">{label}</span>
+                  <span className="text-[#173A5F] font-medium text-right">{value}</span>
                 </div>
               ))}
-              {error && <p className="text-red-600 dark:text-red-400 text-sm pt-2">{error}</p>}
+              {error && <p className="text-red-600 text-sm pt-2">{error}</p>}
             </div>
             );
           })()}
         </div>
 
-        {/* Navigation */}
+        </main>
+
         {!(step === 0 && showNewTenantForm) && (
-          <div className="flex gap-3 mt-6">
-            {step > 0 && (
-              <button
-                onClick={() => setStep(step - 1)}
-                className="flex-1 py-3 rounded-xl text-sm font-medium text-muted bg-surface hover:bg-canvas"
-              >
-                Atrás
-              </button>
-            )}
-            {step < STEP_LABELS.length - 1 ? (
-              <button
-                onClick={() => setStep(step + 1)}
-                disabled={!canProceed()}
-                className="flex-1 bg-primary hover:bg-primary-pressed text-white py-3 rounded-xl text-sm font-medium disabled:opacity-50"
-              >
-                Siguiente
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="flex-1 bg-primary hover:bg-primary-pressed text-white py-3 rounded-xl text-sm font-medium disabled:opacity-50"
-              >
-                {isSubmitting ? 'Creando...' : 'Crear contrato'}
-              </button>
-            )}
-          </div>
+          <footer className="sticky bottom-0 bg-white border-t border-[#DDD9CF] px-4 py-3.5 pb-[calc(env(safe-area-inset-bottom)+0.875rem)] z-30 shadow-[0_-2px_10px_rgba(23,58,95,0.06)]">
+            <div className="max-w-xl mx-auto flex gap-3">
+              {step > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setStep(step - 1)}
+                  className="flex-1 py-3.5 px-4 rounded-[8px] border border-[#A7B0BB] bg-white text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8] transition-all"
+                >
+                  Atrás
+                </button>
+              )}
+              {step < STEP_LABELS.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setStep(step + 1)}
+                  disabled={!canProceed()}
+                  className="flex-[2] py-3.5 px-4 rounded-[8px] bg-[#173A5F] text-white text-sm font-bold hover:bg-[#122e4c] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <span>Siguiente</span>
+                  <span className="material-symbols-outlined text-[19px]">arrow_forward</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="flex-[2] py-3.5 px-4 rounded-[8px] bg-[#2D9E6B] text-white text-sm font-bold hover:bg-[#258257] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <span className="material-symbols-outlined text-[19px]">task_alt</span>
+                  <span>{isSubmitting ? 'Creando...' : 'Crear contrato'}</span>
+                </button>
+              )}
+            </div>
+          </footer>
         )}
       </div>
     </ProtectedRoute>

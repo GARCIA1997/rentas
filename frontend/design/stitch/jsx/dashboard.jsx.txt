@@ -1,0 +1,315 @@
+
+{/* TOP APP BAR / BRAND HEADER */}
+<header className="bg-[#173A5F] text-white pt-4 pb-4 px-4 shadow-none relative">
+<div className="max-w-md mx-auto">
+{/* Top Row: Logo Oficial Negativo y Acciones (Notificaciones + Avatar) */}
+<div className="flex items-center justify-between">
+{/* Logo Oficial KsaRed Horizontal Negativo */}
+<div className="flex items-center">
+<img alt="KsaRed" className="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgHPN2jLXRm0TNnqC79_lhX__nmFBrSoLFGCP2C9WSJAZn_ZPX0LPufN0UKba9ApstnyYVZ2g3Ra04Uj8cAjmQpHhdkoSDh6wonSM5rmvGGQEqq7PPHKm5SMcH-XSuAMJ0oOO3j5sSdeary4_8BV5Ut9PKstVv94Qv1ArthaNTW8ICsnkSPAHtJdyy2bHYL-cn0qlAE3OIg4He8DO3826bo9QGZeuoihrV6YU3hi1WzM-Q8Cum2MkUZ8c8aAg9cnwHsLx3-9PygPEn" />
+</div>
+{/* Trailing Actions: Notifications & Avatar Mariana */}
+<div className="flex items-center space-x-2.5">
+<button aria-label="Notificaciones" className="relative p-2 rounded-[8px] text-white hover:bg-white/10 active:opacity-80 transition-colors" type="button">
+<span className="material-symbols-outlined text-[22px]">notifications</span>
+<span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+</button>
+<div className="relative flex items-center">
+<img alt="Mariana" className="w-9 h-9 rounded-full object-cover border border-white/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-vsI_ZK1ul45eo06tuniciOy65tNvoTkrn6cW93daqWP-FYvp9dPJzcG-O0Y9qJBQH098aDHIs3icy2irTbhiXRtxqpveUUCpkA67nWGmNgdnJ2BoBddvubTJwRdEE2KsMUOUy6MPbY7OpOhr438lyvmVoDK2MIEF6ejPX0pQL9Aj7O8cWEXD_oNF68T5ve7sSKlAicowvwNRkvs_KSuo8Jk4mHaMSNwGGhBbvggRmjtfQEPD1lEZklylCsZNsgYd69NPX4awqle-" />
+<span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#2D9E6B] border-2 border-[#173A5F] rounded-full"></span>
+</div>
+</div>
+</div>
+{/* User Greeting Bar */}
+<div className="flex items-center justify-between pt-3.5 mt-2 border-t border-white/10">
+<div>
+<h1 className="font-sans font-bold text-lg text-white leading-tight tracking-tight">Hola, Mariana</h1>
+<p className="text-xs text-[#A7B0BB] flex items-center gap-1 font-medium mt-0.5">
+<span>Administradora</span>
+<span className="text-[8px] text-[#A7B0BB]">•</span>
+<span className="text-[#2D9E6B] font-semibold">Panel Principal</span>
+</p>
+</div>
+{/* Period Indicator */}
+<div className="bg-white/10 px-2.5 py-1.5 rounded-[8px] border border-white/10 flex items-center gap-1.5 text-xs text-white font-medium">
+<span className="material-symbols-outlined text-[15px] text-[#2D9E6B]">calendar_today</span>
+<span className="font-sans text-[11px] font-semibold">Octubre 2024</span>
+</div>
+</div>
+</div>
+</header>
+{/* MAIN CONTAINER */}
+<main className="max-w-md mx-auto w-full px-4 pt-4 flex-1">
+{/* QUICK ACTION BUTTONS */}
+<section className="grid grid-cols-2 gap-3 mb-5">
+{/* Botón Azul Institucional */}
+<button className="flex items-center justify-center gap-2 bg-[#173A5F] text-white py-2.5 px-3 rounded-[8px] font-sans font-semibold text-xs hover:bg-[#122e4d] active:scale-[0.99] transition duration-150 border border-[#173A5F]">
+<span className="material-symbols-outlined text-base text-[#2D9E6B]">add_business</span>
+<span>+ Nueva propiedad</span>
+</button>
+{/* Botón Verde Corporativo */}
+<button className="flex items-center justify-center gap-2 bg-[#2D9E6B] text-white py-2.5 px-3 rounded-[8px] font-sans font-semibold text-xs hover:bg-[#25855a] active:scale-[0.99] transition duration-150 border border-[#2D9E6B]">
+<span className="material-symbols-outlined text-base text-white">payments</span>
+<span>+ Registrar pago</span>
+</button>
+</section>
+{/* METRICS & KPIS */}
+<section className="mb-5">
+<div className="flex items-center justify-between mb-3">
+<h2 className="font-sans font-bold text-xs uppercase tracking-wider text-[#173A5F]">Resumen operativo</h2>
+<span className="text-[11px] text-[#A7B0BB] font-medium">Actualizado hoy</span>
+</div>
+<div className="grid grid-cols-2 gap-3">
+{/* KPI 1: Propiedades */}
+<div className="bg-white p-3.5 rounded-[8px] border border-[#DDD9CF] flex flex-col justify-between">
+<div className="flex items-center justify-between mb-2">
+<span className="text-xs font-semibold text-[#A7B0BB] font-sans">Propiedades</span>
+<div className="w-8 h-8 rounded-[8px] bg-[#F5F1E8] flex items-center justify-center text-[#173A5F]">
+<span className="material-symbols-outlined text-[18px]">domain</span>
+</div>
+</div>
+<div>
+<div className="text-2xl font-bold font-sans text-[#173A5F] tracking-tight">24</div>
+<div className="mt-1 flex items-center gap-1 text-[11px] font-semibold text-[#2D9E6B]">
+<span className="material-symbols-outlined text-[14px]">trending_up</span>
+<span>+12% vs mes anterior</span>
+</div>
+</div>
+</div>
+{/* KPI 2: Inquilinos */}
+<div className="bg-white p-3.5 rounded-[8px] border border-[#DDD9CF] flex flex-col justify-between">
+<div className="flex items-center justify-between mb-2">
+<span className="text-xs font-semibold text-[#A7B0BB] font-sans">Inquilinos</span>
+<div className="w-8 h-8 rounded-[8px] bg-[#F5F1E8] flex items-center justify-center text-[#173A5F]">
+<span className="material-symbols-outlined text-[18px]">group</span>
+</div>
+</div>
+<div>
+<div className="text-2xl font-bold font-sans text-[#173A5F] tracking-tight">18</div>
+<div className="mt-1 flex items-center gap-1 text-[11px] font-medium text-[#2D9E6B]">
+<span className="material-symbols-outlined text-[14px]">check_circle</span>
+<span>100% al día</span>
+</div>
+</div>
+</div>
+{/* KPI 3: Ingresos mensuales */}
+<div className="bg-white p-3.5 rounded-[8px] border border-[#DDD9CF] flex flex-col justify-between">
+<div className="flex items-center justify-between mb-2">
+<span className="text-xs font-semibold text-[#A7B0BB] font-sans">Ingresos mes</span>
+<div className="w-8 h-8 rounded-[8px] bg-[#F5F1E8] flex items-center justify-center text-[#2D9E6B]">
+<span className="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+</div>
+</div>
+<div>
+<div className="text-2xl font-bold font-sans text-[#173A5F] tracking-tight">$12,480</div>
+<div className="mt-1 flex items-center gap-1 text-[11px] font-semibold text-[#2D9E6B]">
+<span className="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span>+8% vs anterior</span>
+</div>
+</div>
+</div>
+{/* KPI 4: Contratos activos */}
+<div className="bg-white p-3.5 rounded-[8px] border border-[#DDD9CF] flex flex-col justify-between">
+<div className="flex items-center justify-between mb-2">
+<span className="text-xs font-semibold text-[#A7B0BB] font-sans">Contratos</span>
+<div className="w-8 h-8 rounded-[8px] bg-[#F5F1E8] flex items-center justify-center text-[#173A5F]">
+<span className="material-symbols-outlined text-[18px]">description</span>
+</div>
+</div>
+<div>
+<div className="text-2xl font-bold font-sans text-[#173A5F] tracking-tight">16</div>
+<div className="mt-1 flex items-center gap-1 text-[11px] font-medium text-amber-700">
+<span className="material-symbols-outlined text-[14px] text-amber-600">event_repeat</span>
+<span>2 por vencer en 30 d</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+{/* SECTION: PAGOS PRÓXIMOS */}
+<section className="mb-4">
+<div className="flex items-center justify-between mb-3">
+<div className="flex items-center space-x-2">
+<h2 className="font-sans font-bold text-base text-[#173A5F]">Pagos próximos</h2>
+<span className="bg-[#173A5F]/10 text-[#173A5F] font-sans text-[11px] font-bold px-2 py-0.5 rounded-[6px]">4</span>
+</div>
+<a className="text-xs font-semibold text-[#2D9E6B] hover:text-[#25855a] flex items-center gap-0.5 font-sans" href="#">
+<span>Ver todos</span>
+<span className="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+{/* Payments List Cards */}
+<div className="space-y-2.5">
+{/* Card 1: Depto. 402 - Torre Real */}
+<article className="bg-white rounded-[8px] border border-[#DDD9CF] p-3.5 transition-all">
+<div className="flex items-start justify-between">
+<div className="space-y-1">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">Depto. 402 - Torre Real</span>
+<p className="text-xs text-[#A7B0BB] font-medium flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">person</span>
+<span className="text-[#173A5F]/80">Carlos Mendoza</span>
+</p>
+</div>
+{/* Monto & Badge */}
+<div className="text-right">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">$1,200</span>
+<span className="inline-flex items-center text-[10px] font-sans font-bold text-[#2D9E6B] bg-[#2D9E6B]/10 px-2 py-0.5 rounded-[4px] mt-1">
+                Pagado
+              </span>
+</div>
+</div>
+<div className="mt-2.5 pt-2 border-t border-[#F5F1E8] flex items-center justify-between text-xs text-[#A7B0BB]">
+<span className="flex items-center gap-1 text-[#173A5F]/70 font-medium">
+<span className="material-symbols-outlined text-[13px] text-[#A7B0BB]">schedule</span>
+<span>Vence: 05 Nov</span>
+</span>
+<span className="text-[11px] text-[#2D9E6B] font-semibold flex items-center gap-0.5">
+<span className="material-symbols-outlined text-[13px]">verified</span>
+<span>Confirmado</span>
+</span>
+</div>
+</article>
+{/* Card 2: Casa 12 - Los Sauces */}
+<article className="bg-white rounded-[8px] border border-[#DDD9CF] p-3.5 transition-all">
+<div className="flex items-start justify-between">
+<div className="space-y-1">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">Casa 12 - Los Sauces</span>
+<p className="text-xs text-[#A7B0BB] font-medium flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">person</span>
+<span className="text-[#173A5F]/80">Sofía Alarcón</span>
+</p>
+</div>
+{/* Monto & Badge */}
+<div className="text-right">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">$2,100</span>
+<span className="inline-flex items-center text-[10px] font-sans font-bold text-amber-800 bg-[#F5F1E8] border border-[#DDD9CF] px-2 py-0.5 rounded-[4px] mt-1">
+                Próximo
+              </span>
+</div>
+</div>
+<div className="mt-2.5 pt-2 border-t border-[#F5F1E8] flex items-center justify-between text-xs">
+<span className="flex items-center gap-1 text-[#173A5F]/80 font-medium">
+<span className="material-symbols-outlined text-[13px] text-amber-600">schedule</span>
+<span>Vence: 08 Nov</span>
+</span>
+<button className="bg-[#F5F1E8] hover:bg-[#173A5F] hover:text-white text-[#173A5F] border border-[#DDD9CF] text-[11px] font-sans font-semibold px-2 py-1 rounded-[6px] flex items-center gap-1 transition-colors">
+<span>Enviar recordatorio</span>
+<span className="material-symbols-outlined text-[12px]">send</span>
+</button>
+</div>
+</article>
+{/* Card 3: Oficina 3B - Plaza Central */}
+<article className="bg-white rounded-[8px] border border-[#DDD9CF] p-3.5 transition-all">
+<div className="flex items-start justify-between">
+<div className="space-y-1">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">Oficina 3B - Plaza Central</span>
+<p className="text-xs text-[#A7B0BB] font-medium flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">person</span>
+<span className="text-[#173A5F]/80">Roberto Gómez</span>
+</p>
+</div>
+{/* Monto & Badge */}
+<div className="text-right">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">$1,850</span>
+<span className="inline-flex items-center text-[10px] font-sans font-bold text-amber-800 bg-[#F5F1E8] border border-[#DDD9CF] px-2 py-0.5 rounded-[4px] mt-1">
+                Próximo
+              </span>
+</div>
+</div>
+<div className="mt-2.5 pt-2 border-t border-[#F5F1E8] flex items-center justify-between text-xs">
+<span className="flex items-center gap-1 text-[#173A5F]/80 font-medium">
+<span className="material-symbols-outlined text-[13px] text-amber-600">schedule</span>
+<span>Vence: 10 Nov</span>
+</span>
+<button className="bg-[#F5F1E8] hover:bg-[#173A5F] hover:text-white text-[#173A5F] border border-[#DDD9CF] text-[11px] font-sans font-semibold px-2 py-1 rounded-[6px] flex items-center gap-1 transition-colors">
+<span>Enviar recordatorio</span>
+<span className="material-symbols-outlined text-[12px]">send</span>
+</button>
+</div>
+</article>
+{/* Card 4: Depto. 101 - Residencial Palma */}
+<article className="bg-white rounded-[8px] border border-[#DDD9CF] p-3.5 transition-all">
+<div className="flex items-start justify-between">
+<div className="space-y-1">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">Depto. 101 - Residencial Palma</span>
+<p className="text-xs text-[#A7B0BB] font-medium flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">person</span>
+<span className="text-[#173A5F]/80">Elena Morales</span>
+</p>
+</div>
+{/* Monto & Badge */}
+<div className="text-right">
+<span className="font-sans font-bold text-sm text-[#173A5F] block">$950</span>
+<span className="inline-flex items-center text-[10px] font-sans font-bold text-[#2D9E6B] bg-[#2D9E6B]/10 px-2 py-0.5 rounded-[4px] mt-1">
+                Pagado
+              </span>
+</div>
+</div>
+<div className="mt-2.5 pt-2 border-t border-[#F5F1E8] flex items-center justify-between text-xs text-[#A7B0BB]">
+<span className="flex items-center gap-1 text-[#173A5F]/70 font-medium">
+<span className="material-symbols-outlined text-[13px] text-[#A7B0BB]">schedule</span>
+<span>Vence: 12 Nov</span>
+</span>
+<span className="text-[11px] text-[#2D9E6B] font-semibold flex items-center gap-0.5">
+<span className="material-symbols-outlined text-[13px]">verified</span>
+<span>Confirmado</span>
+</span>
+</div>
+</article>
+</div>
+</section>
+{/* SECTION: CONCILIACIÓN BANCARIA */}
+<section className="mt-2 mb-6 bg-white border border-[#DDD9CF] rounded-[8px] p-3.5 flex items-center justify-between">
+<div className="flex items-center gap-3">
+<div className="w-9 h-9 rounded-[8px] bg-[#F5F1E8] flex items-center justify-center text-[#2D9E6B] border border-[#DDD9CF]">
+<span className="material-symbols-outlined text-xl">account_balance</span>
+</div>
+<div>
+<h3 className="text-xs font-bold font-sans text-[#173A5F]">Conciliación bancaria</h3>
+<p className="text-[11px] text-[#A7B0BB] font-medium">Todas las cuentas sincronizadas</p>
+</div>
+</div>
+<button className="bg-[#F5F1E8] text-[#173A5F] hover:bg-[#173A5F] hover:text-white border border-[#173A5F]/30 px-3 py-1.5 rounded-[8px] text-xs font-sans font-semibold transition-colors duration-150">
+        Revisar
+      </button>
+</section>
+</main>
+{/* FIXED BOTTOM NAVIGATION BAR */}
+<nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#DDD9CF] px-1 h-16 flex items-center justify-between max-w-md mx-auto">
+{/* 1. Inicio (Active: Verde #2D9E6B) */}
+<a aria-current="page" className="flex-1 flex flex-col items-center justify-center py-1 text-[#2D9E6B] transition-colors relative" href="#">
+<span className="material-symbols-outlined text-[20px] font-bold">dashboard</span>
+<span className="font-sans text-[10px] font-bold mt-0.5">Inicio</span>
+<span className="w-1.5 h-1.5 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+</a>
+{/* 2. Propiedades */}
+<a className="flex-1 flex flex-col items-center justify-center py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">real_estate_agent</span>
+<span className="font-sans text-[10px] font-medium mt-0.5">Propiedades</span>
+<span className="w-1.5 h-1.5 opacity-0 mt-0.5"></span>
+</a>
+{/* 3. Inquilinos */}
+<a className="flex-1 flex flex-col items-center justify-center py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">group</span>
+<span className="font-sans text-[10px] font-medium mt-0.5">Inquilinos</span>
+<span className="w-1.5 h-1.5 opacity-0 mt-0.5"></span>
+</a>
+{/* 4. Contratos */}
+<a className="flex-1 flex flex-col items-center justify-center py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">description</span>
+<span className="font-sans text-[10px] font-medium mt-0.5">Contratos</span>
+<span className="w-1.5 h-1.5 opacity-0 mt-0.5"></span>
+</a>
+{/* 5. Pagos */}
+<a className="flex-1 flex flex-col items-center justify-center py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">payments</span>
+<span className="font-sans text-[10px] font-medium mt-0.5">Pagos</span>
+<span className="w-1.5 h-1.5 opacity-0 mt-0.5"></span>
+</a>
+{/* 6. Más */}
+<a className="flex-1 flex flex-col items-center justify-center py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">more_horiz</span>
+<span className="font-sans text-[10px] font-medium mt-0.5">Más</span>
+<span className="w-1.5 h-1.5 opacity-0 mt-0.5"></span>
+</a>
+</nav>

@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { BrandLogo } from '@/components/BrandLogo';
 import { LoginForm } from '@/components/LoginForm';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
@@ -21,11 +21,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-canvas flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-surface rounded-lg shadow-xl p-8">
-        <Image src="/logoksa.png" alt="KsaRed" width={112} height={112} className="mx-auto mb-2" priority />
-        <p className="text-center text-muted mb-8">Sistema de Gestión de Propiedades</p>
+    // Fondo institucional del kit: azul profundo con bloques diagonales a 45° derivados
+    // de la geometría del isotipo.
+    <div className="relative min-h-screen overflow-hidden bg-[#173A5F] flex flex-col items-center justify-center p-4">
+      <div aria-hidden className="pointer-events-none absolute -top-24 -left-32 h-96 w-96 rotate-45 bg-white/[0.04]" />
+      <div aria-hidden className="pointer-events-none absolute top-1/3 -right-40 h-[28rem] w-[28rem] rotate-45 bg-[#2D9E6B]/10" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-40 left-1/4 h-96 w-96 rotate-45 bg-white/[0.03]" />
 
+      <div className="relative flex flex-col items-center mb-8">
+        <BrandLogo size="lg" onDark />
+        <p className="mt-3 text-sm tracking-wide text-[#F5F1E8]/80">Gestión inteligente de propiedades</p>
+      </div>
+
+      <div className="relative w-full max-w-md bg-white rounded-lg shadow-xl p-8">
+        <h1 className="text-2xl font-bold text-[#173A5F]">Bienvenido de nuevo</h1>
+        <p className="text-sm text-[#586270] mt-1 mb-6">Ingresa tus credenciales para administrar tus propiedades.</p>
         <LoginForm />
       </div>
     </div>

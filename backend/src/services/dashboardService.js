@@ -82,6 +82,12 @@ export const getPaymentStats = async () => {
     },
   };
 
+  // RentPayment.status sólo se recalcula al escribir el registro, así que un pago sin
+  // tocar puede seguir en PENDING después de vencer (pasa en producción). Vencido/próximo
+  // se decide por dueDate contra hoy — mismo criterio que paymentReminderService. PAID sí
+  // es confiable: markAsPaid siempre lo escribe junto con paidDate.
+  const overdueWhere = { status: { not: 'PAID' }, dueDate: { lt: now }, ...contractFilter };
+
   const [
     totalOverdue,
     totalUpcoming,
@@ -89,14 +95,13 @@ export const getPaymentStats = async () => {
     overdueByProperty,
   ] = await Promise.all([
     prisma.rentPayment.aggregate({
-      where: { status: 'OVERDUE', ...contractFilter },
+      where: overdueWhere,
       _sum: { amountDue: true },
     }),
     prisma.rentPayment.aggregate({
       where: {
-        status: 'PENDING',
-        dueDate: { lte: sevenDaysFromNow },
-        NOT: { status: 'OVERDUE' },
+        status: { not: 'PAID' },
+        dueDate: { gte: now, lte: sevenDaysFromNow },
         ...contractFilter,
       },
       _sum: { amountDue: true },
@@ -107,7 +112,7 @@ export const getPaymentStats = async () => {
     }),
     prisma.rentPayment.groupBy({
       by: ['propertyId'],
-      where: { status: 'OVERDUE', ...contractFilter },
+      where: overdueWhere,
       _count: true,
       _sum: { amountDue: true },
       orderBy: { _count: { id: 'desc' } },

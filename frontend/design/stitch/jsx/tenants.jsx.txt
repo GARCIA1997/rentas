@@ -1,0 +1,384 @@
+
+  {/* Contenedor móvil 390px */}
+  <div className="w-full max-w-[390px] min-h-screen bg-[#F5F1E8] flex flex-col relative pb-28 shadow-xl">
+
+    {/* 1. ENCABEZADO AZUL PLANO CON BORDE RECTO Y LOGO GLOBAL */}
+    <header className="bg-[#173A5F] text-white px-4 pt-4 pb-3 flex items-center justify-between sticky top-0 z-40">
+      {/* Logo Oficial Ksar + ed con isotipo maestro completo de 3 piezas */}
+      <div className="flex items-center gap-2">
+        {/* Isotipo SVG maestro 3 piezas */}
+        <svg className="w-7 h-7 flex-shrink-0" viewBox="0 0 365 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 49 L130 130 L130 222 L50 292 Z" fill="#FFFFFF" />
+          <path d="M137 130 L220 49 L315 49 L137 224 Z" fill="#DDD9CF" />
+          <path d="M153 214 L208 162 L333 292 L229 292 Z" fill="#2D9E6B" />
+        </svg>
+        <span className="text-xl font-bold tracking-tight">Ksar<span className="text-[#2D9E6B]">ed</span></span>
+      </div>
+
+      {/* Acciones de cabecera: Campana blanca con punto verde y avatar administrador */}
+      <div className="flex items-center gap-3">
+        <button className="relative p-1 text-white hover:opacity-80 transition-opacity" aria-label="Notificaciones">
+          <span className="material-symbols-outlined text-[24px]">notifications</span>
+          <span className="absolute top-1 right-1 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+        </button>
+        <div className="w-8 h-8 rounded-full bg-[#0F2A4D] border border-white/30 flex items-center justify-center font-bold text-xs text-white">
+          MA
+        </div>
+      </div>
+    </header>
+
+    {/* 2. SUB-CABECERA / TÍTULO DE SECCIÓN */}
+    <div className="bg-[#173A5F] px-4 pt-2 pb-5 text-white">
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-xl font-bold tracking-tight">Directorio de Inquilinos</h1>
+        <span className="text-xs bg-[#2D9E6B]/20 text-[#2D9E6B] font-semibold px-2 py-0.5 rounded-full border border-[#2D9E6B]/40">
+          18 registrados
+        </span>
+      </div>
+      <p className="text-xs text-white/80">Gestión de accesos al portal, contratos y contactos</p>
+    </div>
+
+    {/* 3. BUSCADOR & FILTRO DE BOTÓN */}
+    <div className="px-4 -mt-3 z-10">
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#A7B0BB] text-[20px]">search</span>
+          <input type="text" placeholder="Buscar por nombre, teléfono o depto..." className="w-full bg-white text-[#173A5F] placeholder-[#A7B0BB] text-xs font-medium pl-9 pr-3 py-2.5 rounded-[8px] border border-[#A7B0BB]/30 focus:outline-none focus:border-[#2D9E6B] shadow-sm" />
+        </div>
+        <button className="w-10 h-10 bg-[#2D9E6B] text-white rounded-[8px] flex items-center justify-center flex-shrink-0 shadow-sm hover:opacity-90 active:scale-95 transition-all">
+          <span className="material-symbols-outlined text-[20px]">tune</span>
+        </button>
+      </div>
+    </div>
+
+    {/* 4. CHIPS DE FILTRO (Reglas Globales: Activo en azul sólido #173A5F) */}
+    <div className="px-4 mt-3">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs">
+        {/* Chip Todos (Activo) */}
+        <button className="bg-[#173A5F] text-white font-semibold px-3.5 py-1.5 rounded-[8px] whitespace-nowrap shadow-sm">
+          Todos (18)
+        </button>
+        {/* Chip Con contrato */}
+        <button className="bg-white text-[#173A5F] hover:bg-white/80 font-medium px-3.5 py-1.5 rounded-[8px] border border-[#A7B0BB]/30 whitespace-nowrap shadow-sm">
+          Con contrato (16)
+        </button>
+        {/* Chip Sin cuenta en portal */}
+        <button className="bg-white text-[#173A5F] hover:bg-white/80 font-medium px-3.5 py-1.5 rounded-[8px] border border-[#A7B0BB]/30 whitespace-nowrap shadow-sm">
+          Sin cuenta portal (3)
+        </button>
+      </div>
+    </div>
+
+    {/* 5. LISTA DE TARJETAS DE INQUILINOS */}
+    <main className="px-4 mt-3 space-y-3 flex-1">
+
+      {/* Tarjeta 1: Ana Torres Morales (Activa, Con portal) */}
+      <article className="bg-white rounded-[8px] border border-[#A7B0BB]/30 p-3.5 shadow-sm hover:shadow transition-shadow">
+        <div className="flex items-start justify-between gap-2">
+          {/* Avatar + Datos Principales */}
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-11 h-11 rounded-full bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm flex-shrink-0 ring-2 ring-[#2D9E6B]/30">
+              AT
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h2 className="text-sm font-bold text-[#173A5F] truncate">Ana Torres Morales</h2>
+              </div>
+              <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5">
+                <span className="material-symbols-outlined text-[14px]">phone</span>
+                +52 55 4912 3840
+              </p>
+            </div>
+          </div>
+
+          {/* Badges de Estado & Portal */}
+          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+            <span className="inline-flex items-center gap-1 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[11px] font-semibold px-2 py-0.5 rounded-[8px]">
+              <span className="w-1.5 h-1.5 bg-[#2D9E6B] rounded-full"></span>
+              Activo
+            </span>
+            {/* Icono Cuenta en Portal: Activa */}
+            <span className="inline-flex items-center gap-1 text-[10px] text-[#2D9E6B] font-medium bg-[#F5F1E8] px-1.5 py-0.5 rounded-[6px]" title="Cuenta activa en portal">
+              <span className="material-symbols-outlined text-[13px] fill text-[#2D9E6B]">key</span>
+              Portal On
+            </span>
+          </div>
+        </div>
+
+        {/* Propiedad Actual & Folio */}
+        <div className="mt-3 pt-2.5 border-t border-[#A7B0BB]/20 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-[#173A5F] font-medium truncate mr-2">
+            <span className="material-symbols-outlined text-[16px] text-[#173A5F]">apartment</span>
+            <span className="truncate">Torre Vista Norte, Depto. 402</span>
+          </div>
+          <span className="text-[11px] font-semibold text-[#173A5F] bg-[#F5F1E8] px-2 py-0.5 rounded-[6px] whitespace-nowrap">
+            $18,500/m
+          </span>
+        </div>
+
+        {/* Acciones Rápidas */}
+        <div className="mt-2.5 flex items-center gap-2">
+          <a href="#" className="flex-1 bg-[#173A5F] text-white text-xs font-semibold py-1.5 px-3 rounded-[8px] text-center hover:opacity-90 active:scale-95 transition-all">
+            Ver perfil
+          </a>
+          <button className="p-1.5 text-[#173A5F] hover:bg-[#F5F1E8] rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center" aria-label="Llamar">
+            <span className="material-symbols-outlined text-[18px]">call</span>
+          </button>
+          <button className="p-1.5 text-[#2D9E6B] hover:bg-[#2D9E6B]/10 rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center" aria-label="WhatsApp">
+            <span className="material-symbols-outlined text-[18px]">chat</span>
+          </button>
+        </div>
+      </article>
+
+      {/* Tarjeta 2: Roberto Corona Mendoza (Activo, Portal activo) */}
+      <article className="bg-white rounded-[8px] border border-[#A7B0BB]/30 p-3.5 shadow-sm hover:shadow transition-shadow">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-11 h-11 rounded-full bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
+              RC
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-sm font-bold text-[#173A5F] truncate">Roberto Corona M.</h2>
+              <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5">
+                <span className="material-symbols-outlined text-[14px]">phone</span>
+                +52 312 118 9022
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+            <span className="inline-flex items-center gap-1 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[11px] font-semibold px-2 py-0.5 rounded-[8px]">
+              <span className="w-1.5 h-1.5 bg-[#2D9E6B] rounded-full"></span>
+              Activo
+            </span>
+            <span className="inline-flex items-center gap-1 text-[10px] text-[#2D9E6B] font-medium bg-[#F5F1E8] px-1.5 py-0.5 rounded-[6px]" title="Cuenta activa en portal">
+              <span className="material-symbols-outlined text-[13px] fill text-[#2D9E6B]">key</span>
+              Portal On
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-3 pt-2.5 border-t border-[#A7B0BB]/20 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-[#173A5F] font-medium truncate mr-2">
+            <span className="material-symbols-outlined text-[16px] text-[#173A5F]">home</span>
+            <span className="truncate">Casa Sauces #12, Fracc. Los Sauces</span>
+          </div>
+          <span className="text-[11px] font-semibold text-[#173A5F] bg-[#F5F1E8] px-2 py-0.5 rounded-[6px] whitespace-nowrap">
+            $18,500/m
+          </span>
+        </div>
+
+        <div className="mt-2.5 flex items-center gap-2">
+          <a href="#" className="flex-1 bg-[#173A5F] text-white text-xs font-semibold py-1.5 px-3 rounded-[8px] text-center hover:opacity-90 active:scale-95 transition-all">
+            Ver perfil
+          </a>
+          <button className="p-1.5 text-[#173A5F] hover:bg-[#F5F1E8] rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center" aria-label="Llamar">
+            <span className="material-symbols-outlined text-[18px]">call</span>
+          </button>
+          <button className="p-1.5 text-[#2D9E6B] hover:bg-[#2D9E6B]/10 rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center" aria-label="WhatsApp">
+            <span className="material-symbols-outlined text-[18px]">chat</span>
+          </button>
+        </div>
+      </article>
+
+      {/* Tarjeta 3: Valeria Guzmán Sánchez (Activa, Sin Portal) */}
+      <article className="bg-white rounded-[8px] border border-[#A7B0BB]/30 p-3.5 shadow-sm hover:shadow transition-shadow">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-11 h-11 rounded-full bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
+              VG
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-sm font-bold text-[#173A5F] truncate">Valeria Guzmán S.</h2>
+              <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5">
+                <span className="material-symbols-outlined text-[14px]">phone</span>
+                +52 55 2049 8812
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+            <span className="inline-flex items-center gap-1 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[11px] font-semibold px-2 py-0.5 rounded-[8px]">
+              <span className="w-1.5 h-1.5 bg-[#2D9E6B] rounded-full"></span>
+              Activo
+            </span>
+            {/* Icono Cuenta en Portal: Sin cuenta */}
+            <span className="inline-flex items-center gap-1 text-[10px] text-[#A7B0BB] font-medium bg-[#F5F1E8] px-1.5 py-0.5 rounded-[6px]" title="Sin cuenta en portal">
+              <span className="material-symbols-outlined text-[13px] text-[#A7B0BB]">key_off</span>
+              Sin portal
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-3 pt-2.5 border-t border-[#A7B0BB]/20 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-[#173A5F] font-medium truncate mr-2">
+            <span className="material-symbols-outlined text-[16px] text-[#173A5F]">apartment</span>
+            <span className="truncate">Depto. Torre Real 402</span>
+          </div>
+          <span className="text-[11px] font-semibold text-[#173A5F] bg-[#F5F1E8] px-2 py-0.5 rounded-[6px] whitespace-nowrap">
+            $12,000/m
+          </span>
+        </div>
+
+        <div className="mt-2.5 flex items-center gap-2">
+          <a href="#" className="flex-1 bg-[#173A5F] text-white text-xs font-semibold py-1.5 px-3 rounded-[8px] text-center hover:opacity-90 active:scale-95 transition-all">
+            Ver perfil
+          </a>
+          <button className="px-2.5 py-1.5 text-[11px] font-semibold text-[#2D9E6B] hover:bg-[#2D9E6B]/10 rounded-[8px] border border-[#2D9E6B]/40 flex items-center justify-center gap-1">
+            <span className="material-symbols-outlined text-[14px]">send</span>
+            Invitar al portal
+          </button>
+        </div>
+      </article>
+
+      {/* Tarjeta 4: Roberto Gómez Peña (Activo, Local Comercial, Portal activo) */}
+      <article className="bg-white rounded-[8px] border border-[#A7B0BB]/30 p-3.5 shadow-sm hover:shadow transition-shadow">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-11 h-11 rounded-full bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
+              RG
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-sm font-bold text-[#173A5F] truncate">Roberto Gómez P.</h2>
+              <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5">
+                <span className="material-symbols-outlined text-[14px]">phone</span>
+                +52 313 324 1109
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+            <span className="inline-flex items-center gap-1 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[11px] font-semibold px-2 py-0.5 rounded-[8px]">
+              <span className="w-1.5 h-1.5 bg-[#2D9E6B] rounded-full"></span>
+              Activo
+            </span>
+            <span className="inline-flex items-center gap-1 text-[10px] text-[#2D9E6B] font-medium bg-[#F5F1E8] px-1.5 py-0.5 rounded-[6px]" title="Cuenta activa en portal">
+              <span className="material-symbols-outlined text-[13px] fill text-[#2D9E6B]">key</span>
+              Portal On
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-3 pt-2.5 border-t border-[#A7B0BB]/20 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-[#173A5F] font-medium truncate mr-2">
+            <span className="material-symbols-outlined text-[16px] text-[#173A5F]">storefront</span>
+            <span className="truncate">Local Comercial 3B - Plaza Central</span>
+          </div>
+          <span className="text-[11px] font-semibold text-[#173A5F] bg-[#F5F1E8] px-2 py-0.5 rounded-[6px] whitespace-nowrap">
+            $8,200/m
+          </span>
+        </div>
+
+        <div className="mt-2.5 flex items-center gap-2">
+          <a href="#" className="flex-1 bg-[#173A5F] text-white text-xs font-semibold py-1.5 px-3 rounded-[8px] text-center hover:opacity-90 active:scale-95 transition-all">
+            Ver perfil
+          </a>
+          <button className="p-1.5 text-[#173A5F] hover:bg-[#F5F1E8] rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center" aria-label="Llamar">
+            <span className="material-symbols-outlined text-[18px]">call</span>
+          </button>
+          <button className="p-1.5 text-[#2D9E6B] hover:bg-[#2D9E6B]/10 rounded-[8px] border border-[#A7B0BB]/30 flex items-center justify-center" aria-label="WhatsApp">
+            <span className="material-symbols-outlined text-[18px]">chat</span>
+          </button>
+        </div>
+      </article>
+
+      {/* Tarjeta 5: Carlos Mendoza (Inactivo / Contrato vencido, Sin portal) */}
+      <article className="bg-white/80 rounded-[8px] border border-[#A7B0BB]/30 p-3.5 shadow-sm opacity-90">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-11 h-11 rounded-full bg-[#A7B0BB]/40 text-[#173A5F] flex items-center justify-center font-bold text-sm flex-shrink-0">
+              CM
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-sm font-bold text-[#173A5F] truncate">Carlos Mendoza L.</h2>
+              <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5">
+                <span className="material-symbols-outlined text-[14px]">phone</span>
+                +52 55 8891 2341
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+            {/* Badge Inactivo (Reglas: Gris libre / inactivo) */}
+            <span className="inline-flex items-center gap-1 bg-[#A7B0BB]/20 text-[#173A5F] text-[11px] font-semibold px-2 py-0.5 rounded-[8px]">
+              <span className="w-1.5 h-1.5 bg-[#A7B0BB] rounded-full"></span>
+              Inactivo
+            </span>
+            <span className="inline-flex items-center gap-1 text-[10px] text-[#A7B0BB] font-medium bg-[#F5F1E8] px-1.5 py-0.5 rounded-[6px]" title="Sin acceso">
+              <span className="material-symbols-outlined text-[13px] text-[#A7B0BB]">key_off</span>
+              Desactivado
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-3 pt-2.5 border-t border-[#A7B0BB]/20 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-[#A7B0BB] font-medium truncate mr-2">
+            <span className="material-symbols-outlined text-[16px]">warehouse</span>
+            <span className="truncate">Ex: Bodega El Trapiche 04</span>
+          </div>
+          <span className="text-[11px] font-medium text-[#A7B0BB] bg-[#F5F1E8] px-2 py-0.5 rounded-[6px] whitespace-nowrap">
+            Finalizado
+          </span>
+        </div>
+
+        <div className="mt-2.5 flex items-center gap-2">
+          <a href="#" className="w-full border border-[#A7B0BB]/40 text-[#173A5F] text-xs font-semibold py-1.5 px-3 rounded-[8px] text-center hover:bg-white active:scale-95 transition-all">
+            Ver expediente histórico
+          </a>
+        </div>
+      </article>
+
+    </main>
+
+    {/* 6. BOTÓN FLOTANTE VERDE "+ NUEVO INQUILINO" (FAB) */}
+    <div className="fixed bottom-20 right-4 z-40 max-w-[390px] mx-auto pointer-events-none">
+      <button className="pointer-events-auto inline-flex items-center gap-2 bg-[#2D9E6B] hover:bg-[#25875a] active:scale-95 text-white font-bold text-xs px-4 py-3 rounded-full shadow-lg shadow-[#2D9E6B]/30 transition-all">
+        <span className="material-symbols-outlined text-[18px]">person_add</span>
+        <span>+ Nuevo inquilino</span>
+      </button>
+    </div>
+
+    {/* 7. TAB BAR INFERIOR DE 6 ÍTEMS (REGLA GLOBAL ADMINISTRADOR) */}
+    {/* Inicio, Propiedades, Inquilinos (ACTIVO), Contratos, Pagos, Más */}
+    <nav className="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto z-50 bg-white border-t border-[#A7B0BB]/30 flex items-center justify-around px-1 py-1.5 h-16 shadow-[0_-2px_10px_rgba(23,58,95,0.06)]">
+      
+      {/* 1. Inicio */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">home</span>
+        <span className="text-[10px] font-medium mt-0.5">Inicio</span>
+      </a>
+
+      {/* 2. Propiedades */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">apartment</span>
+        <span className="text-[10px] font-medium mt-0.5">Propiedades</span>
+      </a>
+
+      {/* 3. Inquilinos (ACTIVO: Verde #2D9E6B semibold + punto verde 4px debajo) */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#2D9E6B] font-semibold transition-colors relative">
+        <span className="material-symbols-outlined text-[20px] fill">group</span>
+        <span className="text-[10px] font-semibold mt-0.5">Inquilinos</span>
+        <span className="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+      </a>
+
+      {/* 4. Contratos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">description</span>
+        <span className="text-[10px] font-medium mt-0.5">Contratos</span>
+      </a>
+
+      {/* 5. Pagos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">payments</span>
+        <span className="text-[10px] font-medium mt-0.5">Pagos</span>
+      </a>
+
+      {/* 6. Más */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">more_horiz</span>
+        <span className="text-[10px] font-medium mt-0.5">Más</span>
+      </a>
+
+    </nav>
+
+  </div>

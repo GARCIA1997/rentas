@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Registrar Pago - Ksared</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Montserrat Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed-variant": "#3f4851",
+            "on-secondary-container": "#007349",
+            "inverse-on-surface": "#f4f0e7",
+            "surface-dim": "#dddad1",
+            "on-primary-fixed-variant": "#28486e",
+            "on-tertiary-fixed": "#141c25",
+            "secondary-fixed-dim": "#70dba2",
+            "primary-fixed": "#d3e4ff",
+            "outline": "#73777f",
+            "on-tertiary-container": "#9ba4ae",
+            "on-tertiary": "#ffffff",
+            "surface-tint": "#416087",
+            "on-primary-fixed": "#001c38",
+            "tertiary-fixed": "#dae3ef",
+            "tertiary": "#1c242d",
+            "surface-container-low": "#f7f3ea",
+            "tertiary-container": "#313a43",
+            "surface-container-highest": "#e6e2d9",
+            "on-secondary-fixed-variant": "#005233",
+            "on-primary-container": "#85a4cf",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#a9c9f5",
+            "on-error": "#ffffff",
+            "surface-container": "#f1eee5",
+            "on-error-container": "#93000a",
+            "tertiary-fixed-dim": "#bec7d3",
+            "surface-bright": "#fdf9f0",
+            "outline-variant": "#c3c6cf",
+            "on-secondary-fixed": "#002112",
+            "primary": "#002445",
+            "surface-container-high": "#ece8df",
+            "surface-variant": "#e6e2d9",
+            "secondary-fixed": "#8cf8bd",
+            "on-surface": "#1c1c16",
+            "on-background": "#1c1c16",
+            "surface": "#fdf9f0",
+            "on-primary": "#ffffff",
+            "inverse-primary": "#a9c9f5",
+            "background": "#fdf9f0",
+            "secondary-container": "#8cf8bd",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#173a5f",
+            "error": "#ba1a1a",
+            "secondary": "#006c45",
+            "on-surface-variant": "#43474e",
+            "inverse-surface": "#31302b"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "margin": "1rem",
+            "space-md": "1rem",
+            "gutter": "1rem"
+          },
+          fontFamily: {
+            "headline-md": ["Montserrat"],
+            "headline-lg": ["Montserrat"],
+            "body-md": ["Montserrat"],
+            "label-md": ["Montserrat"],
+            "label-lg": ["Montserrat"],
+            "body-lg": ["Montserrat"],
+            "body-sm": ["Montserrat"],
+            "headline-sm": ["Montserrat"],
+            "label-sm": ["Montserrat"]
+          },
+          fontSize: {
+            "headline-md": ["1.25rem", { lineHeight: "1.75rem", fontWeight: "600" }],
+            "headline-lg": ["1.75rem", { lineHeight: "2.25rem", fontWeight: "700" }],
+            "body-md": ["0.875rem", { lineHeight: "1.25rem", fontWeight: "400" }],
+            "label-md": ["0.75rem", { lineHeight: "1rem", fontWeight: "600" }],
+            "label-lg": ["0.875rem", { lineHeight: "1.25rem", fontWeight: "600" }],
+            "body-lg": ["1rem", { lineHeight: "1.5rem", fontWeight: "400" }],
+            "body-sm": ["0.75rem", { lineHeight: "1rem", fontWeight: "400" }],
+            "headline-sm": ["1.125rem", { lineHeight: "1.5rem", fontWeight: "600" }],
+            "label-sm": ["0.6875rem", { lineHeight: "0.875rem", fontWeight: "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Estilo limpio para no mostrar barras de scroll nativas feas */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface antialiased flex justify-center items-start min-h-screen select-none">
+<!-- DISPOSITIVO MÓVIL (390px Canvas) -->
+<div class="relative w-full max-w-[390px] min-h-screen bg-surface-container-low shadow-2xl flex flex-col overflow-hidden">
+<!-- ========================================== -->
+<!-- CAPA 1: PANTALLA DE FONDO (PAGOS ATENUADA) -->
+<!-- ========================================== -->
+<div aria-hidden="true" class="flex-1 flex flex-col filter blur-[0.5px] pointer-events-none aria-hidden">
+<!-- TopAppBar de Ksared (Fondo Institucional) -->
+<header class="bg-primary-container text-on-primary flex justify-between items-center w-full px-4 h-16 shadow-sm">
+<div class="flex items-center space-x-2">
+<!-- Isotipo Geométrico 3 Piezas de Ksared -->
+<svg class="w-6 h-6 shrink-0" fill="none" viewbox="0 0 32 32">
+<!-- Bloque vertical azul profundo / marfil -->
+<rect fill="#FFFFFF" height="24" rx="1.5" width="6" x="5" y="4"></rect>
+<!-- Diagonal superior marfil-gris -->
+<path d="M13 16L24 5H18L11 12V16H13Z" fill="#F5F1E8"></path>
+<!-- Diagonal verde acento (#2D9E6B) a 45° -->
+<path d="M12 16L24 28H18L11 21V16H12Z" fill="#2D9E6B"></path>
+</svg>
+<span class="font-headline-md text-headline-sm font-bold tracking-tight text-on-primary flex items-center">
+            Ksar<span class="text-secondary-fixed-dim">ed</span>
+</span>
+</div>
+<div class="flex items-center space-x-3">
+<div class="relative flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-secondary-fixed-dim rounded-full"></span>
+</div>
+<!-- Avatar Usuario -->
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary font-label-md text-label-md">
+            CR
+          </div>
+</div>
+</header>
+<!-- Subcabecera y Filtros de Pagos -->
+<div class="px-4 pt-4 pb-2">
+<div class="flex justify-between items-center mb-3">
+<div>
+<h1 class="font-headline-md text-headline-sm text-primary-container">Gestión de Cobros</h1>
+<p class="font-body-sm text-body-sm text-outline">Periodo actual · Noviembre 2024</p>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-sm">
+            87% Cobrado
+          </span>
+</div>
+<!-- Chips de Filtro -->
+<div class="flex space-x-2 overflow-hidden mb-3">
+<span class="px-3 py-1 bg-primary-container text-on-primary rounded-lg font-label-md text-label-sm">Pendientes</span>
+<span class="px-3 py-1 bg-surface-container text-outline rounded-lg font-label-md text-label-sm border border-outline-variant">Pagados</span>
+<span class="px-3 py-1 bg-surface-container text-outline rounded-lg font-label-md text-label-sm border border-outline-variant">Vencidos</span>
+</div>
+</div>
+<!-- Tarjetas de fondo atenuadas -->
+<div class="px-4 space-y-3">
+<!-- Tarjeta Ana Torres (Target) -->
+<div class="bg-surface-container-lowest p-3.5 rounded-lg border border-outline-variant shadow-sm">
+<div class="flex justify-between items-start">
+<div class="flex items-center space-x-2.5">
+<div class="w-9 h-9 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-label-lg">
+                AT
+              </div>
+<div>
+<p class="font-headline-sm text-label-lg text-primary">Ana Torres Morales</p>
+<p class="font-body-sm text-body-sm text-outline">Torre Vista Norte · Depto 402</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-sm">
+              Por cobrar
+            </span>
+</div>
+<div class="mt-3 pt-2.5 border-t border-surface-container flex justify-between items-center">
+<span class="font-body-sm text-outline">Renta mensual</span>
+<span class="font-headline-md text-headline-sm text-primary">$18,500 MXN</span>
+</div>
+</div>
+<!-- Tarjeta Secundaria -->
+<div class="bg-surface-container-lowest p-3.5 rounded-lg border border-outline-variant shadow-sm opacity-60">
+<div class="flex justify-between items-start">
+<div class="flex items-center space-x-2.5">
+<div class="w-9 h-9 rounded-full bg-surface-container text-outline flex items-center justify-center font-label-lg">
+                RL
+              </div>
+<div>
+<p class="font-headline-sm text-label-lg text-primary">Roberto Lozano</p>
+<p class="font-body-sm text-body-sm text-outline">Residencial Campestre · Casa 12</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-md text-label-sm">
+              Pagado
+            </span>
+</div>
+</div>
+</div>
+<!-- BottomNavBar Inactiva de Fondo -->
+<div class="mt-auto h-16 bg-surface-container-lowest border-t border-outline-variant flex justify-around items-center px-2">
+<div class="flex flex-col items-center text-outline">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Inicio</span>
+</div>
+<div class="flex flex-col items-center text-outline">
+<span class="material-symbols-outlined" data-icon="apartment">apartment</span>
+<span class="font-label-sm text-label-sm">Propiedades</span>
+</div>
+<div class="flex flex-col items-center text-outline">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm">Inquilinos</span>
+</div>
+<div class="flex flex-col items-center text-outline">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-sm text-label-sm">Contratos</span>
+</div>
+<div class="flex flex-col items-center text-on-secondary-container font-semibold">
+<span class="material-symbols-outlined" data-icon="payments" data-weight="fill" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-sm text-label-sm">Pagos</span>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- CAPA 2: OVERLAY INSTITUCIONAL SEMITRANSPARENTE -->
+<!-- ========================================== -->
+<div class="absolute inset-0 bg-[#0F2A4D] bg-opacity-55 z-40 transition-opacity"></div>
+<!-- ========================================== -->
+<!-- CAPA 3: MODAL / BOTTOM SHEET ACTIVO -->
+<!-- ========================================== -->
+<div class="absolute bottom-0 inset-x-0 z-50 bg-surface-container-lowest rounded-t-2xl shadow-2xl flex flex-col max-h-[813px] border-t border-surface-container-high transition-transform duration-200">
+<!-- Asa Superior Centrada (36px x 4px) -->
+<div class="pt-2.5 pb-1 flex justify-center items-center cursor-pointer">
+<div class="w-9 h-1 rounded-full bg-outline-variant"></div>
+</div>
+<!-- Cabecera del Bottom Sheet -->
+<div class="px-5 py-2.5 flex items-center justify-between border-b border-surface-container">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" data-icon="payments">payments</span>
+<h2 class="font-headline-md text-headline-sm font-bold text-primary-container tracking-tight">
+            Registrar pago
+          </h2>
+</div>
+<button aria-label="Cerrar" class="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-primary-container hover:bg-surface-container-high transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Contenido Scrolleable del Formulario -->
+<div class="px-5 py-4 overflow-y-auto no-scrollbar space-y-4">
+<!-- Bloque Resumen del Cobro (Fondo suave Marfil #F5F1E8) -->
+<div class="bg-surface-container-low p-3.5 rounded-lg border border-surface-container-highest">
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-2.5">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-lg font-bold">
+                AT
+              </div>
+<div>
+<p class="font-headline-md text-label-lg font-bold text-primary-container">Ana Torres Morales</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center mt-0.5">
+<span class="material-symbols-outlined text-outline text-[16px] mr-1" data-icon="apartment">apartment</span>
+                  Torre Vista Norte, Depto. 402
+                </p>
+</div>
+</div>
+</div>
+<!-- Metadatos de la Renta -->
+<div class="mt-3 pt-2.5 border-t border-surface-container-high grid grid-cols-2 gap-2 text-left">
+<div>
+<p class="font-label-sm text-label-sm text-outline">Folio y periodo</p>
+<p class="font-body-sm text-body-sm font-semibold text-primary">Pago 4 de 12 · Nov 2024</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-outline">Monto exigible</p>
+<p class="font-headline-md text-headline-sm font-bold text-secondary">$18,500.00 <span class="font-label-sm text-label-sm font-normal text-on-surface-variant">MXN</span></p>
+</div>
+</div>
+<div class="mt-2 pt-2 border-t border-surface-container-high/60 flex justify-between text-label-sm font-body-sm text-outline">
+<span>Abonado previo: <strong class="text-primary font-medium">$0.00 MXN</strong></span>
+<span>Saldo pendiente: <strong class="text-error font-semibold">$18,500.00 MXN</strong></span>
+</div>
+</div>
+<!-- Formulario de Captura -->
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<!-- 1. Campo: Monto recibido (MXN) -->
+<div>
+<label class="block font-label-md text-label-md text-primary-container mb-1.5 font-bold">
+              Monto recibido (MXN) <span class="text-error">*</span>
+</label>
+<div class="relative rounded-lg shadow-sm">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+<span class="font-headline-md text-headline-md text-primary font-bold">$</span>
+</div>
+<input class="block w-full pl-8 pr-16 py-2.5 font-headline-md text-headline-md text-primary font-bold bg-surface-container-lowest rounded-lg border-2 border-secondary focus:border-secondary focus:ring-0 transition-colors" id="input-monto" placeholder="0.00" type="text" value="18,500.00"/>
+<div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+<span class="font-label-md text-label-md text-outline font-semibold">MXN</span>
+</div>
+</div>
+</div>
+<!-- 2. Aviso Dinámico Contextual (Ámbar suave) -->
+<div class="flex items-start space-x-2.5 p-3 rounded-lg bg-[#FEF3C7] border border-[#F59E0B]/50 text-[#92400E]">
+<span class="material-symbols-outlined shrink-0 text-[#D9822B] text-[20px] mt-0.5" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm leading-relaxed">
+              Si el monto recibido es menor al adeudo, se registrará como abono parcial con saldo pendiente en la ficha del inquilino.
+            </p>
+</div>
+<!-- 3. Campo: Método de pago (Grid Chips) -->
+<div>
+<label class="block font-label-md text-label-md text-primary-container mb-1.5 font-bold">
+              Método de pago <span class="text-error">*</span>
+</label>
+<div class="grid grid-cols-2 gap-2">
+<!-- Opción 1: SPEI (Activa por defecto) -->
+<button class="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md shadow-sm border border-primary-container active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="account_balance">account_balance</span>
+<span>Transferencia SPEI</span>
+</button>
+<!-- Opción 2: Efectivo (Inactivo) -->
+<button class="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-lg bg-surface-container-lowest text-primary-container font-label-md text-label-md border border-outline-variant hover:bg-surface-container-low active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="payments">payments</span>
+<span>Efectivo</span>
+</button>
+<!-- Opción 3: Terminal / Tarjeta (Inactivo) -->
+<button class="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-lg bg-surface-container-lowest text-primary-container font-label-md text-label-md border border-outline-variant hover:bg-surface-container-low active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="credit_card">credit_card</span>
+<span>Terminal / Tarjeta</span>
+</button>
+<!-- Opción 4: Cheque (Inactivo) -->
+<button class="flex items-center justify-center space-x-2 py-2.5 px-3 rounded-lg bg-surface-container-lowest text-primary-container font-label-md text-label-md border border-outline-variant hover:bg-surface-container-low active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="receipt_long">receipt_long</span>
+<span>Cheque</span>
+</button>
+</div>
+</div>
+<!-- 4. Campo: Fecha y hora de pago -->
+<div class="grid grid-cols-2 gap-2">
+<div>
+<label class="block font-label-md text-label-md text-primary-container mb-1.5 font-bold">
+                Fecha de pago <span class="text-error">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="calendar_today">calendar_today</span>
+</div>
+<input class="block w-full pl-9 pr-3 py-2 text-body-md font-body-md font-medium text-primary bg-surface-container-lowest rounded-lg border border-outline-variant focus:border-secondary focus:ring-0" type="text" value="05 Nov 2024"/>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-primary-container mb-1.5 font-bold">
+                Hora de recepción
+              </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="schedule">schedule</span>
+</div>
+<input class="block w-full pl-9 pr-3 py-2 text-body-md font-body-md font-medium text-primary bg-surface-container-lowest rounded-lg border border-outline-variant focus:border-secondary focus:ring-0" type="text" value="11:45 AM"/>
+</div>
+</div>
+</div>
+<!-- 5. Campo: Comprobante de pago (Opcional) -->
+<div>
+<div class="flex justify-between items-center mb-1.5">
+<label class="font-label-md text-label-md text-primary-container font-bold">
+                Comprobante de pago
+              </label>
+<span class="font-label-sm text-label-sm text-outline">Opcional · PDF o imagen</span>
+</div>
+<div class="border-2 border-dashed border-outline-variant hover:border-secondary rounded-lg p-3.5 bg-surface-container-low/50 flex flex-col items-center justify-center cursor-pointer transition-colors group">
+<div class="flex items-center space-x-2 text-primary-container">
+<span class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform" data-icon="cloud_upload">cloud_upload</span>
+<span class="font-label-md text-label-md font-semibold">Adjuntar captura o PDF</span>
+</div>
+<p class="font-body-sm text-[11px] text-outline mt-0.5">Arrastra o haz clic para subir voucher SPEI (hasta 10MB)</p>
+</div>
+</div>
+<!-- 6. Campo: Notas o referencia -->
+<div>
+<label class="block font-label-md text-label-md text-primary-container mb-1.5 font-bold">
+              Notas o clave de rastreo
+            </label>
+<div class="relative">
+<input class="block w-full px-3 py-2 text-body-sm font-body-sm text-on-surface bg-surface-container-lowest rounded-lg border border-outline-variant focus:border-secondary focus:ring-0 placeholder-outline" placeholder="Ej. Clave de rastreo o anotación..." type="text" value="Clave de rastreo BBVA 2024110509428"/>
+</div>
+</div>
+</form>
+</div>
+<!-- Pie de Acción (Botones con esquinas de 8px según Reglas KsaRed) -->
+<div class="px-5 py-3.5 bg-surface-container-lowest border-t border-surface-container space-y-2">
+<!-- Botón Principal: Confirmación / Positivo (Verde Sólido #2D9E6B) -->
+<button class="w-full h-12 bg-secondary text-on-secondary font-label-lg font-bold rounded-lg shadow-sm flex items-center justify-center space-x-2 hover:bg-[#25855A] active:scale-[0.98] transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Registrar pago</span>
+</button>
+<!-- Botón Secundario: Cancelar -->
+<button class="w-full h-11 bg-transparent text-primary-container font-label-md font-semibold rounded-lg border border-outline-variant hover:bg-surface-container-low active:scale-[0.98] transition-all" type="button">
+          Cancelar
+        </button>
+</div>
+</div>
+</div>
+</body></html>

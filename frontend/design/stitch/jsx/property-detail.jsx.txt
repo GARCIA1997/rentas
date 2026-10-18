@@ -1,0 +1,265 @@
+
+{/* Mobile Simulator Container (390px max-width) */}
+<div className="w-full max-w-[390px] min-h-screen flex flex-col relative bg-[#fdf9f0] shadow-md">
+{/* TopAppBar (Shared Component Authority: TopAppBar small) */}
+<header className="bg-[#173a5f] text-[#ffffff] docked full-width top-0 rounded-none border-b border-[#c3c6cf]/30 flex justify-between items-center w-full px-space-md py-space-sm h-14 sticky top-0 z-40">
+<div className="flex items-center gap-space-sm">
+<button aria-label="Regresar" className="text-[#ffffff] hover:bg-[#002445]/20 p-1.5 rounded-lg active:scale-95 transition-transform duration-150 flex items-center justify-center" type="button">
+<span className="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div className="flex flex-col">
+<span className="text-headline-sm font-sans text-[#ffffff] tracking-tight leading-none">Detalle de Propiedad</span>
+<span className="text-label-sm font-sans text-[#85a4cf] mt-0.5">ID: PROP-8492 · Villa de Álvarez</span>
+</div>
+</div>
+<div className="flex items-center gap-1">
+<button aria-label="Compartir" className="text-[#ffffff] hover:bg-[#002445]/20 p-1.5 rounded-lg active:scale-95 transition-transform duration-150 flex items-center justify-center" type="button">
+<span className="material-symbols-outlined text-[20px]">share</span>
+</button>
+<button aria-label="Más opciones" className="text-[#ffffff] hover:bg-[#002445]/20 p-1.5 rounded-lg active:scale-95 transition-transform duration-150 flex items-center justify-center" type="button">
+<span className="material-symbols-outlined text-[22px]">more_vert</span>
+</button>
+</div>
+</header>
+{/* Main Scrollable Canvas */}
+<main className="flex-1 pb-24 px-space-md pt-space-md space-y-space-md">
+{/* Hero Card: Photo & Badges & Quick Meta */}
+<section className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 overflow-hidden shadow-[0_1px_3px_rgba(23,58,95,0.05)]">
+{/* Main Property Photo with Data-Alt description */}
+<div className="relative w-full h-52 bg-[#f1eee5] overflow-hidden">
+<img className="w-full h-full object-cover" data-alt="A clean, sunlit photograph of a modern two-story Mexican residential house in Los Sauces with smooth white stucco walls, natural warm limestone detailing, and floor-to-ceiling glass balconies. The sky above is crisp blue with soft morning sunlight casting elegant architectural shadows. Lush tropical green shrubs and neatly paved cobblestone driveway complement the high-end corporate architectural aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHgvWGksEq_uw1Pf5jwuBSxNpCLVfYqUC9rXc2ZwnXCKMiByb5vOKlOIwGsFAHhAzPkWDbIwm6oWbZDu5iJcekOp-3hLpHgZ28U77Msq_-DqTVd3FtCJS60mGo8B3a-T6hUhlmDflydZy5RSpjHpy65bdDuGvaj-S86mctFZuUeSgSpGGhKyWde4inXNt_CDp4T17xK42NyBxYSD9DJyVZOoxx0DtdB_XLHg9Jx7QTYuRBX99OomdfoQqoMIB8Gf9F9xkPOwKxEvAo" />
+{/* Floating Status Badges */}
+<div className="absolute top-3 left-3 flex items-center gap-1.5">
+<span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-label-md font-sans bg-[#E8F5E9] text-[#2D9E6B] border border-[#2D9E6B]/30 shadow-sm">
+<span className="w-2 h-2 rounded-full bg-[#2D9E6B]"></span>
+              Ocupada
+            </span>
+<span className="inline-flex items-center px-2 py-1 rounded-full text-label-sm font-sans bg-[#ffffff]/90 text-[#43474e] font-medium border border-[#c3c6cf]/40 shadow-sm backdrop-blur-none">
+              Casa habitación
+            </span>
+</div>
+{/* Photo Counter Indicator */}
+<div className="absolute bottom-2.5 right-3 bg-[#313a43]/80 text-[#ffffff] px-2 py-0.5 rounded text-label-sm font-sans flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">photo_camera</span>
+            1 / 8
+          </div>
+</div>
+{/* Property Core Information Block */}
+<div className="p-space-md space-y-space-sm">
+<div className="flex items-start justify-between">
+<div>
+<h1 className="text-headline-md font-sans text-[#173a5f] tracking-tight">Casa Sauces #12</h1>
+<p className="text-body-sm font-sans text-[#73777f] flex items-center gap-1 mt-0.5">
+<span className="material-symbols-outlined text-[15px] text-[#73777f]">location_on</span>
+                Av. Tecnológico #450, Fracc. Los Sauces, C.P. 28978
+              </p>
+</div>
+</div>
+{/* Rental Price Highlight */}
+<div className="pt-1 pb-1 flex items-baseline justify-between border-b border-[#ece8df]">
+<div>
+<span className="text-headline-lg font-sans text-[#002445] tracking-tight">$18,500</span>
+<span className="text-body-md font-sans text-[#43474e] font-medium"> MXN / mes</span>
+</div>
+<span className="text-label-sm font-sans text-[#2D9E6B] bg-[#E8F5E9] px-2 py-0.5 rounded-full font-semibold">
+              Renta puntual
+            </span>
+</div>
+{/* Technical Metrics Grid (Bento mini items) */}
+<div className="grid grid-cols-4 gap-2 pt-1 text-center">
+<div className="bg-[#f7f3ea] p-2 rounded-lg border border-[#c3c6cf]/30 flex flex-col items-center">
+<span className="material-symbols-outlined text-[20px] text-[#173a5f]">bed</span>
+<span className="text-label-lg font-sans text-[#1c1c16] mt-0.5">3</span>
+<span className="text-label-sm font-sans text-[#73777f]">Recám.</span>
+</div>
+<div className="bg-[#f7f3ea] p-2 rounded-lg border border-[#c3c6cf]/30 flex flex-col items-center">
+<span className="material-symbols-outlined text-[20px] text-[#173a5f]">bathtub</span>
+<span className="text-label-lg font-sans text-[#1c1c16] mt-0.5">2.5</span>
+<span className="text-label-sm font-sans text-[#73777f]">Baños</span>
+</div>
+<div className="bg-[#f7f3ea] p-2 rounded-lg border border-[#c3c6cf]/30 flex flex-col items-center">
+<span className="material-symbols-outlined text-[20px] text-[#173a5f]">directions_car</span>
+<span className="text-label-lg font-sans text-[#1c1c16] mt-0.5">2</span>
+<span className="text-label-sm font-sans text-[#73777f]">Cajones</span>
+</div>
+<div className="bg-[#f7f3ea] p-2 rounded-lg border border-[#c3c6cf]/30 flex flex-col items-center">
+<span className="material-symbols-outlined text-[20px] text-[#173a5f]">square_foot</span>
+<span className="text-label-lg font-sans text-[#1c1c16] mt-0.5">220</span>
+<span className="text-label-sm font-sans text-[#73777f]">m² const.</span>
+</div>
+</div>
+</div>
+</section>
+{/* Section Tabs (Strictly 3 tabs: Resumen, Contratos, Pagos) */}
+<nav aria-label="Secciones de propiedad" className="border-b border-[#c3c6cf]/30 flex justify-between bg-[#ffffff] rounded-lg px-2 shadow-[0_1px_2px_rgba(23,58,95,0.03)]">
+<button className="flex-1 py-3 text-center text-label-lg font-sans text-[#173a5f] border-b-[3px] border-[#2D9E6B] font-semibold transition-all" type="button">
+          Resumen
+        </button>
+<button className="flex-1 py-3 text-center text-label-lg font-sans text-[#73777f] hover:text-[#1c1c16] font-medium transition-all" type="button">
+          Contratos
+        </button>
+<button className="flex-1 py-3 text-center text-label-lg font-sans text-[#73777f] hover:text-[#1c1c16] font-medium transition-all" type="button">
+          Pagos
+        </button>
+</nav>
+{/* Card 1: Inquilino Actual */}
+<section className="bg-[#ffffff] p-space-md rounded-lg border border-[#c3c6cf]/40 shadow-[0_1px_3px_rgba(23,58,95,0.05)] space-y-space-sm">
+<div className="flex items-center justify-between pb-1 border-b border-[#f1eee5]">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[20px] text-[#173a5f]">person</span>
+<h2 className="text-headline-sm font-sans text-[#173a5f]">Inquilino actual</h2>
+</div>
+<span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm font-sans bg-[#E8F5E9] text-[#2D9E6B] font-semibold">
+<span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+            Al corriente
+          </span>
+</div>
+<div className="flex items-center justify-between pt-1">
+<div className="flex items-center gap-space-sm">
+<div className="w-11 h-11 rounded-full bg-[#173a5f] text-[#ffffff] flex items-center justify-center font-sans text-body-lg font-bold border-2 border-[#8cf8bd]">
+              RC
+            </div>
+<div>
+<p className="text-body-md font-sans font-semibold text-[#1c1c16]">Roberto Corona M.</p>
+<p className="text-body-sm font-sans text-[#73777f]">+52 312 118 9022</p>
+</div>
+</div>
+<div className="flex items-center gap-1.5">
+<a aria-label="Llamar inquilino" className="w-9 h-9 rounded-lg border border-[#c3c6cf]/60 flex items-center justify-center text-[#173a5f] hover:bg-[#f7f3ea] active:scale-95 transition-all" href="tel:+523121189022">
+<span className="material-symbols-outlined text-[20px]">call</span>
+</a>
+<a aria-label="WhatsApp" className="w-9 h-9 rounded-lg border border-[#2D9E6B]/30 bg-[#E8F5E9]/50 flex items-center justify-center text-[#2D9E6B] hover:bg-[#E8F5E9] active:scale-95 transition-all" href="https://wa.me/523121189022" rel="noopener noreferrer" target="_blank">
+<span className="material-symbols-outlined text-[20px]">chat</span>
+</a>
+</div>
+</div>
+{/* Call-to-action button: Blue solid for profile navigation according to Brand Rules */}
+<button className="w-full mt-2 py-2.5 px-4 bg-[#173a5f] hover:bg-[#002445] text-[#ffffff] rounded-lg text-label-lg font-sans font-semibold flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm" type="button">
+<span>Ver perfil</span>
+<span className="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</section>
+{/* Card 2: Contrato Vigente */}
+<section className="bg-[#ffffff] p-space-md rounded-lg border border-[#c3c6cf]/40 shadow-[0_1px_3px_rgba(23,58,95,0.05)] space-y-space-sm">
+<div className="flex items-center justify-between pb-1 border-b border-[#f1eee5]">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[20px] text-[#173a5f]">description</span>
+<h2 className="text-headline-sm font-sans text-[#173a5f]">Contrato vigente</h2>
+</div>
+<span className="text-label-sm font-sans font-mono text-[#73777f] bg-[#f1eee5] px-2 py-0.5 rounded">
+            CTR-2023-042
+          </span>
+</div>
+{/* Alert badge / expiration note */}
+<div className="bg-[#FFF4E5] border-l-4 border-[#D9822B] p-2.5 rounded-r-lg flex items-center justify-between">
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[20px] text-[#D9822B]">event_upcoming</span>
+<div className="text-body-sm font-sans">
+<p className="font-semibold text-[#1c1c16]">01 Nov 2023 – 31 Oct 2024</p>
+<p className="text-[11px] text-[#D9822B] font-medium">Vigencia a término</p>
+</div>
+</div>
+<span className="text-label-sm font-sans px-2 py-0.5 rounded-full bg-[#D9822B] text-white font-semibold">
+            Vence en 14 días
+          </span>
+</div>
+{/* Contract Details Breakdown */}
+<div className="grid grid-cols-2 gap-2 pt-1 text-body-sm font-sans">
+<div className="p-2 bg-[#f7f3ea] rounded border border-[#c3c6cf]/30">
+<span className="text-label-sm font-sans text-[#73777f] block">Renta acordada</span>
+<span className="text-body-md font-sans font-semibold text-[#1c1c16]">$18,500 MXN</span>
+</div>
+<div className="p-2 bg-[#f7f3ea] rounded border border-[#c3c6cf]/30">
+<span className="text-label-sm font-sans text-[#73777f] block">Depósito garantía</span>
+<span className="text-body-md font-sans font-semibold text-[#1c1c16]">$18,500 MXN</span>
+<span className="text-[10px] text-[#2D9E6B] font-medium block">Resguardado</span>
+</div>
+</div>
+{/* Secondary Link Action */}
+<div className="pt-1">
+<a className="inline-flex items-center text-label-lg font-sans text-[#173a5f] hover:text-[#006c45] font-semibold transition-colors" href="#">
+<span>Ver contrato digital</span>
+<span className="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
+</a>
+</div>
+</section>
+{/* Card 3: Datos Técnicos del Inmueble */}
+<section className="bg-[#ffffff] p-space-md rounded-lg border border-[#c3c6cf]/40 shadow-[0_1px_3px_rgba(23,58,95,0.05)] space-y-space-sm">
+<div className="flex items-center justify-between pb-1 border-b border-[#f1eee5]">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[20px] text-[#173a5f]">domain</span>
+<h2 className="text-headline-sm font-sans text-[#173a5f]">Datos técnicos del inmueble</h2>
+</div>
+<span className="material-symbols-outlined text-[18px] text-[#73777f]">info</span>
+</div>
+<dl className="space-y-2 text-body-sm font-sans">
+<div className="flex justify-between py-1 border-b border-[#ece8df]">
+<dt className="text-[#73777f]">Tipo de propiedad</dt>
+<dd className="font-medium text-[#1c1c16] text-right">Casa habitación residencial</dd>
+</div>
+<div className="flex justify-between py-1 border-b border-[#ece8df]">
+<dt className="text-[#73777f]">Superficie construida</dt>
+<dd className="font-medium text-[#1c1c16] text-right">220 m² (Terreno: 250 m²)</dd>
+</div>
+<div className="flex justify-between py-1 border-b border-[#ece8df]">
+<dt className="text-[#73777f]">Código Postal</dt>
+<dd className="font-medium text-[#1c1c16] text-right">C.P. 28978</dd>
+</div>
+<div className="flex justify-between py-1 border-b border-[#ece8df]">
+<dt className="text-[#73777f]">Folio Catastral / Predial</dt>
+<dd className="font-medium text-[#1c1c16] text-right font-mono">FOL-8921-COL</dd>
+</div>
+<div className="flex justify-between pt-1">
+<dt className="text-[#73777f]">Servicios incluidos</dt>
+<dd className="font-medium text-[#1c1c16] text-right">Agua potable, Mtto. Los Sauces</dd>
+</div>
+</dl>
+</section>
+{/* Bottom Action Buttons: Edit and Destructive Remove */}
+<div className="pt-2 pb-4 space-y-2">
+<button className="w-full py-2.5 px-4 rounded-lg border border-[#c3c6cf]/70 text-[#173a5f] bg-[#ffffff] hover:bg-[#f1eee5] text-label-lg font-sans font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all" type="button">
+<span className="material-symbols-outlined text-[18px]">edit</span>
+<span>Editar detalles</span>
+</button>
+<button className="w-full py-2 px-4 rounded-lg border border-[#C0392B]/40 text-[#C0392B] hover:bg-[#FFDAD6]/30 text-label-lg font-sans font-medium flex items-center justify-center gap-1.5 active:scale-95 transition-all" type="button">
+<span className="material-symbols-outlined text-[18px]">delete</span>
+<span>Eliminar propiedad</span>
+</button>
+</div>
+</main>
+{/* BottomNavBar (Shared Component Authority: 6 items strict rule for Admin) */}
+{/* Fixed at bottom with #A7B0BB/30 top border, 'Propiedades' active with 4px green dot */}
+<nav className="fixed bottom-0 max-w-[390px] w-full z-50 bg-[#ffffff] border-t border-[#c3c6cf]/40 flex justify-around items-center px-1 py-1 h-16 shadow-[0_-2px_6px_rgba(23,58,95,0.03)]">
+{/* 1. Inicio (Inactive) */}
+<a className="flex flex-col items-center justify-center text-[#73777f] hover:text-[#006c45] py-1 w-12 transition-all" href="#">
+<span className="material-symbols-outlined text-[22px]">home</span>
+<span className="text-label-sm font-sans mt-0.5">Inicio</span>
+</a>
+{/* 2. Propiedades (ACTIVE: Secondary Green with indicator dot) */}
+<a className="flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-1 w-12 transition-all relative" href="#">
+<span className="material-symbols-outlined text-[22px]" style={{fontVariationSettings: '\'FILL\' 1'}}>apartment</span>
+<span className="text-label-sm font-sans mt-0.5">Propiedades</span>
+<span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B] mt-0.5"></span>
+</a>
+{/* 3. Inquilinos (Inactive) */}
+<a className="flex flex-col items-center justify-center text-[#73777f] hover:text-[#006c45] py-1 w-12 transition-all" href="#">
+<span className="material-symbols-outlined text-[22px]">group</span>
+<span className="text-label-sm font-sans mt-0.5">Inquilinos</span>
+</a>
+{/* 4. Contratos (Inactive) */}
+<a className="flex flex-col items-center justify-center text-[#73777f] hover:text-[#006c45] py-1 w-12 transition-all" href="#">
+<span className="material-symbols-outlined text-[22px]">description</span>
+<span className="text-label-sm font-sans mt-0.5">Contratos</span>
+</a>
+{/* 5. Pagos (Inactive) */}
+<a className="flex flex-col items-center justify-center text-[#73777f] hover:text-[#006c45] py-1 w-12 transition-all" href="#">
+<span className="material-symbols-outlined text-[22px]">payments</span>
+<span className="text-label-sm font-sans mt-0.5">Pagos</span>
+</a>
+{/* 6. Más (Inactive) */}
+<a className="flex flex-col items-center justify-center text-[#73777f] hover:text-[#006c45] py-1 w-12 transition-all" href="#">
+<span className="material-symbols-outlined text-[22px]">menu</span>
+<span className="text-label-sm font-sans mt-0.5">Más</span>
+</a>
+</nav>
+</div>

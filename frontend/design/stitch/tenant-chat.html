@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ksared — Conversación de Reporte de Mantenimiento</title>
+<!-- Google Fonts: Montserrat -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration matching strict tokens -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#dae3ef",
+            "primary-fixed-dim": "#a9c9f5",
+            "error-container": "#ffdad6",
+            "outline": "#73777f",
+            "on-tertiary-fixed-variant": "#3f4851",
+            "surface-variant": "#e6e2d9",
+            "inverse-surface": "#31302b",
+            "surface-container": "#f1eee5",
+            "primary-fixed": "#d3e4ff",
+            "on-surface": "#1c1c16",
+            "on-secondary": "#ffffff",
+            "outline-variant": "#c3c6cf",
+            "surface-container-low": "#f7f3ea",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed": "#001c38",
+            "surface-dim": "#dddad1",
+            "secondary-fixed": "#8cf8bd",
+            "secondary-container": "#8cf8bd",
+            "secondary": "#006c45",
+            "on-primary": "#ffffff",
+            "tertiary": "#1c242d",
+            "surface-container-highest": "#e6e2d9",
+            "on-background": "#1c1c16",
+            "on-secondary-fixed-variant": "#005233",
+            "tertiary-fixed-dim": "#bec7d3",
+            "tertiary-container": "#313a43",
+            "error": "#ba1a1a",
+            "background": "#fdf9f0",
+            "inverse-on-surface": "#f4f0e7",
+            "surface-container-high": "#ece8df",
+            "surface-tint": "#416087",
+            "on-primary-container": "#85a4cf",
+            "on-tertiary-container": "#9ba4ae",
+            "on-error": "#ffffff",
+            "inverse-primary": "#a9c9f5",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#43474e",
+            "surface": "#fdf9f0",
+            "on-secondary-fixed": "#002112",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#70dba2",
+            "primary": "#002445",
+            "surface-bright": "#fdf9f0",
+            "on-tertiary-fixed": "#141c25",
+            "on-primary-fixed-variant": "#28486e",
+            "on-secondary-container": "#007349",
+            "primary-container": "#173a5f"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Montserrat"],
+            "headline-sm": ["Montserrat"],
+            "headline-md": ["Montserrat"],
+            "label-lg": ["Montserrat"],
+            "body-md": ["Montserrat"],
+            "headline-lg": ["Montserrat"],
+            "body-sm": ["Montserrat"],
+            "label-md": ["Montserrat"],
+            "body-lg": ["Montserrat"]
+          },
+          "fontSize": {
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "fontWeight": "500" }],
+            "headline-sm": ["1.125rem", { "lineHeight": "1.5rem", "fontWeight": "600" }],
+            "headline-md": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "600" }],
+            "body-md": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "2.25rem", "fontWeight": "700" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "400" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "fontWeight": "600" }],
+            "body-lg": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-1 {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Hide scrollbars for clean presentation */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container flex justify-center items-start min-h-screen text-on-surface antialiased py-0 sm:py-6 selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Mobile Frame Container strictly 390px width -->
+<main class="w-full max-w-[390px] min-h-screen sm:min-h-[844px] bg-surface flex flex-col relative shadow-md overflow-hidden border-x border-outline-variant/30">
+<!-- TOP APP BAR (Shared Components JSON Anchor with Custom Expansion) -->
+<!-- JSON keys translated: style_bg_color, style_primary_color, style_separation_logic, style_shell_layout -->
+<header class="bg-primary-container text-on-primary border-b border-outline-variant/30 flex flex-col w-full sticky top-0 z-50 shadow-none">
+<!-- Upper Action Row (Navigation + Status) -->
+<div class="flex justify-between items-center w-full px-4 pt-3 pb-2">
+<!-- Return Link -->
+<a class="flex items-center gap-1.5 text-on-primary hover:opacity-90 active:scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+<span class="font-label-md text-label-md">Mis reportes</span>
+</a>
+<!-- Trailing Action: Status Badge -->
+<div class="flex items-center gap-2">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-secondary-container/20 rounded-full border border-secondary-fixed-dim/40">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim animate-pulse"></span>
+<span class="font-label-sm text-label-sm font-semibold text-secondary-fixed">En progreso</span>
+</div>
+<!-- Ticket original shortcut icon -->
+<button aria-label="Ver detalles del caso" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-primary hover:bg-white/10 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+</button>
+</div>
+</div>
+<!-- Lower Case Headline -->
+<div class="px-4 pb-3 pt-0.5">
+<h1 class="font-headline-sm text-headline-sm text-on-primary font-bold tracking-tight">Reporte #1048</h1>
+<p class="font-body-sm text-body-sm text-on-primary/80 truncate">Fuga en monomando lavabo · Depto. 402</p>
+</div>
+</header>
+<!-- CONTENT CANVAS (Scrollable conversation & summary cards) -->
+<div class="flex-1 overflow-y-auto px-4 py-3.5 space-y-4 no-scrollbar pb-36" id="chatScrollArea">
+<!-- 3. RESUMEN SUPERIOR COMPACTO DE LA INCIDENCIA -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant/30 p-3.5 shadow-none">
+<div class="flex items-start justify-between gap-2 border-b border-outline-variant/20 pb-2.5 mb-2.5">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="plumbing">plumbing</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-wider">Categoría</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Plomería &amp; Baño</span>
+</div>
+</div>
+<a class="font-label-sm text-label-sm text-secondary hover:underline flex items-center gap-0.5 pt-0.5" href="#">
+<span>Ver ticket original</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+<div class="grid grid-cols-2 gap-2 text-left">
+<div class="bg-surface-container-low rounded-lg p-2 border border-outline-variant/20">
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Apertura</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">24 Oct · 09:15 hrs</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-2 border border-outline-variant/20">
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Técnico asignado</span>
+<span class="font-label-md text-label-md text-on-surface font-medium truncate block">Javier Morales</span>
+</div>
+</div>
+</section>
+<!-- FECHA SEPARADOR TIPO PÍLDORA -->
+<div class="flex justify-center my-2">
+<span class="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm border border-outline-variant/30">
+          Jueves, 24 de Octubre
+        </span>
+</div>
+<!-- MENSAJE 1: INQUILINO (YO - DERECHA) -->
+<div class="flex flex-col items-end w-full pl-8">
+<div class="bg-primary-container text-on-primary rounded-lg rounded-br-none p-3 shadow-none max-w-[90%] space-y-2.5">
+<p class="font-body-md text-body-md leading-relaxed text-left text-on-primary">
+            Hola, buen día. Desde anoche noté que la llave del monomando del baño principal tiene un goteo constante y la presión bajó un poco.
+          </p>
+<!-- Evidencia Fotográfica Adjunta -->
+<div class="bg-black/20 rounded-lg p-2 flex items-center gap-2.5 border border-white/10 hover:bg-black/30 transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded bg-white/10 flex-shrink-0 flex items-center justify-center overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up photograph showing a polished chrome bathroom sink mixer faucet dripping clear water droplets into an elegant white ceramic basin, with subtle natural morning lighting casting soft reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Ur0CWpKBI6R4oS3xXh4CSykuuC--iyrDDWiVECYbi0SiyMaozKDWtCmHt1dRW-_5Dgypx62BCM_q4S-S7kVsZvMG47HviIUmoIUKsP-GqGg1SfdZiOfeIBy_EoJxUkXlUt60nqYf7zqF-o10aJm9n32dPJBvGs72ZBqtgBhPqjzxdlNVbSwKYm1nBsNiXWSxez4-oZQx0IvxnhYjMYK4fL8S0YZyNgVI6F_BCN8ZMNfmMRL6c6ahu2Rge-F6a7Lunvk4aMwCKtuF"/>
+</div>
+<div class="flex-1 min-w-0 text-left">
+<span class="font-label-sm text-label-sm text-on-primary font-medium block truncate">foto_evidencia_fuga.jpg</span>
+<span class="font-body-sm text-body-sm text-on-primary/70 block">1.8 MB · Imagen</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-primary/80" data-icon="visibility">visibility</span>
+</div>
+</div>
+<!-- Meta info inquilino -->
+<div class="flex items-center gap-1 mt-1 pr-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">09:18 hrs</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">·</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Leído</span>
+<span class="material-symbols-outlined text-[14px] text-secondary fill-1" data-icon="done_all" data-weight="fill">done_all</span>
+</div>
+</div>
+<!-- MENSAJE 2: ADMIN KS (IZQUIERDA) -->
+<div class="flex items-start gap-2.5 pr-8">
+<!-- Avatar KsaRed Admin -->
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex-shrink-0 flex items-center justify-center font-label-md text-label-md font-bold tracking-tight border border-outline-variant/30">
+          KS
+        </div>
+<div class="flex flex-col items-start w-full">
+<div class="bg-surface-container-lowest text-on-surface border border-outline-variant/30 rounded-lg rounded-tl-none p-3 shadow-none max-w-[95%]">
+<span class="font-label-sm text-label-sm font-semibold text-primary-container block mb-1">KsaRed Admin</span>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+              Hola Ana, gracias por reportarlo de inmediato y por la fotografía. Ya hemos registrado la incidencia bajo el folio <strong class="font-label-md text-primary font-semibold">#REP-1048</strong>.
+            </p>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1 pl-1">09:23 hrs</span>
+</div>
+</div>
+<!-- MENSAJE 3: ADMIN KS (IZQUIERDA) -->
+<div class="flex items-start gap-2.5 pr-8">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex-shrink-0 flex items-center justify-center font-label-md text-label-md font-bold border border-outline-variant/30">
+          KS
+        </div>
+<div class="flex flex-col items-start w-full">
+<div class="bg-surface-container-lowest text-on-surface border border-outline-variant/30 rounded-lg rounded-tl-none p-3 shadow-none max-w-[95%]">
+<span class="font-label-sm text-label-sm font-semibold text-primary-container block mb-1">KsaRed Admin</span>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+              El técnico Javier Morales está en el condominio atendiendo otro departamento y puede pasar hoy entre las 11:30 y 12:00 hrs para reemplazar el empaque o cartucho cerámico. ¿Te encuentras en el departamento a esa hora?
+            </p>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1 pl-1">09:25 hrs</span>
+</div>
+</div>
+<!-- 5. NOTIFICACIÓN INFORMATIVA INTERMEDIA DE ESTADO -->
+<div class="my-2 bg-surface-container-lowest rounded-lg border-l-4 border-l-secondary border-y border-r border-outline-variant/30 p-2.5 shadow-none flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-secondary-container/30 flex items-center justify-center flex-shrink-0 text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="engineering">engineering</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-md text-label-md text-primary-container font-semibold truncate">
+            Técnico Javier Morales asignado
+          </p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Visita programada hoy 11:30 hrs
+          </p>
+</div>
+<span class="material-symbols-outlined text-[16px] text-outline-variant" data-icon="schedule">schedule</span>
+</div>
+<!-- MENSAJE 4: INQUILINO (YO - DERECHA) -->
+<div class="flex flex-col items-end w-full pl-8">
+<div class="bg-primary-container text-on-primary rounded-lg rounded-br-none p-3 shadow-none max-w-[90%]">
+<p class="font-body-md text-body-md leading-relaxed text-left text-on-primary">
+            Perfecto, sí estaré aquí a las 11:30 hrs para recibir al técnico. Muchas gracias por la pronta atención.
+          </p>
+</div>
+<div class="flex items-center gap-1 mt-1 pr-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">09:28 hrs</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">·</span>
+<span class="font-label-sm text-label-sm text-outline font-medium">Enviado</span>
+<span class="material-symbols-outlined text-[14px] text-outline fill-1" data-icon="done_all" data-weight="fill">done_all</span>
+</div>
+</div>
+</div>
+<!-- 6. BARRA INFERIOR FIJA (DOCKED INPUT BAR & CLOSED TICKET TOGGLE DEMO) -->
+<footer class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant/30 z-40 transition-all duration-200">
+<!-- Interactive ticket state switcher for reviewer demonstration -->
+<div class="bg-surface-container-low px-4 py-1.5 flex items-center justify-between border-b border-outline-variant/20">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Simulador de estado:</span>
+<button class="font-label-sm text-label-sm text-primary-container hover:underline font-semibold flex items-center gap-1" id="toggleClosedBtn" type="button">
+<span id="toggleText">Probar vista cerrada</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="swap_horiz">swap_horiz</span>
+</button>
+</div>
+<!-- ESTADO ACTIVO: Chat input bar -->
+<div class="p-3 pb-6 flex items-center gap-2" id="activeInputBar">
+<!-- Botón adjuntar archivo / foto -->
+<button aria-label="Adjuntar foto o archivo" class="w-10 h-10 rounded-lg flex items-center justify-center text-primary-container hover:bg-surface-container active:scale-95 transition-all border border-outline-variant/40 flex-shrink-0" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="attach_file">attach_file</span>
+</button>
+<!-- Campo de entrada de texto -->
+<div class="flex-1 relative">
+<input class="w-full bg-surface-container-low border border-outline-variant/40 rounded-lg px-3 py-2 text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" id="chatInput" placeholder="Escribe un mensaje..." type="text"/>
+</div>
+<!-- Botón verde corporativo KsaRed (#2D9E6B / secondary) -->
+<button class="bg-secondary text-on-secondary px-3.5 h-10 rounded-lg font-label-md text-label-md flex items-center justify-center gap-1 hover:opacity-90 active:scale-95 transition-all flex-shrink-0" id="sendBtn" type="button">
+<span>Enviar</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="send">send</span>
+</button>
+</div>
+<!-- ESTADO CERRADO: Aviso gris centrado y sobrio (inicialmente oculto) -->
+<div class="hidden p-4 pb-7 text-center bg-surface-container" id="closedTicketBar">
+<div class="flex items-center justify-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="lock">lock</span>
+<p class="font-label-md text-label-md text-on-surface-variant font-medium">
+            Esta conversación está cerrada
+          </p>
+</div>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">
+          El ticket fue completado con éxito. Si requieres nueva asistencia, crea un nuevo reporte.
+        </p>
+</div>
+</footer>
+</main>
+<!-- Inline Script for UI State Toggle Demo -->
+<script>
+    const toggleBtn = document.getElementById('toggleClosedBtn');
+    const toggleText = document.getElementById('toggleText');
+    const activeBar = document.getElementById('activeInputBar');
+    const closedBar = document.getElementById('closedTicketBar');
+
+    let isClosed = false;
+
+    toggleBtn.addEventListener('click', () => {
+      isClosed = !isClosed;
+      if (isClosed) {
+        activeBar.classList.add('hidden');
+        closedBar.classList.remove('hidden');
+        toggleText.textContent = 'Restaurar chat activo';
+      } else {
+        activeBar.classList.remove('hidden');
+        closedBar.classList.add('hidden');
+        toggleText.textContent = 'Probar vista cerrada';
+      }
+    });
+  </script>
+</body></html>

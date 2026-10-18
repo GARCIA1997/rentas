@@ -1,0 +1,225 @@
+
+  {/* Mobile Container: 390px Optimized Native View */}
+  <div className="w-full max-w-[390px] min-h-screen bg-[#F5F1E8] flex flex-col relative pb-28 shadow-2xl">
+
+    {/* 1. ENCABEZADO INSTITUCIONAL AZUL PLANO CON BORDE INFERIOR RECTO */}
+    <header className="bg-[#173A5F] text-white w-full px-4 h-16 fixed top-0 left-0 max-w-[390px] mx-auto z-50 flex items-center justify-between border-b border-[#173A5F]">
+      <div className="flex items-center gap-3">
+        {/* Flecha atrás */}
+        <button type="button" aria-label="Volver a Más" className="w-9 h-9 rounded-lg flex items-center justify-center text-white hover:bg-white/10 active:scale-95 transition-all">
+          <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+        </button>
+        {/* Título de pantalla */}
+        <h1 className="text-base font-bold text-white tracking-tight">Representantes</h1>
+      </div>
+
+      {/* Icono contextual o información */}
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/10 text-white/90 border border-white/20">
+          2 activos
+        </span>
+      </div>
+    </header>
+
+    {/* 2. CONTENIDO PRINCIPAL */}
+    <main className="flex-1 px-4 pt-20 pb-4 flex flex-col gap-4">
+
+      {/* Descripción explicativa requerida */}
+      <div className="pt-1">
+        <p className="text-xs text-[#586270] font-normal leading-relaxed">
+          Quiénes firman los contratos como arrendador
+        </p>
+      </div>
+
+      {/* BANNER INFORMATIVO NOTA LEGAL */}
+      <div className="bg-white border border-[#DDD9CF] rounded-lg p-3 flex items-start gap-3 shadow-sm">
+        <div className="w-7 h-7 rounded-lg bg-[#173A5F]/10 flex items-center justify-center text-[#173A5F] shrink-0 mt-0.5">
+          <span className="material-symbols-outlined text-[18px]">gavel</span>
+        </div>
+        <p className="text-[11px] leading-tight text-[#586270]">
+          El representante legal designado figurará en la carátula, cláusulas de personalidad jurídica y firma digital de los contratos generados.
+        </p>
+      </div>
+
+      {/* LISTA DE REPRESENTANTES (Tarjetas según reglas globales: esquinas 8px, plano, limpio) */}
+      <div className="flex flex-col gap-3">
+
+        {/* TARJETA 1: Mariana Silva (PREDETERMINADO) */}
+        <div className="bg-white border border-[#DDD9CF] rounded-lg p-4 shadow-sm hover:border-[#173A5F]/30 transition-colors">
+          {/* Cabecera de la tarjeta: Nombre + Badge Verde Predeterminado */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-lg bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                MS
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-sm font-bold text-[#173A5F] leading-tight">Mariana Silva Romero</h2>
+                </div>
+                <span className="text-[11px] text-[#586270] font-medium">KsaRed Inmobiliaria S.A. de C.V.</span>
+              </div>
+            </div>
+
+            {/* Badge verde Predeterminado (Regla Global: verde pagado/activo) */}
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B] border border-[#2D9E6B]/30 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+              Predeterminado
+            </span>
+          </div>
+
+          {/* Datos del Representante: RFC, Teléfono, Correo */}
+          <div className="mt-3 pt-3 border-t border-[#DDD9CF]/60 grid grid-cols-1 gap-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-[#A7B0BB] font-medium">RFC:</span>
+              <span className="font-semibold text-[#173A5F] tracking-wide select-all font-mono">SIRM-850412-HA8</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[#A7B0BB] font-medium">Teléfono:</span>
+              <span className="font-semibold text-[#173A5F] select-all">+52 55 1234 5678</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[#A7B0BB] font-medium">Poder Notarial:</span>
+              <span className="font-medium text-[#586270]">Esc. Pub. #42,109 (Notaría 14)</span>
+            </div>
+          </div>
+
+          {/* Acciones de la Tarjeta: Editar (Lápiz) y Eliminar (Papelera Roja) */}
+          <div className="mt-3.5 pt-2.5 border-t border-[#DDD9CF]/40 flex items-center justify-between">
+            <span className="text-[10px] text-[#2D9E6B] font-semibold flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">check_circle</span>
+              Firmante activo en 14 contratos
+            </span>
+
+            <div className="flex items-center gap-2">
+              {/* Botón Editar (Lápiz) */}
+              <button type="button" aria-label="Editar Mariana Silva" className="h-8 px-2.5 bg-white border border-[#DDD9CF] text-[#173A5F] hover:bg-[#F5F1E8] active:scale-95 transition-all rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm">
+                <span className="material-symbols-outlined text-[16px]">edit</span>
+                <span>Editar</span>
+              </button>
+
+              {/* Botón Eliminar (Papelera Roja - Acción destructiva con borde o texto rojo según reglas) */}
+              <button type="button" aria-label="Eliminar Mariana Silva" title="No se puede eliminar al representante predeterminado con contratos activos" className="h-8 w-8 bg-white border border-[#DDD9CF] text-[#A7B0BB] cursor-not-allowed opacity-50 rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* TARJETA 2: Carlos Mendoza López */}
+        <div className="bg-white border border-[#DDD9CF] rounded-lg p-4 shadow-sm hover:border-[#173A5F]/30 transition-colors">
+          {/* Cabecera de la tarjeta: Nombre */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-lg bg-[#F5F1E8] border border-[#DDD9CF] text-[#173A5F] flex items-center justify-center font-bold text-sm shrink-0">
+                CM
+              </div>
+              <div className="flex flex-col">
+                <h2 className="text-sm font-bold text-[#173A5F] leading-tight">Carlos Mendoza López</h2>
+                <span className="text-[11px] text-[#586270] font-medium">Apoderado Especial · Persona Física</span>
+              </div>
+            </div>
+
+            {/* Botón para asignar como predeterminado */}
+            <button type="button" className="text-[11px] text-[#173A5F] hover:text-[#2D9E6B] font-semibold flex items-center gap-0.5 underline-offset-2 hover:underline">
+              Hacer predeterminado
+            </button>
+          </div>
+
+          {/* Datos del Representante: RFC, Teléfono */}
+          <div className="mt-3 pt-3 border-t border-[#DDD9CF]/60 grid grid-cols-1 gap-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-[#A7B0BB] font-medium">RFC:</span>
+              <span className="font-semibold text-[#173A5F] tracking-wide select-all font-mono">MELC-790920-8B3</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[#A7B0BB] font-medium">Teléfono:</span>
+              <span className="font-semibold text-[#173A5F] select-all">+52 55 9876 5432</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[#A7B0BB] font-medium">Poder Notarial:</span>
+              <span className="font-medium text-[#586270]">Esc. Pub. #18,340 (Notaría 03)</span>
+            </div>
+          </div>
+
+          {/* Acciones de la Tarjeta: Editar (Lápiz) y Eliminar (Papelera Roja) */}
+          <div className="mt-3.5 pt-2.5 border-t border-[#DDD9CF]/40 flex items-center justify-between">
+            <span className="text-[10px] text-[#586270] font-medium flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px] text-[#A7B0BB]">history_edu</span>
+              Firmante activo en 2 contratos
+            </span>
+
+            <div className="flex items-center gap-2">
+              {/* Botón Editar (Lápiz) */}
+              <button type="button" aria-label="Editar Carlos Mendoza" className="h-8 px-2.5 bg-white border border-[#DDD9CF] text-[#173A5F] hover:bg-[#F5F1E8] active:scale-95 transition-all rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm">
+                <span className="material-symbols-outlined text-[16px]">edit</span>
+                <span>Editar</span>
+              </button>
+
+              {/* Botón Eliminar (Papelera Roja - Acción destructiva) */}
+              <button type="button" aria-label="Eliminar Carlos Mendoza" className="h-8 w-8 bg-white border border-[#C0392B] text-[#C0392B] hover:bg-[#FDEDEC] active:scale-95 transition-all rounded-lg flex items-center justify-center shadow-sm">
+                <span className="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* 3. BOTÓN VERDE ANCHO COMPLETO "+ AGREGAR REPRESENTANTE" (Regla Global: Guardar/Registrar/Nuevo siempre verde sólido #2D9E6B) */}
+      <div className="mt-2">
+        <button type="button" className="w-full h-12 bg-[#2D9E6B] text-white hover:bg-[#25855A] active:scale-[0.98] transition-all rounded-lg font-semibold text-sm flex items-center justify-center gap-2 shadow-sm">
+          <span className="material-symbols-outlined text-[20px]">add</span>
+          <span>+ Agregar representante</span>
+        </button>
+      </div>
+
+      {/* Nota de pie informativa */}
+      <p className="text-[11px] text-[#A7B0BB] text-center pt-2">
+        Todos los representantes deben contar con RFC con homoclave y poder notarial vigente según el Código Civil Federal.
+      </p>
+
+    </main>
+
+    {/* 4. TAB BAR INFERIOR - ADMINISTRADOR (Idéntica en todas: 6 ítems exactos, orden estricto, "Más" ACTIVO) */}
+    {/* Fondo blanco, borde superior gris #A7B0BB/30, inactivo #A7B0BB, activo #2D9E6B semibold con punto verde de 4px debajo, sin píldora */}
+    <nav className="fixed bottom-0 left-0 max-w-[390px] mx-auto w-full z-50 h-16 bg-white border-t border-[#A7B0BB]/30 flex justify-between items-center px-1">
+      {/* 1. Inicio */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[22px]">home</span>
+        <span className="text-[10px] font-normal mt-0.5">Inicio</span>
+      </a>
+
+      {/* 2. Propiedades */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[22px]">apartment</span>
+        <span className="text-[10px] font-normal mt-0.5">Propiedades</span>
+      </a>
+
+      {/* 3. Inquilinos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[22px]">group</span>
+        <span className="text-[10px] font-normal mt-0.5">Inquilinos</span>
+      </a>
+
+      {/* 4. Contratos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[22px]">description</span>
+        <span className="text-[10px] font-normal mt-0.5">Contratos</span>
+      </a>
+
+      {/* 5. Pagos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[22px]">payments</span>
+        <span className="text-[10px] font-normal mt-0.5">Pagos</span>
+      </a>
+
+      {/* 6. Más -> ACTIVO (Verde corporativo #2D9E6B semibold + punto verde de 4px debajo, sin píldora) */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 h-full text-[#2D9E6B] font-semibold transition-colors">
+        <span className="material-symbols-outlined text-[22px]" style={{fontVariationSettings: '\'FILL\' 1'}}>more_horiz</span>
+        <span className="text-[10px] font-semibold mt-0.5">Más</span>
+        {/* Punto indicador verde de 4px debajo */}
+        <span className="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+      </a>
+    </nav>
+
+  </div>

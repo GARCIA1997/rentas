@@ -1,20 +1,18 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ReportConversation } from '@/components/ReportConversation';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ToastProvider';
 import { reportsApi, MaintenanceReport, MaintenanceReportStatus, maintenanceReportStatusLabels } from '@/lib/api';
-import { ArrowLeftIcon } from '@/components/icons';
 
 const POLL_INTERVAL_MS = 15_000;
 const STATUS_ORDER: MaintenanceReportStatus[] = ['REPORTED', 'IN_PROGRESS', 'CLOSED'];
 
 export default function AdminReportDetailPage() {
   const { token } = useAuth();
-  const router = useRouter();
   const params = useParams();
   const tenantId = params?.id as string;
   const reportId = params?.reportId as string;
@@ -68,24 +66,15 @@ export default function AdminReportDetailPage() {
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="flex flex-col h-[calc(100dvh-env(safe-area-inset-top)-4.5rem)] sm:h-[calc(100vh-6rem)]">
-        <button
-          onClick={() => router.push(`/tenants/${tenantId}/profile`)}
-          className="flex items-center gap-1.5 text-muted hover:text-heading text-sm mb-4 -ml-1 shrink-0"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          {report?.tenant?.fullName ?? 'Perfil del inquilino'}
-        </button>
-
-        {isLoading ? (
-          <p className="text-muted">Cargando...</p>
-        ) : !report ? (
-          <p className="text-muted">No se encontró el reporte.</p>
+        {isLoading || !report ? (
+          <p className="p-4 text-xs text-[#73777f]">{isLoading ? 'Cargando...' : 'No se encontró el reporte.'}</p>
         ) : (
           <ReportConversation
             report={report}
             viewerRole="ADMIN"
             onSend={handleSend}
+            backHref={`/tenants/${tenantId}/profile`}
+            backLabel={report.tenant?.fullName ?? 'Perfil del inquilino'}
             headerExtra={
               <div className="flex gap-2">
                 {STATUS_ORDER.map((status) => (
@@ -93,10 +82,10 @@ export default function AdminReportDetailPage() {
                     key={status}
                     onClick={() => handleStatusChange(status)}
                     disabled={updatingStatus || report.status === status}
-                    className={`flex-1 text-xs font-medium py-2 rounded-lg border transition-colors disabled:opacity-40 ${
+                    className={`flex-1 font-sans text-label-sm font-semibold py-2 rounded-lg border transition-colors disabled:cursor-default ${
                       report.status === status
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas'
+                        ? 'border-[#173a5f] bg-[#173a5f] text-white'
+                        : 'border-[#c3c6cf]/40 bg-white text-[#173a5f] hover:bg-[#f7f3ea] disabled:opacity-40'
                     }`}
                   >
                     {maintenanceReportStatusLabels[status]}
@@ -106,7 +95,6 @@ export default function AdminReportDetailPage() {
             }
           />
         )}
-      </div>
     </ProtectedRoute>
   );
 }

@@ -1,0 +1,53 @@
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #EFECE6;
+      margin: 0;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mobile-frame {
+      width: 390px;
+      min-height: 844px;
+      background-color: #F5F1E8;
+      box-shadow: 0 20px 40px -15px rgba(23, 58, 95, 0.25);
+      border-radius: 36px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 6px solid #173A5F;
+    }
+
+    /* Shimmer Skeleton */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #E6E2D8 25%, #F0EDE6 50%, #E6E2D8 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite ease-in-out;
+    }
+
+    /* Spinner Animation */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+      animation: spin 1.2s linear infinite;
+    }
+
+    /* Custom Scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  

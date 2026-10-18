@@ -1,0 +1,317 @@
+
+{/* Mockup Móvil 390px */}
+<div className="w-[390px] bg-[#F5F1E8] text-[#173A5F] rounded-[32px] shadow-2xl overflow-hidden border border-[#DDD9CF] relative flex flex-col min-h-[920px]">
+{/* ============================================== */}
+{/* CAPA BASE: DASHBOARD ADMINISTRADOR DE FONDO */}
+{/* ============================================== */}
+{/* Status Bar iOS */}
+<div className="h-10 px-6 flex justify-between items-center text-xs text-white bg-[#173A5F] select-none font-semibold">
+<span>9:41</span>
+<div className="flex items-center space-x-1.5">
+<span className="material-symbols-outlined text-sm">signal_cellular_alt</span>
+<span className="material-symbols-outlined text-sm">wifi</span>
+<span className="material-symbols-outlined text-sm">battery_full</span>
+</div>
+</div>
+{/* Header / Barra Superior Azul (Reglas Globales: Recto, Logo oficial Ksar en blanco + ed en verde, Campana activa, Avatar) */}
+<header className="bg-[#173A5F] px-4 py-3 flex items-center justify-between border-b border-[#173A5F] relative z-20">
+{/* Logotipo oficial: Isotipo 3 piezas + Ksar(blanco)ed(verde) sin cajas ni marcos */}
+<div className="flex items-center space-x-2">
+<div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
+<img alt="Isotipo KsaRed" className="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz5ZuXjEkf_rr9jlL7846awvMiKxtygXRu6mbP_6T2-Ds8cpRXL-MRxxBbtC8iNRPh8Qamdabiv9cHzs0jwbN1o3CNgvsVjzmix0e0XVmDUUGBuN8zm2nnjtmS9fWIA5OBHKwxaxowSif4RvPoke2401DQwjRWuWHSPSXTBOcMBrxJSoINejc0Nly8fOuwD1qObQrxL5YKN_3rXDLVPNJGad4s-ndb5LF5_Yh6jdFvXiBDdBaAAIAVoCPAvSUPsU-Wf2ndRWgYLCau" />
+</div>
+<div className="text-[21px] font-bold tracking-tight leading-none">
+<span className="text-white">Ksar</span><span className="text-[#2D9E6B]">ed</span>
+</div>
+</div>
+{/* Iconos header: Campana destacada/abierta y Avatar */}
+<div className="flex items-center space-x-3">
+<button className="relative w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white transition hover:bg-white/20 active:scale-95" title="Notificaciones">
+<span className="material-symbols-outlined text-[22px]">notifications</span>
+<span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+</button>
+<div className="w-9 h-9 rounded-full ring-2 ring-[#2D9E6B] overflow-hidden bg-[#173A5F]">
+<img alt="Mariana Silva" className="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg" />
+</div>
+</div>
+</header>
+{/* Sub-header Dashboard (atenuado bajo la experiencia activa) */}
+<div className="bg-[#173A5F] px-4 pt-1 pb-4 text-white">
+<div className="flex items-center justify-between">
+<div>
+<h1 className="text-lg font-bold leading-tight">Hola, Mariana</h1>
+<p className="text-[11px] text-white/70 font-medium">Administradora · Panel Principal</p>
+</div>
+<div className="flex items-center space-x-1.5 bg-white/10 px-2.5 py-1 rounded-lg text-[11px] font-medium text-white/90">
+<span className="material-symbols-outlined text-[15px]">calendar_today</span>
+<span>Octubre 2024</span>
+</div>
+</div>
+</div>
+{/* Contenido Scrollable con Toasts y Dropdown de Notificaciones */}
+<div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 relative z-10 pb-20">
+{/* ============================================== */}
+{/* SECCIÓN 1: APILAMIENTO DE 4 TOASTS (SUPERIOR) */}
+{/* ============================================== */}
+<section className="space-y-2.5">
+<div className="flex items-center justify-between px-1">
+<span className="text-[10px] font-bold tracking-wider uppercase text-[#173A5F]/60">Alertas del sistema (Toasts)</span>
+<span className="text-[10px] font-semibold text-[#2D9E6B] bg-[#2D9E6B]/10 px-2 py-0.5 rounded">Activos (4)</span>
+</div>
+{/* Toast 1: Éxito (Verde #2D9E6B) */}
+<div className="bg-white rounded-lg shadow-md border border-[#E2DDD2] flex items-stretch overflow-hidden transition-all hover:shadow-lg">
+{/* Barra lateral de 4px */}
+<div className="w-1 bg-[#2D9E6B] flex-shrink-0"></div>
+<div className="p-3 flex items-start space-x-2.5 flex-1 min-w-0">
+{/* Ícono de éxito */}
+<div className="w-7 h-7 rounded-full bg-[#2D9E6B]/15 text-[#2D9E6B] flex items-center justify-center flex-shrink-0 mt-0.5">
+<span className="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+{/* Contenido */}
+<div className="flex-1 min-w-0">
+<p className="text-xs font-bold text-[#173A5F]">Pago registrado</p>
+<p className="text-[11px] text-[#475569] leading-snug mt-0.5">El pago de $18,500 MXN de Ana Torres fue conciliado con éxito.</p>
+</div>
+{/* Botón cerrar */}
+<button className="text-[#A7B0BB] hover:text-[#173A5F] p-0.5 transition active:scale-90 flex-shrink-0" title="Cerrar notificación">
+<span className="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+{/* Toast 2: Error (Rojo #D32F2F) */}
+<div className="bg-white rounded-lg shadow-md border border-[#E2DDD2] flex items-stretch overflow-hidden transition-all hover:shadow-lg">
+{/* Barra lateral de 4px */}
+<div className="w-1 bg-[#D32F2F] flex-shrink-0"></div>
+<div className="p-3 flex items-start space-x-2.5 flex-1 min-w-0">
+{/* Ícono de error */}
+<div className="w-7 h-7 rounded-full bg-[#D32F2F]/15 text-[#D32F2F] flex items-center justify-center flex-shrink-0 mt-0.5">
+<span className="material-symbols-outlined text-[18px]">error</span>
+</div>
+{/* Contenido */}
+<div className="flex-1 min-w-0">
+<p className="text-xs font-bold text-[#173A5F]">No se pudo generar el PDF</p>
+<p className="text-[11px] text-[#475569] leading-snug mt-0.5">Intenta de nuevo o descarga el archivo desde el historial de recibos.</p>
+</div>
+{/* Botón cerrar */}
+<button className="text-[#A7B0BB] hover:text-[#173A5F] p-0.5 transition active:scale-90 flex-shrink-0" title="Cerrar notificación">
+<span className="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+{/* Toast 3: Advertencia (Ámbar #E67E22) */}
+<div className="bg-white rounded-lg shadow-md border border-[#E2DDD2] flex items-stretch overflow-hidden transition-all hover:shadow-lg">
+{/* Barra lateral de 4px */}
+<div className="w-1 bg-[#E67E22] flex-shrink-0"></div>
+<div className="p-3 flex items-start space-x-2.5 flex-1 min-w-0">
+{/* Ícono de advertencia */}
+<div className="w-7 h-7 rounded-full bg-[#E67E22]/15 text-[#E67E22] flex items-center justify-center flex-shrink-0 mt-0.5">
+<span className="material-symbols-outlined text-[18px]">warning</span>
+</div>
+{/* Contenido */}
+<div className="flex-1 min-w-0">
+<p className="text-xs font-bold text-[#173A5F]">Permiso requerido</p>
+<p className="text-[11px] text-[#475569] leading-snug mt-0.5">Bloqueaste las notificaciones en el navegador. Habilítalas en permisos del sitio.</p>
+</div>
+{/* Botón cerrar */}
+<button className="text-[#A7B0BB] hover:text-[#173A5F] p-0.5 transition active:scale-90 flex-shrink-0" title="Cerrar notificación">
+<span className="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+{/* Toast 4: Info (Azul Marino #173A5F) */}
+<div className="bg-white rounded-lg shadow-md border border-[#E2DDD2] flex items-stretch overflow-hidden transition-all hover:shadow-lg">
+{/* Barra lateral de 4px */}
+<div className="w-1 bg-[#173A5F] flex-shrink-0"></div>
+<div className="p-3 flex items-start space-x-2.5 flex-1 min-w-0">
+{/* Ícono de info */}
+<div className="w-7 h-7 rounded-full bg-[#173A5F]/15 text-[#173A5F] flex items-center justify-center flex-shrink-0 mt-0.5">
+<span className="material-symbols-outlined text-[18px]">download_done</span>
+</div>
+{/* Contenido */}
+<div className="flex-1 min-w-0">
+<p className="text-xs font-bold text-[#173A5F]">Descarga completada</p>
+<p className="text-[11px] text-[#475569] leading-snug mt-0.5">El recibo se descargó — adjúntalo en WhatsApp para enviarlo al inquilino.</p>
+</div>
+{/* Botón cerrar */}
+<button className="text-[#A7B0BB] hover:text-[#173A5F] p-0.5 transition active:scale-90 flex-shrink-0" title="Cerrar notificación">
+<span className="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+</section>
+{/* ============================================== */}
+{/* SECCIÓN 2: PANEL DESPLEGABLE DE NOTIFICACIONES */}
+{/* ============================================== */}
+<section className="bg-white rounded-lg border border-[#DDD9CF] shadow-xl overflow-hidden mt-2">
+{/* Encabezado del Panel */}
+<div className="px-4 py-3 border-b border-[#EAE6DC] flex items-center justify-between bg-white">
+<div className="flex items-center space-x-2">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">notifications_active</span>
+<h2 className="text-sm font-bold text-[#173A5F]">Notificaciones</h2>
+<span className="bg-[#2D9E6B] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3 nuevas</span>
+</div>
+{/* Enlace: Marcar todas como leídas */}
+<button className="text-[11px] font-semibold text-[#2D9E6B] hover:underline flex items-center space-x-1 transition active:opacity-75">
+<span className="material-symbols-outlined text-[14px]">done_all</span>
+<span>Marcar todas como leídas</span>
+</button>
+</div>
+{/* Filtros rápidos tipo chip (Regla Global: chip activo azul #173A5F sólido) */}
+<div className="px-3 py-2 bg-[#FBF9F4] border-b border-[#EAE6DC] flex items-center space-x-1.5 overflow-x-auto text-[11px]">
+<span className="px-2.5 py-1 rounded bg-[#173A5F] text-white font-semibold">Todas (5)</span>
+<span className="px-2.5 py-1 rounded bg-white text-[#173A5F] font-medium border border-[#DDD9CF] hover:bg-[#F5F1E8]">No leídas (3)</span>
+<span className="px-2.5 py-1 rounded bg-white text-[#173A5F] font-medium border border-[#DDD9CF] hover:bg-[#F5F1E8]">Cobros</span>
+<span className="px-2.5 py-1 rounded bg-white text-[#173A5F] font-medium border border-[#DDD9CF] hover:bg-[#F5F1E8]">Reportes</span>
+</div>
+{/* Lista de Notificaciones */}
+<div className="divide-y divide-[#EAE6DC]">
+{/* Ítem 1: Nuevo reporte (No leída - Punto verde) */}
+<div className="p-3.5 bg-[#F5F1E8]/40 hover:bg-[#F5F1E8] transition cursor-pointer flex items-start space-x-3 relative">
+{/* Indicador no leída: punto verde #2D9E6B */}
+<div className="absolute left-2 top-4 w-2 h-2 rounded-full bg-[#2D9E6B]"></div>
+{/* Contenedor ícono reporte */}
+<div className="w-9 h-9 rounded-lg bg-[#2D9E6B]/15 text-[#2D9E6B] flex items-center justify-center flex-shrink-0 ml-1">
+<span className="material-symbols-outlined text-[20px]">build</span>
+</div>
+<div className="flex-1 min-w-0">
+<div className="flex items-center justify-between">
+<p className="text-xs font-bold text-[#173A5F] truncate">Nuevo reporte de mantenimiento</p>
+<span className="text-[10px] text-[#A7B0BB] font-medium ml-2 whitespace-nowrap">Hace 15 min</span>
+</div>
+<p className="text-[11px] text-[#475569] leading-snug mt-1">
+<span className="font-semibold text-[#173A5F]">Ana Torres</span> (Depto. 402): "Fuga en monomando de lavabo principal".
+              </p>
+<div className="mt-2 flex items-center space-x-2">
+<span className="text-[10px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B] px-2 py-0.5 rounded">#REP-1048</span>
+<span className="text-[10px] font-medium text-[#173A5F] flex items-center hover:underline">
+<span>Atender ticket</span>
+<span className="material-symbols-outlined text-[13px] ml-0.5">arrow_forward</span>
+</span>
+</div>
+</div>
+</div>
+{/* Ítem 2: Pago vencido (No leída - Punto verde) */}
+<div className="p-3.5 bg-[#F5F1E8]/40 hover:bg-[#F5F1E8] transition cursor-pointer flex items-start space-x-3 relative">
+{/* Indicador no leída: punto verde #2D9E6B */}
+<div className="absolute left-2 top-4 w-2 h-2 rounded-full bg-[#2D9E6B]"></div>
+{/* Contenedor ícono cobro vencido (rojo) */}
+<div className="w-9 h-9 rounded-lg bg-[#D32F2F]/15 text-[#D32F2F] flex items-center justify-center flex-shrink-0 ml-1">
+<span className="material-symbols-outlined text-[20px]">receipt_long</span>
+</div>
+<div className="flex-1 min-w-0">
+<div className="flex items-center justify-between">
+<p className="text-xs font-bold text-[#173A5F] truncate">Pago vencido detectado</p>
+<span className="text-[10px] text-[#A7B0BB] font-medium ml-2 whitespace-nowrap">Hace 1 h</span>
+</div>
+<p className="text-[11px] text-[#475569] leading-snug mt-1">
+<span className="font-semibold text-[#173A5F]">Sofía Alarcón</span> (Casa Sauces #12): Saldo de <span className="font-bold text-[#D32F2F]">$2,100 MXN</span> con 3 días de retraso.
+              </p>
+<div className="mt-2 flex items-center space-x-2">
+<span className="text-[10px] font-semibold bg-[#D32F2F]/15 text-[#D32F2F] px-2 py-0.5 rounded">Vencido</span>
+<button className="text-[10px] font-bold text-[#173A5F] border border-[#DDD9CF] bg-white px-2 py-0.5 rounded hover:bg-[#F5F1E8]">Enviar recordatorio</button>
+</div>
+</div>
+</div>
+{/* Ítem 3: Respuesta de inquilino (No leída - Punto verde) */}
+<div className="p-3.5 bg-[#F5F1E8]/40 hover:bg-[#F5F1E8] transition cursor-pointer flex items-start space-x-3 relative">
+{/* Indicador no leída: punto verde #2D9E6B */}
+<div className="absolute left-2 top-4 w-2 h-2 rounded-full bg-[#2D9E6B]"></div>
+{/* Contenedor ícono respuesta / mensaje */}
+<div className="w-9 h-9 rounded-lg bg-[#173A5F]/15 text-[#173A5F] flex items-center justify-center flex-shrink-0 ml-1">
+<span className="material-symbols-outlined text-[20px]">chat</span>
+</div>
+<div className="flex-1 min-w-0">
+<div className="flex items-center justify-between">
+<p className="text-xs font-bold text-[#173A5F] truncate">Respuesta de inquilino</p>
+<span className="text-[10px] text-[#A7B0BB] font-medium ml-2 whitespace-nowrap">Hace 3 h</span>
+</div>
+<p className="text-[11px] text-[#475569] leading-snug mt-1">
+<span className="font-semibold text-[#173A5F]">Roberto Gómez</span> respondió en el chat: "Perfecto, los espero a las 11:30 para la revisión".
+              </p>
+<div className="mt-2 flex items-center space-x-2">
+<span className="text-[10px] font-medium text-[#2D9E6B] flex items-center hover:underline">
+<span>Abrir conversación</span>
+<span className="material-symbols-outlined text-[13px] ml-0.5">arrow_forward</span>
+</span>
+</div>
+</div>
+</div>
+{/* Ítem 4: Notificación anterior ya leída (Sin punto verde) */}
+<div className="p-3.5 bg-white hover:bg-[#F5F1E8]/50 transition cursor-pointer flex items-start space-x-3">
+<div className="w-2 h-2 flex-shrink-0"></div> {/* Espaciador para alinear con las que tienen punto */}
+<div className="w-9 h-9 rounded-lg bg-[#A7B0BB]/20 text-[#173A5F] flex items-center justify-center flex-shrink-0">
+<span className="material-symbols-outlined text-[20px]">contract</span>
+</div>
+<div className="flex-1 min-w-0">
+<div className="flex items-center justify-between">
+<p className="text-xs font-medium text-[#475569] truncate">Contrato por vencer</p>
+<span className="text-[10px] text-[#A7B0BB] font-medium ml-2 whitespace-nowrap">Ayer</span>
+</div>
+<p className="text-[11px] text-[#64748B] leading-snug mt-1">
+                El contrato <span className="font-semibold text-[#173A5F]">CTR-2023-042</span> vence en 14 días. Puedes preparar la renovación.
+              </p>
+</div>
+</div>
+</div>
+{/* Pie del Panel */}
+<div className="px-4 py-2.5 bg-[#FBF9F4] border-t border-[#EAE6DC] text-center">
+<button className="text-xs font-bold text-[#173A5F] hover:text-[#2D9E6B] transition inline-flex items-center space-x-1">
+<span>Ver historial completo de actividades</span>
+<span className="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</div>
+</section>
+{/* Bloque informativo adicional de directrices */}
+<div className="bg-white/70 rounded-lg p-3 border border-[#E2DDD2] flex items-center justify-between text-[11px] text-[#64748B]">
+<div className="flex items-center space-x-2">
+<span className="material-symbols-outlined text-[#2D9E6B] text-[18px]">verified_user</span>
+<span>Notificaciones push cifradas NOM-151</span>
+</div>
+<span className="text-[10px] font-semibold text-[#173A5F]">KsaRed v2.4</span>
+</div>
+</div>
+{/* ============================================== */}
+{/* TAB BAR INFERIOR (REGLAS GLOBALES ADMINISTRADOR) */}
+{/* Exactamente 6 ítems: Inicio, Propiedades, */}
+{/* Inquilinos, Contratos, Pagos, Más. */}
+{/* Activo en Inicio: Verde #2D9E6B con punto 4px */}
+{/* ============================================== */}
+<nav className="bg-white border-t border-[#A7B0BB]/30 py-2 px-1 flex justify-around items-center absolute bottom-0 left-0 right-0 z-30 shadow-[0_-2px_10px_rgba(23,58,95,0.06)]">
+{/* 1. Inicio (Activo) */}
+<div className="flex flex-col items-center justify-center flex-1 py-0.5 cursor-pointer">
+<span className="material-symbols-outlined text-[#2D9E6B] text-[20px] fill-1">dashboard</span>
+<span className="text-[10px] font-semibold text-[#2D9E6B] mt-0.5 leading-none">Inicio</span>
+<span className="w-1 h-1 bg-[#2D9E6B] rounded-full mt-1"></span>
+</div>
+{/* 2. Propiedades */}
+<div className="flex flex-col items-center justify-center flex-1 py-0.5 cursor-pointer text-[#A7B0BB] hover:text-[#173A5F] transition">
+<span className="material-symbols-outlined text-[20px]">apartment</span>
+<span className="text-[10px] font-normal mt-0.5 leading-none">Propiedades</span>
+<span className="w-1 h-1 bg-transparent rounded-full mt-1"></span>
+</div>
+{/* 3. Inquilinos */}
+<div className="flex flex-col items-center justify-center flex-1 py-0.5 cursor-pointer text-[#A7B0BB] hover:text-[#173A5F] transition">
+<span className="material-symbols-outlined text-[20px]">group</span>
+<span className="text-[10px] font-normal mt-0.5 leading-none">Inquilinos</span>
+<span className="w-1 h-1 bg-transparent rounded-full mt-1"></span>
+</div>
+{/* 4. Contratos */}
+<div className="flex flex-col items-center justify-center flex-1 py-0.5 cursor-pointer text-[#A7B0BB] hover:text-[#173A5F] transition">
+<span className="material-symbols-outlined text-[20px]">description</span>
+<span className="text-[10px] font-normal mt-0.5 leading-none">Contratos</span>
+<span className="w-1 h-1 bg-transparent rounded-full mt-1"></span>
+</div>
+{/* 5. Pagos */}
+<div className="flex flex-col items-center justify-center flex-1 py-0.5 cursor-pointer text-[#A7B0BB] hover:text-[#173A5F] transition">
+<span className="material-symbols-outlined text-[20px]">payments</span>
+<span className="text-[10px] font-normal mt-0.5 leading-none">Pagos</span>
+<span className="w-1 h-1 bg-transparent rounded-full mt-1"></span>
+</div>
+{/* 6. Más */}
+<div className="flex flex-col items-center justify-center flex-1 py-0.5 cursor-pointer text-[#A7B0BB] hover:text-[#173A5F] transition">
+<span className="material-symbols-outlined text-[20px]">more_horiz</span>
+<span className="text-[10px] font-normal mt-0.5 leading-none">Más</span>
+<span className="w-1 h-1 bg-transparent rounded-full mt-1"></span>
+</div>
+</nav>
+</div>

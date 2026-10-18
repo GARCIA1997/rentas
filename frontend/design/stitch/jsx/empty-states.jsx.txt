@@ -1,0 +1,336 @@
+
+
+  <div className="mobile-frame">
+    {/* Top System Bar (iOS style status) */}
+    <div className="bg-[#173A5F] text-white px-6 pt-3 pb-1 flex justify-between items-center text-xs font-semibold select-none">
+      <span>9:41</span>
+      <div className="flex items-center space-x-1.5">
+        <span className="material-symbols-outlined text-sm">signal_cellular_4_bar</span>
+        <span className="material-symbols-outlined text-sm">wifi</span>
+        <span className="material-symbols-outlined text-sm">battery_full</span>
+      </div>
+    </div>
+
+    {/* Official Header (REGLAS GLOBALES KsaRed) */}
+    {/* Encabezado azul #173A5F plano con borde inferior recto, campana blanca con punto verde y avatar */}
+    <header className="bg-[#173A5F] px-4 py-3 flex items-center justify-between border-b border-[#173A5F] select-none">
+      {/* Logo: Isotipo 3 piezas + Ksar en blanco + ed en verde #2D9E6B sin recuadro de fondo */}
+      <div className="flex items-center space-x-2.5">
+        <svg className="w-7 h-7 flex-shrink-0" viewBox="0 0 365 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 49 L130 130 L130 222 L50 292 Z" fill="#FFFFFF" />
+          <path d="M137 130 L220 49 L315 49 L137 224 Z" fill="#DDD9CF" />
+          <path d="M153 214 L208 162 L333 292 L229 292 Z" fill="#2D9E6B" />
+        </svg>
+        <span className="text-xl font-bold tracking-tight leading-none">
+          <span className="text-white">Ksar</span><span className="text-[#2D9E6B]">ed</span>
+        </span>
+      </div>
+
+      {/* Action Icons: Bell with green badge + Avatar */}
+      <div className="flex items-center space-x-3">
+        <div className="relative cursor-pointer">
+          <span className="material-symbols-outlined text-white text-[22px] flex items-center justify-center">notifications</span>
+          <span className="absolute top-0 right-0 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+        </div>
+        <div className="w-8 h-8 rounded-full bg-[#2D9E6B]/20 border-2 border-white flex items-center justify-center overflow-hidden">
+          <span className="text-xs font-bold text-white tracking-wider">MS</span>
+        </div>
+      </div>
+    </header>
+
+    {/* Subheader Title / Catálogo Normativo */}
+    <div className="bg-[#173A5F] text-white px-4 pb-3 pt-0.5 flex justify-between items-center border-b border-[#234c77]">
+      <div>
+        <h1 className="text-sm font-bold tracking-tight text-white">Estados vacíos y de carga</h1>
+        <p className="text-[11px] text-[#A7B0BB] font-medium">Guía normativa de interfaces móviles</p>
+      </div>
+      <span className="bg-[#2D9E6B]/20 text-[#2D9E6B] text-[10px] font-semibold px-2 py-0.5 rounded border border-[#2D9E6B]/40">
+        4 Módulos
+      </span>
+    </div>
+
+    {/* Scrollable Content Body */}
+    <main className="flex-1 overflow-y-auto no-scrollbar p-3.5 space-y-4 pb-24">
+
+      {/* ========================================== */}
+      {/* BLOQUE 1: Estado Vacío "Aún no tienes propiedades" */}
+      {/* ========================================== */}
+      <section className="bg-white rounded-[8px] p-4 shadow-[0_2px_8px_rgba(23,58,95,0.06)] border border-[#A7B0BB]/25">
+        <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#F5F1E8]">
+          <div className="flex items-center space-x-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#173A5F]"></span>
+            <span className="text-[11px] font-bold text-[#173A5F] uppercase tracking-wider">01. Estado Vacío — Propiedades</span>
+          </div>
+          <span className="text-[10px] font-medium text-[#A7B0BB] bg-[#F5F1E8] px-1.5 py-0.5 rounded-[4px]">Directorio</span>
+        </div>
+
+        <div className="flex flex-col items-center text-center py-3 px-2">
+          {/* Ilustración geométrica basada estrictamente en el isotipo corporativo (bloques diagonales azul, marfil y verde) */}
+          <div className="relative w-24 h-24 mb-3 flex items-center justify-center">
+            {/* Círculo difuminado tenue de fondo */}
+            <div className="absolute inset-0 bg-[#F5F1E8] rounded-full scale-105 border border-[#A7B0BB]/20"></div>
+            {/* Isotipo Maestro Reconstruido a 45° */}
+            <svg className="relative w-16 h-16" viewBox="0 0 365 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Mástil vertical izquierdo (Azul Marino #173A5F) */}
+              <path d="M50 49 L130 130 L130 222 L50 292 Z" fill="#173A5F" />
+              {/* Diagonal superior (Marfil/Crema #DDD9CF) */}
+              <path d="M137 130 L220 49 L315 49 L137 224 Z" fill="#DDD9CF" />
+              {/* Diagonal inferior (Verde Ksa #2D9E6B) */}
+              <path d="M153 214 L208 162 L333 292 L229 292 Z" fill="#2D9E6B" />
+            </svg>
+            {/* Detalle sutil de arquitectura */}
+            <div className="absolute -bottom-1 -right-1 bg-[#173A5F] text-white p-1 rounded-full shadow-sm flex items-center justify-center border-2 border-white">
+              <span className="material-symbols-outlined text-[13px]">domain_add</span>
+            </div>
+          </div>
+
+          <h2 className="text-base font-bold text-[#173A5F] mb-1">Aún no tienes propiedades</h2>
+          <p className="text-xs text-[#A7B0BB] font-normal leading-relaxed max-w-[260px] mb-4">
+            Comienza registrando tu primer inmueble para generar contratos oficiales y habilitar el cobro automatizado.
+          </p>
+
+          {/* Botón verde "+ Nueva propiedad" (REGLAS GLOBALES: verde sólido #2D9E6B, 8px) */}
+          <button className="w-full py-2.5 px-4 bg-[#2D9E6B] hover:bg-[#25855a] text-white text-xs font-semibold rounded-[8px] flex items-center justify-center space-x-1.5 transition-all shadow-sm active:scale-[0.98]">
+            <span className="material-symbols-outlined text-base">add</span>
+            <span>+ Nueva propiedad</span>
+          </button>
+        </div>
+      </section>
+
+      {/* ========================================== */}
+      {/* BLOQUE 2: Estado Vacío "Sin pagos vencidos" */}
+      {/* ========================================== */}
+      <section className="bg-white rounded-[8px] p-4 shadow-[0_2px_8px_rgba(23,58,95,0.06)] border border-[#A7B0BB]/25">
+        <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#F5F1E8]">
+          <div className="flex items-center space-x-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+            <span className="text-[11px] font-bold text-[#173A5F] uppercase tracking-wider">02. Estado Vacío — Cartera al Día</span>
+          </div>
+          {/* Badge verde (REGLAS GLOBALES: verde activo/al corriente) */}
+          <span className="text-[10px] font-semibold text-[#2D9E6B] bg-[#2D9E6B]/10 px-2 py-0.5 rounded-[4px] border border-[#2D9E6B]/25">
+            Al corriente
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center text-center py-2 px-2">
+          {/* Icono check verde dentro de contenedor institucional con detalles KsaRed */}
+          <div className="w-16 h-16 rounded-full bg-[#2D9E6B]/15 border-2 border-[#2D9E6B]/30 flex items-center justify-center mb-3">
+            <div className="w-11 h-11 rounded-full bg-[#2D9E6B] flex items-center justify-center shadow-[0_4px_10px_rgba(45,158,107,0.3)]">
+              <span className="material-symbols-outlined text-white text-2xl font-bold">check</span>
+            </div>
+          </div>
+
+          <h2 className="text-base font-bold text-[#173A5F] mb-1">Sin pagos vencidos</h2>
+          <p className="text-xs text-[#A7B0BB] font-normal leading-relaxed max-w-[270px] mb-3.5">
+            ¡Excelente labor de cobranza! Todos tus inquilinos activos se encuentran al corriente con sus mensualidades de renta.
+          </p>
+
+          {/* Resumen métrico compacto al día */}
+          <div className="w-full bg-[#F5F1E8] rounded-[8px] p-2.5 flex items-center justify-between border border-[#A7B0BB]/20 text-left">
+            <div className="flex items-center space-x-2">
+              <span className="material-symbols-outlined text-[#2D9E6B] text-lg">verified_user</span>
+              <div>
+                <p className="text-[10px] text-[#A7B0BB] font-medium leading-none">Próximo vencimiento</p>
+                <p className="text-xs font-bold text-[#173A5F] mt-0.5">05 Nov 2024 · 4 contratos</p>
+              </div>
+            </div>
+            <span className="text-[11px] font-bold text-[#2D9E6B]">$18,500 MXN</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================== */}
+      {/* BLOQUE 3: Skeleton de Carga (3 Tarjetas) */}
+      {/* ========================================== */}
+      <section className="bg-white rounded-[8px] p-4 shadow-[0_2px_8px_rgba(23,58,95,0.06)] border border-[#A7B0BB]/25">
+        <div className="flex items-center justify-between pb-2 mb-3 border-b border-[#F5F1E8]">
+          <div className="flex items-center space-x-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#A7B0BB]"></span>
+            <span className="text-[11px] font-bold text-[#173A5F] uppercase tracking-wider">03. Carga en Proceso (Skeleton)</span>
+          </div>
+          <div className="flex items-center space-x-1 text-[10px] text-[#A7B0BB] font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B] animate-pulse"></span>
+            <span>Sincronizando</span>
+          </div>
+        </div>
+
+        <p className="text-[11px] text-[#A7B0BB] mb-3">Estructura placeholder animada para listados de propiedades y pagos:</p>
+
+        {/* Skeleton 1: Tarjeta con layout tipo propiedad */}
+        <div className="bg-[#F5F1E8]/70 border border-[#A7B0BB]/25 rounded-[8px] p-3 mb-2.5">
+          <div className="flex items-start space-x-3">
+            {/* Thumbnail skeleton */}
+            <div className="w-16 h-16 rounded-[8px] skeleton-box flex-shrink-0"></div>
+            {/* Info lines */}
+            <div className="flex-1 space-y-2">
+              <div className="flex justify-between items-center">
+                <div className="w-28 h-3.5 rounded-[4px] skeleton-box"></div>
+                <div className="w-12 h-3 rounded-[4px] skeleton-box"></div>
+              </div>
+              <div className="w-36 h-2.5 rounded-[4px] skeleton-box"></div>
+              <div className="flex justify-between items-center pt-1">
+                <div className="w-20 h-3 rounded-[4px] skeleton-box"></div>
+                <div className="w-14 h-2.5 rounded-[4px] skeleton-box"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Skeleton 2: Tarjeta con layout de pago/inquilino */}
+        <div className="bg-[#F5F1E8]/70 border border-[#A7B0BB]/25 rounded-[8px] p-3 mb-2.5">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 rounded-full skeleton-box"></div>
+              <div className="space-y-1">
+                <div className="w-24 h-3 rounded-[4px] skeleton-box"></div>
+                <div className="w-16 h-2 rounded-[4px] skeleton-box"></div>
+              </div>
+            </div>
+            <div className="w-14 h-4 rounded-[4px] skeleton-box"></div>
+          </div>
+          <div className="w-full h-7 rounded-[8px] skeleton-box mt-1"></div>
+        </div>
+
+        {/* Skeleton 3: Tarjeta compacta */}
+        <div className="bg-[#F5F1E8]/70 border border-[#A7B0BB]/25 rounded-[8px] p-3">
+          <div className="flex justify-between items-center mb-2">
+            <div className="w-32 h-3.5 rounded-[4px] skeleton-box"></div>
+            <div className="w-16 h-3.5 rounded-[4px] skeleton-box"></div>
+          </div>
+          <div className="w-44 h-2.5 rounded-[4px] skeleton-box mb-2"></div>
+          <div className="flex space-x-2">
+            <div className="flex-1 h-6 rounded-[8px] skeleton-box"></div>
+            <div className="flex-1 h-6 rounded-[8px] skeleton-box"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================== */}
+      {/* BLOQUE 4: Hoja de Progreso PDF y Estado Final */}
+      {/* ========================================== */}
+      <section className="bg-white rounded-[8px] p-4 shadow-[0_2px_8px_rgba(23,58,95,0.06)] border border-[#A7B0BB]/25">
+        <div className="flex items-center justify-between pb-2 mb-3 border-b border-[#F5F1E8]">
+          <div className="flex items-center space-x-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#173A5F]"></span>
+            <span className="text-[11px] font-bold text-[#173A5F] uppercase tracking-wider">04. Hoja de Progreso & Entrega</span>
+          </div>
+          <span className="text-[10px] font-semibold text-[#173A5F] bg-[#173A5F]/10 px-1.5 py-0.5 rounded-[4px]">NOM-151</span>
+        </div>
+
+        {/* Fase A: Generando PDF del contrato… (En progreso) */}
+        <div className="bg-[#F5F1E8] rounded-[8px] p-3.5 border border-[#A7B0BB]/30 mb-3.5">
+          <div className="flex items-start space-x-3 mb-2.5">
+            {/* Spinner institucional azul y verde */}
+            <div className="relative w-7 h-7 flex-shrink-0 mt-0.5">
+              <svg className="w-7 h-7 animate-spin-slow" viewBox="0 0 24 24">
+                <circle className="opacity-20" cx="12" cy="12" r="10" stroke="#173A5F" strokeWidth="3" fill="none"></circle>
+                <path className="opacity-100" fill="none" stroke="#2D9E6B" strokeWidth="3" strokeLinecap="round" d="M4 12a8 8 0 018-8"></path>
+              </svg>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold text-[#173A5F]">Generando PDF del contrato…</h3>
+                <span className="text-[11px] font-bold text-[#2D9E6B]">78%</span>
+              </div>
+              <p className="text-[10px] text-[#A7B0BB] mt-0.5">Compilando cláusulas, sellos y firmas digitales criptográficas</p>
+            </div>
+          </div>
+
+          {/* Barra de progreso verde corporativa (#2D9E6B) */}
+          <div className="w-full bg-[#E5E0D5] h-2 rounded-full overflow-hidden mb-1">
+            <div className="bg-[#2D9E6B] h-full rounded-full transition-all duration-300" style={{width: '78%'}}></div>
+          </div>
+          <div className="flex justify-between items-center text-[9px] text-[#A7B0BB] font-medium pt-0.5">
+            <span>Folio CTR-2024-012</span>
+            <span>Paso 3 de 4</span>
+          </div>
+        </div>
+
+        {/* Fase B: Estado final "PDF listo" con acciones */}
+        {/* REGLAS GLOBALES: "Descargar" azul sólido #173A5F; "Enviar por WhatsApp" verde sólido #2D9E6B */}
+        <div className="bg-white rounded-[8px] p-3.5 border-2 border-[#2D9E6B]/30 shadow-sm">
+          <div className="flex items-center space-x-2.5 mb-3">
+            <div className="w-8 h-8 rounded-[8px] bg-[#2D9E6B]/15 text-[#2D9E6B] flex items-center justify-center flex-shrink-0">
+              <span className="material-symbols-outlined text-lg">picture_as_pdf</span>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center space-x-1.5">
+                <h3 className="text-xs font-bold text-[#173A5F]">PDF listo</h3>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+              </div>
+              <p className="text-[10px] text-[#A7B0BB]">Contrato_Arrendamiento_Sauces12.pdf · 2.4 MB</p>
+            </div>
+            <span className="material-symbols-outlined text-[#2D9E6B] text-xl">check_circle</span>
+          </div>
+
+          {/* Botones requeridos bajo las REGLAS GLOBALES */}
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            {/* Botón Azul Sólido (#173A5F) para Descargar */}
+            <button className="py-2.5 px-3 bg-[#173A5F] hover:bg-[#122e4c] text-white text-[11px] font-semibold rounded-[8px] flex items-center justify-center space-x-1 transition-all shadow-sm active:scale-[0.98]">
+              <span className="material-symbols-outlined text-sm">download</span>
+              <span>Descargar</span>
+            </button>
+            {/* Botón Verde Sólido (#2D9E6B) para WhatsApp */}
+            <button className="py-2.5 px-3 bg-[#2D9E6B] hover:bg-[#25855a] text-white text-[11px] font-semibold rounded-[8px] flex items-center justify-center space-x-1 transition-all shadow-sm active:scale-[0.98]">
+              <span className="material-symbols-outlined text-sm">send</span>
+              <span>Enviar WhatsApp</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    {/* ========================================== */}
+    {/* Tab Bar Inferior Oficial (REGLAS GLOBALES KsaRed) */}
+    {/* Exactamente 6 ítems para Administrador: Inicio, Propiedades, Inquilinos, Contratos, Pagos, Más */}
+    {/* Fondo blanco, borde superior gris #A7B0BB/30, inactivo #A7B0BB, activo #2D9E6B semibold con punto verde de 4px debajo */}
+    {/* ========================================== */}
+    <nav className="fixed bottom-0 left-0 right-0 w-full max-w-[390px] mx-auto bg-white border-t border-[#A7B0BB]/30 h-16 px-1 flex items-center justify-around z-40 select-none">
+      
+      {/* 1. Inicio (Activo en esta vista de muestra del sistema) */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#2D9E6B]">
+        <span className="material-symbols-outlined text-[20px]">dashboard</span>
+        <span className="text-[10px] font-semibold tracking-tight mt-0.5">Inicio</span>
+        {/* Punto verde de 4px debajo sin píldora */}
+        <span className="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+      </a>
+
+      {/* 2. Propiedades */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">apartment</span>
+        <span className="text-[10px] font-medium tracking-tight mt-0.5">Propiedades</span>
+        <span className="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      {/* 3. Inquilinos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">group</span>
+        <span className="text-[10px] font-medium tracking-tight mt-0.5">Inquilinos</span>
+        <span className="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      {/* 4. Contratos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">description</span>
+        <span className="text-[10px] font-medium tracking-tight mt-0.5">Contratos</span>
+        <span className="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      {/* 5. Pagos */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">payments</span>
+        <span className="text-[10px] font-medium tracking-tight mt-0.5">Pagos</span>
+        <span className="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+      {/* 6. Más */}
+      <a href="#" className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span className="material-symbols-outlined text-[20px]">more_horiz</span>
+        <span className="text-[10px] font-medium tracking-tight mt-0.5">Más</span>
+        <span className="w-1 h-1 bg-transparent rounded-full mt-0.5"></span>
+      </a>
+
+    </nav>
+  </div>
+

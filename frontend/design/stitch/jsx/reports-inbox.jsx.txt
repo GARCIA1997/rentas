@@ -1,0 +1,312 @@
+
+{/* Mobile Container (Max 390px Formato Smartphone) */}
+<div className="w-full max-w-[390px] min-h-screen bg-[#F5F1E8] flex flex-col relative pb-28">
+{/* TopAppBar Institucional Plano (Sin bordes curvos) */}
+<header className="bg-[#173a5f] text-[#ffffff] w-full docked full-width top-0 rounded-none z-40 sticky shadow-none">
+<div className="flex items-center justify-between px-4 h-14 w-full">
+{/* Leading action (Arrow Back) */}
+<button aria-label="Volver" className="text-[#ffffff] hover:bg-white/10 p-1.5 rounded-lg transition-colors flex items-center justify-center" type="button">
+<span className="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+{/* Titulo centrado o alineado según Shared Components */}
+<div className="flex-1 px-3">
+<h1 className="text-headline-sm font-sans text-[#ffffff] truncate">Reportes de inquilinos</h1>
+</div>
+{/* Trailing actions: Campana con indicador verde y Avatar */}
+<div className="flex items-center space-x-3">
+<button aria-label="Notificaciones" className="relative text-[#ffffff] hover:bg-white/10 p-1.5 rounded-lg transition-colors flex items-center justify-center" type="button">
+<span className="material-symbols-outlined text-[22px]">notifications</span>
+{/* Indicador verde punto de 4px */}
+<span className="absolute top-1.5 right-1.5 w-[6px] h-[6px] bg-[#2D9E6B] rounded-full border border-[#173a5f]"></span>
+</button>
+{/* Avatar de la administradora */}
+<div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-[#a9c9f5]/30 flex-shrink-0">
+<img alt="Administradora" className="w-full h-full object-cover" data-alt="Close up professional portrait of a Mexican female property manager with friendly approachable expression in corporate attire against bright neutral background light mode" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfCLenjNkixjJCXHUeWQ81kH-Cw133ZMfZlIfhHRR1sGyOalZAQoH5g8FdsbYMHhMuYjfptXZjxvtWm43rTAWN33NL8cGKZDiHCwnrsWcx-vQoCU3PTE94W7NppodOrouCHHAd23DH4rgl8GTYNrVNOJjFOFPLcT7Zm8d99xA_pat0LPBt5sSDJltNWfNSnUPDE_yxjI8BUh1wH2TKp18CJc_OO9bt6XJ4-B__kHpB763nDVel18cE_c7NXdbrwX0-PDdqZUflw2Qi" />
+</div>
+</div>
+</div>
+{/* Barra secundaria de métricas sutiles */}
+<div className="px-4 py-2 bg-[#122e4d] flex items-center justify-between text-body-sm font-sans text-[#ffffff]/80 border-t border-white/10">
+<div className="flex items-center space-x-1.5">
+<span className="material-symbols-outlined text-[16px] text-[#2D9E6B]">assignment</span>
+<span>14 reportes registrados</span>
+</div>
+<div className="flex items-center space-x-1">
+<span className="w-2 h-2 rounded-full bg-[#D9822B]"></span>
+<span className="text-white font-medium">3 pendientes de atención</span>
+</div>
+</div>
+</header>
+{/* Controles de Búsqueda y Filtros */}
+<section className="px-4 pt-4 pb-2 space-y-3">
+{/* Search Input + Filter Button */}
+<div className="flex items-center gap-2">
+<div className="relative flex-1">
+<span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#73777f] text-[20px]">search</span>
+<input className="w-full h-11 pl-10 pr-3 bg-[#ffffff] text-[#1c1c16] rounded-lg border border-[#A7B0BB]/30 text-body-md font-sans placeholder:text-[#73777f] focus:outline-none focus:border-[#173a5f] focus:ring-1 focus:ring-[#173a5f] transition-all" placeholder="Buscar por inquilino, propiedad o folio..." type="search" />
+</div>
+<button aria-label="Filtros avanzados" className="w-11 h-11 flex-shrink-0 bg-[#ffffff] border border-[#A7B0BB]/40 rounded-lg flex items-center justify-center text-[#173a5f] hover:bg-[#f7f3ea] transition-colors" type="button">
+<span className="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+{/* Chips de estado deslizables horizontalmente */}
+<div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+{/* Chip Activo: Abiertos (5) */}
+<button className="flex-shrink-0 px-3.5 py-1.5 rounded-lg bg-[#173a5f] text-[#ffffff] text-label-md font-sans flex items-center gap-1.5 shadow-none" type="button">
+<span>Abiertos</span>
+<span className="px-1.5 py-0.2 rounded-full bg-[#2D9E6B] text-white text-[10px] font-bold">5</span>
+</button>
+{/* Chip Inactivo: En progreso (4) */}
+<button className="flex-shrink-0 px-3.5 py-1.5 rounded-lg bg-[#ffffff] border border-[#A7B0BB]/40 text-[#173a5f] text-label-md font-sans flex items-center gap-1.5 hover:bg-[#f7f3ea] transition-colors" type="button">
+<span>En progreso</span>
+<span className="px-1.5 py-0.2 rounded-full bg-[#F5F1E8] text-[#173A5F] text-[10px] font-semibold border border-[#A7B0BB]/30">4</span>
+</button>
+{/* Chip Inactivo: Cerrados (5) */}
+<button className="flex-shrink-0 px-3.5 py-1.5 rounded-lg bg-[#ffffff] border border-[#A7B0BB]/40 text-[#173a5f] text-label-md font-sans flex items-center gap-1.5 hover:bg-[#f7f3ea] transition-colors" type="button">
+<span>Cerrados</span>
+<span className="px-1.5 py-0.2 rounded-full bg-[#F5F1E8] text-[#173A5F] text-[10px] font-semibold border border-[#A7B0BB]/30">5</span>
+</button>
+{/* Chip Inactivo: Todos (14) */}
+<button className="flex-shrink-0 px-3.5 py-1.5 rounded-lg bg-[#ffffff] border border-[#A7B0BB]/40 text-[#173a5f] text-label-md font-sans flex items-center gap-1.5 hover:bg-[#f7f3ea] transition-colors" type="button">
+<span>Todos</span>
+<span className="px-1.5 py-0.2 rounded-full bg-[#F5F1E8] text-[#173A5F] text-[10px] font-semibold border border-[#A7B0BB]/30">14</span>
+</button>
+</div>
+</section>
+{/* Lista de Tarjetas de Reportes (Bento-styled clean cards) */}
+<main className="px-4 py-2 space-y-3.5 flex-1">
+{/* TARJETA 1 */}
+<article className="bg-[#ffffff] border border-[#A7B0BB]/30 rounded-lg p-3.5 shadow-[0_1px_3px_rgba(23,58,95,0.05)] hover:border-[#173a5f]/40 transition-all cursor-pointer">
+{/* Encabezado de Tarjeta: Folio + Dot nuevo + Estatus */}
+<div className="flex items-center justify-between pb-2 border-b border-[#E2E6EA]">
+<div className="flex items-center gap-2">
+{/* Indicador nuevo mensaje verde */}
+<span className="w-2 h-2 rounded-full bg-[#2D9E6B] flex-shrink-0 animate-pulse"></span>
+<span className="text-label-md font-sans text-[#173a5f]">#REP-1048</span>
+<span className="text-body-sm font-sans text-[#73777f]">·</span>
+<span className="text-body-sm font-sans text-[#c3c6cf] text-[#6B7280]">Plomería &amp; Baño</span>
+</div>
+<span className="px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]">
+            Por asignar
+          </span>
+</div>
+{/* Inquilino y Ubicación */}
+<div className="pt-2.5">
+<h2 className="text-label-lg font-sans text-[#173a5f] font-semibold">Ana Torres Morales</h2>
+<div className="flex items-center gap-1 text-body-sm font-sans text-[#73777f] mt-0.5">
+<span className="material-symbols-outlined text-[16px] text-[#73777f]">apartment</span>
+<span>Torre Vista Norte, Depto. 402</span>
+</div>
+</div>
+{/* Descripción */}
+<p className="mt-2 text-body-sm font-sans text-[#43474e] line-clamp-2 leading-relaxed">
+          Desde anoche noté que la llave del monomando del baño principal tiene un goteo constante y la presión bajó un poco...
+        </p>
+{/* Footer Tarjeta */}
+<div className="mt-3 pt-2.5 border-t border-[#F1EEE5] flex items-center justify-between text-body-sm font-sans text-[#73777f]">
+<div className="flex items-center gap-3">
+<span className="flex items-center gap-1 text-[#73777f]">
+<span className="material-symbols-outlined text-[15px]">schedule</span>
+<span>Hoy, 09:15 hrs</span>
+</span>
+<span className="text-[#B45309] font-medium text-label-sm font-sans flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">person_off</span>
+<span>Sin técnico</span>
+</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f] text-[18px]">chevron_right</span>
+</div>
+</article>
+{/* TARJETA 2 */}
+<article className="bg-[#ffffff] border border-[#A7B0BB]/30 rounded-lg p-3.5 shadow-[0_1px_3px_rgba(23,58,95,0.05)] hover:border-[#173a5f]/40 transition-all cursor-pointer">
+<div className="flex items-center justify-between pb-2 border-b border-[#E2E6EA]">
+<div className="flex items-center gap-2">
+<span className="w-2 h-2 rounded-full bg-[#2D9E6B] flex-shrink-0"></span>
+<span className="text-label-md font-sans text-[#173a5f]">#REP-1052</span>
+<span className="text-body-sm font-sans text-[#73777f]">·</span>
+<span className="text-body-sm font-sans text-[#6B7280]">Cerrajería &amp; Acceso</span>
+</div>
+<span className="px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]">
+            Abierto
+          </span>
+</div>
+<div className="pt-2.5">
+<div className="flex items-center justify-between">
+<h2 className="text-label-lg font-sans text-[#173a5f] font-semibold">Roberto Corona M.</h2>
+{/* Badge Urgencia */}
+<span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEE2E2] text-[#C0392B] border border-[#FECACA] flex items-center gap-1">
+<span className="material-symbols-outlined text-[12px]">priority_high</span> Alta prioridad
+            </span>
+</div>
+<div className="flex items-center gap-1 text-body-sm font-sans text-[#73777f] mt-0.5">
+<span className="material-symbols-outlined text-[16px] text-[#73777f]">home</span>
+<span>Casa Sauces #12, Fracc. Los Sauces</span>
+</div>
+</div>
+<p className="mt-2 text-body-sm font-sans text-[#43474e] line-clamp-2 leading-relaxed">
+          La cerradura digital emite un pitido de batería baja al ingresar con el código y ocasionalmente se traba el cerrojo...
+        </p>
+<div className="mt-3 pt-2.5 border-t border-[#F1EEE5] flex items-center justify-between text-body-sm font-sans text-[#73777f]">
+<div className="flex items-center gap-3">
+<span className="flex items-center gap-1 text-[#73777f]">
+<span className="material-symbols-outlined text-[15px]">schedule</span>
+<span>Ayer, 18:30 hrs</span>
+</span>
+<span className="text-[#D9822B] font-medium text-label-sm font-sans flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">bolt</span>
+<span>Revisión urgente</span>
+</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f] text-[18px]">chevron_right</span>
+</div>
+</article>
+{/* TARJETA 3 */}
+<article className="bg-[#ffffff] border border-[#A7B0BB]/30 rounded-lg p-3.5 shadow-[0_1px_3px_rgba(23,58,95,0.05)] hover:border-[#173a5f]/40 transition-all cursor-pointer">
+<div className="flex items-center justify-between pb-2 border-b border-[#E2E6EA]">
+<div className="flex items-center gap-2">
+<span className="text-label-md font-sans text-[#173a5f]">#REP-1045</span>
+<span className="text-body-sm font-sans text-[#73777f]">·</span>
+<span className="text-body-sm font-sans text-[#6B7280]">Electricidad</span>
+</div>
+<span className="px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
+            En progreso
+          </span>
+</div>
+<div className="pt-2.5">
+<h2 className="text-label-lg font-sans text-[#173a5f] font-semibold">Valeria Guzmán S.</h2>
+<div className="flex items-center gap-1 text-body-sm font-sans text-[#73777f] mt-0.5">
+<span className="material-symbols-outlined text-[16px] text-[#73777f]">apartment</span>
+<span>Depto. Torre Real 402</span>
+</div>
+</div>
+<p className="mt-2 text-body-sm font-sans text-[#43474e] line-clamp-2 leading-relaxed">
+          El interruptor termomagnético de la cocina se disparó al encender el horno de microondas...
+        </p>
+<div className="mt-3 pt-2.5 border-t border-[#F1EEE5] flex items-center justify-between text-body-sm font-sans text-[#73777f]">
+<div className="flex items-center gap-3">
+<span className="flex items-center gap-1 text-[#73777f]">
+<span className="material-symbols-outlined text-[15px]">calendar_today</span>
+<span>24 Oct 2024</span>
+</span>
+<span className="text-[#173a5f] font-medium text-label-sm font-sans flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">engineering</span>
+<span>Téc. Javier Morales</span>
+</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f] text-[18px]">chevron_right</span>
+</div>
+</article>
+{/* TARJETA 4 */}
+<article className="bg-[#ffffff] border border-[#A7B0BB]/30 rounded-lg p-3.5 shadow-[0_1px_3px_rgba(23,58,95,0.05)] hover:border-[#173a5f]/40 transition-all cursor-pointer">
+<div className="flex items-center justify-between pb-2 border-b border-[#E2E6EA]">
+<div className="flex items-center gap-2">
+<span className="text-label-md font-sans text-[#173a5f]">#REP-1040</span>
+<span className="text-body-sm font-sans text-[#73777f]">·</span>
+<span className="text-body-sm font-sans text-[#6B7280]">Filtraciones &amp; Techo</span>
+</div>
+<span className="px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]">
+            En progreso
+          </span>
+</div>
+<div className="pt-2.5">
+<h2 className="text-label-lg font-sans text-[#173a5f] font-semibold">Roberto Gómez P.</h2>
+<div className="flex items-center gap-1 text-body-sm font-sans text-[#73777f] mt-0.5">
+<span className="material-symbols-outlined text-[16px] text-[#73777f]">storefront</span>
+<span>Local Comercial 3B - Plaza Central</span>
+</div>
+</div>
+<p className="mt-2 text-body-sm font-sans text-[#43474e] line-clamp-2 leading-relaxed">
+          Humedad visible en esquina superior oriente tras la lluvia del fin de semana, requiere impermeabilización...
+        </p>
+<div className="mt-3 pt-2.5 border-t border-[#F1EEE5] flex items-center justify-between text-body-sm font-sans text-[#73777f]">
+<div className="flex items-center gap-3">
+<span className="flex items-center gap-1 text-[#73777f]">
+<span className="material-symbols-outlined text-[15px]">calendar_today</span>
+<span>22 Oct 2024</span>
+</span>
+<span className="text-[#73777f] font-medium text-label-sm font-sans flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">build_circle</span>
+<span>Visita programada</span>
+</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f] text-[18px]">chevron_right</span>
+</div>
+</article>
+{/* TARJETA 5 */}
+<article className="bg-[#ffffff] border border-[#A7B0BB]/30 rounded-lg p-3.5 shadow-[0_1px_3px_rgba(23,58,95,0.05)] hover:border-[#173a5f]/40 transition-all cursor-pointer opacity-90">
+<div className="flex items-center justify-between pb-2 border-b border-[#E2E6EA]">
+<div className="flex items-center gap-2">
+<span className="text-label-md font-sans text-[#173a5f]">#REP-0994</span>
+<span className="text-body-sm font-sans text-[#73777f]">·</span>
+<span className="text-body-sm font-sans text-[#6B7280]">Mantenimiento preventivo</span>
+</div>
+<span className="px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold bg-[#DCFCE7] text-[#2D9E6B] border border-[#BBF7D0]">
+            Cerrado
+          </span>
+</div>
+<div className="pt-2.5">
+<h2 className="text-label-lg font-sans text-[#173a5f] font-semibold">Carlos Mendoza L.</h2>
+<div className="flex items-center gap-1 text-body-sm font-sans text-[#73777f] mt-0.5">
+<span className="material-symbols-outlined text-[16px] text-[#73777f]">warehouse</span>
+<span>Bodega El Trapiche 04</span>
+</div>
+</div>
+<p className="mt-2 text-body-sm font-sans text-[#43474e] line-clamp-2 leading-relaxed">
+          Cambio de filtros y revisión semestral de aire acondicionado completado con firma de conformidad...
+        </p>
+<div className="mt-3 pt-2.5 border-t border-[#F1EEE5] flex items-center justify-between text-body-sm font-sans text-[#73777f]">
+<div className="flex items-center gap-3">
+<span className="flex items-center gap-1 text-[#73777f]">
+<span className="material-symbols-outlined text-[15px]">calendar_today</span>
+<span>15 Oct 2024</span>
+</span>
+<span className="text-[#2D9E6B] font-medium text-label-sm font-sans flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Concluido</span>
+</span>
+</div>
+<span className="material-symbols-outlined text-[#73777f] text-[18px]">chevron_right</span>
+</div>
+</article>
+</main>
+{/* Botón de Acción Rápida Flotante (Esquinas de 8px, Verde corporativo #2D9E6B) */}
+<div className="fixed bottom-20 left-0 right-0 max-w-[390px] mx-auto px-4 z-40 pointer-events-none">
+<button className="pointer-events-auto w-full h-12 bg-[#2D9E6B] hover:bg-[#25855A] active:scale-[0.98] text-white rounded-lg font-sans text-label-lg font-semibold flex items-center justify-center gap-2 shadow-[0_2px_8px_rgba(45,158,107,0.35)] transition-all" type="button">
+<span className="material-symbols-outlined text-[20px]">add</span>
+<span>+ Registrar incidencia</span>
+</button>
+</div>
+{/* Bottom Navigation Bar - Administrador (6 ÍTEMS ESTRICTOS, "Más" ACTIVO) */}
+<nav className="fixed bottom-0 left-0 right-0 w-full max-w-[390px] mx-auto z-50 flex items-center justify-around h-16 px-1 bg-[#ffffff] border-t border-[#A7B0BB]/30">
+{/* 1. Inicio (Inactivo) */}
+<a className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#006c45] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]">home</span>
+<span className="text-label-sm font-sans mt-0.5">Inicio</span>
+</a>
+{/* 2. Propiedades (Inactivo) */}
+<a className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#006c45] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]">apartment</span>
+<span className="text-label-sm font-sans mt-0.5">Propiedades</span>
+</a>
+{/* 3. Inquilinos (Inactivo) */}
+<a className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#006c45] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]">group</span>
+<span className="text-label-sm font-sans mt-0.5">Inquilinos</span>
+</a>
+{/* 4. Contratos (Inactivo) */}
+<a className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#006c45] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]">description</span>
+<span className="text-label-sm font-sans mt-0.5">Contratos</span>
+</a>
+{/* 5. Pagos (Inactivo) */}
+<a className="flex flex-col items-center justify-center flex-1 py-1 text-[#A7B0BB] hover:text-[#006c45] transition-colors" href="#">
+<span className="material-symbols-outlined text-[22px]">payments</span>
+<span className="text-label-sm font-sans mt-0.5">Pagos</span>
+</a>
+{/* 6. Más (ACTIVO con punto verde de 4px sin píldora ni fondo sombreado) */}
+<a className="flex flex-col items-center justify-center flex-1 py-1 text-[#006c45] font-semibold relative after:content-[''] after:block after:w-1 after:h-1 after:bg-[#006c45] after:rounded-full after:mt-0.5" href="#">
+<span className="material-symbols-outlined text-[22px]" style={{fontVariationSettings: '\'FILL\' 1'}}>more_horiz</span>
+<span className="text-label-sm font-sans">Más</span>
+</a>
+</nav>
+</div>

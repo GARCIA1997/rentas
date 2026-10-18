@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ksared — Hojas inferiores de filtros y acciones (Móvil 390px)</title>
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#173A5F',
+              green: '#2D9E6B',
+              bg: '#F5F1E8',
+              gray: '#A7B0BB',
+              darkNavy: '#0F2A4D',
+              danger: '#DC2626',
+              amber: '#D97706'
+            }
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'Arial', 'sans-serif']
+          },
+          borderRadius: {
+            'custom': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #E5E1D8;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill-1 {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 min-h-screen">
+
+  <!-- ========================================== -->
+  <!-- PANTALLA 1: HOJA INFERIOR DE FILTROS -->
+  <!-- ========================================== -->
+  <div class="relative w-[390px] h-[844px] bg-[#F5F1E8] shadow-2xl rounded-[36px] overflow-hidden border-[6px] border-[#2C3E50] flex flex-col shrink-0">
+    
+    <!-- Status Bar iOS -->
+    <div class="w-full h-11 bg-[#173A5F] flex justify-between items-center px-6 text-white text-xs z-10 shrink-0">
+      <span class="font-semibold text-xs">9:41</span>
+      <div class="flex items-center space-x-1.5 text-xs">
+        <span class="material-symbols-outlined text-[15px]">signal_cellular_4_bar</span>
+        <span class="material-symbols-outlined text-[15px]">wifi</span>
+        <span class="material-symbols-outlined text-[17px]">battery_full</span>
+      </div>
+    </div>
+
+    <!-- PANTALLA DE FONDO: Listado de Propiedades (Underlay) -->
+    <div class="flex-1 flex flex-col overflow-hidden relative select-none">
+      
+      <!-- Encabezado Azul Recto KsaRed -->
+      <header class="bg-[#173A5F] px-4 py-3 shrink-0">
+        <div class="flex items-center justify-between">
+          <!-- Logo Oficial: Isotipo 3 piezas + Ksar (blanco) ed (verde) -->
+          <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 shrink-0" viewBox="0 0 365 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 49 L130 130 L130 222 L50 292 Z" fill="#FFFFFF"/>
+              <path d="M137 130 L220 49 L315 49 L137 224 Z" fill="#DDD9CF"/>
+              <path d="M153 214 L208 162 L333 292 L229 292 Z" fill="#2D9E6B"/>
+            </svg>
+            <span class="font-bold text-lg tracking-tight">
+              <span class="text-white">Ksar</span><span class="text-[#2D9E6B]">ed</span>
+            </span>
+          </div>
+
+          <!-- Campana con punto verde y avatar -->
+          <div class="flex items-center space-x-3">
+            <button class="relative text-white p-1" aria-label="Notificaciones">
+              <span class="material-symbols-outlined text-[22px]">notifications</span>
+              <span class="absolute top-1 right-1 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+            </button>
+            <div class="w-8 h-8 rounded-full border-2 border-white/20 overflow-hidden bg-[#2D9E6B]/30 flex items-center justify-center text-white font-bold text-xs">
+              MS
+            </div>
+          </div>
+        </div>
+
+        <!-- Título y conteo -->
+        <div class="mt-2.5 flex items-center justify-between">
+          <h1 class="text-white text-lg font-bold tracking-tight">Propiedades</h1>
+          <span class="text-xs bg-[#0F2A4D] text-white/90 px-2 py-0.5 rounded-full font-medium">24 inmuebles</span>
+        </div>
+      </header>
+
+      <!-- Contenido desenfocado / cubierto de Propiedades -->
+      <div class="p-3 space-y-3 opacity-70">
+        <!-- Barra de búsqueda y botón filtros activo -->
+        <div class="flex items-center space-x-2">
+          <div class="flex-1 bg-white border border-[#A7B0BB]/30 rounded-[8px] px-3 py-2 flex items-center text-xs text-[#173A5F]">
+            <span class="material-symbols-outlined text-[#A7B0BB] text-base mr-2">search</span>
+            <span>Buscar propiedad...</span>
+          </div>
+          <div class="w-9 h-9 bg-[#173A5F] rounded-[8px] flex items-center justify-center text-white">
+            <span class="material-symbols-outlined text-lg">tune</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta muestra fondo -->
+        <div class="bg-white rounded-[8px] p-3 shadow-sm border border-[#A7B0BB]/20 space-y-2">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="inline-block text-[10px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B] px-2 py-0.5 rounded-[4px]">Ocupada</span>
+              <h3 class="text-xs font-bold text-[#173A5F] mt-1">Casa Sauces #12</h3>
+              <p class="text-[11px] text-[#A7B0BB]">Villa de Álvarez, Colima</p>
+            </div>
+            <span class="text-xs font-bold text-[#173A5F]">$18,500 MXN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OVERLAY AZUL AL 50% (#173A5F con 50% opacidad) -->
+      <div class="absolute inset-0 bg-[#173A5F]/50 backdrop-blur-[1px] z-20 flex flex-col justify-end">
+        
+        <!-- HOJA INFERIOR: FILTROS -->
+        <div class="bg-white rounded-t-[20px] shadow-2xl flex flex-col max-h-[82%] animate-slide-up border-t border-[#A7B0BB]/30 z-30">
+          
+          <!-- Tirador / Drag handle -->
+          <div class="w-full flex justify-center pt-2.5 pb-1">
+            <div class="w-10 h-1.5 bg-[#A7B0BB]/50 rounded-full"></div>
+          </div>
+
+          <!-- Cabecera de la hoja modal -->
+          <div class="px-5 py-2.5 flex items-center justify-between border-b border-[#A7B0BB]/20">
+            <div class="flex items-center space-x-2">
+              <span class="material-symbols-outlined text-[#173A5F] text-[20px]">tune</span>
+              <h2 class="text-base font-bold text-[#173A5F]">Filtros de búsqueda</h2>
+            </div>
+            <button class="w-7 h-7 rounded-full hover:bg-[#F5F1E8] flex items-center justify-center text-[#A7B0BB] transition-colors" aria-label="Cerrar">
+              <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+          </div>
+
+          <!-- Cuerpo scrollable de filtros -->
+          <div class="p-5 space-y-4 overflow-y-auto text-xs text-[#173A5F]">
+            
+            <!-- SECCIÓN 1: Estado Operativo -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-[11px] font-bold text-[#173A5F] uppercase tracking-wider">Estado del inmueble</label>
+                <span class="text-[10px] text-[#A7B0BB]">Selección múltiple</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <!-- Chip Ocupada (Activo) -->
+                <button class="px-3 py-1.5 rounded-[8px] bg-[#173A5F] text-white font-medium text-xs flex items-center space-x-1.5 shadow-sm transition">
+                  <span class="w-2 h-2 rounded-full bg-[#2D9E6B]"></span>
+                  <span>Ocupada</span>
+                  <span class="material-symbols-outlined text-[13px] ml-0.5">check</span>
+                </button>
+                <!-- Chip Libre (Inactivo) -->
+                <button class="px-3 py-1.5 rounded-[8px] bg-[#F5F1E8] text-[#173A5F] font-medium text-xs border border-[#A7B0BB]/30 flex items-center space-x-1.5 hover:border-[#173A5F] transition">
+                  <span class="w-2 h-2 rounded-full bg-[#A7B0BB]"></span>
+                  <span>Libre</span>
+                </button>
+                <!-- Chip Mantenimiento (Inactivo) -->
+                <button class="px-3 py-1.5 rounded-[8px] bg-[#F5F1E8] text-[#173A5F] font-medium text-xs border border-[#A7B0BB]/30 flex items-center space-x-1.5 hover:border-[#173A5F] transition">
+                  <span class="w-2 h-2 rounded-full bg-[#D97706]"></span>
+                  <span>Mantenimiento</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 2: Tipo de propiedad -->
+            <div>
+              <label class="block text-[11px] font-bold text-[#173A5F] uppercase tracking-wider mb-2">Tipo de propiedad</label>
+              <div class="grid grid-cols-2 gap-2">
+                <!-- Opción 1: Casa habitación (Seleccionada) -->
+                <div class="border-2 border-[#173A5F] bg-[#173A5F]/5 rounded-[8px] p-2.5 flex items-center space-x-2.5 cursor-pointer">
+                  <div class="w-7 h-7 rounded-[6px] bg-[#173A5F] text-white flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[16px]">home</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[11px] font-bold text-[#173A5F] leading-tight truncate">Casa habitación</div>
+                    <div class="text-[9px] text-[#2D9E6B] font-semibold">14 propiedades</div>
+                  </div>
+                  <span class="material-symbols-outlined text-[#173A5F] text-[16px]">check_circle</span>
+                </div>
+
+                <!-- Opción 2: Local comercial -->
+                <div class="border border-[#A7B0BB]/30 bg-[#F5F1E8]/40 hover:bg-[#F5F1E8] rounded-[8px] p-2.5 flex items-center space-x-2.5 cursor-pointer transition">
+                  <div class="w-7 h-7 rounded-[6px] bg-white border border-[#A7B0BB]/30 text-[#173A5F] flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[16px]">storefront</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[11px] font-semibold text-[#173A5F] leading-tight truncate">Local comercial</div>
+                    <div class="text-[9px] text-[#A7B0BB]">10 propiedades</div>
+                  </div>
+                  <span class="w-4 h-4 rounded-full border border-[#A7B0BB]"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 3: Ubicación / Ciudad (2 opciones) -->
+            <div>
+              <label class="block text-[11px] font-bold text-[#173A5F] uppercase tracking-wider mb-2">Ciudad o Municipio</label>
+              <div class="flex gap-2">
+                <!-- Ciudad 1: Villa de Álvarez (Activa) -->
+                <button class="flex-1 px-3 py-2 rounded-[8px] bg-[#173A5F] text-white font-medium text-[11px] flex items-center justify-between shadow-sm">
+                  <span class="truncate">Villa de Álvarez, Col.</span>
+                  <span class="material-symbols-outlined text-[14px]">check</span>
+                </button>
+                <!-- Ciudad 2: Coahuayana (Inactiva) -->
+                <button class="flex-1 px-3 py-2 rounded-[8px] bg-[#F5F1E8] text-[#173A5F] font-medium text-[11px] border border-[#A7B0BB]/30 flex items-center justify-between hover:border-[#173A5F] transition">
+                  <span class="truncate">Coahuayana, Mich.</span>
+                  <span class="w-3.5 h-3.5 rounded-full border border-[#A7B0BB]"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 4: Rango de Renta Mensual (MXN) -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-[11px] font-bold text-[#173A5F] uppercase tracking-wider">Rango de renta (MXN)</label>
+                <span class="text-[10px] text-[#2D9E6B] font-semibold">$5,000 — $25,000+</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <!-- Campo Mínimo -->
+                <div>
+                  <span class="text-[10px] text-[#A7B0BB] font-medium mb-1 block">Monto mínimo</span>
+                  <div class="flex items-center bg-[#F5F1E8] border border-[#A7B0BB]/30 rounded-[8px] px-2.5 py-1.5 focus-within:border-[#173A5F] focus-within:bg-white transition">
+                    <span class="text-xs font-semibold text-[#A7B0BB] mr-1">$</span>
+                    <input type="text" value="8,000" class="w-full bg-transparent font-semibold text-xs text-[#173A5F] outline-none" />
+                    <span class="text-[9px] text-[#A7B0BB] font-medium">MXN</span>
+                  </div>
+                </div>
+                <!-- Campo Máximo -->
+                <div>
+                  <span class="text-[10px] text-[#A7B0BB] font-medium mb-1 block">Monto máximo</span>
+                  <div class="flex items-center bg-[#F5F1E8] border border-[#A7B0BB]/30 rounded-[8px] px-2.5 py-1.5 focus-within:border-[#173A5F] focus-within:bg-white transition">
+                    <span class="text-xs font-semibold text-[#A7B0BB] mr-1">$</span>
+                    <input type="text" value="20,000" class="w-full bg-transparent font-semibold text-xs text-[#173A5F] outline-none" />
+                    <span class="text-[9px] text-[#A7B0BB] font-medium">MXN</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- PIE DE LA HOJA: Botones Limpiar (contorno) y Aplicar (azul sólido) -->
+          <div class="p-4 bg-[#F5F1E8]/50 border-t border-[#A7B0BB]/20 flex items-center space-x-3">
+            <!-- Botón Limpiar (contorno gris) -->
+            <button class="flex-1 py-2.5 px-4 rounded-[8px] border border-[#A7B0BB] text-[#173A5F] font-semibold text-xs text-center hover:bg-white transition">
+              Limpiar
+            </button>
+            <!-- Botón Aplicar filtros (azul sólido #173A5F) -->
+            <button class="flex-[1.5] py-2.5 px-4 rounded-[8px] bg-[#173A5F] text-white font-bold text-xs text-center shadow-md hover:bg-[#0F2A4D] transition flex items-center justify-center space-x-1.5">
+              <span>Aplicar filtros</span>
+              <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">14</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB BAR INFERIOR DE ADMINISTRADOR: 6 Destinos idéntica al sistema visual -->
+    <nav class="h-14 bg-white border-t border-[#A7B0BB]/30 px-2 flex justify-around items-center shrink-0 z-30">
+      <!-- 1. Inicio -->
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">home</span>
+        <span class="mt-0.5">Inicio</span>
+      </a>
+
+      <!-- 2. Propiedades (Activo: verde semibold con punto de 4px debajo) -->
+      <a href="#" class="flex flex-col items-center justify-center text-[#2D9E6B] text-[10px] font-semibold relative">
+        <span class="material-symbols-outlined text-[19px]">apartment</span>
+        <span class="mt-0.5">Propiedades</span>
+        <span class="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+      </a>
+
+      <!-- 3. Inquilinos -->
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">group</span>
+        <span class="mt-0.5">Inquilinos</span>
+      </a>
+
+      <!-- 4. Contratos -->
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">description</span>
+        <span class="mt-0.5">Contratos</span>
+      </a>
+
+      <!-- 5. Pagos -->
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">payments</span>
+        <span class="mt-0.5">Pagos</span>
+      </a>
+
+      <!-- 6. Más -->
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">more_horiz</span>
+        <span class="mt-0.5">Más</span>
+      </a>
+    </nav>
+
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- PANTALLA 2: HOJA DE ACCIONES MENÚ "⋮" (REFERENCIA) -->
+  <!-- ========================================== -->
+  <div class="relative w-[390px] h-[844px] bg-[#F5F1E8] shadow-2xl rounded-[36px] overflow-hidden border-[6px] border-[#2C3E50] flex flex-col shrink-0">
+    
+    <!-- Status Bar iOS -->
+    <div class="w-full h-11 bg-[#173A5F] flex justify-between items-center px-6 text-white text-xs z-10 shrink-0">
+      <span class="font-semibold text-xs">9:41</span>
+      <div class="flex items-center space-x-1.5 text-xs">
+        <span class="material-symbols-outlined text-[15px]">signal_cellular_4_bar</span>
+        <span class="material-symbols-outlined text-[15px]">wifi</span>
+        <span class="material-symbols-outlined text-[17px]">battery_full</span>
+      </div>
+    </div>
+
+    <!-- PANTALLA DE FONDO: Listado de Propiedades con tarjeta enfocada -->
+    <div class="flex-1 flex flex-col overflow-hidden relative select-none">
+      
+      <!-- Encabezado Azul Recto KsaRed -->
+      <header class="bg-[#173A5F] px-4 py-3 shrink-0">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <svg class="w-6 h-6 shrink-0" viewBox="0 0 365 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 49 L130 130 L130 222 L50 292 Z" fill="#FFFFFF"/>
+              <path d="M137 130 L220 49 L315 49 L137 224 Z" fill="#DDD9CF"/>
+              <path d="M153 214 L208 162 L333 292 L229 292 Z" fill="#2D9E6B"/>
+            </svg>
+            <span class="font-bold text-lg tracking-tight">
+              <span class="text-white">Ksar</span><span class="text-[#2D9E6B]">ed</span>
+            </span>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <button class="relative text-white p-1" aria-label="Notificaciones">
+              <span class="material-symbols-outlined text-[22px]">notifications</span>
+              <span class="absolute top-1 right-1 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+            </button>
+            <div class="w-8 h-8 rounded-full border-2 border-white/20 overflow-hidden bg-[#2D9E6B]/30 flex items-center justify-center text-white font-bold text-xs">
+              MS
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2.5 flex items-center justify-between">
+          <h1 class="text-white text-lg font-bold tracking-tight">Propiedades</h1>
+          <span class="text-xs bg-[#0F2A4D] text-white/90 px-2 py-0.5 rounded-full font-medium">Acción activa</span>
+        </div>
+      </header>
+
+      <!-- Tarjetas simuladas en fondo -->
+      <div class="p-3 space-y-3 opacity-60">
+        <div class="bg-white rounded-[8px] p-3 shadow-sm border border-[#A7B0BB]/30">
+          <div class="flex justify-between items-start">
+            <div class="space-y-1">
+              <span class="text-[10px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B] px-2 py-0.5 rounded-[4px]">Ocupada</span>
+              <h3 class="text-xs font-bold text-[#173A5F]">Casa Sauces #12</h3>
+              <p class="text-[11px] text-[#A7B0BB]">Av. Tecnológico #450, Colima</p>
+            </div>
+            <div class="w-7 h-7 rounded-full bg-[#173A5F] text-white flex items-center justify-center">
+              <span class="material-symbols-outlined text-sm">more_vert</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OVERLAY AZUL AL 50% -->
+      <div class="absolute inset-0 bg-[#173A5F]/50 backdrop-blur-[1px] z-20 flex flex-col justify-end">
+        
+        <!-- HOJA INFERIOR: ACCIONES DEL MENÚ "⋮" -->
+        <div class="bg-white rounded-t-[20px] shadow-2xl flex flex-col animate-slide-up border-t border-[#A7B0BB]/30 z-30">
+          
+          <!-- Tirador -->
+          <div class="w-full flex justify-center pt-2.5 pb-1">
+            <div class="w-10 h-1.5 bg-[#A7B0BB]/50 rounded-full"></div>
+          </div>
+
+          <!-- Resumen de la propiedad seleccionada -->
+          <div class="px-5 py-3 border-b border-[#A7B0BB]/20 bg-[#F5F1E8]/40">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-[8px] bg-[#173A5F] text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[22px]">apartment</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center space-x-2">
+                  <h3 class="text-xs font-bold text-[#173A5F] truncate">Casa Sauces #12</h3>
+                  <span class="text-[9px] font-bold bg-[#2D9E6B]/15 text-[#2D9E6B] px-1.5 py-0.2 rounded-[4px]">Ocupada</span>
+                </div>
+                <p class="text-[10px] text-[#A7B0BB] truncate">PROP-8492 · Villa de Álvarez, Colima</p>
+                <p class="text-[10px] font-bold text-[#173A5F] mt-0.5">$18,500 MXN / mes</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de Acciones Requeridas -->
+          <div class="p-3 space-y-1 text-xs">
+            
+            <!-- 1. Ver ficha (Azul estándar / primario) -->
+            <button class="w-full px-3.5 py-2.5 rounded-[8px] flex items-center justify-between text-[#173A5F] hover:bg-[#F5F1E8] transition font-semibold group">
+              <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 rounded-[6px] bg-[#173A5F]/10 text-[#173A5F] flex items-center justify-center group-hover:bg-[#173A5F] group-hover:text-white transition">
+                  <span class="material-symbols-outlined text-[17px]">visibility</span>
+                </div>
+                <span class="text-xs">Ver ficha de propiedad</span>
+              </div>
+              <span class="material-symbols-outlined text-[#A7B0BB] text-sm">arrow_forward_ios</span>
+            </button>
+
+            <!-- 2. Editar -->
+            <button class="w-full px-3.5 py-2.5 rounded-[8px] flex items-center justify-between text-[#173A5F] hover:bg-[#F5F1E8] transition font-semibold group">
+              <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 rounded-[6px] bg-[#173A5F]/10 text-[#173A5F] flex items-center justify-center group-hover:bg-[#173A5F] group-hover:text-white transition">
+                  <span class="material-symbols-outlined text-[17px]">edit</span>
+                </div>
+                <span class="text-xs">Editar detalles</span>
+              </div>
+              <span class="material-symbols-outlined text-[#A7B0BB] text-sm">arrow_forward_ios</span>
+            </button>
+
+            <!-- 3. Asignar contrato (Acción clave / con acento verde) -->
+            <button class="w-full px-3.5 py-2.5 rounded-[8px] flex items-center justify-between text-[#173A5F] hover:bg-[#F5F1E8] transition font-semibold group">
+              <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 rounded-[6px] bg-[#2D9E6B]/15 text-[#2D9E6B] flex items-center justify-center group-hover:bg-[#2D9E6B] group-hover:text-white transition">
+                  <span class="material-symbols-outlined text-[17px]">assignment_turned_in</span>
+                </div>
+                <span class="text-xs">Asignar contrato / inquilino</span>
+              </div>
+              <span class="text-[10px] font-bold text-[#2D9E6B] bg-[#2D9E6B]/10 px-2 py-0.5 rounded-full">Activo</span>
+            </button>
+
+            <!-- 4. Compartir por WhatsApp -->
+            <button class="w-full px-3.5 py-2.5 rounded-[8px] flex items-center justify-between text-[#173A5F] hover:bg-[#F5F1E8] transition font-semibold group">
+              <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 rounded-[6px] bg-[#2D9E6B]/15 text-[#2D9E6B] flex items-center justify-center group-hover:bg-[#2D9E6B] group-hover:text-white transition">
+                  <span class="material-symbols-outlined text-[17px]">share</span>
+                </div>
+                <span class="text-xs">Compartir por WhatsApp</span>
+              </div>
+              <span class="material-symbols-outlined text-[#A7B0BB] text-sm">open_in_new</span>
+            </button>
+
+            <div class="my-1 border-t border-[#A7B0BB]/20"></div>
+
+            <!-- 5. Eliminar (Acción destructiva - Rojo #DC2626) -->
+            <button class="w-full px-3.5 py-2.5 rounded-[8px] flex items-center justify-between text-[#DC2626] hover:bg-[#DC2626]/10 transition font-semibold group">
+              <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 rounded-[6px] bg-[#DC2626]/10 text-[#DC2626] flex items-center justify-center group-hover:bg-[#DC2626] group-hover:text-white transition">
+                  <span class="material-symbols-outlined text-[17px]">delete</span>
+                </div>
+                <span class="text-xs">Eliminar propiedad</span>
+              </div>
+              <span class="text-[10px] font-semibold text-[#DC2626] bg-[#DC2626]/10 px-2 py-0.5 rounded-[4px]">Irreversible</span>
+            </button>
+
+          </div>
+
+          <!-- BOTÓN CANCELAR (Contorno neutro / fondo claro) -->
+          <div class="p-4 pt-1 bg-white border-t border-[#A7B0BB]/20">
+            <button class="w-full py-2.5 px-4 rounded-[8px] border border-[#A7B0BB] text-[#173A5F] font-semibold text-xs text-center hover:bg-[#F5F1E8] transition">
+              Cancelar
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB BAR INFERIOR DE ADMINISTRADOR: 6 Destinos -->
+    <nav class="h-14 bg-white border-t border-[#A7B0BB]/30 px-2 flex justify-around items-center shrink-0 z-30">
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">home</span>
+        <span class="mt-0.5">Inicio</span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center text-[#2D9E6B] text-[10px] font-semibold relative">
+        <span class="material-symbols-outlined text-[19px]">apartment</span>
+        <span class="mt-0.5">Propiedades</span>
+        <span class="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">group</span>
+        <span class="mt-0.5">Inquilinos</span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">description</span>
+        <span class="mt-0.5">Contratos</span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">payments</span>
+        <span class="mt-0.5">Pagos</span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center text-[#A7B0BB] text-[10px] font-medium">
+        <span class="material-symbols-outlined text-[19px]">more_horiz</span>
+        <span class="mt-0.5">Más</span>
+      </a>
+    </nav>
+
+  </div>
+
+</body>
+</html>

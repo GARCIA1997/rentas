@@ -1,0 +1,22 @@
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+    
+    /* Efecto de visor de cámara simulada */
+    .camera-feed {
+      background: radial-gradient(circle at 50% 45%, #18283a 0%, #0d1722 55%, #070b10 100%);
+    }
+
+    /* Animación suave de barrido / escaneo */
+    @keyframes scanline {
+      0% { top: 6%; opacity: 0.15; }
+      50% { opacity: 0.85; }
+      100% { top: 92%; opacity: 0.15; }
+    }
+    .scan-beam {
+      animation: scanline 3s ease-in-out infinite alternate;
+    }
+  

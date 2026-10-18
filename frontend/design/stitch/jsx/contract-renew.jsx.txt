@@ -1,0 +1,204 @@
+
+  {/* Contenedor móvil centrado */}
+  <div className="w-full max-w-md mx-auto min-h-screen flex flex-col bg-[#F5F1E8] shadow-sm">
+    
+    {/* 1. ENCABEZADO AZUL PLANO CON BORDE RECTO (Sin curvas, estilo corporativo) */}
+    <header className="bg-[#173A5F] text-white px-4 h-14 flex items-center justify-between sticky top-0 z-30 border-b border-[#0F2A4D]">
+      <div className="flex items-center gap-2.5">
+        <button aria-label="Regresar" className="text-white p-1.5 -ml-1.5 rounded-lg hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center" type="button">
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <div>
+          <h1 className="text-base font-bold tracking-tight text-white leading-tight">Renovar contrato</h1>
+          <p className="text-[11px] font-medium text-white/70">Folio actual: CTR-2024-089</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-1">
+        <button aria-label="Ayuda del proceso" className="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+          <span className="material-symbols-outlined text-[20px]">help_outline</span>
+        </button>
+      </div>
+    </header>
+
+    {/* CONTENIDO PRINCIPAL SCROLLABLE */}
+    <main className="flex-1 px-4 py-4 space-y-4">
+
+      {/* 2. TARJETA RESUMEN DEL CONTRATO ACTUAL */}
+      <section className="bg-white rounded-[8px] p-4 border border-[#DDD9CF] shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#F5F1E8]">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#173A5F]/10 text-[#173A5F]">
+              <span className="material-symbols-outlined text-[15px]">description</span>
+            </span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#A7B0BB]">Contrato Vigente</span>
+          </div>
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#2D9E6B]/10 text-[#2D9E6B] border border-[#2D9E6B]/20">
+            ● Activo
+          </span>
+        </div>
+
+        <div className="pt-3 space-y-3">
+          {/* Inquilino y Propiedad */}
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-[8px] bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm shrink-0">
+              AT
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-sm font-bold text-[#173A5F] truncate">Ana Torres Morales</h2>
+              <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5 truncate">
+                <span className="material-symbols-outlined text-[14px]">apartment</span>
+                Torre Vista Norte, Depto. 402
+              </p>
+            </div>
+          </div>
+
+          {/* Métricas del contrato actual */}
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <div className="bg-[#F5F1E8] rounded-[8px] p-2.5 border border-[#DDD9CF]/60">
+              <span className="text-[11px] font-medium text-[#A7B0BB] block">Fecha de término</span>
+              <div className="flex items-center gap-1 mt-0.5 text-[#173A5F] font-bold text-xs">
+                <span className="material-symbols-outlined text-[15px] text-[#A7B0BB]">event</span>
+                <span>31 Ene 2025</span>
+              </div>
+              <span className="text-[10px] font-semibold text-amber-600 block mt-0.5">Vence en 60 días</span>
+            </div>
+
+            <div className="bg-[#F5F1E8] rounded-[8px] p-2.5 border border-[#DDD9CF]/60">
+              <span className="text-[11px] font-medium text-[#A7B0BB] block">Renta mensual actual</span>
+              <div className="flex items-center gap-1 mt-0.5 text-[#173A5F] font-bold text-xs">
+                <span className="material-symbols-outlined text-[15px] text-[#2D9E6B]">payments</span>
+                <span>$18,500 <span className="text-[10px] text-[#A7B0BB] font-normal">MXN</span></span>
+              </div>
+              <span className="text-[10px] text-[#A7B0BB] block mt-0.5">Depósito: $18,500 MXN</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. FORMULARIO DE RENOVACIÓN */}
+      <section className="bg-white rounded-[8px] p-4 border border-[#DDD9CF] shadow-[0_1px_3px_rgba(23,58,95,0.04)] space-y-4">
+        <div className="flex items-center gap-2 pb-2.5 border-b border-[#F5F1E8]">
+          <span className="material-symbols-outlined text-[#2D9E6B]">history_edu</span>
+          <h2 className="text-sm font-bold text-[#173A5F]">Condiciones del Nuevo Periodo</h2>
+        </div>
+
+        {/* Campo 1: Duración */}
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <label className="block text-xs font-bold text-[#173A5F]">Duración del contrato</label>
+            <span id="nueva-vigencia-label" className="text-[11px] font-semibold text-[#2D9E6B] bg-[#F5F1E8] px-2 py-0.5 rounded-[8px] border border-[#DDD9CF]">
+              01 Feb 2025 – 31 Ene 2026
+            </span>
+          </div>
+
+          {/* Selector de píldoras de duración */}
+          <div className="grid grid-cols-3 gap-2" role="radiogroup">
+            <button type="button" className="duration-btn py-2.5 px-3 text-center border border-[#A7B0BB]/50 bg-[#F5F1E8] rounded-[8px] text-xs font-semibold text-[#173A5F] hover:bg-[#DDD9CF]/40 transition-colors">
+              6 meses
+            </button>
+            <button type="button" className="duration-btn py-2.5 px-3 text-center bg-[#173A5F] text-white rounded-[8px] text-xs font-bold border border-[#173A5F] shadow-xs">
+              12 meses
+            </button>
+            <button type="button" className="duration-btn py-2.5 px-3 text-center border border-[#A7B0BB]/50 bg-[#F5F1E8] rounded-[8px] text-xs font-semibold text-[#173A5F] hover:bg-[#DDD9CF]/40 transition-colors">
+              24 meses
+            </button>
+          </div>
+        </div>
+
+        {/* Campo 2: Renta mensual pactada con sugerencia */}
+        <div className="space-y-2 pt-1">
+          <div className="flex justify-between items-center">
+            <label htmlFor="input-renta" className="block text-xs font-bold text-[#173A5F]">
+              Nueva renta mensual (MXN)
+            </label>
+            <span className="text-[11px] text-[#A7B0BB] font-medium">Actual: $18,500</span>
+          </div>
+
+          <div className="relative">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#173A5F] font-bold text-sm">
+              $
+            </span>
+            <input type="text" id="input-renta" name="renta" value="18,500.00" className="w-full pl-7 pr-16 py-2.5 bg-white border border-[#A7B0BB]/60 rounded-[8px] text-sm font-bold text-[#173A5F] focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] tracking-tight" />
+            <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-xs font-semibold text-[#A7B0BB]">
+              MXN / mes
+            </span>
+          </div>
+
+          {/* Sugerencia + Chip de acción rápida en verde KsaRed */}
+          <div className="bg-[#F5F1E8] border border-[#DDD9CF] rounded-[8px] p-2.5 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#2D9E6B] text-[18px]">trending_up</span>
+              <div>
+                <span className="text-xs font-semibold text-[#173A5F] block leading-tight">+7% sugerido: <span className="font-bold text-[#2D9E6B]">$19,800</span></span>
+                <span className="text-[10px] text-[#A7B0BB]">Inflación proyectada anual</span>
+              </div>
+            </div>
+            <button type="button" className="px-2.5 py-1.5 rounded-[8px] bg-[#2D9E6B] text-white text-xs font-semibold hover:bg-[#258257] active:scale-95 transition-all shadow-xs flex items-center gap-1 shrink-0">
+              <span className="material-symbols-outlined text-[14px]">done</span>
+              <span>Usar sugerencia</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Campo 3: Representante que firma (Obligatorio) */}
+        <div className="space-y-1.5 pt-1">
+          <label htmlFor="select-representante" className="flex items-center gap-1 text-xs font-bold text-[#173A5F]">
+            <span>Representante que firma</span>
+            <span className="text-rose-500 font-bold" title="Obligatorio">*</span>
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#173A5F]">
+              <span className="material-symbols-outlined text-[18px]">badge</span>
+            </div>
+            <select id="select-representante" name="representante" required className="w-full pl-9 pr-9 py-2.5 bg-white border border-[#A7B0BB]/60 rounded-[8px] text-xs font-medium text-[#173A5F] focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] appearance-none">
+              <option value="" disabled selected>Selecciona al apoderado legal...</option>
+              <option value="mariana-silva" selected>Mariana Silva — KsaRed Inmobiliaria S.A. de C.V.</option>
+              <option value="carlos-aranda">Carlos Aranda — Director de Operaciones</option>
+              <option value="carlos-mendoza">Carlos Mendoza — Director General</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#A7B0BB]">
+              <span className="material-symbols-outlined text-[18px]">expand_more</span>
+            </div>
+          </div>
+          <p className="text-[10px] text-[#A7B0BB]">Este firmante figurará como parte arrendadora en la carátula y firma digital.</p>
+        </div>
+
+        {/* Día de pago y fecha de inicio fija */}
+        <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#F5F1E8]">
+          <div>
+            <label className="block text-[11px] font-semibold text-[#A7B0BB] mb-1">Fecha de inicio</label>
+            <div className="bg-[#F5F1E8] px-3 py-2 rounded-[8px] text-xs font-bold text-[#173A5F] border border-[#DDD9CF]">
+              01 Feb 2025
+            </div>
+          </div>
+          <div>
+            <label className="block text-[11px] font-semibold text-[#A7B0BB] mb-1">Día de corte y cobro</label>
+            <div className="bg-[#F5F1E8] px-3 py-2 rounded-[8px] text-xs font-bold text-[#173A5F] border border-[#DDD9CF]">
+              Día 05 de cada mes
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. NOTA GRIS INFORMATIVA / LEGAL */}
+      <section className="rounded-[8px] bg-[#DDD9CF]/40 border border-[#DDD9CF] p-3.5 flex items-start gap-2.5 text-[#173A5F]">
+        <span className="material-symbols-outlined text-[#A7B0BB] text-[18px] shrink-0 mt-0.5">info</span>
+        <p className="text-xs font-medium leading-relaxed text-[#173A5F]/85">
+          La renovación crea un contrato nuevo en borrador; el depósito original sigue en garantía.
+        </p>
+      </section>
+
+    </main>
+
+    {/* 5. BOTÓN VERDE ANCHO COMPLETO (Sin Tab Bar por regla de pantalla de tarea/flujo) */}
+    <footer className="sticky bottom-0 bg-white border-t border-[#DDD9CF] px-4 py-3.5 z-30 shadow-[0_-2px_10px_rgba(23,58,95,0.06)]">
+      <button type="button" className="w-full py-3.5 px-4 rounded-[8px] bg-[#2D9E6B] text-white text-sm font-bold hover:bg-[#258257] active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-xs">
+        <span>Crear renovación</span>
+        <span className="material-symbols-outlined text-[19px]">arrow_forward</span>
+      </button>
+    </footer>
+
+  </div>
+
+  {/* Micro-interacción: selección de duración y sugerencia */}
+  

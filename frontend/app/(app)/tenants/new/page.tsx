@@ -10,7 +10,6 @@ import { parseIneData, type ParsedIneResult } from '@/lib/ineParser';
 import { runIneOcr } from '@/lib/ineOcr';
 import type { Roi } from '@/lib/imagePreprocess';
 import {
-  ArrowLeftIcon,
   CheckCircleIcon,
   CameraIcon,
   RotateCardIcon,
@@ -53,8 +52,8 @@ const emptyForm: TenantInput = {
 const CURP_REGEX = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/;
 
 const inputClass =
-  'w-full px-3 py-2.5 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-xl focus:outline-none focus:ring-2 focus:ring-primary';
-const labelClass = 'block text-sm font-medium text-heading mb-1.5';
+  'w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all';
+const labelClass = 'block text-xs font-bold text-[#173A5F] mb-1.5';
 
 const toCapture = (result: IneCaptureResult): Capture => ({
   blob: result.blob,
@@ -209,7 +208,7 @@ export default function NewTenantWizardPage() {
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-lg min-h-[100dvh] px-4 pb-8">
         {stage === 'intro-front' && (
           <IntroScreen
             step="Paso 1 de 2"
@@ -219,7 +218,7 @@ export default function NewTenantWizardPage() {
             onContinue={() => setStage('camera-front')}
             continueLabel="Abrir cámara"
             footer={
-              <button onClick={skipToManual} className="text-sm text-muted underline hover:text-heading">
+              <button onClick={skipToManual} className="text-sm text-[#586270] underline hover:text-[#173A5F]">
                 Prefiero capturar los datos a mano
               </button>
             }
@@ -248,7 +247,7 @@ export default function NewTenantWizardPage() {
             footer={
               <button
                 onClick={() => front && runOcr(front, null)}
-                className="text-sm text-muted underline hover:text-heading"
+                className="text-sm text-[#586270] underline hover:text-[#173A5F]"
               >
                 Continuar sólo con el frente
               </button>
@@ -270,15 +269,15 @@ export default function NewTenantWizardPage() {
 
         {stage === 'processing' && (
           <div className="py-24 text-center">
-            <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
-            <p className="font-medium text-heading">{ocrMessage || 'Procesando...'}</p>
-            <div className="mx-auto mt-5 h-1.5 w-48 overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
+            <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-[#2D9E6B]/20 border-t-primary" />
+            <p className="font-medium text-[#173A5F]">{ocrMessage || 'Procesando...'}</p>
+            <div className="mx-auto mt-5 h-1.5 w-48 overflow-hidden rounded-full bg-black/10">
               <div
-                className="h-full rounded-full bg-primary transition-all duration-300"
+                className="h-full rounded-full bg-[#2D9E6B] transition-all duration-300"
                 style={{ width: `${Math.round(ocrProgress * 100)}%` }}
               />
             </div>
-            <p className="mt-4 px-8 text-xs leading-relaxed text-muted">
+            <p className="mt-4 px-8 text-xs leading-relaxed text-[#586270]">
               La primera vez se descarga el modelo de lectura (~10 MB). Después es más rápido.
             </p>
           </div>
@@ -305,18 +304,25 @@ export default function NewTenantWizardPage() {
 
 // --- Pantallas del wizard ---------------------------------------------------
 
+// Encabezado azul de pantalla de tarea (Stitch: ine-camera.html / ine-review.html).
 function StepHeader({ step, onBack }: { step: string; onBack: () => void }) {
   return (
-    <div className="mb-6 flex items-center justify-between">
-      <button
-        onClick={onBack}
-        className="-ml-1 flex items-center gap-1.5 text-sm text-muted hover:text-heading"
-      >
-        <ArrowLeftIcon className="h-4 w-4" />
-        Atrás
-      </button>
-      <span className="text-xs font-medium text-muted">{step}</span>
-    </div>
+    <header className="-mx-4 mb-5 sticky top-0 z-30 bg-[#173a5f] text-white border-b border-[#002445] pt-[env(safe-area-inset-top)]">
+      <div className="flex items-center gap-3 px-4 py-3 h-14">
+        <button
+          onClick={onBack}
+          aria-label="Regresar"
+          type="button"
+          className="text-white p-1.5 rounded-lg hover:bg-[#002445] active:opacity-90 flex items-center justify-center"
+        >
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <div>
+          <h1 className="text-headline-sm font-sans text-white leading-tight font-semibold tracking-tight">Nuevo inquilino</h1>
+          <p className="text-label-sm font-sans text-[#85a4cf] font-medium">{step}</p>
+        </div>
+      </div>
+    </header>
   );
 }
 
@@ -341,13 +347,13 @@ function IntroScreen({
     <div>
       <StepHeader step={step} onBack={onBack} />
 
-      <div className="rounded-2xl bg-surface p-6 text-center">
-        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-          <RotateCardIcon className="h-10 w-10 text-primary" />
+      <div className="rounded-[8px] border border-[#DDD9CF] bg-white p-6 text-center shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#2D9E6B]/10">
+          <RotateCardIcon className="h-10 w-10 text-[#2D9E6B]" />
         </div>
 
-        <h1 className="mb-2 text-xl font-bold text-heading">{title}</h1>
-        <p className="mb-6 text-sm leading-relaxed text-muted">{description}</p>
+        <h2 className="mb-2 text-lg font-bold text-[#173A5F]">{title}</h2>
+        <p className="mb-6 text-sm leading-relaxed text-[#586270]">{description}</p>
 
         <ul className="mb-6 space-y-2.5 text-left">
           {[
@@ -355,8 +361,8 @@ function IntroScreen({
             'Llena el marco por completo, sin dejar borde.',
             'Luz pareja, sin reflejos ni sombras encima.',
           ].map((tip) => (
-            <li key={tip} className="flex gap-2.5 text-sm text-muted">
-              <CheckCircleIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+            <li key={tip} className="flex gap-2.5 text-sm text-[#586270]">
+              <CheckCircleIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#2D9E6B]" />
               {tip}
             </li>
           ))}
@@ -364,7 +370,7 @@ function IntroScreen({
 
         <button
           onClick={onContinue}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-medium text-white hover:bg-primary-pressed"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-bold text-white hover:bg-[#25855a]"
         >
           <CameraIcon className="h-4 w-4" />
           {continueLabel}
@@ -397,12 +403,12 @@ function ConfirmScreen({
     <div>
       <StepHeader step={step} onBack={onBack} />
 
-      <h1 className="mb-1 text-xl font-bold text-heading">{title}</h1>
-      <p className="mb-5 text-sm text-muted">
+      <h2 className="mb-1 text-lg font-bold text-[#173A5F]">{title}</h2>
+      <p className="mb-5 text-sm text-[#586270]">
         Si el texto se ve borroso o cortado, vuelve a tomarla: de esta foto sale todo lo demás.
       </p>
 
-      <div className="mb-5 overflow-hidden rounded-2xl bg-black">
+      <div className="mb-5 overflow-hidden rounded-lg bg-black">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={previewUrl} alt="Foto capturada del INE" className="mx-auto max-h-[52vh] w-auto" />
       </div>
@@ -410,13 +416,13 @@ function ConfirmScreen({
       <div className="flex gap-3">
         <button
           onClick={onRetake}
-          className="flex-1 rounded-xl bg-surface py-3.5 text-sm font-medium text-muted hover:bg-canvas"
+          className="flex-1 rounded-lg border border-[#A7B0BB] bg-white py-3.5 text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8]"
         >
           Volver a tomar
         </button>
         <button
           onClick={onContinue}
-          className="flex-1 rounded-xl bg-primary py-3.5 text-sm font-medium text-white hover:bg-primary-pressed"
+          className="flex-1 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-bold text-white hover:bg-[#25855a]"
         >
           {continueLabel}
         </button>
@@ -429,7 +435,7 @@ function ConfirmScreen({
 function ConfidenceBanner({ parsed }: { parsed: ParsedIneResult | null }) {
   if (!parsed) {
     return (
-      <div className="mb-4 flex gap-2.5 rounded-xl border border-black/10 bg-canvas p-3 text-sm text-muted dark:border-white/10">
+      <div className="mb-4 flex gap-2.5 rounded-lg border border-[#A7B0BB]/30 bg-[#F5F1E8] p-3 text-sm text-[#586270]">
         <InfoIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
         Captura manual: llena los datos del inquilino a mano.
       </div>
@@ -438,7 +444,7 @@ function ConfidenceBanner({ parsed }: { parsed: ParsedIneResult | null }) {
 
   if (parsed.confidence === 'high') {
     return (
-      <div className="mb-4 flex gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-900/10 dark:text-emerald-400">
+      <div className="mb-4 flex gap-2.5 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
         <CheckCircleIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
         <span>
           Credencial leída correctamente
@@ -450,7 +456,7 @@ function ConfidenceBanner({ parsed }: { parsed: ParsedIneResult | null }) {
 
   if (parsed.confidence === 'medium') {
     return (
-      <div className="mb-4 flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/10 dark:text-amber-400">
+      <div className="mb-4 flex gap-2.5 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
         <AlertTriangleIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
         Se leyeron algunos datos. Revisa cada campo contra la credencial antes de guardar.
       </div>
@@ -458,7 +464,7 @@ function ConfidenceBanner({ parsed }: { parsed: ParsedIneResult | null }) {
   }
 
   return (
-    <div className="mb-4 flex gap-2.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/10 dark:text-amber-400">
+    <div className="mb-4 flex gap-2.5 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
       <AlertTriangleIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
       No se pudo leer la credencial. Puedes volver a tomar las fotos o capturar los datos a mano.
     </div>
@@ -469,7 +475,7 @@ function ConfidenceBanner({ parsed }: { parsed: ParsedIneResult | null }) {
 function SourceBadge({ source }: { source?: 'mrz' | 'curp' | 'ocr' }) {
   if (source !== 'mrz' && source !== 'curp') return null;
   return (
-    <span className="ml-2 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+    <span className="ml-2 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
       {source === 'mrz' ? 'MRZ' : 'CURP'}
     </span>
   );
@@ -500,36 +506,36 @@ function ReviewScreen({
 }) {
   return (
     <div>
-      <h1 className="mb-1 text-xl font-bold text-heading">Revisa los datos</h1>
-      <p className="mb-5 text-sm text-muted">
+      <h2 className="mb-1 text-lg font-bold text-[#173A5F]">Revisa los datos</h2>
+      <p className="mb-5 text-sm text-[#586270]">
         {front ? 'El teléfono no viene en el INE, agrégalo a mano.' : 'Captura los datos del inquilino.'}
       </p>
 
       <ConfidenceBanner parsed={parsed} />
 
       {(front || back) && (
-        <div className="mb-5 flex items-end gap-3 rounded-xl bg-canvas p-3">
+        <div className="mb-5 flex items-end gap-3 rounded-lg bg-[#F5F1E8] p-3">
           {front && (
             <figure className="text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={front.previewUrl} alt="Frente del INE" className="h-20 w-auto rounded-lg" />
-              <figcaption className="mt-1 text-[11px] text-muted">Frente</figcaption>
+              <figcaption className="mt-1 text-[11px] text-[#586270]">Frente</figcaption>
             </figure>
           )}
           {back && (
             <figure className="text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={back.previewUrl} alt="Reverso del INE" className="h-20 w-auto rounded-lg" />
-              <figcaption className="mt-1 text-[11px] text-muted">Reverso</figcaption>
+              <figcaption className="mt-1 text-[11px] text-[#586270]">Reverso</figcaption>
             </figure>
           )}
-          <button onClick={onRetake} className="ml-auto pb-1 text-xs text-primary underline">
+          <button onClick={onRetake} className="ml-auto pb-1 text-xs text-[#2D9E6B] underline">
             Volver a escanear
           </button>
         </div>
       )}
 
-      <div className="space-y-4 rounded-2xl bg-surface p-5 shadow-sm">
+      <div className="space-y-4 rounded-[8px] border border-[#DDD9CF] bg-white p-4 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
         <div>
           <label className={labelClass}>
             Nombre completo
@@ -627,20 +633,20 @@ function ReviewScreen({
           />
         </div>
 
-        {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
 
       <div className="mt-6 flex gap-3">
         <button
           onClick={onCancel}
-          className="flex-1 rounded-xl bg-surface py-3.5 text-sm font-medium text-muted hover:bg-canvas"
+          className="flex-1 rounded-lg border border-[#A7B0BB] bg-white py-3.5 text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8]"
         >
           Cancelar
         </button>
         <button
           onClick={onSubmit}
           disabled={isSaving}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-medium text-white hover:bg-primary-pressed disabled:opacity-50"
+          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-bold text-white hover:bg-[#25855a] disabled:opacity-50"
         >
           {isSaving ? (
             'Guardando...'

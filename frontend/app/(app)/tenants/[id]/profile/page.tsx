@@ -15,8 +15,6 @@ import {
   buildWhatsAppReminderUrl,
   shareReceiptOnWhatsApp,
   getPendingPayments,
-  getPaymentsDue,
-  getScheduledPayments,
   paymentTypeLabels,
   maintenanceReportStatusLabels,
   Tenant,
@@ -27,16 +25,7 @@ import {
 import { formatDate } from '@/lib/formatDate';
 import { useToast } from '@/components/ToastProvider';
 import { useConfirm } from '@/components/ConfirmProvider';
-import { ArrowLeftIcon, PencilIcon, TrashIcon, BellIcon, BanknoteIcon, DownloadIcon, UndoIcon, ChevronRightIcon } from '@/components/icons';
-
-function Row({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex justify-between py-2.5 border-b border-black/5 dark:border-white/10 last:border-0 text-sm">
-      <span className="text-muted">{label}</span>
-      <span className="text-heading font-medium text-right">{value}</span>
-    </div>
-  );
-}
+import { DetailHeader } from '@/components/StitchHeader';
 
 const contractStatusLabels: Record<Contract['status'], string> = {
   DRAFT: 'Borrador',
@@ -46,19 +35,8 @@ const contractStatusLabels: Record<Contract['status'], string> = {
   CANCELLED: 'Cancelado',
 };
 
-const contractStatusColors: Record<Contract['status'], string> = {
-  DRAFT: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-  ACTIVE: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  EXPIRED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  AUTO_RENEWAL_PENDING: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  CANCELLED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-};
-
-const reportStatusColors: Record<MaintenanceReport['status'], string> = {
-  CLOSED: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  IN_PROGRESS: 'bg-slate-100 text-slate-700 dark:bg-slate-700/30 dark:text-slate-300',
-  REPORTED: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-};
+// Fuera del componente: la regla de pureza de React marca Date.now() dentro del render.
+const daysTo = (iso: string) => Math.ceil((new Date(iso).getTime() - Date.now()) / 86_400_000);
 
 export default function TenantProfilePage() {
   const { token } = useAuth();
@@ -231,7 +209,8 @@ export default function TenantProfilePage() {
   if (isLoading) {
     return (
       <ProtectedRoute requiredRole="ADMIN">
-        <p className="text-muted">Cargando...</p>
+        <DetailHeader title="Perfil de Inquilino" backHref="/tenants" />
+        <p className="px-4 pt-4 text-xs text-[#A7B0BB]">Cargando...</p>
       </ProtectedRoute>
     );
   }
@@ -239,14 +218,9 @@ export default function TenantProfilePage() {
   if (!tenant) {
     return (
       <ProtectedRoute requiredRole="ADMIN">
-        <div className="space-y-4">
-          <button onClick={() => router.back()} className="flex items-center gap-1.5 text-muted hover:text-heading text-sm -ml-1">
-            <ArrowLeftIcon className="w-4 h-4" />
-            Atrás
-          </button>
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <p className="text-red-800 dark:text-red-400 text-sm">{error || 'No se pudo cargar el inquilino'}</p>
-          </div>
+        <DetailHeader title="Perfil de Inquilino" backHref="/tenants" />
+        <div className="p-4">
+          <div className="bg-rose-50 border border-rose-200 rounded-lg p-3 text-xs text-rose-700">{error || 'No se pudo cargar el inquilino'}</div>
         </div>
       </ProtectedRoute>
     );
@@ -274,412 +248,510 @@ export default function TenantProfilePage() {
   const sortedContracts = [...contracts].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
   const openReportsCount = reports.filter((r) => r.status !== 'CLOSED').length;
 
+  const money = (n: number | string) => `$${Number(n).toLocaleString('es-MX')}`;
+  const initials = tenant.fullName
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase();
+  const nextPayment = [...pendingPayments, ...scheduledPayments].sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate))[0];
+  const hasOverdue = payments.some((p) => p.status === 'OVERDUE');
+  const statusBadge: Record<Contract['status'], string> = {
+    DRAFT: 'bg-amber-50 text-amber-700',
+    ACTIVE: 'bg-[#2D9E6B]/10 text-[#2D9E6B]',
+    EXPIRED: 'bg-[#F5F1E8] text-[#A7B0BB]',
+    AUTO_RENEWAL_PENDING: 'bg-amber-50 text-amber-700',
+    CANCELLED: 'bg-rose-50 text-rose-700',
+  };
+  const reportBadge: Record<MaintenanceReport['status'], string> = {
+    REPORTED: 'bg-amber-50 text-amber-700',
+    IN_PROGRESS: 'bg-[#173A5F]/10 text-[#173A5F]',
+    CLOSED: 'bg-[#F5F1E8] text-[#A7B0BB]',
+  };
+  const TABS = [
+    { key: 'resumen' as const, label: 'Resumen', count: 0, countClass: '' },
+    { key: 'pagos' as const, label: 'Pagos', count: pendingPayments.length, countClass: 'bg-[#F5F1E8] text-[#173A5F]' },
+    { key: 'contratos' as const, label: 'Contratos', count: 0, countClass: '' },
+    { key: 'reportes' as const, label: 'Reportes', count: openReportsCount, countClass: 'bg-[#2D9E6B]/15 text-[#2D9E6B]' },
+  ];
+
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="space-y-6">
-        <button onClick={() => router.back()} className="flex items-center gap-1.5 text-muted hover:text-heading text-sm -ml-1">
-          <ArrowLeftIcon className="w-4 h-4" />
-          Volver
-        </button>
+      {/* Markup portado de Stitch: design/stitch/tenant-profile.html */}
+      <DetailHeader title="Perfil de Inquilino" backHref="/tenants" />
 
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-heading">{tenant.fullName}</h1>
-            <p className="text-muted text-sm">Perfil del inquilino</p>
+      <main className="w-full max-w-md sm:max-w-3xl mx-auto px-4 pt-4 pb-6 flex-1 flex flex-col gap-4">
+        {error && <div className="bg-rose-50 border border-rose-200 rounded-lg p-3 text-xs text-rose-700">{error}</div>}
+
+        {/* Cabecera del Inquilino */}
+        <section className="card-ksared p-4 bg-white">
+          <div className="flex items-start gap-3.5">
+            <div className="relative shrink-0">
+              <div className="w-16 h-16 rounded-lg bg-[#173A5F] text-white flex items-center justify-center font-sans font-bold text-xl border-2 border-white shadow-sm overflow-hidden">
+                <span className="tracking-wide">{initials}</span>
+              </div>
+              {tenant.status === 'ACTIVE' && (
+                <span className="absolute -bottom-1 -right-1 bg-[#2D9E6B] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 border border-white">
+                  <span className="material-symbols-outlined text-[10px] fill">check_circle</span>
+                  Activo
+                </span>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-1">
+                <h2 className="font-sans font-bold text-xl text-[#173A5F] truncate">{tenant.fullName}</h2>
+              </div>
+              <div className="flex items-center gap-1.5 mt-1 text-xs text-[#173A5F]/80 font-medium">
+                <span className="material-symbols-outlined text-sm text-[#2D9E6B]">apartment</span>
+                <span className="truncate">{activeContract?.property?.name ?? 'Sin contrato activo'}</span>
+              </div>
+              <p className="text-[11px] text-[#A7B0BB] mt-0.5">
+                {tenant.status === 'ACTIVE' ? 'Inquilino activo' : tenant.status === 'EVICTED' ? 'Desalojado' : 'Finalizado'}
+                {tenant.userId ? ' • Portal activo' : ' • Sin cuenta en portal'}
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Barra de Acciones */}
+          <div className="grid grid-cols-4 gap-2 mt-4 pt-3.5 border-t border-[#DDD9CF]/80">
+            <a
+              className={`flex flex-col items-center justify-center p-2 rounded-lg bg-[#F5F1E8] hover:bg-[#DDD9CF]/50 active:scale-95 transition-all group ${tenant.phone ? '' : 'opacity-40 pointer-events-none'}`}
+              href={tenant.phone ? `tel:${tenant.phone}` : undefined}
+            >
+              <span className="material-symbols-outlined text-[#173A5F] group-hover:text-[#2D9E6B] text-lg mb-0.5">call</span>
+              <span className="text-[10px] font-semibold text-[#173A5F]">Llamar</span>
+            </a>
+            <a
+              className={`flex flex-col items-center justify-center p-2 rounded-lg bg-[#2D9E6B]/10 hover:bg-[#2D9E6B]/20 active:scale-95 transition-all text-[#2D9E6B] ${tenant.phone ? '' : 'opacity-40 pointer-events-none'}`}
+              href={tenant.phone ? `https://wa.me/52${tenant.phone.replace(/\D/g, '').slice(-10)}` : undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="material-symbols-outlined text-lg mb-0.5">chat</span>
+              <span className="text-[10px] font-semibold">Mensaje</span>
+            </a>
             <button
               onClick={() => setIsEditOpen(true)}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-surface shadow-sm text-muted hover:text-primary transition-colors"
-              aria-label="Editar"
+              className="flex flex-col items-center justify-center p-2 rounded-lg bg-[#173A5F]/5 hover:bg-[#173A5F]/10 active:scale-95 transition-all text-[#173A5F]"
+              type="button"
             >
-              <PencilIcon className="w-4 h-4" />
+              <span className="material-symbols-outlined text-lg mb-0.5">edit</span>
+              <span className="text-[10px] font-semibold">Editar</span>
             </button>
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-surface shadow-sm text-muted hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
-              aria-label="Eliminar"
+              className="flex flex-col items-center justify-center p-2 rounded-lg bg-rose-50 hover:bg-rose-100/70 active:scale-95 transition-all text-rose-700 disabled:opacity-50"
+              type="button"
             >
-              <TrashIcon className="w-4 h-4" />
+              <span className="material-symbols-outlined text-lg mb-0.5">delete</span>
+              <span className="text-[10px] font-semibold">Eliminar</span>
             </button>
           </div>
-        </div>
+        </section>
 
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-sm text-red-800 dark:text-red-400">
-            {error}
-          </div>
-        )}
-
-        {/* Resumen / Pagos / Contratos / Reportes — antes todo vivía en un solo scroll
-            largo (datos, notas, fotos, stats, historial de pagos, historial de contratos,
-            reportes) y abrumaba. Se agrupa por tarea: consultar identidad, cobrar, revisar
-            contratos, o atender incidencias — mismo patrón que /profile del inquilino. */}
-        <div className="flex bg-canvas rounded-xl p-1 gap-1 overflow-x-auto">
-          {(
-            [
-              ['resumen', 'Resumen'],
-              ['pagos', `Pagos${pendingPayments.length > 0 ? ` (${pendingPayments.length})` : ''}`],
-              ['contratos', 'Contratos'],
-              ['reportes', `Reportes${openReportsCount > 0 ? ` (${openReportsCount})` : ''}`],
-            ] as const
-          ).map(([value, label]) => (
+        {/* Tabs Planas */}
+        <nav aria-label="Pestañas de inquilino" className="flex border-b border-[#DDD9CF] bg-white rounded-lg px-2 pt-1">
+          {TABS.map((t) => (
             <button
-              key={value}
-              onClick={() => setTab(value)}
-              className={`flex-1 py-2 px-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-                tab === value ? 'bg-surface shadow-sm text-heading' : 'text-muted'
-              }`}
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={
+                tab === t.key
+                  ? 'relative flex-1 py-2.5 text-center text-xs font-semibold text-[#173A5F] border-b-[3px] border-[#2D9E6B] transition-colors flex items-center justify-center gap-1'
+                  : 'flex-1 py-2.5 text-center text-xs font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors flex items-center justify-center gap-1'
+              }
             >
-              {label}
+              <span>{t.label}</span>
+              {t.count > 0 && (
+                <span className={`inline-flex items-center justify-center text-[10px] font-bold px-1.5 rounded-full ${t.countClass}`}>{t.count}</span>
+              )}
             </button>
           ))}
-        </div>
+        </nav>
 
         {tab === 'resumen' && (
-          <div className="space-y-6">
-            <div className="bg-surface rounded-2xl shadow-sm p-5">
-              <h3 className="text-heading font-semibold mb-2">Datos personales</h3>
-              <Row label="Nombre" value={tenant.fullName} />
-              <Row label="Teléfono" value={tenant.phone ?? '—'} />
-              <Row label="Email" value={tenant.email ?? '—'} />
-              <Row label="Clave de elector" value={tenant.idDocument ?? '—'} />
-              <Row label="CURP" value={tenant.curp ?? '—'} />
-              <Row label="Fecha de nacimiento" value={tenant.birthDate ? formatDate(tenant.birthDate) : '—'} />
-              <Row label="Domicilio" value={tenant.address ?? '—'} />
-              <Row label="Estado" value={tenant.status} />
-            </div>
-
-            <div className="bg-surface rounded-2xl shadow-sm p-5">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-heading font-semibold">Notas</h3>
-                <button onClick={() => setIsEditOpen(true)} className="text-primary text-xs font-medium hover:underline">
-                  Editar
-                </button>
+          <div className="flex flex-col gap-3.5">
+            {/* Datos personales */}
+            <section className="card-ksared p-4">
+              <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#DDD9CF]/80">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#173A5F]/10 text-[#173A5F]">
+                    <span className="material-symbols-outlined text-base text-[#173A5F]">badge</span>
+                  </span>
+                  <h3 className="font-sans font-semibold text-sm text-[#173A5F]">Datos personales</h3>
+                </div>
+                {tenant.ineFrontUrl && (
+                  <span className="text-[11px] font-medium text-[#2D9E6B] flex items-center gap-0.5">
+                    <span className="material-symbols-outlined text-xs fill">verified</span> INE capturado
+                  </span>
+                )}
               </div>
-              {tenant.notes ? (
-                <p className="text-sm text-heading whitespace-pre-wrap">{tenant.notes}</p>
-              ) : (
-                <p className="text-sm text-muted">Sin notas registradas. Usa este espacio para observaciones internas sobre el inquilino.</p>
-              )}
-            </div>
+              <div className="space-y-3 text-xs">
+                {[
+                  { icon: 'phone_iphone', label: 'Teléfono', value: tenant.phone, copy: true },
+                  { icon: 'mail', label: 'Correo electrónico', value: tenant.email },
+                  { icon: 'fingerprint', label: 'Clave de elector', value: tenant.idDocument },
+                  { icon: 'id_card', label: 'CURP', value: tenant.curp },
+                  { icon: 'cake', label: 'Fecha de nacimiento', value: tenant.birthDate ? formatDate(tenant.birthDate) : null },
+                  { icon: 'home_pin', label: 'Domicilio', value: tenant.address },
+                ].map((row) => (
+                  <div key={row.label} className="flex items-center justify-between py-0.5 gap-3">
+                    <div className="text-[#A7B0BB] flex items-center gap-1.5 shrink-0">
+                      <span className="material-symbols-outlined text-sm text-[#A7B0BB]">{row.icon}</span>
+                      <span>{row.label}</span>
+                    </div>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-semibold text-[#173A5F] truncate text-right">{row.value || '—'}</span>
+                      {row.copy && row.value && (
+                        <button
+                          aria-label="Copiar teléfono"
+                          onClick={() => {
+                            navigator.clipboard.writeText(row.value as string);
+                            showToast('Teléfono copiado', 'success');
+                          }}
+                          className="text-[#A7B0BB] hover:text-[#2D9E6B] active:scale-90 transition-transform"
+                          type="button"
+                        >
+                          <span className="material-symbols-outlined text-sm">content_copy</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
 
-            {(tenant.ineFrontUrl || tenant.ineBackUrl) && (
-              <div className="bg-surface rounded-2xl shadow-sm p-5">
-                <h3 className="text-heading font-semibold mb-1">Fotografías del INE</h3>
-                <p className="text-muted text-xs mb-3">Guardadas como respaldo. Toca una foto para verla en tamaño completo.</p>
-                <div className="flex gap-3">
-                  {inePhotos.front && (
-                    <a href={inePhotos.front} target="_blank" rel="noopener noreferrer" className="block w-1/2">
-                      <img src={inePhotos.front} alt="Frente del INE" className="w-full rounded-xl shadow-sm" />
-                      <p className="text-muted text-xs text-center mt-1">Frente</p>
-                    </a>
-                  )}
-                  {inePhotos.back && (
-                    <a href={inePhotos.back} target="_blank" rel="noopener noreferrer" className="block w-1/2">
-                      <img src={inePhotos.back} alt="Reverso del INE" className="w-full rounded-xl shadow-sm" />
-                      <p className="text-muted text-xs text-center mt-1">Reverso</p>
-                    </a>
+            {/* Detalles del arrendamiento */}
+            {activeContract && (
+              <section className="card-ksared p-4">
+                <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#DDD9CF]/80">
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#2D9E6B]/10 text-[#2D9E6B]">
+                      <span className="material-symbols-outlined text-base text-[#2D9E6B]">apartment</span>
+                    </span>
+                    <h3 className="font-sans font-semibold text-sm text-[#173A5F]">Detalles del arrendamiento</h3>
+                  </div>
+                  {hasOverdue ? (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-600"></span> Con adeudo
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2D9E6B] bg-[#2D9E6B]/10 px-2 py-0.5 rounded">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span> Al corriente
+                    </span>
                   )}
                 </div>
-              </div>
+                <div className="space-y-2.5 text-xs">
+                  <div>
+                    <div className="text-[11px] text-[#A7B0BB] font-medium">Inmueble asignado</div>
+                    <div className="font-semibold text-[#173A5F] text-sm mt-0.5">{activeContract.property?.name ?? '—'}</div>
+                    {activeContract.property?.city && <div className="text-[11px] text-[#A7B0BB]">{activeContract.property.city}</div>}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#DDD9CF]/60">
+                    <div className="bg-[#F5F1E8] p-2.5 rounded-lg">
+                      <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Renta Mensual</div>
+                      <div className="text-sm font-bold text-[#173A5F] mt-0.5">
+                        {money(activeContract.monthlyRent)} <span className="text-[10px] font-medium text-[#A7B0BB]">MXN</span>
+                      </div>
+                      <div className="text-[10px] text-[#2D9E6B] font-medium mt-0.5 flex items-center gap-0.5">
+                        <span className="material-symbols-outlined text-[11px]">event_available</span> Día {activeContract.paymentDay} c/mes
+                      </div>
+                    </div>
+                    <div className="bg-[#F5F1E8] p-2.5 rounded-lg">
+                      <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Próximo Cobro</div>
+                      <div className="text-sm font-bold text-[#173A5F] mt-0.5">{nextPayment ? formatDate(nextPayment.dueDate) : '—'}</div>
+                      {nextPayment && (
+                        <div className="text-[10px] text-[#173A5F]/80 font-medium mt-0.5 flex items-center gap-0.5">
+                          <span className="material-symbols-outlined text-[11px] text-[#173A5F]">schedule</span>
+                          {daysTo(nextPayment.dueDate) >= 0 ? `En ${daysTo(nextPayment.dueDate)} días` : `Hace ${-daysTo(nextPayment.dueDate)} días`}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between pt-1 text-[11px]">
+                    <span className="text-[#A7B0BB]">Depósito en garantía:</span>
+                    <span className="font-semibold text-[#173A5F]">{money(activeContract.depositAmount)} MXN</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-[#A7B0BB]">Vigencia de contrato:</span>
+                    <span className="font-semibold text-[#173A5F]">
+                      {formatDate(activeContract.startDate)} – {activeContract.endDate ? formatDate(activeContract.endDate) : '—'}
+                    </span>
+                  </div>
+                </div>
+              </section>
             )}
 
-            <div className="bg-surface rounded-2xl shadow-sm p-5">
-              <h3 className="text-heading font-semibold mb-1">Acceso al portal</h3>
+            {/* Notas de administración */}
+            <section className="card-ksared p-4 bg-white">
+              <div className="flex items-center justify-between pb-2 mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#173A5F]/10 text-[#173A5F]">
+                    <span className="material-symbols-outlined text-base">sticky_note_2</span>
+                  </span>
+                  <h3 className="font-sans font-semibold text-sm text-[#173A5F]">Notas de administración</h3>
+                </div>
+                <button
+                  onClick={() => setIsEditOpen(true)}
+                  className="text-xs font-semibold text-[#2D9E6B] hover:text-[#173A5F] flex items-center gap-0.5 transition-colors"
+                  type="button"
+                >
+                  <span className="material-symbols-outlined text-sm">{tenant.notes ? 'edit' : 'add'}</span> {tenant.notes ? 'Editar nota' : 'Añadir nota'}
+                </button>
+              </div>
+              <div className="bg-[#F5F1E8] p-3 rounded-lg border border-[#DDD9CF]">
+                <p className="text-xs text-[#173A5F]/90 leading-relaxed font-normal whitespace-pre-wrap">
+                  {tenant.notes || 'Sin notas registradas. Usa este espacio para observaciones internas sobre el inquilino.'}
+                </p>
+              </div>
+            </section>
+
+            {/* Fotografías del INE */}
+            {(tenant.ineFrontUrl || tenant.ineBackUrl) && (
+              <section className="card-ksared p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#173A5F]/10 text-[#173A5F]">
+                    <span className="material-symbols-outlined text-base">id_card</span>
+                  </span>
+                  <h3 className="font-sans font-semibold text-sm text-[#173A5F]">Fotografías del INE</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {(['front', 'back'] as const).map(
+                    (side) =>
+                      inePhotos[side] && (
+                        <a key={side} href={inePhotos[side]} target="_blank" rel="noopener noreferrer" className="block">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={inePhotos[side]} alt={side === 'front' ? 'Frente del INE' : 'Reverso del INE'} className="w-full rounded-lg border border-[#DDD9CF]" />
+                          <p className="text-[10px] text-[#A7B0BB] text-center mt-1">{side === 'front' ? 'Frente' : 'Reverso'}</p>
+                        </a>
+                      )
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Acceso al portal */}
+            <section className="card-ksared p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#2D9E6B]/10 text-[#2D9E6B]">
+                    <span className="material-symbols-outlined text-base text-[#2D9E6B]">vpn_key</span>
+                  </span>
+                  <h3 className="font-sans font-semibold text-sm text-[#173A5F]">Acceso al portal inquilino</h3>
+                </div>
+                <span className={`w-2.5 h-2.5 rounded-full ring-4 ${tenant.userId ? 'bg-[#2D9E6B] ring-[#2D9E6B]/20' : 'bg-[#A7B0BB] ring-[#A7B0BB]/20'}`}></span>
+              </div>
               {tenant.userId ? (
-                <p className="text-sm text-muted">Ya tiene una cuenta vinculada — puede iniciar sesión con su teléfono.</p>
+                <p className="text-xs text-[#173A5F]/80">
+                  Estado: <strong className="text-[#2D9E6B]">Activo</strong> • Inicia sesión con su teléfono.
+                </p>
               ) : !tenant.phone ? (
-                <p className="text-sm text-muted">Agrega un teléfono al inquilino antes de generar su link de registro.</p>
+                <p className="text-xs text-[#173A5F]/80">Agrega un teléfono al inquilino antes de generar su link de registro.</p>
               ) : (
                 <>
-                  <p className="text-sm text-muted mb-3">
-                    Aún no tiene cuenta. Genera un link de un solo uso para que se registre — sólo le pedirá una contraseña.
+                  <p className="text-xs text-[#173A5F]/80">
+                    Estado: <strong className="text-amber-700">Sin cuenta</strong> • Genera un link de un solo uso para que se registre.
                   </p>
                   {inviteLink ? (
-                    <div className="flex items-center gap-2 bg-canvas rounded-lg px-3 py-2">
-                      <p className="text-xs text-heading truncate flex-1">{inviteLink}</p>
-                      <button onClick={handleCopyInviteLink} className="text-primary text-xs font-medium shrink-0 hover:underline">
+                    <div className="mt-3 flex items-center gap-2 bg-[#F5F1E8] rounded-lg px-3 py-2 border border-[#DDD9CF]">
+                      <p className="text-xs text-[#173A5F] truncate flex-1">{inviteLink}</p>
+                      <button onClick={handleCopyInviteLink} className="text-[#2D9E6B] text-xs font-semibold shrink-0">
                         Copiar
                       </button>
                     </div>
                   ) : (
-                    <button
-                      onClick={handleCreateInvite}
-                      disabled={isCreatingInvite}
-                      className="text-primary text-sm font-medium disabled:opacity-50"
-                    >
-                      {isCreatingInvite ? 'Generando...' : 'Generar link de registro'}
-                    </button>
+                    <div className="mt-3 flex gap-2">
+                      <button
+                        onClick={handleCreateInvite}
+                        disabled={isCreatingInvite}
+                        className="flex-1 py-2 px-3 text-xs font-semibold text-white bg-[#2D9E6B] hover:opacity-90 active:scale-95 transition-all rounded-lg flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        type="button"
+                      >
+                        <span className="material-symbols-outlined text-sm">link</span> {isCreatingInvite ? 'Generando...' : 'Generar link de registro'}
+                      </button>
+                    </div>
                   )}
                 </>
               )}
-            </div>
+            </section>
           </div>
         )}
 
         {tab === 'pagos' && (
-          <div className="space-y-6">
-            {payments.length === 0 ? (
-              <div className="bg-surface rounded-2xl shadow-sm p-6">
-                <p className="text-muted text-sm text-center">Sin pagos registrados todavía.</p>
+          <div className="flex flex-col gap-3.5">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="card-ksared p-3">
+                <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Puntualidad</div>
+                <div className="text-xl font-bold text-[#173A5F] mt-0.5">{punctualityPercent}%</div>
+                <div className="text-[10px] text-[#2D9E6B] font-medium">
+                  {punctualPayments.length}/{paidPayments.length} puntuales
+                </div>
+              </div>
+              <div className="card-ksared p-3">
+                <div className="text-[10px] text-[#A7B0BB] uppercase font-bold tracking-wider">Pagos</div>
+                <div className="text-xl font-bold text-[#173A5F] mt-0.5">{paidPayments.length}</div>
+                <div className="text-[10px] text-[#A7B0BB] font-medium">de {payments.length} registrados</div>
+              </div>
+            </div>
+
+            <nav className="bg-white p-1 rounded-[8px] border border-[#DDD9CF] flex gap-1">
+              {(
+                [
+                  ['pending', 'Por pagar', pendingPayments.length],
+                  ['scheduled', 'Programados', scheduledPayments.length],
+                  ['paid', 'Pagados', paidHistory.length],
+                ] as const
+              ).map(([key, label, count]) => (
+                <button
+                  key={key}
+                  onClick={() => setSegment(key)}
+                  className={
+                    segment === key
+                      ? 'flex-1 py-1.5 px-2 text-xs font-bold rounded-[8px] bg-[#173A5F] text-white'
+                      : 'flex-1 py-1.5 px-2 text-xs font-medium rounded-[8px] text-[#173A5F] hover:bg-[#F5F1E8]'
+                  }
+                >
+                  {label} {count > 0 && `(${count})`}
+                </button>
+              ))}
+            </nav>
+
+            {listToShow.length === 0 ? (
+              <div className="card-ksared p-6 text-center text-xs text-[#A7B0BB]">
+                {segment === 'paid' ? 'Aún no hay pagos registrados.' : 'Sin pagos en esta sección.'}
               </div>
             ) : (
-              <>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl shadow-sm p-4 border border-emerald-200 dark:border-emerald-800">
-                    <p className="text-muted text-xs mb-2">Puntualidad</p>
-                    <p className="text-heading font-bold text-2xl">{punctualityPercent}%</p>
-                    <p className="text-muted text-xs mt-1">
-                      {punctualPayments.length}/{paidPayments.length} puntuales
-                    </p>
-                  </div>
-                  <div className="bg-blue-50 dark:bg-blue-900/10 rounded-2xl shadow-sm p-4 border border-blue-200 dark:border-blue-800">
-                    <p className="text-muted text-xs mb-2">Pagos</p>
-                    <p className="text-heading font-bold text-2xl">{paidPayments.length}</p>
-                    <p className="text-muted text-xs mt-1">de {payments.length} registrados</p>
-                  </div>
-                </div>
-
-                <div className="bg-surface rounded-2xl shadow-sm p-5">
-                  <h3 className="text-heading font-semibold mb-4">Historial de pagos</h3>
-
-                  {/* Segmented control */}
-                  <div className="flex bg-canvas rounded-xl p-1 mb-4">
-                    <button
-                      onClick={() => setSegment('pending')}
-                      className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                        segment === 'pending' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
-                      }`}
-                    >
-                      Programados {pendingPayments.length > 0 && `(${pendingPayments.length})`}
-                    </button>
-                    <button
-                      onClick={() => setSegment('paid')}
-                      className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                        segment === 'paid' ? 'bg-surface shadow-sm text-heading' : 'text-muted'
-                      }`}
-                    >
-                      Pagados {paidHistory.length > 0 && `(${paidHistory.length})`}
-                    </button>
-                  </div>
-
-                  {listToShow.length === 0 ? (
-                    <p className="text-muted text-sm text-center py-6">
-                      {segment === 'pending' ? 'No hay pagos programados pendientes.' : 'Aún no hay pagos registrados.'}
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
-                      {listToShow.map((payment) => {
-                        const isOverdue = payment.status === 'OVERDUE';
-                        const remaining = Number(payment.amountDue) - Number(payment.amountPaid || 0);
-                        return (
-                          <div key={payment.id} className="py-3 border-b border-black/5 dark:border-white/10 last:border-0">
-                            <div className="flex items-center justify-between text-sm mb-1">
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-1.5">
-                                  <p className="text-heading font-medium">
-                                    {formatDate(segment === 'paid' ? payment.paidDate ?? payment.dueDate : payment.dueDate)}
-                                  </p>
-                                  {payment.paymentType && (
-                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-black/5 dark:bg-white/10 text-muted">
-                                      {paymentTypeLabels[payment.paymentType]}
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-muted text-xs truncate">
-                                  ${Number(payment.amountDue).toLocaleString('es-MX')}
-                                  {payment.paymentNumber && ` (${payment.paymentNumber}/${payment.totalPaymentsInContract})`}
-                                  {segment === 'pending' && Number(payment.amountPaid) > 0 && ` · abonado $${Number(payment.amountPaid).toLocaleString('es-MX')}`}
-                                </p>
-                              </div>
-                              {segment === 'pending' ? (
-                                <span
-                                  className={`ml-2 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                                    isOverdue
-                                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                                      : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
-                                  }`}
-                                >
-                                  {isOverdue ? 'Vencido' : 'Próximo'}
-                                </span>
-                              ) : (
-                                <span className="ml-2 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                  Pagado
-                                </span>
-                              )}
-                            </div>
-
-                            {segment === 'pending' ? (
-                              <div className="flex gap-2 mt-2">
-                                <button
-                                  onClick={() => handleReminder(payment)}
-                                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas transition-colors"
-                                >
-                                  <BellIcon className="w-3.5 h-3.5" />
-                                  Recordatorio
-                                </button>
-                                <button
-                                  onClick={() => setPayTarget(payment)}
-                                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-primary text-white hover:bg-primary-pressed transition-colors"
-                                >
-                                  <BanknoteIcon className="w-3.5 h-3.5" />
-                                  Pagar {remaining < Number(payment.amountDue) && `($${remaining.toLocaleString('es-MX')})`}
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="flex gap-2 mt-2">
-                                <button
-                                  onClick={() => handleDownloadReceipt(payment)}
-                                  className="flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-3 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-heading hover:bg-canvas transition-colors"
-                                  aria-label="Descargar recibo"
-                                >
-                                  <DownloadIcon className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => handleShareReceipt(payment)}
-                                  disabled={sharingId === payment.id}
-                                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 rounded-lg bg-primary text-white hover:bg-primary-pressed transition-colors disabled:opacity-50"
-                                >
-                                  {sharingId === payment.id ? 'Enviando...' : 'Enviar recibo por WhatsApp'}
-                                </button>
-                                <button
-                                  onClick={() => handleRevertPayment(payment)}
-                                  disabled={revertingId === payment.id}
-                                  className="flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-3 rounded-lg border border-black/10 dark:border-white/10 text-muted hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-800 transition-colors disabled:opacity-50"
-                                  aria-label="Revertir pago"
-                                  title="Revertir pago"
-                                >
-                                  <UndoIcon className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+              listToShow.map((payment) => {
+                const isOverdue = payment.status === 'OVERDUE';
+                const isPaid = payment.status === 'PAID';
+                const remaining = Number(payment.amountDue) - Number(payment.amountPaid || 0);
+                return (
+                  <article key={payment.id} className={`card-ksared p-3.5 relative overflow-hidden ${isOverdue ? 'border-rose-200' : ''}`}>
+                    {isOverdue && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#DC2626]"></div>}
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-bold text-[#173A5F]">{formatDate(isPaid ? payment.paidDate ?? payment.dueDate : payment.dueDate)}</p>
+                        <p className="text-[11px] text-[#A7B0BB]">
+                          {payment.paymentType ? paymentTypeLabels[payment.paymentType] : 'Renta'}
+                          {payment.paymentNumber && ` · ${payment.paymentNumber}/${payment.totalPaymentsInContract}`}
+                          {!isPaid && Number(payment.amountPaid) > 0 && ` · abonado ${money(payment.amountPaid)}`}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-sm font-bold ${isPaid ? 'text-[#2D9E6B]' : isOverdue ? 'text-[#DC2626]' : 'text-[#173A5F]'}`}>{money(payment.amountDue)}</p>
+                        <span
+                          className={`inline-flex px-2 py-0.5 rounded-[8px] text-[10px] font-bold ${
+                            isPaid ? 'bg-[#DCFCE7] text-[#2D9E6B]' : isOverdue ? 'bg-[#FEE2E2] text-[#DC2626]' : 'bg-[#FEF3C7] text-[#D97706]'
+                          }`}
+                        >
+                          {isPaid ? 'Pagado' : isOverdue ? 'Vencido' : 'Próximo'}
+                        </span>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </>
+                    {isPaid ? (
+                      <div className="mt-3 grid grid-cols-[auto_1fr_auto] gap-2">
+                        <button
+                          onClick={() => handleDownloadReceipt(payment)}
+                          aria-label="Descargar recibo"
+                          className="py-2 px-3 rounded-[8px] border border-[#DDD9CF] bg-[#F5F1E8]/50 hover:bg-[#F5F1E8] text-[#173A5F] flex items-center justify-center"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">download</span>
+                        </button>
+                        <button
+                          onClick={() => handleShareReceipt(payment)}
+                          disabled={sharingId === payment.id}
+                          className="w-full py-2 px-3 rounded-[8px] border border-[#DDD9CF] bg-[#F5F1E8]/50 hover:bg-[#F5F1E8] text-[#173A5F] text-xs font-medium flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">receipt_long</span>
+                          {sharingId === payment.id ? 'Enviando...' : 'Enviar recibo por WhatsApp'}
+                        </button>
+                        <button
+                          onClick={() => handleRevertPayment(payment)}
+                          disabled={revertingId === payment.id}
+                          aria-label="Revertir pago"
+                          className="py-2 px-3 rounded-[8px] border border-[#DDD9CF] bg-white text-[#D97706] hover:bg-[#FEF3C7] flex items-center justify-center disabled:opacity-50"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">undo</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => handleReminder(payment)}
+                          className="w-full py-2 px-2.5 rounded-[8px] border border-[#A7B0BB]/60 bg-white text-[#173A5F] hover:bg-[#F5F1E8] text-xs font-semibold flex items-center justify-center gap-1.5"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">send</span>
+                          Recordatorio
+                        </button>
+                        <button
+                          onClick={() => setPayTarget(payment)}
+                          className="w-full py-2 px-2.5 rounded-[8px] bg-[#2D9E6B] hover:opacity-95 text-white text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                          Registrar pago{remaining < Number(payment.amountDue) ? ` (${money(remaining)})` : ''}
+                        </button>
+                      </div>
+                    )}
+                  </article>
+                );
+              })
             )}
           </div>
         )}
 
         {tab === 'contratos' && (
-          <div className="space-y-6">
-            {contracts.length === 0 ? (
-              <div className="bg-surface rounded-2xl shadow-sm p-6">
-                <p className="text-muted text-sm text-center">Sin contratos registrados todavía.</p>
-              </div>
+          <div className="flex flex-col gap-3.5">
+            {sortedContracts.length === 0 ? (
+              <div className="card-ksared p-6 text-center text-xs text-[#A7B0BB]">Sin contratos registrados todavía.</div>
             ) : (
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-blue-50 dark:bg-blue-900/10 rounded-2xl shadow-sm p-4 border border-blue-200 dark:border-blue-800">
-                  <p className="text-muted text-xs mb-2">Contratos totales</p>
-                  <p className="text-heading font-bold text-2xl">{contracts.length}</p>
-                </div>
-                <div
-                  className={`rounded-2xl shadow-sm p-4 border ${
-                    activeContract
-                      ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800'
-                      : 'bg-gray-50 dark:bg-gray-900/10 border-gray-200 dark:border-gray-800'
-                  }`}
-                >
-                  <p className="text-muted text-xs mb-2">Contratos activos</p>
-                  <p className="text-heading font-bold text-2xl">{contracts.filter((c) => c.status === 'ACTIVE').length}</p>
-                </div>
-              </div>
-            )}
-
-            {activeContract && (
-              <div className="bg-surface rounded-2xl shadow-sm p-5">
-                <h3 className="text-heading font-semibold mb-2">Contrato activo</h3>
-                <Row label="Propiedad" value={activeContract.property?.name ?? '—'} />
-                <Row
-                  label="Vigencia"
-                  value={`${formatDate(activeContract.startDate)} — ${activeContract.endDate ? formatDate(activeContract.endDate) : '—'}`}
-                />
-                <Row label="Renta mensual" value={`$${Number(activeContract.monthlyRent).toLocaleString('es-MX')}`} />
-                <Row label="Depósito" value={`$${Number(activeContract.depositAmount).toLocaleString('es-MX')}`} />
-                <Row label="Estado" value={activeContract.status} />
-                <Link href={`/contracts/${activeContract.id}`} className="block mt-4 text-primary text-sm font-medium hover:underline">
-                  Ver contrato completo →
-                </Link>
-              </div>
-            )}
-
-            {sortedContracts.length > 0 && (
-              <div className="bg-surface rounded-2xl shadow-sm p-5">
-                <h3 className="text-heading font-semibold mb-4">Historial de contratos</h3>
-                <div className="space-y-2">
-                  {sortedContracts.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between gap-3 py-3 border-b border-black/5 dark:border-white/10 last:border-0">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <p className="text-heading font-medium text-sm truncate">{c.property?.name ?? '—'}</p>
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${contractStatusColors[c.status]}`}>
-                            {contractStatusLabels[c.status]}
-                          </span>
-                        </div>
-                        <p className="text-muted text-xs mt-0.5">
-                          {formatDate(c.startDate)} — {c.endDate ? formatDate(c.endDate) : '—'} · $
-                          {Number(c.monthlyRent).toLocaleString('es-MX')}/mes
-                        </p>
-                      </div>
-                      <Link href={`/contracts/${c.id}`} className="shrink-0 text-primary text-sm font-medium hover:underline">
-                        Ver detalle →
-                      </Link>
+              sortedContracts.map((c) => (
+                <Link key={c.id} href={`/contracts/${c.id}`} className="card-ksared p-3.5 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-[#173A5F]">description</span>
+                      <p className="text-sm font-bold text-[#173A5F] truncate">{c.property?.name ?? '—'}</p>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <p className="text-[11px] text-[#A7B0BB] mt-0.5">
+                      {formatDate(c.startDate)} – {c.endDate ? formatDate(c.endDate) : '—'} · {money(c.monthlyRent)}/mes
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${statusBadge[c.status]}`}>{contractStatusLabels[c.status]}</span>
+                    <span className="material-symbols-outlined text-[18px] text-[#A7B0BB]">chevron_right</span>
+                  </div>
+                </Link>
+              ))
             )}
           </div>
         )}
 
         {tab === 'reportes' && (
-          <div className="bg-surface rounded-2xl shadow-sm p-5">
-            <h3 className="text-heading font-semibold mb-3">Reportes</h3>
+          <div className="flex flex-col gap-3.5">
             {reports.length === 0 ? (
-              <p className="text-muted text-sm">Sin incidencias reportadas.</p>
+              <div className="card-ksared p-6 text-center text-xs text-[#A7B0BB]">Sin incidencias reportadas.</div>
             ) : (
-              <div className="space-y-2">
-                {reports.map((report) => (
-                  <Link
-                    key={report.id}
-                    href={`/tenants/${tenantId}/reports/${report.id}`}
-                    className="flex items-center gap-3 py-2.5 border-b border-black/5 dark:border-white/10 last:border-0 active:opacity-70 transition-opacity"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-heading text-sm truncate">{report.description}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${reportStatusColors[report.status]}`}>
-                          {maintenanceReportStatusLabels[report.status]}
-                        </span>
-                        <span className="text-muted text-xs">{formatDate(report.createdAt)}</span>
-                      </div>
+              reports.map((report) => (
+                <Link key={report.id} href={`/tenants/${tenantId}/reports/${report.id}`} className="card-ksared p-3.5 flex items-center gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-[#173A5F] font-medium truncate">{report.description}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${reportBadge[report.status]}`}>
+                        {maintenanceReportStatusLabels[report.status]}
+                      </span>
+                      <span className="text-[11px] text-[#A7B0BB]">{formatDate(report.createdAt)}</span>
                     </div>
-                    <ChevronRightIcon className="w-4 h-4 text-muted shrink-0" />
-                  </Link>
-                ))}
-              </div>
+                  </div>
+                  <span className="material-symbols-outlined text-[18px] text-[#A7B0BB] shrink-0">chevron_right</span>
+                </Link>
+              ))
             )}
           </div>
         )}
-      </div>
+      </main>
 
-      <TenantFormModal
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        tenant={tenant}
-        onSaved={() => loadData({ silent: true })}
-      />
-      <PayPaymentModal
-        payment={payTarget}
-        isOpen={!!payTarget}
-        onClose={() => setPayTarget(null)}
-        onPaid={() => loadData({ silent: true })}
-      />
+      <TenantFormModal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} tenant={tenant} onSaved={() => loadData({ silent: true })} />
+      <PayPaymentModal payment={payTarget} isOpen={!!payTarget} onClose={() => setPayTarget(null)} onPaid={() => loadData({ silent: true })} />
     </ProtectedRoute>
   );
 }

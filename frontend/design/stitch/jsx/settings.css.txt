@@ -1,0 +1,30 @@
+
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Toggle Switch Custom */
+    .switch-checkbox:checked + .switch-label {
+      background-color: #2D9E6B;
+    }
+    .switch-checkbox:checked + .switch-label .switch-dot {
+      transform: translateX(1.25rem);
+    }
+  
+
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  

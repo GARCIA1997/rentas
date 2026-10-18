@@ -30,7 +30,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-2 text-heading">Teléfono</label>
+        <label className="block text-sm font-medium mb-2 text-[#173A5F]">Teléfono</label>
         <input
           type="tel"
           value={phone}
@@ -38,19 +38,19 @@ export function LoginForm() {
           placeholder="5551234567"
           maxLength={10}
           required
-          className="w-full px-4 py-2 border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-4 py-3 border border-line bg-white text-[#173A5F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#173A5F]"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2 text-heading">Contraseña</label>
+        <label className="block text-sm font-medium mb-2 text-[#173A5F]">Contraseña</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           required
-          className="w-full px-4 py-2 border border-black/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-4 py-3 border border-line bg-white text-[#173A5F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#173A5F]"
         />
       </div>
 
@@ -59,7 +59,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-pressed disabled:opacity-50"
+        className="w-full bg-accent text-white py-3 rounded-lg font-semibold hover:brightness-110 active:brightness-95 disabled:opacity-50"
       >
         {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </button>

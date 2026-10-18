@@ -1,0 +1,211 @@
+
+{/* Mobile Screen Container 390px */}
+<div className="w-full max-w-[390px] bg-[#fdf9f0] flex flex-col min-h-screen sm:min-h-[844px] shadow-sm relative pb-10">
+{/* 1. TopAppBar (Shared Component Standard: Navy Blue Flat Header) */}
+<header className="fixed top-0 left-0 right-0 max-w-[390px] mx-auto z-50 flex items-center justify-between px-4 h-16 bg-[#173a5f] text-[#ffffff] border-b border-[#173a5f]">
+<div className="flex items-center gap-3">
+<button aria-label="Volver" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 active:opacity-80 transition-opacity" type="button">
+<span className="material-symbols-outlined text-white text-2xl">arrow_back</span>
+</button>
+<div className="flex flex-col">
+<h1 className="font-sans text-headline-sm text-white leading-tight">Nuevo inquilino</h1>
+<span className="font-sans text-label-sm text-[#85a4cf] tracking-wide">Paso 2 de 2 · Validación INE</span>
+</div>
+</div>
+<button aria-label="Ayuda" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 active:opacity-80 transition-opacity" type="button">
+<span className="material-symbols-outlined text-white text-2xl">help_outline</span>
+</button>
+</header>
+{/* Content Area (with pt-16 to offset fixed header) */}
+<main className="pt-20 px-4 flex flex-col gap-4">
+{/* 2. Banner Informativo Sutil */}
+<section className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-3.5 flex items-start gap-3">
+<div className="w-8 h-8 rounded-lg bg-[#8cf8bd]/30 flex items-center justify-center shrink-0 mt-0.5">
+<span className="material-symbols-outlined brand-green text-xl" style={{fontVariationSettings: '\'FILL\' 1'}}>verified</span>
+</div>
+<div className="flex-1">
+<p className="font-sans text-body-md text-[#1c242d] font-medium leading-snug">
+            Verifica y confirma la información extraída automáticamente de la credencial para votar.
+          </p>
+<p className="font-sans text-body-sm text-[#73777f] mt-0.5">
+            Los datos marcados con MRZ provienen del código biométrico.
+          </p>
+</div>
+</section>
+{/* 3. Sección 'Documento escaneado' con Miniaturas INE */}
+<section className="flex flex-col gap-2.5">
+<div className="flex items-center justify-between">
+<span className="font-sans text-label-lg brand-navy font-semibold flex items-center gap-1.5">
+<span className="material-symbols-outlined text-lg brand-navy">badge</span>
+            Documento escaneado
+          </span>
+<span className="inline-flex items-center gap-1 font-sans text-label-sm brand-green font-medium">
+<span className="material-symbols-outlined text-base brand-green" style={{fontVariationSettings: '\'FILL\' 1'}}>check_circle</span>
+            2 de 2 procesadas
+          </span>
+</div>
+<div className="grid grid-cols-2 gap-3">
+{/* Tarjeta Frente */}
+<div className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-2.5 flex flex-col justify-between">
+<div>
+<div className="flex items-center justify-between mb-2">
+<span className="font-sans text-label-md brand-navy font-semibold">Frente</span>
+<span className="w-2 h-2 rounded-full bg-brand-green"></span>
+</div>
+{/* Simulación INE Frente con Placeholder Foto */}
+<div className="relative w-full h-24 rounded-lg overflow-hidden border border-[#c3c6cf]/30 bg-[#f7f3ea] mb-2">
+<img className="w-full h-full object-cover" data-alt="A clean, close-up photograph of the front of a Mexican INE credential card resting flat on a neutral background under bright balanced architectural office lighting. The card features a clear citizen portrait in high resolution, holographic security micro-patterns in subdued green and gray, and official typography in deep corporate navy. Sharp focus and modern flat professional styling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOaf7nAPbKiOTXV2Tp7fj88PFsOTZej_P6UguKOnVmO3sWA33xVkctiVulE1fPlirM_S3SE3126c1Uw4HNJY2jh4dXth3nAUjwjK10p-94RwO2yb9PJvu1WqD4rQEC1RJ6Vjfi9btliSNXebmBOpaqlugdwuFdwv66krQIOevAQRv-S1syewp0pg-V5TmpVecM3ri8Z_Lrlu0CGNsbhD7WmJCMpMbPgqXlRVQn0XBGiiKeObYC3x9X3AP3Exwt9AYK75ZHknYs7wtI" />
+<div className="absolute bottom-1 right-1 bg-[#173a5f]/85 px-1.5 py-0.5 rounded text-[9px] font-semibold text-white tracking-wider">
+                  OCR OK
+                </div>
+</div>
+</div>
+<button className="inline-flex items-center justify-center gap-1 w-full py-1.5 rounded-lg border border-[#c3c6cf] text-[#1c242d] hover:bg-[#f1eee5] active:opacity-80 transition-opacity font-sans text-label-md" type="button">
+<span className="material-symbols-outlined text-sm text-[#73777f]">refresh</span>
+              Repetir
+            </button>
+</div>
+{/* Tarjeta Reverso */}
+<div className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-2.5 flex flex-col justify-between">
+<div>
+<div className="flex items-center justify-between mb-2">
+<span className="font-sans text-label-md brand-navy font-semibold">Reverso</span>
+<span className="w-2 h-2 rounded-full bg-brand-green"></span>
+</div>
+{/* Simulación INE Reverso con Placeholder Foto */}
+<div className="relative w-full h-24 rounded-lg overflow-hidden border border-[#c3c6cf]/30 bg-[#f7f3ea] mb-2">
+<img className="w-full h-full object-cover" data-alt="A realistic detailed close-up shot of the reverse side of a Mexican voter ID card, displaying optical barcode lines, fingerprint graphic element, and prominent MRZ code strips. Balanced crisp documentary lighting with corporate navy, crisp paper white, and muted forest green hues, capturing an authentic flat identification document aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn1u2nbcCzpEtegK4U3Vcw8fev7sh9yhCzT96AxL_fVpl2S93_k6YaSLUtJpmmXs_vLeteQTbAeSzXQ2WN3ObbYPWN8XWqgbY6b93o5BvUaoBRYEoK_LQsnqLtczqqoNR6prhXw-Nh847m_N8Mf53g5bZRGECCzXHUdO90hELWHAdaWA78zIKADO6WFfHh5HO5J6r8numTkMU07Akud7yZQysB_361Ih_ZlMgv8WF1TDqWnFpQjvQW3QiO7USVRS3FCnik-6BA0L2Y" />
+<div className="absolute bottom-1 right-1 bg-brand-green/90 px-1.5 py-0.5 rounded text-[9px] font-semibold text-white tracking-wider">
+                  MRZ OK
+                </div>
+</div>
+</div>
+<button className="inline-flex items-center justify-center gap-1 w-full py-1.5 rounded-lg border border-[#c3c6cf] text-[#1c242d] hover:bg-[#f1eee5] active:opacity-80 transition-opacity font-sans text-label-md" type="button">
+<span className="material-symbols-outlined text-sm text-[#73777f]">refresh</span>
+              Repetir
+            </button>
+</div>
+</div>
+</section>
+{/* 4. Formulario Editable de Datos Extraídos */}
+<section className="bg-[#ffffff] rounded-lg border border-[#c3c6cf]/40 p-4 flex flex-col gap-3.5">
+{/* Header Formulario */}
+<div className="flex items-center justify-between border-b border-[#f1eee5] pb-2.5">
+<div className="flex items-center gap-2">
+<h2 className="font-sans text-headline-sm brand-navy font-semibold">Datos personales</h2>
+<span className="bg-[#f1eee5] px-2 py-0.5 rounded-full font-sans text-label-sm text-[#73777f] font-semibold">5 / 6 listos</span>
+</div>
+<span className="font-sans text-label-sm brand-navy font-medium flex items-center gap-0.5">
+<span className="material-symbols-outlined text-sm">edit_note</span>
+            Editable
+          </span>
+</div>
+{/* Campo 1: Nombre Completo */}
+<div className="flex flex-col gap-1">
+<div className="flex items-center justify-between">
+<label className="font-sans text-label-md text-[#1c242d] font-semibold" htmlFor="inp-nombre">Nombre completo (apellidos primero)</label>
+<span className="bg-[#8cf8bd]/40 text-[#006c45] border border-[#8cf8bd] font-sans text-[10px] px-2 py-0.5 rounded-full font-semibold">
+              MRZ
+            </span>
+</div>
+<div className="relative">
+<input className="w-full h-11 px-3 bg-[#f7f3ea] border border-[#c3c6cf]/60 rounded-lg font-sans text-body-md text-[#1c242d] font-medium focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-nombre" type="text" value="GUTIÉRREZ MENDOZA, SOFÍA VALERIA" />
+<span className="absolute right-3 top-3 material-symbols-outlined text-base brand-green" style={{fontVariationSettings: '\'FILL\' 1'}}>check_circle</span>
+</div>
+</div>
+{/* Campo 2: CURP */}
+<div className="flex flex-col gap-1">
+<div className="flex items-center justify-between">
+<label className="font-sans text-label-md text-[#1c242d] font-semibold" htmlFor="inp-curp">CURP</label>
+<span className="bg-[#8cf8bd]/40 text-[#006c45] border border-[#8cf8bd] font-sans text-[10px] px-2 py-0.5 rounded-full font-semibold">
+              MRZ
+            </span>
+</div>
+<div className="relative">
+<input className="w-full h-11 px-3 uppercase tracking-wider bg-[#f7f3ea] border border-[#c3c6cf]/60 rounded-lg font-sans text-body-md text-[#1c242d] font-semibold focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-curp" type="text" value="GUMS940815MDFRND04" />
+<span className="absolute right-3 top-3 material-symbols-outlined text-base brand-green" style={{fontVariationSettings: '\'FILL\' 1'}}>check_circle</span>
+</div>
+</div>
+{/* Dos Columnas: Nacimiento & Clave de Elector */}
+<div className="grid grid-cols-2 gap-2.5">
+{/* Campo 3: Fecha de Nacimiento */}
+<div className="flex flex-col gap-1">
+<div className="flex items-center justify-between">
+<label className="font-sans text-label-md text-[#1c242d] font-semibold truncate" htmlFor="inp-fnac">F. Nacimiento</label>
+<span className="bg-[#8cf8bd]/40 text-[#006c45] border border-[#8cf8bd] font-sans text-[10px] px-1.5 py-0.5 rounded-full font-semibold">
+                MRZ
+              </span>
+</div>
+<input className="w-full h-11 px-3 bg-[#f7f3ea] border border-[#c3c6cf]/60 rounded-lg font-sans text-body-md text-[#1c242d] font-medium focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-fnac" type="text" value="15 / 08 / 1994" />
+<span className="font-sans text-label-sm text-[#73777f]">30 años</span>
+</div>
+{/* Campo 4: Clave de Elector */}
+<div className="flex flex-col gap-1">
+<div className="flex items-center justify-between">
+<label className="font-sans text-label-md text-[#1c242d] font-semibold truncate" htmlFor="inp-clave">Clave Elector</label>
+<span className="bg-[#d3e4ff] text-[#002445] border border-[#a9c9f5] font-sans text-[10px] px-1.5 py-0.5 rounded-full font-semibold">
+                Frente
+              </span>
+</div>
+<input className="w-full h-11 px-2.5 uppercase font-medium bg-[#f7f3ea] border border-[#c3c6cf]/60 rounded-lg font-sans text-body-md text-[#1c242d] focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-clave" type="text" value="GTMDSO94081509M100" />
+<span className="font-sans text-label-sm text-[#73777f]">Sección 0914</span>
+</div>
+</div>
+{/* Campo 5: Domicilio (Con Alerta Ámbar) */}
+<div className="flex flex-col gap-1 pt-1">
+<div className="flex items-center justify-between">
+<label className="font-sans text-label-md text-[#1c242d] font-semibold" htmlFor="inp-domicilio">Domicilio particular</label>
+<span className="bg-amber-100 text-amber-800 border border-amber-300 font-sans text-[10px] px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+<span className="material-symbols-outlined text-[12px]">warning</span>
+              Requerido
+            </span>
+</div>
+{/* Banner Alerta Ámbar Suave */}
+<div className="bg-amber-50 border border-amber-200 rounded-lg p-2.5 flex items-start gap-2">
+<span className="material-symbols-outlined text-amber-600 text-base mt-0.5">warning</span>
+<div className="flex-1">
+<p className="font-sans text-label-md text-amber-900 font-semibold leading-tight">No se pudo leer, complétalo</p>
+<p className="font-sans text-body-sm text-amber-800/80 leading-normal">El texto del reverso no cuenta con nitidez suficiente para extraer calle y colonia.</p>
+</div>
+</div>
+<textarea className="w-full p-3 bg-[#ffffff] border-2 border-amber-300 rounded-lg font-sans text-body-md text-[#1c242d] placeholder:text-[#c3c6cf] focus:outline-none focus:border-brand-navy transition-colors resize-none" id="inp-domicilio" placeholder="Ingresa calle, número exterior, colonia, C.P. y ciudad..." rows="2"></textarea>
+</div>
+{/* Campo 6: Teléfono de Contacto (Manual) */}
+<div className="flex flex-col gap-1">
+<div className="flex items-center justify-between">
+<label className="font-sans text-label-md text-[#1c242d] font-semibold" htmlFor="inp-tel">Teléfono (obligatorio) <span className="text-[#ba1a1a]">*</span></label>
+<span className="bg-[#e6e2d9] text-[#1c242d] border border-[#c3c6cf] font-sans text-[10px] px-2 py-0.5 rounded-full font-semibold">
+              Manual
+            </span>
+</div>
+<div className="flex gap-2">
+{/* Prefijo México */}
+<div className="flex items-center gap-1.5 px-3 bg-[#f7f3ea] border border-[#c3c6cf]/60 rounded-lg shrink-0">
+<span className="text-base">🇲🇽</span>
+<span className="font-sans text-body-md text-[#1c242d] font-semibold">+52</span>
+</div>
+{/* Input Numérico */}
+<input className="flex-1 h-11 px-3 bg-[#f7f3ea] border border-[#c3c6cf]/60 rounded-lg font-sans text-body-md text-[#1c242d] font-medium focus:outline-none focus:border-brand-navy focus:bg-white transition-colors" id="inp-tel" type="tel" value="55 1234 5678" />
+</div>
+<span className="font-sans text-body-sm text-[#73777f]">Se enviará el contrato y accesos a este número por WhatsApp.</span>
+</div>
+</section>
+{/* 5. Botones de Acción */}
+<section className="flex flex-col gap-2.5 pt-2 pb-6">
+{/* Botón Positivo Verde Oficial */}
+<button className="w-full h-12 bg-brand-green hover:bg-[#26885b] text-white font-sans text-label-lg font-semibold rounded-lg flex items-center justify-center gap-2 active:opacity-90 transition-all shadow-none" type="button">
+<span className="material-symbols-outlined text-xl" style={{fontVariationSettings: '\'FILL\' 1'}}>check</span>
+          Guardar inquilino
+        </button>
+{/* Botón Secundario Cancelar */}
+<button className="w-full py-2.5 text-center font-sans text-label-lg text-[#73777f] hover:text-[#1c242d] active:opacity-75 transition-colors" type="button">
+          Cancelar y descartar
+        </button>
+{/* Sello de Privacidad KsaRed */}
+<div className="flex items-center justify-center gap-1.5 pt-1 text-[#73777f]">
+<span className="material-symbols-outlined text-sm">lock</span>
+<span className="font-sans text-[11px]">Validación biométrica encriptada bajo estándares NOM-151</span>
+</div>
+</section>
+</main>
+</div>

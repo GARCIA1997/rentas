@@ -1,0 +1,282 @@
+
+{/* Main Presentation Container (390px mobile viewport representation) */}
+<div className="w-full max-w-[390px] mx-auto bg-[#fdf9f0] relative shadow-xl overflow-hidden rounded-lg flex flex-col border border-[#c3c6cf]/40">
+{/* ========================================== */}
+{/* 1. BARRA SUPERIOR (TopAppBar Shared Component) */}
+{/* ========================================== */}
+<header className="bg-[#173a5f] text-[#ffffff] flex justify-between items-center w-full px-space-md h-14 z-20 sticky top-0 left-0">
+{/* Official Logo: 3-piece isotype with typography */}
+<div className="flex items-center space-x-2">
+<img alt="KsaRed Isotipo" className="w-7 h-7 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD18u-dy4cvFhfIfWNJaWaLjND9D-DHjmjK7uRghRiJBbdDMRIyqReVf3E9Q1JSf9gOtCVCuxOAKgFwUYcQ563ZeKodU_SRR883cbpmJkrC5CtxTAn3AjxSsjFp5OQQ0eFRm6LI9bFnD0UZwgWeC0KJiGSPGQCCbTnTWacD02aWERGnGxfF5I6g47XMov8WjNFZckJd0BkzJc61UfSwOZBpqsb4r0wgz0UAoTm8lLTe7RFttM6qX9925m4QoaMAlV1K0TOxjuBElXOn" />
+<span className="text-headline-md font-sans font-bold text-[#ffffff] tracking-tight">
+          Ksar<span className="text-[#70dba2]">ed</span>
+</span>
+</div>
+{/* Action items: Notifications with indicator and Avatar */}
+<div className="flex items-center space-x-3">
+{/* Notification icon with 4px green badge */}
+<button aria-label="Notificaciones" className="relative p-1 text-[#ffffff] hover:opacity-90 transition-opacity">
+<span className="material-symbols-outlined text-[22px]">notifications</span>
+<span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#8cf8bd] rounded-full border border-[#173a5f]"></span>
+</button>
+{/* Admin user avatar */}
+<div className="w-8 h-8 rounded-full border border-[#c3c6cf]/40 overflow-hidden bg-[#002445] flex items-center justify-center">
+<img className="w-full h-full object-cover" data-alt="Portrait of a modern Latin American female property administrator dressed in professional dark navy blazer, soft studio lighting, crisp corporate profile image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmjLIrhoPo86nBMWJjTBVdY0kAtSJQw-EwZYZuwIZn97Cs3uLed8wFJ7irKCEqiRQuUOtYKkzSIQJ0fnxYX2G_NEQqhjMlC5CNLu3IB_pmDK7Gvm_VFBAWQXv_MdGD_B5axqy2yZH13oK-m_LDKJoN05rGdfykCNJ_q4DH2G1BPmgAJZhD6GpPyOXawidrw0MgHAlMnhvahOKMoxQNnCuyXwegDmJ-KONvFckKaIoVRYZnGbeFx2DnGmZuQnbJlzS_3Xz3KmxhbUYf" />
+</div>
+</div>
+</header>
+{/* ========================================== */}
+{/* BACKGROUND SCREEN (Atenuada con Backdrop) */}
+{/* Representación de vista: Ficha de Inquilino Ana Torres */}
+{/* ========================================== */}
+<div className="relative w-full bg-[#f7f3ea] min-h-[580px] p-space-md flex flex-col gap-3">
+{/* Tenant Summary Card (Base view content) */}
+<div className="bg-[#ffffff] border border-[#c3c6cf]/40 rounded-lg p-3">
+<div className="flex items-center space-x-3">
+<div className="w-12 h-12 rounded-full overflow-hidden bg-[#f1eee5] flex items-center justify-center">
+<img className="w-full h-full object-cover" data-alt="Headshot of a friendly professional tenant named Ana Torres, bright warm lighting, elegant neutral background, modern corporate styling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNazAinca9-lLwMIDFwlou4p-R7gIMUwa34GdhM6FlXOU1jaWhnkfaWpzq2481gwaXbnJJFnehMO7JdEYKf2knL-LaEHWGULfx-HI_6mmXqxCOnVvQh-hcABWE_phR-MpWs5P4gv6um_mO2O7rk_XS20age13-6cghrjWa6JdYIkDvXDrDyy-d77Vc4CEGyVAihiL1OqH9CYgKjiKB5lZ5wDXhrkKS1q7w98Wc3920VRZtsfeUpfVQSFzL-LZlfwyk_JVWKlzz9vk3" />
+</div>
+<div>
+<div className="flex items-center gap-1.5">
+<h2 className="text-headline-sm font-sans text-[#002445]">Ana Torres</h2>
+<span className="bg-[#8cf8bd]/30 text-[#006c45] font-sans text-label-sm px-2 py-0.5 rounded-full font-semibold">Ocupada</span>
+</div>
+<p className="text-body-sm font-sans text-[#73777f]">Torre Vista Norte #402 • Depto. 4B</p>
+</div>
+</div>
+<div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-[#c3c6cf]/20">
+<div>
+<span className="text-label-sm font-sans text-[#73777f]">Renta mensual</span>
+<p className="text-label-lg font-sans text-[#002445]">$18,500 MXN</p>
+</div>
+<div>
+<span className="text-label-sm font-sans text-[#73777f]">Estatus de contrato</span>
+<p className="text-label-sm font-sans font-semibold text-[#006c45]">Activo (Vence Mar 2026)</p>
+</div>
+</div>
+</div>
+{/* Quick Action Buttons on Base View */}
+<div className="grid grid-cols-2 gap-2">
+<button className="bg-[#173a5f] text-[#ffffff] py-2.5 px-3 rounded-lg text-label-md font-sans flex items-center justify-center gap-1.5 shadow-sm">
+<span className="material-symbols-outlined text-[18px]">badge</span>
+<span>Ver contrato</span>
+</button>
+<button className="bg-[#ffffff] border border-[#c3c6cf] text-[#002445] py-2.5 px-3 rounded-lg text-label-md font-sans flex items-center justify-center gap-1.5 shadow-sm">
+<span className="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Historial pagos</span>
+</button>
+</div>
+{/* General Activity List preview */}
+<div className="bg-[#ffffff] border border-[#c3c6cf]/40 rounded-lg p-3">
+<h3 className="text-label-md font-sans text-[#002445] mb-2">Movimientos recientes</h3>
+<div className="space-y-2">
+<div className="flex justify-between items-center text-body-sm font-sans py-1 border-b border-[#f1eee5]">
+<span>Renta Febrero 2025</span>
+<span className="text-[#006c45] font-semibold font-sans">$18,500 Pagado</span>
+</div>
+<div className="flex justify-between items-center text-body-sm font-sans py-1">
+<span>Mantenimiento Elevador</span>
+<span className="text-[#73777f] font-sans">$1,200 Cubierto</span>
+</div>
+</div>
+</div>
+{/* ========================================== */}
+{/* OVERLAY ATENUADO (Backdrop) */}
+{/* ========================================== */}
+<div className="absolute inset-0 bg-[#0f2a4d]/65 z-30 transition-opacity"></div>
+{/* ========================================== */}
+{/* 2. HOJA INFERIOR PRINCIPAL (BOTTOM SHEET) */}
+{/* "Link de registro generado / Invitación lista" */}
+{/* ========================================== */}
+<div className="absolute bottom-0 left-0 right-0 z-40 bg-[#ffffff] rounded-t-2xl shadow-xl flex flex-col border-t border-[#c3c6cf]/30">
+{/* Drag Handle / Asa de arrastre */}
+<div className="w-full flex justify-center pt-2.5 pb-1">
+<div className="w-10 h-1 bg-[#c3c6cf] rounded-full"></div>
+</div>
+<div className="px-space-md pb-5 pt-1">
+{/* Top Row: Icon + Close button */}
+<div className="flex items-start justify-between">
+<div className="w-11 h-11 rounded-full bg-[#8cf8bd]/25 flex items-center justify-center">
+<span className="material-symbols-outlined text-[#006c45] text-2xl font-bold">link</span>
+</div>
+<button aria-label="Cerrar modal" className="p-1 rounded-full text-[#73777f] hover:text-[#1c1c16] hover:bg-[#f1eee5] transition-colors">
+<span className="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+{/* Header info */}
+<div className="mt-2.5">
+<h2 className="text-headline-sm font-sans text-[#173a5f] font-bold">Invitación lista</h2>
+<p className="text-body-md font-sans text-[#43474e] mt-0.5 leading-snug">
+              Comparte este enlace con <span className="font-semibold text-[#1c1c16]">Ana Torres</span>; es de un solo uso y vence en 7 días.
+            </p>
+</div>
+{/* Validity Badge */}
+<div className="mt-3 flex items-center">
+<div className="inline-flex items-center gap-1.5 bg-[#f1eee5] text-[#173a5f] px-2.5 py-1 rounded-full text-label-sm font-sans border border-[#c3c6cf]/40">
+<span className="material-symbols-outlined text-[15px] text-[#006c45]">schedule</span>
+<span>Válido por 7 días • Un solo uso</span>
+</div>
+</div>
+{/* Generated Link Container */}
+<div className="mt-3 p-2.5 bg-[#f7f3ea] border border-[#DDD9CF] rounded-lg flex items-center justify-between gap-2">
+<div className="flex items-center gap-2 overflow-hidden">
+<span className="material-symbols-outlined text-[#73777f] text-[18px] flex-shrink-0">find_replace</span>
+<p className="text-label-md font-sans text-[#002445] truncate select-all">
+                https://app.ksared.com/invitacion/ana-torres-9842f...
+              </p>
+</div>
+<button className="flex-shrink-0 flex items-center gap-1 bg-[#ffffff] border border-[#c3c6cf] hover:border-[#173a5f] text-[#173a5f] px-2.5 py-1 rounded-lg text-label-sm font-sans font-semibold active:scale-95 transition-transform">
+<span className="material-symbols-outlined text-[15px]">content_copy</span>
+<span>Copiar</span>
+</button>
+</div>
+{/* Security notice note */}
+<div className="mt-2.5 flex items-start gap-2 bg-[#f4f7fa] p-2.5 rounded-lg border border-[#173a5f]/10">
+<span className="material-symbols-outlined text-[#173a5f] text-[17px] mt-0.5 flex-shrink-0">verified_user</span>
+<p className="text-body-sm font-sans text-[#43474e] leading-tight">
+              El inquilino podrá activar su cuenta, verificar su INE y consultar su contrato digital con firma biométrica.
+            </p>
+</div>
+{/* Action Buttons (Strict Rules: Corners 8px) */}
+<div className="mt-4 flex flex-col gap-2">
+{/* Positive / Sharing Action (Verde #2D9E6B) */}
+<button className="w-full bg-[#006c45] text-[#ffffff] py-3 px-space-md rounded-lg text-label-lg font-sans font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+<span className="material-symbols-outlined text-[20px]">share</span>
+<span>Compartir por WhatsApp</span>
+</button>
+{/* Secondary Action (Contorno Gris) */}
+<button className="w-full bg-transparent border border-[#73777f] text-[#173a5f] py-2.5 px-space-md rounded-lg text-label-md font-sans font-semibold hover:bg-[#f1eee5] transition-colors active:scale-95">
+              Cerrar
+            </button>
+</div>
+</div>
+</div>
+</div>
+{/* ========================================== */}
+{/* TAB BAR INFERIOR INSTITUCIONAL (BottomNavBar Shared Component) */}
+{/* 6 destinos Administrador: Inicio, Propiedades, Inquilinos (Activo), Contratos, Pagos, Más */}
+{/* ========================================== */}
+<nav className="w-full h-16 bg-[#ffffff] border-t border-[#c3c6cf]/30 flex justify-around items-center px-space-xs z-50">
+{/* Inicio */}
+<a className="flex flex-col items-center justify-center text-[#73777f] font-sans hover:text-[#006c45] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">home</span>
+<span className="text-label-sm font-sans mt-0.5">Inicio</span>
+</a>
+{/* Propiedades */}
+<a className="flex flex-col items-center justify-center text-[#73777f] font-sans hover:text-[#006c45] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">apartment</span>
+<span className="text-label-sm font-sans mt-0.5">Propiedades</span>
+</a>
+{/* Inquilinos (ACTIVO: Verde #2D9E6B semibold + punto indicador) */}
+<a className="flex flex-col items-center justify-center text-[#006c45] font-sans font-semibold relative active:scale-95 after:content-[''] after:w-1 after:h-1 after:bg-[#006c45] after:rounded-full after:mt-0.5" href="#">
+<span className="material-symbols-outlined text-[20px] fill">group</span>
+<span className="text-label-sm font-sans mt-0.5">Inquilinos</span>
+</a>
+{/* Contratos */}
+<a className="flex flex-col items-center justify-center text-[#73777f] font-sans hover:text-[#006c45] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">description</span>
+<span className="text-label-sm font-sans mt-0.5">Contratos</span>
+</a>
+{/* Pagos */}
+<a className="flex flex-col items-center justify-center text-[#73777f] font-sans hover:text-[#006c45] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">payments</span>
+<span className="text-label-sm font-sans mt-0.5">Pagos</span>
+</a>
+{/* Más */}
+<a className="flex flex-col items-center justify-center text-[#73777f] font-sans hover:text-[#006c45] transition-colors active:scale-95" href="#">
+<span className="material-symbols-outlined text-[20px]">more_horiz</span>
+<span className="text-label-sm font-sans mt-0.5">Más</span>
+</a>
+</nav>
+</div>
+{/* ======================================================== */}
+{/* 3. VARIANTE DE REFERENCIA — HOJA INFERIOR ADICIONAL */}
+{/* "Agregar representante legal" (Formulario estructurado) */}
+{/* ======================================================== */}
+<div className="w-full max-w-[390px] mx-auto mt-8 flex flex-col">
+{/* Divisor y rótulo de variante */}
+<div className="flex items-center gap-2 mb-3 px-1">
+<span className="h-0.5 w-6 bg-[#006c45]"></span>
+<h4 className="text-label-sm font-sans font-bold text-[#002445] tracking-wider uppercase">
+        Variante de Referencia — Hoja Inferior
+      </h4>
+<span className="h-0.5 flex-1 bg-[#c3c6cf]/30"></span>
+</div>
+{/* Sheet Card container */}
+<div className="bg-[#ffffff] rounded-2xl shadow-md border border-[#c3c6cf]/40 overflow-hidden flex flex-col">
+{/* Drag handle */}
+<div className="w-full flex justify-center pt-2.5 pb-1">
+<div className="w-10 h-1 bg-[#c3c6cf] rounded-full"></div>
+</div>
+<div className="px-space-md pb-5 pt-1">
+{/* Header */}
+<div className="flex items-start justify-between">
+<div>
+<h3 className="text-headline-sm font-sans font-bold text-[#173a5f]">Agregar representante legal</h3>
+<p className="text-body-sm font-sans text-[#73777f] mt-0.5">
+              Ingresa los datos para asignar un nuevo firmante autorizado a la propiedad o contrato.
+            </p>
+</div>
+<button aria-label="Cerrar modal de representante" className="p-1 rounded-full text-[#73777f] hover:text-[#1c1c16] hover:bg-[#f1eee5] transition-colors">
+<span className="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+{/* Form fields (8px corner rules, #DDD9CF borders) */}
+<form className="mt-4 space-y-3.5">
+{/* Field 1: Nombre o Razón Social */}
+<div>
+<label className="block text-label-sm font-sans font-semibold text-[#002445] mb-1">
+              Nombre completo o razón social <span className="text-[#ba1a1a]">*</span>
+</label>
+<input className="w-full px-3 py-2 text-body-md font-sans bg-[#ffffff] border border-[#DDD9CF] rounded-lg focus:outline-none focus:border-[#173a5f] text-[#1c1c16] placeholder:text-[#73777f]/60" placeholder="Ej. Lic. Carlos Mendoza López" type="text" value="Lic. Carlos Mendoza López" />
+</div>
+{/* Field 2: RFC con homoclave */}
+<div>
+<div className="flex justify-between items-center mb-1">
+<label className="block text-label-sm font-sans font-semibold text-[#002445]">
+                RFC con homoclave <span className="text-[#ba1a1a]">*</span>
+</label>
+<span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.2 rounded bg-[#f1eee5] text-[#73777f]">Obligatorio</span>
+</div>
+<input className="w-full px-3 py-2 text-body-md font-sans bg-[#ffffff] border border-[#DDD9CF] rounded-lg focus:outline-none focus:border-[#173a5f] uppercase tracking-wider text-[#1c1c16] placeholder:text-[#73777f]/60" placeholder="MELC-790920-8B3" type="text" value="MELC-790920-8B3" />
+</div>
+{/* Field 3: Teléfono de contacto */}
+<div>
+<label className="block text-label-sm font-sans font-semibold text-[#002445] mb-1">
+              Teléfono de contacto <span className="text-[#ba1a1a]">*</span>
+</label>
+<div className="flex rounded-lg border border-[#DDD9CF] overflow-hidden focus-within:border-[#173a5f]">
+<span className="inline-flex items-center px-3 bg-[#f7f3ea] text-label-sm font-sans text-[#73777f] border-r border-[#DDD9CF]">
+                🇲🇽 +52
+              </span>
+<input className="w-full px-3 py-2 text-body-md font-sans bg-[#ffffff] border-0 focus:ring-0 text-[#1c1c16] placeholder:text-[#73777f]/60" placeholder="55 9876 5432" type="tel" value="55 9876 5432" />
+</div>
+</div>
+{/* Field 4: Domicilio fiscal / Notaría */}
+<div>
+<label className="block text-label-sm font-sans font-semibold text-[#002445] mb-1">
+              Domicilio fiscal / Notaría <span className="text-[#ba1a1a]">*</span>
+</label>
+<input className="w-full px-3 py-2 text-body-md font-sans bg-[#ffffff] border border-[#DDD9CF] rounded-lg focus:outline-none focus:border-[#173a5f] text-[#1c1c16] placeholder:text-[#73777f]/60" placeholder="Av. Insurgentes Sur 1605, Notaría 03" type="text" value="Av. Insurgentes Sur 1605, Notaría 03 Colima" />
+</div>
+{/* Checkbox / Toggle default */}
+<div className="flex items-start gap-2.5 pt-1">
+<input checked="" className="mt-1 h-4 w-4 rounded border-[#DDD9CF] text-[#006c45] focus:ring-[#006c45]/20" id="rep-default" type="checkbox" />
+<label className="text-body-sm font-sans text-[#1c1c16] leading-tight cursor-pointer" htmlFor="rep-default">
+              Usar como representante predeterminado para nuevos contratos de arrendamiento.
+            </label>
+</div>
+{/* Action buttons for reference form */}
+<div className="pt-3 flex gap-2">
+<button className="w-1/3 bg-transparent border border-[#73777f] text-[#173a5f] py-2.5 px-3 rounded-lg text-label-md font-sans font-semibold hover:bg-[#f1eee5] transition-colors active:scale-95" type="button">
+              Cancelar
+            </button>
+<button className="w-2/3 bg-[#006c45] text-[#ffffff] py-2.5 px-3 rounded-lg text-label-md font-sans font-semibold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-transform" type="submit">
+<span className="material-symbols-outlined text-[18px]">check</span>
+<span>Guardar representante</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>

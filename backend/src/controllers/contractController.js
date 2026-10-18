@@ -109,7 +109,8 @@ export const downloadPdf = async (req, res, next) => {
 
 export const markSigned = async (req, res, next) => {
   try {
-    const contract = await contractService.markAsSigned(req.params.id, req.body.signedDigitallyPhone);
+    // includeDeposit: casilla "Generar pago de depósito" del modal de firma (por defecto sí).
+    const contract = await contractService.markAsSigned(req.params.id, req.body.signedDigitallyPhone, req.body.includeDeposit !== false);
     res.json(contract);
   } catch (error) {
     next(error);

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>KsaRed — Representantes Legales</title>
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#173A5F",
+            "primary-container": "#173A5F",
+            "on-primary": "#ffffff",
+            "secondary": "#2D9E6B",
+            "secondary-container": "#E8F7F0",
+            "on-secondary": "#ffffff",
+            "surface": "#F5F1E8",
+            "surface-container": "#EAE5DA",
+            "surface-container-low": "#FDF9F0",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#A7B0BB",
+            "outline-variant": "#DDD9CF",
+            "error": "#C0392B",
+            "error-container": "#FDEDEC",
+            "on-surface": "#173A5F",
+            "on-surface-variant": "#586270"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem", // 8px estándar
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Montserrat", "sans-serif"],
+            headline: ["Montserrat", "sans-serif"],
+            body: ["Montserrat", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 22px;
+      line-height: 1;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body class="bg-[#F5F1E8] text-[#173A5F] font-sans antialiased min-h-screen flex justify-center selection:bg-[#2D9E6B]/20 selection:text-[#173A5F]">
+  <!-- Mobile Container: 390px Optimized Native View -->
+  <div class="w-full max-w-[390px] min-h-screen bg-[#F5F1E8] flex flex-col relative pb-28 shadow-2xl">
+
+    <!-- 1. ENCABEZADO INSTITUCIONAL AZUL PLANO CON BORDE INFERIOR RECTO -->
+    <header class="bg-[#173A5F] text-white w-full px-4 h-16 fixed top-0 left-0 max-w-[390px] mx-auto z-50 flex items-center justify-between border-b border-[#173A5F]">
+      <div class="flex items-center gap-3">
+        <!-- Flecha atrás -->
+        <button type="button" aria-label="Volver a Más" class="w-9 h-9 rounded-lg flex items-center justify-center text-white hover:bg-white/10 active:scale-95 transition-all">
+          <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+        </button>
+        <!-- Título de pantalla -->
+        <h1 class="text-base font-bold text-white tracking-tight">Representantes</h1>
+      </div>
+
+      <!-- Icono contextual o información -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/10 text-white/90 border border-white/20">
+          2 activos
+        </span>
+      </div>
+    </header>
+
+    <!-- 2. CONTENIDO PRINCIPAL -->
+    <main class="flex-1 px-4 pt-20 pb-4 flex flex-col gap-4">
+
+      <!-- Descripción explicativa requerida -->
+      <div class="pt-1">
+        <p class="text-xs text-[#586270] font-normal leading-relaxed">
+          Quiénes firman los contratos como arrendador
+        </p>
+      </div>
+
+      <!-- BANNER INFORMATIVO NOTA LEGAL -->
+      <div class="bg-white border border-[#DDD9CF] rounded-lg p-3 flex items-start gap-3 shadow-sm">
+        <div class="w-7 h-7 rounded-lg bg-[#173A5F]/10 flex items-center justify-center text-[#173A5F] shrink-0 mt-0.5">
+          <span class="material-symbols-outlined text-[18px]">gavel</span>
+        </div>
+        <p class="text-[11px] leading-tight text-[#586270]">
+          El representante legal designado figurará en la carátula, cláusulas de personalidad jurídica y firma digital de los contratos generados.
+        </p>
+      </div>
+
+      <!-- LISTA DE REPRESENTANTES (Tarjetas según reglas globales: esquinas 8px, plano, limpio) -->
+      <div class="flex flex-col gap-3">
+
+        <!-- TARJETA 1: Mariana Silva (PREDETERMINADO) -->
+        <div class="bg-white border border-[#DDD9CF] rounded-lg p-4 shadow-sm hover:border-[#173A5F]/30 transition-colors">
+          <!-- Cabecera de la tarjeta: Nombre + Badge Verde Predeterminado -->
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 rounded-lg bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                MS
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="text-sm font-bold text-[#173A5F] leading-tight">Mariana Silva Romero</h2>
+                </div>
+                <span class="text-[11px] text-[#586270] font-medium">KsaRed Inmobiliaria S.A. de C.V.</span>
+              </div>
+            </div>
+
+            <!-- Badge verde Predeterminado (Regla Global: verde pagado/activo) -->
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B] border border-[#2D9E6B]/30 shrink-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+              Predeterminado
+            </span>
+          </div>
+
+          <!-- Datos del Representante: RFC, Teléfono, Correo -->
+          <div class="mt-3 pt-3 border-t border-[#DDD9CF]/60 grid grid-cols-1 gap-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-[#A7B0BB] font-medium">RFC:</span>
+              <span class="font-semibold text-[#173A5F] tracking-wide select-all font-mono">SIRM-850412-HA8</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[#A7B0BB] font-medium">Teléfono:</span>
+              <span class="font-semibold text-[#173A5F] select-all">+52 55 1234 5678</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[#A7B0BB] font-medium">Poder Notarial:</span>
+              <span class="font-medium text-[#586270]">Esc. Pub. #42,109 (Notaría 14)</span>
+            </div>
+          </div>
+
+          <!-- Acciones de la Tarjeta: Editar (Lápiz) y Eliminar (Papelera Roja) -->
+          <div class="mt-3.5 pt-2.5 border-t border-[#DDD9CF]/40 flex items-center justify-between">
+            <span class="text-[10px] text-[#2D9E6B] font-semibold flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+              Firmante activo en 14 contratos
+            </span>
+
+            <div class="flex items-center gap-2">
+              <!-- Botón Editar (Lápiz) -->
+              <button type="button" aria-label="Editar Mariana Silva" class="h-8 px-2.5 bg-white border border-[#DDD9CF] text-[#173A5F] hover:bg-[#F5F1E8] active:scale-95 transition-all rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+                <span>Editar</span>
+              </button>
+
+              <!-- Botón Eliminar (Papelera Roja - Acción destructiva con borde o texto rojo según reglas) -->
+              <button type="button" aria-label="Eliminar Mariana Silva" title="No se puede eliminar al representante predeterminado con contratos activos" class="h-8 w-8 bg-white border border-[#DDD9CF] text-[#A7B0BB] cursor-not-allowed opacity-50 rounded-lg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TARJETA 2: Carlos Mendoza López -->
+        <div class="bg-white border border-[#DDD9CF] rounded-lg p-4 shadow-sm hover:border-[#173A5F]/30 transition-colors">
+          <!-- Cabecera de la tarjeta: Nombre -->
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 rounded-lg bg-[#F5F1E8] border border-[#DDD9CF] text-[#173A5F] flex items-center justify-center font-bold text-sm shrink-0">
+                CM
+              </div>
+              <div class="flex flex-col">
+                <h2 class="text-sm font-bold text-[#173A5F] leading-tight">Carlos Mendoza López</h2>
+                <span class="text-[11px] text-[#586270] font-medium">Apoderado Especial · Persona Física</span>
+              </div>
+            </div>
+
+            <!-- Botón para asignar como predeterminado -->
+            <button type="button" class="text-[11px] text-[#173A5F] hover:text-[#2D9E6B] font-semibold flex items-center gap-0.5 underline-offset-2 hover:underline">
+              Hacer predeterminado
+            </button>
+          </div>
+
+          <!-- Datos del Representante: RFC, Teléfono -->
+          <div class="mt-3 pt-3 border-t border-[#DDD9CF]/60 grid grid-cols-1 gap-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-[#A7B0BB] font-medium">RFC:</span>
+              <span class="font-semibold text-[#173A5F] tracking-wide select-all font-mono">MELC-790920-8B3</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[#A7B0BB] font-medium">Teléfono:</span>
+              <span class="font-semibold text-[#173A5F] select-all">+52 55 9876 5432</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[#A7B0BB] font-medium">Poder Notarial:</span>
+              <span class="font-medium text-[#586270]">Esc. Pub. #18,340 (Notaría 03)</span>
+            </div>
+          </div>
+
+          <!-- Acciones de la Tarjeta: Editar (Lápiz) y Eliminar (Papelera Roja) -->
+          <div class="mt-3.5 pt-2.5 border-t border-[#DDD9CF]/40 flex items-center justify-between">
+            <span class="text-[10px] text-[#586270] font-medium flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px] text-[#A7B0BB]">history_edu</span>
+              Firmante activo en 2 contratos
+            </span>
+
+            <div class="flex items-center gap-2">
+              <!-- Botón Editar (Lápiz) -->
+              <button type="button" aria-label="Editar Carlos Mendoza" class="h-8 px-2.5 bg-white border border-[#DDD9CF] text-[#173A5F] hover:bg-[#F5F1E8] active:scale-95 transition-all rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+                <span>Editar</span>
+              </button>
+
+              <!-- Botón Eliminar (Papelera Roja - Acción destructiva) -->
+              <button type="button" aria-label="Eliminar Carlos Mendoza" class="h-8 w-8 bg-white border border-[#C0392B] text-[#C0392B] hover:bg-[#FDEDEC] active:scale-95 transition-all rounded-lg flex items-center justify-center shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. BOTÓN VERDE ANCHO COMPLETO "+ AGREGAR REPRESENTANTE" (Regla Global: Guardar/Registrar/Nuevo siempre verde sólido #2D9E6B) -->
+      <div class="mt-2">
+        <button type="button" class="w-full h-12 bg-[#2D9E6B] text-white hover:bg-[#25855A] active:scale-[0.98] transition-all rounded-lg font-semibold text-sm flex items-center justify-center gap-2 shadow-sm">
+          <span class="material-symbols-outlined text-[20px]">add</span>
+          <span>+ Agregar representante</span>
+        </button>
+      </div>
+
+      <!-- Nota de pie informativa -->
+      <p class="text-[11px] text-[#A7B0BB] text-center pt-2">
+        Todos los representantes deben contar con RFC con homoclave y poder notarial vigente según el Código Civil Federal.
+      </p>
+
+    </main>
+
+    <!-- 4. TAB BAR INFERIOR - ADMINISTRADOR (Idéntica en todas: 6 ítems exactos, orden estricto, "Más" ACTIVO) -->
+    <!-- Fondo blanco, borde superior gris #A7B0BB/30, inactivo #A7B0BB, activo #2D9E6B semibold con punto verde de 4px debajo, sin píldora -->
+    <nav class="fixed bottom-0 left-0 max-w-[390px] mx-auto w-full z-50 h-16 bg-white border-t border-[#A7B0BB]/30 flex justify-between items-center px-1">
+      <!-- 1. Inicio -->
+      <a href="#" class="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span class="material-symbols-outlined text-[22px]">home</span>
+        <span class="text-[10px] font-normal mt-0.5">Inicio</span>
+      </a>
+
+      <!-- 2. Propiedades -->
+      <a href="#" class="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span class="material-symbols-outlined text-[22px]">apartment</span>
+        <span class="text-[10px] font-normal mt-0.5">Propiedades</span>
+      </a>
+
+      <!-- 3. Inquilinos -->
+      <a href="#" class="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span class="material-symbols-outlined text-[22px]">group</span>
+        <span class="text-[10px] font-normal mt-0.5">Inquilinos</span>
+      </a>
+
+      <!-- 4. Contratos -->
+      <a href="#" class="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span class="material-symbols-outlined text-[22px]">description</span>
+        <span class="text-[10px] font-normal mt-0.5">Contratos</span>
+      </a>
+
+      <!-- 5. Pagos -->
+      <a href="#" class="flex flex-col items-center justify-center flex-1 h-full text-[#A7B0BB] hover:text-[#173A5F] transition-colors">
+        <span class="material-symbols-outlined text-[22px]">payments</span>
+        <span class="text-[10px] font-normal mt-0.5">Pagos</span>
+      </a>
+
+      <!-- 6. Más -> ACTIVO (Verde corporativo #2D9E6B semibold + punto verde de 4px debajo, sin píldora) -->
+      <a href="#" class="flex flex-col items-center justify-center flex-1 h-full text-[#2D9E6B] font-semibold transition-colors">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">more_horiz</span>
+        <span class="text-[10px] font-semibold mt-0.5">Más</span>
+        <!-- Punto indicador verde de 4px debajo -->
+        <span class="w-1 h-1 bg-[#2D9E6B] rounded-full mt-0.5"></span>
+      </a>
+    </nav>
+
+  </div>
+</body>
+</html>

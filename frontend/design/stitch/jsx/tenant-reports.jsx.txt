@@ -1,0 +1,201 @@
+
+{/* Mobile Container: 390px fixed preview width simulation for pixel-perfect fidelity */}
+<div className="w-full max-w-[390px] min-h-screen bg-[#F5F1E8] flex flex-col relative pb-24 shadow-sm border-x border-[#DDD9CF]/40">
+{/* TOP INSTITUTIONAL APP BAR */}
+<header className="bg-[#173A5F] text-[#ffffff] w-full flex-none sticky top-0 z-40 border-none shadow-none">
+<div className="h-14 px-4 flex items-center justify-between">
+{/* Official Isotype + Typography Ksared Logo */}
+<div className="flex items-center space-x-2.5">
+{/* Geometric 3-piece Ksared Isotype */}
+<svg className="w-7 h-7 flex-shrink-0" fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+{/* Vertical main chevron left in ivory-grey/navy */}
+<polygon fill="#FFFFFF" opacity="0.95" points="12,12 36,44 36,68 12,100"></polygon>
+{/* Diagonal top right in ivory/grey */}
+<polygon fill="#DDD9CF" points="38,40 68,12 88,12 48,54"></polygon>
+{/* Diagonal bottom right accent green #2D9E6B */}
+<polygon fill="#2D9E6B" points="46,58 72,90 92,90 56,46"></polygon>
+</svg>
+<div className="text-[1.3rem] font-bold tracking-tight select-none">
+<span className="text-white">Ksar</span><span className="text-[#2D9E6B]">ed</span>
+</div>
+</div>
+{/* Right action cluster: Notification with 4-6px green dot & Avatar */}
+<div className="flex items-center space-x-3.5">
+{/* Notification Bell */}
+<button aria-label="Notificaciones" className="relative p-1 text-white hover:opacity-80 transition-opacity" type="button">
+<span className="material-symbols-outlined text-[24px]">notifications</span>
+<span className="absolute top-1 right-1 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+</button>
+{/* Inquilino Avatar: Ana Torres */}
+<div className="w-8 h-8 rounded-full overflow-hidden border border-white/40 flex-shrink-0">
+<img alt="Ana Torres" className="w-full h-full object-cover" data-alt="Professional modern warm portrait of Ana Torres smiling, a young female tenant with natural lighting in a bright, minimalist apartment environment with subtle beige and deep navy corporate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjP6D0e2gACrOkVUt2XjseSXB9sk-QOwcZV9I1BZ12_-AgQuCMbq-EdkRdTo1k3cxJ96ilNMhrW-AgEblFXY2Lb3JkUvqYeafj7Y8KziK4fuMCDj_7JlKus6ezTEOdS_SMVNqo_HdS5HDYYZWcyDC2bky-ViJQ5gcPGWVN8uvaJnhJGlxrb1z6tlU7muZMn5HeHXZsnyeDoS30WyKcgVVbadaMQ6efHPshqzg9mXOGwdMzi2LODRMuV3nLQrN9m_Kj2eGrOI_IwywT" />
+</div>
+</div>
+</div>
+{/* Tenant Subheader & Unit Indicator */}
+<div className="px-4 pb-3 pt-1 border-t border-white/10 flex justify-between items-end">
+<div>
+<span className="block text-[0.6875rem] font-semibold uppercase tracking-wider text-[#85a4cf]">PORTAL INQUILINO</span>
+<h1 className="text-white text-[1.125rem] font-bold leading-tight mt-0.5">Mi Perfil</h1>
+</div>
+<div className="text-right">
+<span className="inline-flex items-center text-[0.75rem] text-[#F5F1E8] font-medium bg-white/10 px-2.5 py-0.5 rounded">
+<span className="material-symbols-outlined text-[14px] mr-1 text-[#2D9E6B]">apartment</span>
+            Torre Vista Norte #402
+          </span>
+</div>
+</div>
+</header>
+{/* PAGE TABS */}
+<nav className="bg-[#ffffff] border-b border-[#c3c6cf]/40 w-full px-4 flex space-x-6 sticky top-24 z-30">
+{/* Inactive Tab: Perfil */}
+<button className="py-3 text-[0.875rem] font-medium text-[#A7B0BB] hover:text-[#173A5F] transition-colors relative" type="button">
+        Perfil
+      </button>
+{/* Active Tab: Reportes (1) */}
+<button className="py-3 text-[0.875rem] font-bold text-[#173A5F] relative flex items-center space-x-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-[#2D9E6B]" type="button">
+<span>Reportes</span>
+<span className="text-[0.6875rem] font-semibold bg-[#F5F1E8] text-[#173A5F] px-1.5 py-0.5 rounded-full border border-[#c3c6cf]/30">1</span>
+</button>
+</nav>
+{/* MAIN SCROLLABLE CONTENT CANVAS */}
+<main className="flex-1 px-4 pt-4 pb-6 space-y-4">
+{/* Action Button: + Reportar incidencia */}
+<button className="w-full bg-[#2D9E6B] text-white h-12 rounded-lg font-semibold text-[0.875rem] flex items-center justify-center space-x-2 active:scale-[0.99] hover:bg-[#26875b] transition-all shadow-none" type="button">
+<span className="material-symbols-outlined text-[20px]">add</span>
+<span>Reportar incidencia</span>
+</button>
+{/* Context Metric Banner: Status Counts */}
+<section className="bg-[#ffffff] rounded-lg p-3.5 border border-[#A7B0BB]/30 flex items-center justify-between">
+<div>
+<span className="text-[0.6875rem] font-semibold text-[#73777F] uppercase tracking-wide">Mantenimiento</span>
+<p className="text-[0.875rem] font-bold text-[#173A5F] mt-0.5">Seguimiento de Incidencias</p>
+</div>
+<div className="flex items-center space-x-2">
+<div className="text-center px-2.5 py-1 bg-[#F5F1E8] rounded-lg">
+<span className="block text-[0.875rem] font-bold text-[#173A5F]">1</span>
+<span className="block text-[0.625rem] text-[#73777F] font-medium">En curso</span>
+</div>
+<div className="text-center px-2.5 py-1 bg-[#F5F1E8] rounded-lg">
+<span className="block text-[0.875rem] font-bold text-[#73777F]">2</span>
+<span className="block text-[0.625rem] text-[#73777F] font-medium">Cerrados</span>
+</div>
+</div>
+</section>
+{/* INCIDENT CARDS LIST */}
+<div className="space-y-3">
+{/* Tarjeta 1: En progreso (#REP-1048) */}
+<article className="bg-[#ffffff] rounded-lg border border-[#A7B0BB]/35 p-3.5 flex flex-col justify-between hover:border-[#173A5F]/40 transition-colors cursor-pointer group">
+<div className="flex items-start justify-between mb-1.5">
+<div className="flex items-center space-x-2">
+<span className="text-[0.6875rem] font-semibold text-[#173A5F] bg-[#E8EFF6] px-2 py-0.5 rounded">#REP-1048</span>
+{/* Pill Badge: En progreso */}
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.6875rem] font-semibold bg-[#E8EFF6] text-[#173A5F]">
+<span className="w-1.5 h-1.5 rounded-full bg-[#173A5F] mr-1.5"></span>
+                En progreso
+              </span>
+</div>
+<span className="material-symbols-outlined text-[#A7B0BB] group-hover:text-[#173A5F] transition-colors text-[20px]">chevron_right</span>
+</div>
+<h2 className="text-[0.875rem] font-bold text-[#173A5F] leading-snug">
+            Fuga en monomando lavabo principal
+          </h2>
+<p className="text-[0.75rem] text-[#43474E] mt-1 line-clamp-2 leading-relaxed">
+            Desde anoche noté que la llave del monomando del baño principal tiene un goteo constante y la presión bajó sensiblemente...
+          </p>
+<div className="mt-3 pt-2.5 border-t border-[#DDD9CF]/50 flex items-center justify-between text-[0.6875rem] text-[#73777F]">
+<div className="flex items-center space-x-1">
+<span className="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>24 Oct 2024 · 09:15 hrs</span>
+</div>
+<span className="text-[#2D9E6B] font-semibold">Técnico asignado</span>
+</div>
+</article>
+{/* Tarjeta 2: Reportado (#REP-1052) */}
+<article className="bg-[#ffffff] rounded-lg border border-[#A7B0BB]/35 p-3.5 flex flex-col justify-between hover:border-[#D9822B]/50 transition-colors cursor-pointer group">
+<div className="flex items-start justify-between mb-1.5">
+<div className="flex items-center space-x-2">
+<span className="text-[0.6875rem] font-semibold text-[#73777F] bg-[#F5F1E8] px-2 py-0.5 rounded">#REP-1052</span>
+{/* Pill Badge: Reportado (Ámbar) */}
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.6875rem] font-semibold bg-[#FEF3C7] text-[#B45309]">
+<span className="w-1.5 h-1.5 rounded-full bg-[#B45309] mr-1.5"></span>
+                Reportado
+              </span>
+</div>
+<span className="material-symbols-outlined text-[#A7B0BB] group-hover:text-[#173A5F] transition-colors text-[20px]">chevron_right</span>
+</div>
+<h2 className="text-[0.875rem] font-bold text-[#173A5F] leading-snug">
+            Revisión de chapa electrónica
+          </h2>
+<p className="text-[0.75rem] text-[#43474E] mt-1 line-clamp-2 leading-relaxed">
+            La cerradura digital emite un pitido de batería baja al ingresar con el código y se desactiva ocasionalmente el cerrojo...
+          </p>
+<div className="mt-3 pt-2.5 border-t border-[#DDD9CF]/50 flex items-center justify-between text-[0.6875rem] text-[#73777F]">
+<div className="flex items-center space-x-1">
+<span className="material-symbols-outlined text-[14px]">calendar_today</span>
+<span>28 Oct 2024 · 14:30 hrs</span>
+</div>
+<span className="text-[#B45309] font-medium">Por revisar</span>
+</div>
+</article>
+{/* Tarjeta 3: Cerrado (#REP-0994) */}
+<article className="bg-[#ffffff] rounded-lg border border-[#A7B0BB]/35 p-3.5 flex flex-col justify-between opacity-85 hover:opacity-100 transition-opacity cursor-pointer group">
+<div className="flex items-start justify-between mb-1.5">
+<div className="flex items-center space-x-2">
+<span className="text-[0.6875rem] font-semibold text-[#73777F] bg-[#F5F1E8] px-2 py-0.5 rounded">#REP-0994</span>
+{/* Pill Badge: Cerrado (Gris) */}
+<span className="inline-flex items-center px-2 py-0.5 rounded-full text-[0.6875rem] font-semibold bg-[#F1EEE5] text-[#73777F]">
+<span className="w-1.5 h-1.5 rounded-full bg-[#73777F] mr-1.5"></span>
+                Cerrado
+              </span>
+</div>
+<span className="material-symbols-outlined text-[#A7B0BB] group-hover:text-[#173A5F] transition-colors text-[20px]">chevron_right</span>
+</div>
+<h2 className="text-[0.875rem] font-bold text-[#43474E] leading-snug">
+            Cambio de filtro purificador
+          </h2>
+<p className="text-[0.75rem] text-[#73777F] mt-1 line-clamp-2 leading-relaxed">
+            Mantenimiento preventivo semestral programado para el sistema de agua filtrada de cocina realizado satisfactoriamente.
+          </p>
+<div className="mt-3 pt-2.5 border-t border-[#DDD9CF]/50 flex items-center justify-between text-[0.6875rem] text-[#73777F]">
+<div className="flex items-center space-x-1">
+<span className="material-symbols-outlined text-[14px]">check_circle</span>
+<span>15 Sep 2024</span>
+</div>
+<span className="text-[#73777F]">Atendido por técnico</span>
+</div>
+</article>
+</div>
+{/* Institutional Support Helper Card */}
+<div className="bg-[#F1EEE5] rounded-lg p-3 flex items-center justify-between border border-[#DDD9CF]">
+<div className="flex items-center space-x-2.5">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">support_agent</span>
+<div>
+<p className="text-[0.75rem] font-bold text-[#173A5F]">¿Emergencia en tu inmueble?</p>
+<p className="text-[0.6875rem] text-[#43474E]">Comunícate a la administración 24/7</p>
+</div>
+</div>
+<button className="px-2.5 py-1 text-[0.6875rem] font-semibold text-[#173A5F] bg-white rounded border border-[#A7B0BB]/50 hover:bg-white/80 transition-colors" type="button">
+          Llamar
+        </button>
+</div>
+</main>
+{/* FIXED TENANT BOTTOM NAVIGATION BAR (Strict 3 Items from JSON) */}
+<nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] h-16 bg-[#ffffff] border-t border-[#c3c6cf] dark:border-[#73777f] flex justify-around items-center px-space-md z-50">
+{/* Tab 1: Inicio (Inactive) */}
+<a className="flex flex-col items-center justify-center text-[#9ba4ae] dark:text-[#43474e] pt-1 pb-1 hover:text-[#006c45] transition-colors duration-150 active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]">home</span>
+<span className="text-label-sm font-sans mt-0.5">Inicio</span>
+</a>
+{/* Tab 2: Perfil (ACTIVE - Exact mapping to "Mi Perfil", green text + 4px dot below) */}
+<a className="flex flex-col items-center justify-center text-[#006c45] dark:text-[#8cf8bd] font-semibold pt-1 pb-1 relative after:content-[''] after:w-1 after:h-1 after:bg-[#006c45] dark:after:bg-[#8cf8bd] after:rounded-full after:mt-1 active:scale-95 transition-transform duration-150" href="#">
+<span className="material-symbols-outlined text-[22px]" style={{fontVariationSettings: '\'FILL\' 1'}}>person</span>
+<span className="text-label-sm font-sans mt-0.5">Perfil</span>
+</a>
+{/* Tab 3: Más (Inactive) */}
+<a className="flex flex-col items-center justify-center text-[#9ba4ae] dark:text-[#43474e] pt-1 pb-1 hover:text-[#006c45] transition-colors duration-150 active:scale-95" href="#">
+<span className="material-symbols-outlined text-[22px]">more_horiz</span>
+<span className="text-label-sm font-sans mt-0.5">Más</span>
+</a>
+</nav>
+</div>

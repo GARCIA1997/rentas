@@ -1,0 +1,262 @@
+
+
+  {/* Mobile Container (390px width) */}
+  <div className="relative w-[390px] min-h-[844px] bg-[#F5F1E8] shadow-2xl flex flex-col overflow-hidden select-none border border-[#A7B0BB]/20">
+
+    {/* ==================== BACKGROUND: PANTALLA DETALLE DE CONTRATO ==================== */}
+    <div className="flex-1 flex flex-col pb-20 pointer-events-none select-none filter blur-[0.5px]">
+
+      {/* Header Azul Plano sin curvas redondeadas */}
+      <header className="bg-[#173A5F] text-white px-4 py-3 flex items-center justify-between z-10">
+        <div className="flex items-center gap-2">
+          <button className="text-white hover:opacity-80 p-1">
+            <span className="material-symbols-outlined text-[22px]">arrow_back</span>
+          </button>
+          <div>
+            <h1 className="text-white font-bold text-base leading-tight tracking-tight">Contrato CTR-2024-012</h1>
+            <p className="text-white/70 text-xs font-normal">Detalle de Contrato</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="text-white/90 p-1">
+            <span className="material-symbols-outlined text-[20px]">share</span>
+          </button>
+          <button className="text-white/90 p-1">
+            <span className="material-symbols-outlined text-[20px]">more_vert</span>
+          </button>
+        </div>
+      </header>
+
+      {/* Sub-barra Folio y Estado */}
+      <div className="bg-white px-4 py-2 border-b border-[#A7B0BB]/30 flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 font-medium">Estado actual:</span>
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Por firmar
+          </span>
+        </div>
+        <span className="text-slate-400 font-medium">Folio: #KSR-9842</span>
+      </div>
+
+      {/* Contenido scrolleable simulado de fondo */}
+      <div className="p-4 space-y-3.5">
+        
+        {/* Tarjeta Inmueble */}
+        <div className="bg-white rounded-lg p-3.5 border border-[#A7B0BB]/30 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#173A5F] uppercase tracking-wider">
+              <span className="material-symbols-outlined text-[18px]">apartment</span> Inmueble Arrendado
+            </div>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">Habitacional</span>
+          </div>
+          <p className="font-bold text-sm text-[#173A5F]">Depto. Torre Real 402</p>
+          <p className="text-xs text-slate-500">Fracc. Real Bugambilias, Villa de Álvarez</p>
+          <div className="flex gap-4 mt-2 text-xs text-slate-600 pt-2 border-t border-slate-100">
+            <span>2 Rec</span> · <span>2 Baños</span> · <span>88 m²</span>
+          </div>
+        </div>
+
+        {/* Tarjeta Inquilino y Arrendador */}
+        <div className="bg-white rounded-lg p-3.5 border border-[#A7B0BB]/30 shadow-sm space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-[#173A5F] uppercase tracking-wider mb-1">
+            <span className="material-symbols-outlined text-[18px]">group</span> Partes del Contrato
+          </div>
+          <div className="flex items-center justify-between p-2 rounded-lg bg-[#F5F1E8]/60 border border-[#A7B0BB]/20">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#173A5F] text-white flex items-center justify-center font-bold text-xs">AT</div>
+              <div>
+                <p className="text-xs font-bold text-[#173A5F]">Ana Torres Morales</p>
+                <p className="text-[10px] text-slate-500">Inquilina titular · 55 4912 3840</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Términos */}
+        <div className="bg-white rounded-lg p-3.5 border border-[#A7B0BB]/30 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#173A5F] uppercase tracking-wider">
+              <span className="material-symbols-outlined text-[18px]">description</span> Términos
+            </div>
+            <span className="text-xs font-bold text-slate-500">12 meses</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-2 bg-[#F5F1E8]/60 rounded-lg border border-[#A7B0BB]/20">
+              <span className="text-[10px] text-slate-500 block">Renta mensual</span>
+              <span className="text-sm font-bold text-[#173A5F]">$18,500 MXN</span>
+            </div>
+            <div className="p-2 bg-[#F5F1E8]/60 rounded-lg border border-[#A7B0BB]/20">
+              <span className="text-[10px] text-slate-500 block">Depósito</span>
+              <span className="text-sm font-bold text-amber-700">$18,500 MXN</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Botón primario de fondo simulado */}
+        <div className="pt-2">
+          <button className="w-full py-3 rounded-lg bg-[#2D9E6B] text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2">
+            <span className="material-symbols-outlined text-[18px]">draw</span> Marcar como firmado
+          </button>
+        </div>
+
+      </div>
+
+      {/* Tab bar inferior fija de 6 ítems (Administrador) */}
+      <nav className="absolute bottom-0 left-0 right-0 h-16 bg-white border-t border-[#A7B0BB]/30 flex items-center justify-around px-2 z-10">
+        <div className="flex flex-col items-center justify-center text-[#A7B0BB]">
+          <span className="material-symbols-outlined text-[20px]">grid_view</span>
+          <span className="text-[10px] font-medium mt-0.5">Inicio</span>
+        </div>
+        <div className="flex flex-col items-center justify-center text-[#A7B0BB]">
+          <span className="material-symbols-outlined text-[20px]">apartment</span>
+          <span className="text-[10px] font-medium mt-0.5">Propiedades</span>
+        </div>
+        <div className="flex flex-col items-center justify-center text-[#A7B0BB]">
+          <span className="material-symbols-outlined text-[20px]">group</span>
+          <span className="text-[10px] font-medium mt-0.5">Inquilinos</span>
+        </div>
+        <div className="flex flex-col items-center justify-center text-[#2D9E6B] font-semibold relative after:content-[''] after:w-1 after:h-1 after:bg-[#2D9E6B] after:rounded-full after:mt-0.5">
+          <span className="material-symbols-outlined text-[20px] filled">description</span>
+          <span className="text-[10px] font-semibold mt-0.5">Contratos</span>
+        </div>
+        <div className="flex flex-col items-center justify-center text-[#A7B0BB]">
+          <span className="material-symbols-outlined text-[20px]">payments</span>
+          <span className="text-[10px] font-medium mt-0.5">Pagos</span>
+        </div>
+        <div className="flex flex-col items-center justify-center text-[#A7B0BB]">
+          <span className="material-symbols-outlined text-[20px]">more_horiz</span>
+          <span className="text-[10px] font-medium mt-0.5">Más</span>
+        </div>
+      </nav>
+    </div>
+
+    {/* ==================== OVERLAY AZUL AL 50% ==================== */}
+    <div className="absolute inset-0 bg-[#173A5F]/50 backdrop-blur-[1px] z-20 transition-opacity"></div>
+
+    {/* ==================== BOTTOM SHEET BLANCA (MODAL) ==================== */}
+    <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-[0_-8px_30px_rgba(23,58,95,0.25)] border-t border-[#A7B0BB]/30 z-30 flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-300">
+      
+      {/* Asa de arrastre gris estándar */}
+      <div className="w-full flex justify-center pt-3 pb-1">
+        <div className="w-12 h-1.5 bg-[#A7B0BB]/60 rounded-full"></div>
+      </div>
+
+      {/* Contenedor del Modal */}
+      <div className="px-5 pt-2 pb-6 space-y-4">
+        
+        {/* Encabezado del Modal */}
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <span className="w-2 h-2 rounded-full bg-[#2D9E6B]"></span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Paso de confirmación</span>
+            </div>
+            <h2 className="text-xl font-bold text-[#173A5F] tracking-tight">¿Cómo se firmó?</h2>
+          </div>
+          <button className="text-slate-400 hover:text-slate-600 p-1 -mr-1 rounded-full transition-colors">
+            <span className="material-symbols-outlined text-[22px]">close</span>
+          </button>
+        </div>
+
+        <p className="text-xs text-slate-500 leading-relaxed -mt-2">
+          Selecciona el método de formalización utilizado para actualizar el expediente y activar el ciclo de cobros.
+        </p>
+
+        {/* Dos opciones tipo tarjeta seleccionable con radio */}
+        <div className="space-y-2.5">
+          
+          {/* Opción 1: Firma física en papel (No seleccionada) */}
+          <label className="group relative flex items-start gap-3 p-3.5 rounded-lg border border-[#A7B0BB]/40 bg-white hover:bg-[#F5F1E8]/40 cursor-pointer transition-all">
+            {/* Radio custom sin marcar */}
+            <div className="mt-0.5 flex-shrink-0">
+              <div className="w-5 h-5 rounded-full border-2 border-[#A7B0BB] flex items-center justify-center transition-colors">
+                <div className="w-2.5 h-2.5 rounded-full bg-transparent"></div>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-sm text-[#173A5F] group-hover:text-[#173A5F]">Firma física en papel</span>
+                <span className="material-symbols-outlined text-[18px] text-slate-400">history_edu</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5 leading-snug">
+                El documento impreso fue rubricado autógrafamente por ambas partes.
+              </p>
+            </div>
+            <input type="radio" name="signing_method" value="physical" className="sr-only" />
+          </label>
+
+          {/* Opción 2: Firma digital por teléfono (SELECCIONADA: Borde verde #2D9E6B) */}
+          <label className="relative flex items-start gap-3 p-3.5 rounded-lg border-2 border-[#2D9E6B] bg-[#2D9E6B]/5 shadow-sm cursor-pointer transition-all">
+            {/* Radio custom marcado */}
+            <div className="mt-0.5 flex-shrink-0">
+              <div className="w-5 h-5 rounded-full border-2 border-[#2D9E6B] bg-[#2D9E6B] flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-white"></div>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-sm text-[#173A5F]">Firma digital por teléfono</span>
+                  <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#2D9E6B]/20 text-[#2D9E6B]">Recomendado</span>
+                </div>
+                <span className="material-symbols-outlined text-[18px] text-[#2D9E6B]">draw</span>
+              </div>
+              <p className="text-xs text-slate-600 mt-0.5 leading-snug">
+                Validada vía SMS / WhatsApp con constancia de aceptación biométrica y NOM-151.
+              </p>
+            </div>
+            <input type="radio" name="signing_method" value="digital" checked className="sr-only" />
+          </label>
+
+        </div>
+
+        {/* Casilla "Generar pago de depósito ($18,500)" marcada */}
+        <div className="p-3 bg-[#F5F1E8] rounded-lg border border-[#A7B0BB]/30">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <div className="mt-0.5 flex-shrink-0">
+              {/* Checkbox marcado con verde oficial #2D9E6B */}
+              <div className="w-5 h-5 rounded bg-[#2D9E6B] flex items-center justify-center text-white shadow-sm">
+                <span className="material-symbols-outlined text-[16px] font-bold">check</span>
+              </div>
+            </div>
+            <div className="flex-1 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-[#173A5F]">Generar pago de depósito ($18,500)</span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Pendiente</span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Crea automáticamente el concepto de cobro por concepto de garantía en el módulo de pagos.
+              </p>
+            </div>
+            <input type="checkbox" checked className="sr-only" />
+          </label>
+        </div>
+
+        {/* Nota gris informativa */}
+        <div className="flex items-start gap-2 px-1 text-slate-500">
+          <span className="material-symbols-outlined text-[18px] text-[#A7B0BB] flex-shrink-0 mt-0.5">info</span>
+          <p className="text-xs leading-relaxed text-slate-500">
+            Al confirmar se generará el calendario completo de 12 pagos.
+          </p>
+        </div>
+
+        {/* Pie de botones de acción */}
+        <div className="pt-2 grid grid-cols-2 gap-3">
+          {/* Cancelar (Contorno gris) */}
+          <button type="button" className="w-full py-3 px-4 rounded-lg border border-[#A7B0BB]/50 bg-white hover:bg-slate-50 text-[#173A5F] font-bold text-sm tracking-wide transition-colors flex items-center justify-center active:scale-[0.98]">
+            Cancelar
+          </button>
+
+          {/* Marcar como firmado (Verde sólido #2D9E6B) */}
+          <button type="button" className="w-full py-3 px-4 rounded-lg bg-[#2D9E6B] hover:bg-[#25855a] text-white font-bold text-sm tracking-wide shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-[0.98]">
+            <span className="material-symbols-outlined text-[18px]">verified</span>
+            Marcar como firmado
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+

@@ -1,0 +1,259 @@
+
+{/* Mobile App Frame Container */}
+<div className="w-full max-w-md bg-[#F5F1E8] min-h-screen flex flex-col relative pb-28 shadow-sm">
+{/* Top Navigation Header (Docked full-width top-0, #173A5F) */}
+<header className="bg-[#173A5F] text-white w-full sticky top-0 z-40 border-b border-[#173A5F]">
+<div className="flex justify-between items-center w-full px-4 h-16 max-w-md mx-auto">
+{/* Brand Logo / Identity */}
+<div className="flex items-center gap-2.5">
+{/* Corporate Isotype K (Geometric 45-degree angle blocks) */}
+<svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 6L18 20L6 34V6Z" fill="#173A5F"></path>
+<path d="M19 19L27 10H36L25 22.5L19 19Z" fill="#F5F1E8"></path>
+<path d="M21 24.5L29 34H38L27 21L21 24.5Z" fill="#2D9E6B"></path>
+</svg>
+<div className="flex flex-col">
+<span className="font-sans text-xl font-bold tracking-tight text-white leading-none">Ksared</span>
+<span className="text-[9px] font-medium tracking-wider text-white/70 uppercase mt-0.5">Portal Inquilino</span>
+</div>
+</div>
+{/* Trailing Actions: Notifications & Avatar */}
+<div className="flex items-center gap-3">
+<button aria-label="Notificaciones" className="relative p-1.5 rounded-lg text-white/80 hover:text-white hover:opacity-80 transition-opacity active:scale-95 duration-150" type="button">
+<span className="material-symbols-outlined text-[24px]">notifications</span>
+<span className="absolute top-1 right-1 w-2 h-2 bg-[#2D9E6B] rounded-full ring-2 ring-[#173A5F]"></span>
+</button>
+<div className="flex items-center">
+<img className="w-9 h-9 rounded-full object-cover border-2 border-white/20" data-alt="Professional portrait photo of Ana Torres, a young professional tenant with a warm confident smile, neutral corporate office background with warm natural sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDqJS4oTnsg9bnR03Yndh77iDBGWQPUyeLyQyy-7-7flRAXjtaos5s5Bxu60j7qp1SLb5awS4eJpe9Qg94krOZCsZDwpIyvxC1xYluY8ObZvdfctBAdMR7fzSrRp2xq14VooxvGGqoyjJaLp_HIFy7zGdnqDdumHjVx8WF-GEZWVCI8ZKnpZxWmfsmNfTzBa-haXfX1Z2T_pu9NcyFwvUdrWYsMtpRZCglk8IgKt00xyjZHefvrM2DeP5LCO89UCExH3M3N-DMh0M-" />
+</div>
+</div>
+</div>
+{/* Welcome Banner & Identity Context inside Navy Container */}
+<div className="px-5 pt-1 pb-6 relative overflow-hidden">
+{/* Background subtle diagonal pattern overlay */}
+<div className="absolute -right-8 -bottom-10 w-36 h-36 opacity-10 pointer-events-none transform rotate-45">
+<div className="w-full h-full bg-[#2D9E6B]"></div>
+</div>
+<div className="flex items-start justify-between">
+<div>
+<div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#2D9E6B]/20 text-[#2D9E6B] border border-[#2D9E6B]/30 mb-2">
+<span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+<span className="text-[10px] font-semibold tracking-wide uppercase">Contrato Activo</span>
+</div>
+<h1 className="font-sans text-2xl font-bold text-white tracking-tight">Bienvenida, Ana</h1>
+<p className="text-xs font-medium text-white/75 mt-0.5 flex items-center gap-1">
+<span className="material-symbols-outlined text-[14px] text-[#2D9E6B]">apartment</span>
+              Inquilina · Torre Vista Norte #402
+            </p>
+</div>
+</div>
+</div>
+</header>
+{/* Main Content Canvas */}
+<main className="flex-1 px-4 pt-4 space-y-4">
+{/* Featured Card: Próximo pago (High Priority Bento Item) */}
+<section className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-sm relative overflow-hidden">
+{/* Accent Green top bar */}
+<div className="absolute top-0 left-0 right-0 h-1 bg-[#2D9E6B]"></div>
+<div className="flex items-center justify-between mb-3 pt-1">
+<div className="flex items-center gap-2">
+<span className="p-1.5 bg-[#2D9E6B]/10 text-[#2D9E6B] rounded-lg">
+<span className="material-symbols-outlined text-[20px]">calendar_today</span>
+</span>
+<span className="text-xs font-semibold uppercase tracking-wider text-[#173A5F]">Próximo vencimiento de renta</span>
+</div>
+<span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B]">
+            Al corriente
+          </span>
+</div>
+<div className="mb-4">
+<div className="flex items-baseline gap-1">
+<span className="text-3xl font-extrabold text-[#173A5F] tracking-tight font-sans">$18,500</span>
+<span className="text-xs font-semibold text-[#A7B0BB]">MXN</span>
+</div>
+<p className="text-xs text-[#A7B0BB] mt-1 flex items-center gap-1">
+<span className="material-symbols-outlined text-[15px] text-[#A7B0BB]">schedule</span>
+            Vence: <strong className="text-[#173A5F] font-semibold">05 Nov 2024</strong> (en 5 días)
+          </p>
+</div>
+{/* Action CTAs */}
+<div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#A7B0BB]/20">
+<button className="w-full bg-[#2D9E6B] hover:bg-[#258257] active:scale-95 transition-all text-white font-semibold text-xs py-2.5 px-3 rounded-lg flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span className="material-symbols-outlined text-[16px]">credit_card</span>
+            Pagar ahora
+          </button>
+<button className="w-full bg-white hover:bg-[#F5F1E8] border border-[#A7B0BB] active:scale-95 transition-all text-[#173A5F] font-semibold text-xs py-2.5 px-2 rounded-lg flex items-center justify-center gap-1" type="button">
+<span className="material-symbols-outlined text-[16px] text-[#173A5F]">receipt_long</span>
+            Reportar pago
+          </button>
+</div>
+</section>
+{/* Section: Acciones Rápidas del Inquilino */}
+<section>
+<h2 className="text-xs font-bold text-[#173A5F] uppercase tracking-wider mb-2.5 px-1">Acciones rápidas</h2>
+<div className="grid grid-cols-3 gap-2.5">
+{/* Action 1: Avería / Mantenimiento */}
+<button className="bg-white rounded-lg border border-[#A7B0BB]/30 p-3 flex flex-col items-center text-center hover:border-[#173A5F] active:scale-95 transition-all group" type="button">
+<div className="w-10 h-10 rounded-lg bg-[#F5F1E8] flex items-center justify-center text-[#173A5F] group-hover:bg-[#173A5F] group-hover:text-white transition-colors mb-2">
+<span className="material-symbols-outlined text-[20px]">build</span>
+</div>
+<span className="text-[11px] font-semibold text-[#173A5F] leading-tight">Reportar avería</span>
+</button>
+{/* Action 2: Descargar recibos */}
+<button className="bg-white rounded-lg border border-[#A7B0BB]/30 p-3 flex flex-col items-center text-center hover:border-[#173A5F] active:scale-95 transition-all group" type="button">
+<div className="w-10 h-10 rounded-lg bg-[#F5F1E8] flex items-center justify-center text-[#173A5F] group-hover:bg-[#173A5F] group-hover:text-white transition-colors mb-2">
+<span className="material-symbols-outlined text-[20px]">download</span>
+</div>
+<span className="text-[11px] font-semibold text-[#173A5F] leading-tight">Descargar recibos</span>
+</button>
+{/* Action 3: Contactar administración */}
+<button className="bg-white rounded-lg border border-[#A7B0BB]/30 p-3 flex flex-col items-center text-center hover:border-[#173A5F] active:scale-95 transition-all group" type="button">
+<div className="w-10 h-10 rounded-lg bg-[#F5F1E8] flex items-center justify-center text-[#173A5F] group-hover:bg-[#173A5F] group-hover:text-white transition-colors mb-2">
+<span className="material-symbols-outlined text-[20px]">support_agent</span>
+</div>
+<span className="text-[11px] font-semibold text-[#173A5F] leading-tight">Administración</span>
+</button>
+</div>
+</section>
+{/* Section: Mi Contrato */}
+<section className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-sm">
+<div className="flex items-center justify-between border-b border-[#A7B0BB]/20 pb-3 mb-3">
+<div className="flex items-center gap-2">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">description</span>
+<div>
+<h2 className="text-xs font-bold text-[#173A5F] tracking-tight">Mi contrato</h2>
+<span className="text-[10px] text-[#A7B0BB] font-medium">Folio: CTR-2023-089</span>
+</div>
+</div>
+<button className="text-xs font-semibold text-[#173A5F] hover:text-[#2D9E6B] flex items-center gap-0.5 active:scale-95 transition-transform" type="button">
+            Ver digital
+            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<div className="space-y-2.5 text-xs">
+<div className="flex justify-between items-center py-0.5">
+<span className="text-[#A7B0BB]">Inmueble arrendado</span>
+<span className="font-semibold text-[#173A5F] text-right">Torre Vista Norte, Depto. 402</span>
+</div>
+<div className="flex justify-between items-center py-0.5">
+<span className="text-[#A7B0BB]">Vigencia anual</span>
+<div className="text-right">
+<span className="font-semibold text-[#173A5F]">01 Feb 2024 – 31 Ene 2025</span>
+<span className="block text-[10px] text-[#2D9E6B] font-medium">Faltan 3 meses</span>
+</div>
+</div>
+<div className="flex justify-between items-center py-0.5">
+<span className="text-[#A7B0BB]">Renta acordada</span>
+<span className="font-semibold text-[#173A5F]">$18,500 MXN / mes</span>
+</div>
+<div className="flex justify-between items-center py-0.5">
+<span className="text-[#A7B0BB]">Depósito en garantía</span>
+<span className="font-semibold text-[#173A5F]">$18,500 MXN <span className="text-[10px] text-[#2D9E6B] font-medium">(Resguardado)</span></span>
+</div>
+</div>
+</section>
+{/* Section: Pagos Recientes */}
+<section className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-sm mb-6">
+<div className="flex items-center justify-between mb-3">
+<div className="flex items-center gap-1.5">
+<span className="material-symbols-outlined text-[#173A5F] text-[20px]">history</span>
+<h2 className="text-xs font-bold text-[#173A5F] uppercase tracking-wider">Pagos recientes</h2>
+</div>
+<a className="text-[11px] font-semibold text-[#173A5F] hover:text-[#2D9E6B] transition-colors" href="#">
+            Ver historial
+          </a>
+</div>
+{/* Payments List */}
+<div className="divide-y divide-[#A7B0BB]/20">
+{/* Payment Item 1 */}
+<div className="py-3 flex items-center justify-between first:pt-0">
+<div className="flex items-start gap-2.5">
+<div className="w-8 h-8 rounded-lg bg-[#2D9E6B]/10 flex items-center justify-center text-[#2D9E6B] mt-0.5 flex-shrink-0">
+<span className="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div>
+<p className="text-xs font-bold text-[#173A5F]">Renta Octubre 2024</p>
+<p className="text-[11px] text-[#A7B0BB]">Pagado el 05 Oct 2024</p>
+<div className="mt-1 flex items-center gap-1.5">
+<span className="px-1.5 py-0.5 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[9px] font-bold rounded">Pagado</span>
+<span className="text-[10px] text-[#A7B0BB]">SPEI BBVA #8902</span>
+</div>
+</div>
+</div>
+<div className="text-right flex flex-col items-end">
+<span className="text-xs font-bold text-[#173A5F]">$18,500 MXN</span>
+<button className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#173A5F] hover:text-[#2D9E6B] active:scale-95 transition-transform bg-[#F5F1E8] px-2 py-1 rounded" type="button">
+<span className="material-symbols-outlined text-[13px]">file_download</span>
+                Recibo
+              </button>
+</div>
+</div>
+{/* Payment Item 2 */}
+<div className="py-3 flex items-center justify-between">
+<div className="flex items-start gap-2.5">
+<div className="w-8 h-8 rounded-lg bg-[#2D9E6B]/10 flex items-center justify-center text-[#2D9E6B] mt-0.5 flex-shrink-0">
+<span className="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div>
+<p className="text-xs font-bold text-[#173A5F]">Renta Septiembre 2024</p>
+<p className="text-[11px] text-[#A7B0BB]">Pagado el 04 Sep 2024</p>
+<div className="mt-1 flex items-center gap-1.5">
+<span className="px-1.5 py-0.5 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[9px] font-bold rounded">Pagado</span>
+<span className="text-[10px] text-[#A7B0BB]">SPEI BBVA #4419</span>
+</div>
+</div>
+</div>
+<div className="text-right flex flex-col items-end">
+<span className="text-xs font-bold text-[#173A5F]">$18,500 MXN</span>
+<button className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#173A5F] hover:text-[#2D9E6B] active:scale-95 transition-transform bg-[#F5F1E8] px-2 py-1 rounded" type="button">
+<span className="material-symbols-outlined text-[13px]">file_download</span>
+                Recibo
+              </button>
+</div>
+</div>
+{/* Payment Item 3 */}
+<div className="py-3 flex items-center justify-between last:pb-0">
+<div className="flex items-start gap-2.5">
+<div className="w-8 h-8 rounded-lg bg-[#2D9E6B]/10 flex items-center justify-center text-[#2D9E6B] mt-0.5 flex-shrink-0">
+<span className="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div>
+<p className="text-xs font-bold text-[#173A5F]">Renta Agosto 2024</p>
+<p className="text-[11px] text-[#A7B0BB]">Pagado el 05 Ago 2024</p>
+<div className="mt-1 flex items-center gap-1.5">
+<span className="px-1.5 py-0.5 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[9px] font-bold rounded">Pagado</span>
+<span className="text-[10px] text-[#A7B0BB]">SPEI BBVA #3108</span>
+</div>
+</div>
+</div>
+<div className="text-right flex flex-col items-end">
+<span className="text-xs font-bold text-[#173A5F]">$18,500 MXN</span>
+<button className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#173A5F] hover:text-[#2D9E6B] active:scale-95 transition-transform bg-[#F5F1E8] px-2 py-1 rounded" type="button">
+<span className="material-symbols-outlined text-[13px]">file_download</span>
+                Recibo
+              </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+{/* Bottom Navigation Bar (Docked bottom-0, 3 Destinations: Inicio, Perfil, Más) */}
+{/* Follows Shared Components JSON exact classes and Active state logic */}
+<nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 border-t border-[#A7B0BB]/30 bg-white max-w-md mx-auto right-0">
+{/* Tab 1: Inicio (Active) */}
+<button className="flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-1 active:scale-95 transition-transform duration-150" type="button">
+<span className="material-symbols-outlined text-[24px]">home</span>
+<span className="font-sans text-xs font-medium">Inicio</span>
+</button>
+{/* Tab 2: Perfil (Inactive) */}
+<button className="flex flex-col items-center justify-center text-[#A7B0BB] font-medium py-1 hover:text-[#173A5F] transition-colors duration-150 active:scale-95" type="button">
+<span className="material-symbols-outlined text-[24px]">person</span>
+<span className="font-sans text-xs font-medium">Perfil</span>
+</button>
+{/* Tab 3: Más (Inactive) */}
+<button className="flex flex-col items-center justify-center text-[#A7B0BB] font-medium py-1 hover:text-[#173A5F] transition-colors duration-150 active:scale-95" type="button">
+<span className="material-symbols-outlined text-[24px]">grid_view</span>
+<span className="font-sans text-xs font-medium">Más</span>
+</button>
+</nav>
+</div>
