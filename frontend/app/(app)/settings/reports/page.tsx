@@ -88,7 +88,7 @@ export default function ReportsInboxPage() {
             <p className="text-xs text-[#73777f]">Cargando...</p>
           ) : list.length === 0 ? (
             <div className="bg-white rounded-lg border border-[#A7B0BB]/30 p-6 text-center">
-              <span className="material-symbols-outlined text-[36px] text-[#A7B0BB]">inbox</span>
+              <span className="material-symbols-outlined text-[36px] text-[#73777f]">inbox</span>
               <p className="text-xs text-[#73777f] mt-1">{reports.length === 0 ? 'No hay reportes todavía.' : 'Ningún reporte en este filtro.'}</p>
             </div>
           ) : (

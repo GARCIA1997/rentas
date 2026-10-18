@@ -100,7 +100,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* En móvil cada pantalla pinta su propio encabezado azul (como en Stitch). */}
-        <main className={`flex-1 w-full ${isFullscreen ? '' : 'pb-20 sm:pb-0'}`}>{children}</main>
+        <main className={`flex-1 w-full ${isFullscreen ? '' : 'pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:pb-0'}`}>{children}</main>
       </div>
 
       {/* Tab bar inferior — markup de Stitch (pantalla "Listado de Contratos"). */}
@@ -116,7 +116,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   className={
                     active
                       ? 'flex flex-col items-center justify-center text-[#2D9E6B] font-semibold py-1 px-2 active:scale-95'
-                      : 'flex flex-col items-center justify-center text-[#A7B0BB] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95'
+                      : 'flex flex-col items-center justify-center text-[#73777f] py-1 px-2 hover:text-[#173A5F] transition-colors active:scale-95'
                   }
                 >
                   <span

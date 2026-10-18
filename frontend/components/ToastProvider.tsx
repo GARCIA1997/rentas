@@ -38,7 +38,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
           <p className="text-xs font-bold text-[#173A5F]">{v.title}</p>
           <p className="text-[11px] text-[#475569] leading-snug mt-0.5">{toast.message}</p>
         </div>
-        <button onClick={onDismiss} className="text-[#A7B0BB] hover:text-[#173A5F] p-0.5 transition active:scale-90 flex-shrink-0" aria-label="Cerrar">
+        <button onClick={onDismiss} className="text-[#73777f] hover:text-[#173A5F] p-0.5 transition active:scale-90 flex-shrink-0" aria-label="Cerrar">
           <span className="material-symbols-outlined text-[18px]">close</span>
         </button>
       </div>

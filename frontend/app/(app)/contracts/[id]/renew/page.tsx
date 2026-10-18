@@ -120,7 +120,7 @@ export default function ContractRenewalPage() {
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#173A5F]/10 text-[#173A5F]">
                 <span className="material-symbols-outlined text-[15px]">description</span>
               </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#A7B0BB]">Contrato Vigente</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#73777f]">Contrato Vigente</span>
             </div>
             <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#2D9E6B]/10 text-[#2D9E6B] border border-[#2D9E6B]/20">● Activo</span>
           </div>
@@ -129,7 +129,7 @@ export default function ContractRenewalPage() {
               <div className="w-10 h-10 rounded-[8px] bg-[#173A5F] text-white flex items-center justify-center font-bold text-sm shrink-0">{initials}</div>
               <div className="min-w-0 flex-1">
                 <h2 className="text-sm font-bold text-[#173A5F] truncate">{contract.tenant?.fullName}</h2>
-                <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5 truncate">
+                <p className="text-xs text-[#73777f] flex items-center gap-1 mt-0.5 truncate">
                   <span className="material-symbols-outlined text-[14px]">apartment</span>
                   {contract.property?.name}
                 </p>
@@ -137,22 +137,22 @@ export default function ContractRenewalPage() {
             </div>
             <div className="grid grid-cols-2 gap-2 pt-1">
               <div className="bg-[#F5F1E8] rounded-[8px] p-2.5 border border-[#DDD9CF]/60">
-                <span className="text-[11px] font-medium text-[#A7B0BB] block">Fecha de término</span>
+                <span className="text-[11px] font-medium text-[#73777f] block">Fecha de término</span>
                 <div className="flex items-center gap-1 mt-0.5 text-[#173A5F] font-bold text-xs">
-                  <span className="material-symbols-outlined text-[15px] text-[#A7B0BB]">event</span>
+                  <span className="material-symbols-outlined text-[15px] text-[#73777f]">event</span>
                   <span>{contract.endDate ? formatDate(contract.endDate) : '—'}</span>
                 </div>
                 <span className="text-[10px] font-semibold text-amber-600 block mt-0.5">{contract.durationMonths} meses pactados</span>
               </div>
               <div className="bg-[#F5F1E8] rounded-[8px] p-2.5 border border-[#DDD9CF]/60">
-                <span className="text-[11px] font-medium text-[#A7B0BB] block">Renta mensual actual</span>
+                <span className="text-[11px] font-medium text-[#73777f] block">Renta mensual actual</span>
                 <div className="flex items-center gap-1 mt-0.5 text-[#173A5F] font-bold text-xs">
                   <span className="material-symbols-outlined text-[15px] text-[#2D9E6B]">payments</span>
                   <span>
-                    ${Number(contract.monthlyRent).toLocaleString('es-MX')} <span className="text-[10px] text-[#A7B0BB] font-normal">MXN</span>
+                    ${Number(contract.monthlyRent).toLocaleString('es-MX')} <span className="text-[10px] text-[#73777f] font-normal">MXN</span>
                   </span>
                 </div>
-                <span className="text-[10px] text-[#A7B0BB] block mt-0.5">Depósito: ${Number(contract.depositAmount).toLocaleString('es-MX')} MXN</span>
+                <span className="text-[10px] text-[#73777f] block mt-0.5">Depósito: ${Number(contract.depositAmount).toLocaleString('es-MX')} MXN</span>
               </div>
             </div>
           </div>
@@ -203,7 +203,7 @@ export default function ContractRenewalPage() {
               <label htmlFor="input-renta" className="block text-xs font-bold text-[#173A5F]">
                 Nueva renta mensual (MXN)
               </label>
-              <span className="text-[11px] text-[#A7B0BB] font-medium">Actual: ${Number(contract.monthlyRent).toLocaleString('es-MX')}</span>
+              <span className="text-[11px] text-[#73777f] font-medium">Actual: ${Number(contract.monthlyRent).toLocaleString('es-MX')}</span>
             </div>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#173A5F] font-bold text-sm">$</span>
@@ -216,7 +216,7 @@ export default function ContractRenewalPage() {
                 onChange={(e) => setMonthlyRent(Number(e.target.value))}
                 className="w-full pl-7 pr-20 py-2.5 bg-white border border-[#A7B0BB]/60 rounded-[8px] text-sm font-bold text-[#173A5F] focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] tracking-tight"
               />
-              <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-xs font-semibold text-[#A7B0BB]">MXN / mes</span>
+              <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-xs font-semibold text-[#73777f]">MXN / mes</span>
             </div>
             {rentIncrease !== 0 && (
               <p className={`text-[11px] font-semibold ${rentIncrease > 0 ? 'text-amber-600' : 'text-[#2D9E6B]'}`}>
@@ -231,7 +231,7 @@ export default function ContractRenewalPage() {
                   <span className="text-xs font-semibold text-[#173A5F] block leading-tight">
                     +7% sugerido: <span className="font-bold text-[#2D9E6B]">${suggestedRent.toLocaleString('es-MX')}</span>
                   </span>
-                  <span className="text-[10px] text-[#A7B0BB]">Redondeado a la decena superior</span>
+                  <span className="text-[10px] text-[#73777f]">Redondeado a la decena superior</span>
                 </div>
               </div>
               <button
@@ -268,20 +268,20 @@ export default function ContractRenewalPage() {
                   </option>
                 ))}
               </select>
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#A7B0BB]">
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#73777f]">
                 <span className="material-symbols-outlined text-[18px]">expand_more</span>
               </div>
             </div>
-            <p className="text-[10px] text-[#A7B0BB]">Este firmante figurará como parte arrendadora en el contrato.</p>
+            <p className="text-[10px] text-[#73777f]">Este firmante figurará como parte arrendadora en el contrato.</p>
           </div>
 
           <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#F5F1E8]">
             <div>
-              <label className="block text-[11px] font-semibold text-[#A7B0BB] mb-1">Fecha de inicio</label>
+              <label className="block text-[11px] font-semibold text-[#73777f] mb-1">Fecha de inicio</label>
               <div className="bg-[#F5F1E8] px-3 py-2 rounded-[8px] text-xs font-bold text-[#173A5F] border border-[#DDD9CF]">{formatDate(newStart.toISOString())}</div>
             </div>
             <div>
-              <label className="block text-[11px] font-semibold text-[#A7B0BB] mb-1">Día de corte y cobro</label>
+              <label className="block text-[11px] font-semibold text-[#73777f] mb-1">Día de corte y cobro</label>
               <div className="bg-[#F5F1E8] px-3 py-2 rounded-[8px] text-xs font-bold text-[#173A5F] border border-[#DDD9CF]">
                 Día {String(contract.paymentDay).padStart(2, '0')} de cada mes
               </div>
@@ -290,7 +290,7 @@ export default function ContractRenewalPage() {
         </section>
 
         <section className="rounded-[8px] bg-[#DDD9CF]/40 border border-[#DDD9CF] p-3.5 flex items-start gap-2.5 text-[#173A5F]">
-          <span className="material-symbols-outlined text-[#A7B0BB] text-[18px] shrink-0 mt-0.5">info</span>
+          <span className="material-symbols-outlined text-[#73777f] text-[18px] shrink-0 mt-0.5">info</span>
           <p className="text-xs font-medium leading-relaxed text-[#173A5F]/85">
             La renovación crea un contrato nuevo en borrador; el depósito original sigue en garantía.
           </p>

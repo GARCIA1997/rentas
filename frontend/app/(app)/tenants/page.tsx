@@ -7,6 +7,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { tenantsApi, Tenant } from '@/lib/api';
 import { MainHeader } from '@/components/StitchHeader';
+import { Fab } from '@/components/Fab';
 
 type Filter = 'ALL' | 'CONTRACT' | 'NO_PORTAL';
 const initials = (name: string) =>
@@ -57,7 +58,7 @@ export default function TenantsPage() {
           <div className="flex items-center justify-between mb-1">
             <h1 className="text-xl font-bold tracking-tight">Directorio de Inquilinos</h1>
             <span className="text-xs bg-[#2D9E6B]/20 text-[#2D9E6B] font-semibold px-2 py-0.5 rounded-full border border-[#2D9E6B]/40">
-              {tenants.length} registrados
+              {tenants.length} {tenants.length === 1 ? 'registrado' : 'registrados'}
             </span>
           </div>
           <p className="text-xs text-white/80">Gestión de accesos al portal, contratos y contactos</p>
@@ -68,7 +69,7 @@ export default function TenantsPage() {
         {/* BUSCADOR */}
         <div className="px-4 -mt-3 relative z-10">
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#A7B0BB] text-[20px]">search</span>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#73777f] text-[20px]">search</span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -102,9 +103,9 @@ export default function TenantsPage() {
         <main className="px-4 mt-3 pb-24 sm:pb-8">
           {error && <div className="mb-3 bg-red-50 border border-red-200 rounded-[8px] p-3 text-xs text-red-700">{error}</div>}
           {isLoading ? (
-            <p className="text-xs text-[#A7B0BB]">Cargando...</p>
+            <p className="text-xs text-[#73777f]">Cargando...</p>
           ) : list.length === 0 ? (
-            <div className="bg-white rounded-[8px] border border-[#A7B0BB]/30 p-6 text-center text-xs text-[#A7B0BB]">
+            <div className="bg-white rounded-[8px] border border-[#A7B0BB]/30 p-6 text-center text-xs text-[#73777f]">
               {tenants.length === 0 ? 'Aún no hay inquilinos registrados.' : 'Ningún inquilino coincide con la búsqueda.'}
             </div>
           ) : (
@@ -128,7 +129,7 @@ export default function TenantsPage() {
                         </div>
                         <div className="min-w-0">
                           <h2 className="text-sm font-bold text-[#173A5F] truncate">{t.fullName}</h2>
-                          <p className="text-xs text-[#A7B0BB] flex items-center gap-1 mt-0.5">
+                          <p className="text-xs text-[#73777f] flex items-center gap-1 mt-0.5">
                             <span className="material-symbols-outlined text-[14px]">phone</span>
                             {t.phone ?? 'Sin teléfono'}
                           </p>
@@ -207,17 +208,7 @@ export default function TenantsPage() {
           )}
         </main>
       </div>
-
-      {/* FAB */}
-      <div className="fixed bottom-20 sm:bottom-6 right-4 z-40 pointer-events-none">
-        <Link
-          href="/tenants/new"
-          className="pointer-events-auto inline-flex items-center gap-2 bg-[#2D9E6B] hover:bg-[#25875a] active:scale-95 text-white font-bold text-xs px-4 py-3 rounded-full shadow-lg shadow-[#2D9E6B]/30 transition-all"
-        >
-          <span className="material-symbols-outlined text-[18px]">person_add</span>
-          <span>+ Nuevo inquilino</span>
-        </Link>
-      </div>
+      <Fab icon="person_add" label="Nuevo inquilino" href="/tenants/new" />
     </ProtectedRoute>
   );
 }

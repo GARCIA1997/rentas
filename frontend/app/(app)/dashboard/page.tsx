@@ -33,7 +33,7 @@ function Kpi({ label, icon, iconClass, value, footer }: { label: string; icon: s
   return (
     <div className="bg-white p-3.5 rounded-[8px] border border-[#DDD9CF] flex flex-col justify-between">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold text-[#A7B0BB] font-sans">{label}</span>
+        <span className="text-xs font-semibold text-[#73777f] font-sans">{label}</span>
         <div className={`w-8 h-8 rounded-[8px] bg-[#F5F1E8] flex items-center justify-center ${iconClass}`}>
           <span className="material-symbols-outlined text-[18px]">{icon}</span>
         </div>
@@ -89,9 +89,9 @@ function AdminDashboard() {
         <div className="flex items-center justify-between pt-3.5 mt-2 border-t border-white/10 sm:mt-0 sm:pt-0 sm:border-0">
           <div>
             <h1 className="font-sans font-bold text-lg text-white leading-tight tracking-tight">Hola, {user?.firstName}</h1>
-            <p className="text-xs text-[#A7B0BB] flex items-center gap-1 font-medium mt-0.5">
+            <p className="text-xs text-[#73777f] flex items-center gap-1 font-medium mt-0.5">
               <span>Administrador</span>
-              <span className="text-[8px] text-[#A7B0BB]">•</span>
+              <span className="text-[8px] text-[#73777f]">•</span>
               <span className="text-[#2D9E6B] font-semibold">Panel Principal</span>
             </p>
           </div>
@@ -123,16 +123,16 @@ function AdminDashboard() {
         </section>
 
         {isLoading ? (
-          <p className="text-xs text-[#A7B0BB]">Cargando estadísticas...</p>
+          <p className="text-xs text-[#73777f]">Cargando estadísticas...</p>
         ) : !stats ? (
-          <p className="text-xs text-[#A7B0BB]">No se pudieron cargar las estadísticas.</p>
+          <p className="text-xs text-[#73777f]">No se pudieron cargar las estadísticas.</p>
         ) : (
           <>
             {/* METRICS & KPIS */}
             <section className="mb-5">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="font-sans font-bold text-xs uppercase tracking-wider text-[#173A5F]">Resumen operativo</h2>
-                <span className="text-[11px] text-[#A7B0BB] font-medium">Actualizado hoy</span>
+                <span className="text-[11px] text-[#73777f] font-medium">Actualizado hoy</span>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 <Kpi
@@ -206,7 +206,7 @@ function AdminDashboard() {
                 </Link>
               </div>
               {upcoming.length === 0 ? (
-                <div className="bg-white rounded-[8px] border border-[#DDD9CF] p-4 text-xs text-[#A7B0BB]">No hay pagos pendientes.</div>
+                <div className="bg-white rounded-[8px] border border-[#DDD9CF] p-4 text-xs text-[#73777f]">No hay pagos pendientes.</div>
               ) : (
                 <div className="space-y-2.5">
                   {upcoming.map((p) => {
@@ -216,7 +216,7 @@ function AdminDashboard() {
                         <div className="flex items-start justify-between">
                           <div className="space-y-1">
                             <span className="font-sans font-bold text-sm text-[#173A5F] block">{p.property?.name ?? '—'}</span>
-                            <p className="text-xs text-[#A7B0BB] font-medium flex items-center gap-1">
+                            <p className="text-xs text-[#73777f] font-medium flex items-center gap-1">
                               <span className="material-symbols-outlined text-[14px]">person</span>
                               <span className="text-[#173A5F]/80">{p.tenant?.fullName ?? '—'}</span>
                             </p>
@@ -266,7 +266,7 @@ function AdminDashboard() {
                     <Link key={a.id} href={`/contracts/${a.id}`} className="flex items-center justify-between py-2">
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-[#173A5F] truncate">{a.tenant.fullName}</p>
-                        <p className="text-[11px] text-[#A7B0BB] truncate">{a.property.name}</p>
+                        <p className="text-[11px] text-[#73777f] truncate">{a.property.name}</p>
                       </div>
                       <span className="text-[11px] font-semibold text-amber-700 shrink-0">En {a.daysUntilEnd} d</span>
                     </Link>
@@ -347,9 +347,9 @@ function TenantDashboard() {
 
       <main className="max-w-md sm:max-w-5xl mx-auto flex-1 px-4 pt-4 pb-6 space-y-4">
         {isLoading ? (
-          <p className="text-xs text-[#A7B0BB]">Cargando...</p>
+          <p className="text-xs text-[#73777f]">Cargando...</p>
         ) : !tenant ? (
-          <section className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 text-xs text-[#A7B0BB]">
+          <section className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 text-xs text-[#73777f]">
             Tu cuenta aún no está vinculada a ningún contrato de arrendamiento. Contacta al administrador si crees que esto es un error.
           </section>
         ) : (
@@ -374,16 +374,16 @@ function TenantDashboard() {
                 <div className="mb-4">
                   <div className="flex items-baseline gap-1">
                     <span className="text-3xl font-extrabold text-[#173A5F] tracking-tight font-sans">{money(nextPayment.amountDue)}</span>
-                    <span className="text-xs font-semibold text-[#A7B0BB]">MXN</span>
+                    <span className="text-xs font-semibold text-[#73777f]">MXN</span>
                   </div>
-                  <p className="text-xs text-[#A7B0BB] mt-1 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px] text-[#A7B0BB]">schedule</span>
+                  <p className="text-xs text-[#73777f] mt-1 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[15px] text-[#73777f]">schedule</span>
                     Vence: <strong className="text-[#173A5F] font-semibold">{formatDate(nextPayment.dueDate)}</strong>
                     {daysTo(nextPayment.dueDate) >= 0 && ` (en ${daysTo(nextPayment.dueDate)} días)`}
                   </p>
                 </div>
               ) : (
-                <p className="text-xs text-[#A7B0BB] mb-4">Estás al corriente con tus pagos.</p>
+                <p className="text-xs text-[#73777f] mb-4">Estás al corriente con tus pagos.</p>
               )}
               <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#A7B0BB]/20">
                 <Link
@@ -418,21 +418,21 @@ function TenantDashboard() {
                 </div>
                 <div className="space-y-2.5 text-xs">
                   <div className="flex justify-between items-center py-0.5">
-                    <span className="text-[#A7B0BB]">Inmueble arrendado</span>
+                    <span className="text-[#73777f]">Inmueble arrendado</span>
                     <span className="font-semibold text-[#173A5F] text-right">{contract.property?.name ?? tenant.currentProperty?.name ?? '—'}</span>
                   </div>
                   <div className="flex justify-between items-center py-0.5">
-                    <span className="text-[#A7B0BB]">Vigencia</span>
+                    <span className="text-[#73777f]">Vigencia</span>
                     <span className="font-semibold text-[#173A5F] text-right">
                       {formatDate(contract.startDate)} – {contract.endDate ? formatDate(contract.endDate) : '—'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-0.5">
-                    <span className="text-[#A7B0BB]">Renta acordada</span>
+                    <span className="text-[#73777f]">Renta acordada</span>
                     <span className="font-semibold text-[#173A5F]">{money(contract.monthlyRent)} MXN / mes</span>
                   </div>
                   <div className="flex justify-between items-center py-0.5">
-                    <span className="text-[#A7B0BB]">Depósito en garantía</span>
+                    <span className="text-[#73777f]">Depósito en garantía</span>
                     <span className="font-semibold text-[#173A5F]">{money(contract.depositAmount)} MXN</span>
                   </div>
                 </div>
@@ -451,7 +451,7 @@ function TenantDashboard() {
                 </Link>
               </div>
               {recentPayments.length === 0 ? (
-                <p className="text-xs text-[#A7B0BB]">No hay pagos registrados todavía.</p>
+                <p className="text-xs text-[#73777f]">No hay pagos registrados todavía.</p>
               ) : (
                 <div className="divide-y divide-[#A7B0BB]/20">
                   {recentPayments.map((p) => (
@@ -464,7 +464,7 @@ function TenantDashboard() {
                           <p className="text-xs font-bold text-[#173A5F]">
                             {p.paymentType === 'DEPOSIT' ? 'Depósito' : `Renta ${p.paymentNumber ? `${p.paymentNumber}/${p.totalPaymentsInContract}` : ''}`}
                           </p>
-                          <p className="text-[11px] text-[#A7B0BB]">Pagado el {formatDate(p.paidDate ?? p.dueDate)}</p>
+                          <p className="text-[11px] text-[#73777f]">Pagado el {formatDate(p.paidDate ?? p.dueDate)}</p>
                           <div className="mt-1 flex items-center gap-1.5">
                             <span className="px-1.5 py-0.5 bg-[#2D9E6B]/15 text-[#2D9E6B] text-[9px] font-bold rounded-lg">Pagado</span>
                           </div>

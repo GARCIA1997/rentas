@@ -396,11 +396,11 @@ function ContractCancelModal({
 
         <div className="bg-[#F5F1E8]/60 border border-[#A7B0BB]/30 rounded-lg p-3 mb-4 flex items-center justify-between text-xs">
           <div>
-            <span className="text-[10px] text-[#A7B0BB] font-bold uppercase tracking-wider block">Inquilino</span>
+            <span className="text-[10px] text-[#73777f] font-bold uppercase tracking-wider block">Inquilino</span>
             <span className="font-bold text-[#173A5F]">{contract.tenant?.fullName ?? '—'}</span>
           </div>
           <div className="text-right">
-            <span className="text-[10px] text-[#A7B0BB] font-bold uppercase tracking-wider block">Vigencia pactada</span>
+            <span className="text-[10px] text-[#73777f] font-bold uppercase tracking-wider block">Vigencia pactada</span>
             <span className="font-semibold text-slate-700">Hasta {contract.endDate ? formatDate(contract.endDate) : '—'}</span>
           </div>
         </div>
@@ -417,7 +417,7 @@ function ContractCancelModal({
           ) : (
             <p className="text-slate-500">Este contrato no tiene penalizaciones definidas.</p>
           )}
-          <p className="text-[10px] text-[#A7B0BB] mt-1.5">Aplícalas manualmente al liquidar el depósito; el sistema no las cobra.</p>
+          <p className="text-[10px] text-[#73777f] mt-1.5">Aplícalas manualmente al liquidar el depósito; el sistema no las cobra.</p>
         </div>
 
         <div className="mb-5">
@@ -425,7 +425,7 @@ function ContractCancelModal({
             <label htmlFor="motivo" className="text-xs font-bold text-[#173A5F] flex items-center gap-1">
               Motivo de la cancelación <span className="text-red-500">*</span>
             </label>
-            <span className="text-[11px] font-semibold text-[#A7B0BB]">{reason.length} / 1000</span>
+            <span className="text-[11px] font-semibold text-[#73777f]">{reason.length} / 1000</span>
           </div>
           <textarea
             id="motivo"
@@ -548,7 +548,7 @@ function SignedModal({
         </div>
       </button>
       <div className="flex items-start gap-2 px-1 mt-4 text-slate-500">
-        <span className="material-symbols-outlined text-[18px] text-[#A7B0BB] flex-shrink-0 mt-0.5">info</span>
+        <span className="material-symbols-outlined text-[18px] text-[#73777f] flex-shrink-0 mt-0.5">info</span>
         <p className="text-xs leading-relaxed text-slate-500">Al confirmar se generará el calendario completo de {contract.durationMonths} pagos.</p>
       </div>
       <div className="pt-4 grid grid-cols-2 gap-3">
@@ -909,14 +909,14 @@ export default function ContractDetailPage() {
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#73777f] block mb-2">Servicios y Cláusulas Clave</span>
               <div className="flex flex-wrap gap-1.5">
                 <span className={chip}>
-                  <span className={`material-symbols-outlined text-[14px] ${contract.waterIncluded ? 'text-[#2D9E6B]' : 'text-[#A7B0BB]'}`}>
+                  <span className={`material-symbols-outlined text-[14px] ${contract.waterIncluded ? 'text-[#2D9E6B]' : 'text-[#73777f]'}`}>
                     {contract.waterIncluded ? 'check_circle' : 'cancel'}
                   </span>
                   {contract.waterIncluded ? 'Agua incluida' : 'Agua no incluida'}
                 </span>
                 {contract.property?.propertyType === 'HOUSE' && (
                   <span className={chip}>
-                    <span className={`material-symbols-outlined text-[14px] ${contract.hasParking ? 'text-[#2D9E6B]' : 'text-[#A7B0BB]'}`}>
+                    <span className={`material-symbols-outlined text-[14px] ${contract.hasParking ? 'text-[#2D9E6B]' : 'text-[#73777f]'}`}>
                       {contract.hasParking ? 'check_circle' : 'cancel'}
                     </span>
                     {contract.hasParking ? 'Estacionamiento (1 cajón)' : 'Sin estacionamiento'}
