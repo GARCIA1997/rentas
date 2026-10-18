@@ -16,10 +16,11 @@ import {
   Representative,
   ContractTemplateSummary,
 } from '@/lib/api';
-import { ArrowLeftIcon, CheckCircleIcon } from '@/components/icons';
 import { useToast } from '@/components/ToastProvider';
 
 const STEP_LABELS = ['Inquilino', 'Propiedad y fechas', 'Renta y depósito', 'Firma y plantilla', 'Condiciones', 'Revisión'];
+// Etiquetas cortas del stepper horizontal de Stitch (contract-wizard.html).
+const STEP_SHORT = ['Inquilino', 'Inmueble', 'Renta', 'Firma', 'Cláusulas', 'Revisión'];
 
 interface WizardState {
   tenantId: string;
@@ -211,8 +212,10 @@ export default function NewContractWizardPage() {
   if (createdContractId) {
     return (
       <ProtectedRoute requiredRole="ADMIN">
-        <div className="max-w-lg mx-auto text-center py-12">
-          <CheckCircleIcon className="w-16 h-16 text-[#2D9E6B] mx-auto mb-4" />
+        <div className="max-w-md mx-auto text-center px-4 py-16">
+          <div className="w-16 h-16 rounded-full bg-[#2D9E6B]/15 flex items-center justify-center mx-auto mb-4">
+            <span className="material-symbols-outlined fill text-[#2D9E6B] text-[40px]">task_alt</span>
+          </div>
           <h1 className="text-2xl font-bold text-[#173A5F] mb-2">Contrato creado</h1>
           <p className="text-[#586270] mb-8">
             Se generó el calendario completo de pagos mensuales para este contrato. Ya puedes generar el PDF para
@@ -241,35 +244,78 @@ export default function NewContractWizardPage() {
   if (isLoadingData) {
     return (
       <ProtectedRoute requiredRole="ADMIN">
-        <p className="text-[#586270]">Cargando...</p>
+        <p className="p-4 text-xs text-[#73777f]">Cargando...</p>
       </ProtectedRoute>
     );
   }
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="max-w-xl mx-auto">
-        <button
-          onClick={() => (step === 0 ? router.push('/contracts') : setStep(step - 1))}
-          className="flex items-center gap-1.5 text-[#586270] hover:text-[#173A5F] text-sm mb-4 -ml-1"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          {step === 0 ? 'Contratos' : STEP_LABELS[step - 1]}
-        </button>
+      {/* Markup portado de Stitch: design/stitch/contract-wizard.html (pantalla de tarea, sin tab bar) */}
+      <div className="min-h-[100dvh] flex flex-col bg-[#fdf9f0]">
+        <header className="bg-[#173a5f] text-[#ffffff] w-full sticky top-0 z-30 border-b border-[#002445] pt-[env(safe-area-inset-top)]">
+          <div className="max-w-xl mx-auto flex items-center gap-3 px-4 py-3 h-14">
+            <button
+              aria-label="Regresar"
+              type="button"
+              onClick={() => (step === 0 ? router.push('/contracts') : setStep(step - 1))}
+              className="text-[#ffffff] p-1.5 rounded-lg hover:bg-[#002445] transition-opacity active:opacity-90 flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div>
+              <h1 className="text-headline-sm font-sans text-[#ffffff] leading-tight font-semibold tracking-tight">Nuevo contrato</h1>
+              <p className="text-label-sm font-sans text-[#85a4cf] font-medium">
+                Paso {step + 1} de {STEP_LABELS.length}: {STEP_LABELS[step]}
+              </p>
+            </div>
+          </div>
+        </header>
 
-        {/* Progress bar */}
-        <div className="flex gap-1.5 mb-2">
-          {STEP_LABELS.map((_, i) => (
-            <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? 'bg-[#2D9E6B]' : 'bg-black/10'}`} />
-          ))}
-        </div>
-        <p className="text-xs text-[#586270] mb-6">
-          Paso {step + 1} de {STEP_LABELS.length}
-        </p>
+        <nav aria-label="Progreso del contrato" className="bg-[#ffffff] border-b border-[#e6e2d9] px-2 py-3.5">
+          <div className="max-w-xl mx-auto flex items-center justify-between">
+            {STEP_SHORT.map((label, i) => {
+              const done = i < step;
+              const active = i === step;
+              return (
+                <div key={label} className="flex flex-col items-center flex-1 min-w-0">
+                  <div className="flex items-center w-full">
+                    <span className={`w-full h-0.5 ${i === 0 ? 'bg-transparent' : i <= step ? 'bg-[#2D9E6B]' : 'bg-[#c3c6cf]'}`}></span>
+                    {done ? (
+                      <div className="w-6 h-6 rounded-full bg-[#2D9E6B] text-[#ffffff] flex items-center justify-center shrink-0 ring-2 ring-[#8cf8bd]">
+                        <span className="material-symbols-outlined text-[15px]">check</span>
+                      </div>
+                    ) : active ? (
+                      <div className="w-6 h-6 rounded-full bg-[#173a5f] text-[#ffffff] flex items-center justify-center text-label-sm font-sans font-bold shrink-0 ring-4 ring-[#d3e4ff]">
+                        {i + 1}
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-[#ece8df] border border-[#c3c6cf] text-[#43474e] flex items-center justify-center text-label-sm font-sans shrink-0">
+                        {i + 1}
+                      </div>
+                    )}
+                    <span className={`w-full h-0.5 ${i === STEP_SHORT.length - 1 ? 'bg-transparent' : i < step ? 'bg-[#2D9E6B]' : 'bg-[#c3c6cf]'}`}></span>
+                  </div>
+                  <span
+                    className={`text-[10px] font-sans mt-1 tracking-tight truncate max-w-full ${
+                      done ? 'font-medium text-[#2D9E6B]' : active ? 'font-bold text-[#173a5f]' : 'font-medium text-[#73777f]'
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </nav>
 
-        <h1 className="text-xl font-bold text-[#173A5F] mb-5">{STEP_LABELS[step]}</h1>
+        <main className="flex-1 w-full max-w-xl mx-auto px-4 py-4">
+        <h2 className="text-sm font-bold text-[#173A5F] mb-3 flex items-center gap-2">
+          <span className="material-symbols-outlined text-[#2D9E6B] text-[20px]">history_edu</span>
+          {STEP_LABELS[step]}
+        </h2>
 
-        <div className="bg-white rounded-lg border border-[#A7B0BB]/30 shadow-sm p-5 space-y-4">
+        <div className="bg-white rounded-[8px] border border-[#DDD9CF] shadow-[0_1px_3px_rgba(23,58,95,0.04)] p-4 space-y-4">
           {/* Step 0: Tenant */}
           {step === 0 && (
             <>
@@ -615,35 +661,43 @@ export default function NewContractWizardPage() {
           })()}
         </div>
 
-        {/* Navigation */}
+        </main>
+
         {!(step === 0 && showNewTenantForm) && (
-          <div className="flex gap-3 mt-6">
-            {step > 0 && (
-              <button
-                onClick={() => setStep(step - 1)}
-                className="flex-1 py-3 rounded-lg text-sm font-medium text-[#586270] bg-white hover:bg-[#F5F1E8]"
-              >
-                Atrás
-              </button>
-            )}
-            {step < STEP_LABELS.length - 1 ? (
-              <button
-                onClick={() => setStep(step + 1)}
-                disabled={!canProceed()}
-                className="flex-1 bg-[#2D9E6B] hover:bg-[#25855a] text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
-              >
-                Siguiente
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="flex-1 bg-[#2D9E6B] hover:bg-[#25855a] text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
-              >
-                {isSubmitting ? 'Creando...' : 'Crear contrato'}
-              </button>
-            )}
-          </div>
+          <footer className="sticky bottom-0 bg-white border-t border-[#DDD9CF] px-4 py-3.5 pb-[calc(env(safe-area-inset-bottom)+0.875rem)] z-30 shadow-[0_-2px_10px_rgba(23,58,95,0.06)]">
+            <div className="max-w-xl mx-auto flex gap-3">
+              {step > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setStep(step - 1)}
+                  className="flex-1 py-3.5 px-4 rounded-[8px] border border-[#A7B0BB] bg-white text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8] transition-all"
+                >
+                  Atrás
+                </button>
+              )}
+              {step < STEP_LABELS.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setStep(step + 1)}
+                  disabled={!canProceed()}
+                  className="flex-[2] py-3.5 px-4 rounded-[8px] bg-[#173A5F] text-white text-sm font-bold hover:bg-[#122e4c] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <span>Siguiente</span>
+                  <span className="material-symbols-outlined text-[19px]">arrow_forward</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="flex-[2] py-3.5 px-4 rounded-[8px] bg-[#2D9E6B] text-white text-sm font-bold hover:bg-[#258257] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <span className="material-symbols-outlined text-[19px]">task_alt</span>
+                  <span>{isSubmitting ? 'Creando...' : 'Crear contrato'}</span>
+                </button>
+              )}
+            </div>
+          </footer>
         )}
       </div>
     </ProtectedRoute>

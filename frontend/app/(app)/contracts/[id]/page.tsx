@@ -23,7 +23,7 @@ import { DetailHeader } from '@/components/StitchHeader';
 
 const contractFolio = (c: Contract) => `CTR-${c.id.slice(-6).toUpperCase()}`;
 const money = (v: string | number) => `$${Number(v).toLocaleString('es-MX')}`;
-const monthShort = (iso: string) => new Date(iso).toLocaleDateString('es-MX', { month: 'short' }).replace('.', '');
+const monthShort = (iso: string) => new Date(iso).toLocaleDateString('es-MX', { month: 'short', timeZone: 'UTC' }).replace('.', '');
 const waLink = (phone: string) => `https://wa.me/52${phone.replace(/\D/g, '').slice(-10)}`;
 
 // Elegible para renovar: ACTIVE y termina dentro de 2 meses (mismo criterio que el backend).

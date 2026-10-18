@@ -10,7 +10,6 @@ import { parseIneData, type ParsedIneResult } from '@/lib/ineParser';
 import { runIneOcr } from '@/lib/ineOcr';
 import type { Roi } from '@/lib/imagePreprocess';
 import {
-  ArrowLeftIcon,
   CheckCircleIcon,
   CameraIcon,
   RotateCardIcon,
@@ -209,7 +208,7 @@ export default function NewTenantWizardPage() {
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-lg min-h-[100dvh] px-4 pb-8">
         {stage === 'intro-front' && (
           <IntroScreen
             step="Paso 1 de 2"
@@ -305,18 +304,25 @@ export default function NewTenantWizardPage() {
 
 // --- Pantallas del wizard ---------------------------------------------------
 
+// Encabezado azul de pantalla de tarea (Stitch: ine-camera.html / ine-review.html).
 function StepHeader({ step, onBack }: { step: string; onBack: () => void }) {
   return (
-    <div className="mb-6 flex items-center justify-between">
-      <button
-        onClick={onBack}
-        className="-ml-1 flex items-center gap-1.5 text-sm text-[#586270] hover:text-[#173A5F]"
-      >
-        <ArrowLeftIcon className="h-4 w-4" />
-        Atrás
-      </button>
-      <span className="text-xs font-medium text-[#586270]">{step}</span>
-    </div>
+    <header className="-mx-4 mb-5 sticky top-0 z-30 bg-[#173a5f] text-white border-b border-[#002445] pt-[env(safe-area-inset-top)]">
+      <div className="flex items-center gap-3 px-4 py-3 h-14">
+        <button
+          onClick={onBack}
+          aria-label="Regresar"
+          type="button"
+          className="text-white p-1.5 rounded-lg hover:bg-[#002445] active:opacity-90 flex items-center justify-center"
+        >
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <div>
+          <h1 className="text-headline-sm font-sans text-white leading-tight font-semibold tracking-tight">Nuevo inquilino</h1>
+          <p className="text-label-sm font-sans text-[#85a4cf] font-medium">{step}</p>
+        </div>
+      </div>
+    </header>
   );
 }
 
@@ -341,12 +347,12 @@ function IntroScreen({
     <div>
       <StepHeader step={step} onBack={onBack} />
 
-      <div className="rounded-lg bg-white p-6 text-center">
+      <div className="rounded-[8px] border border-[#DDD9CF] bg-white p-6 text-center shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
         <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#2D9E6B]/10">
           <RotateCardIcon className="h-10 w-10 text-[#2D9E6B]" />
         </div>
 
-        <h1 className="mb-2 text-xl font-bold text-[#173A5F]">{title}</h1>
+        <h2 className="mb-2 text-lg font-bold text-[#173A5F]">{title}</h2>
         <p className="mb-6 text-sm leading-relaxed text-[#586270]">{description}</p>
 
         <ul className="mb-6 space-y-2.5 text-left">
@@ -364,7 +370,7 @@ function IntroScreen({
 
         <button
           onClick={onContinue}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#25855a]"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-bold text-white hover:bg-[#25855a]"
         >
           <CameraIcon className="h-4 w-4" />
           {continueLabel}
@@ -397,7 +403,7 @@ function ConfirmScreen({
     <div>
       <StepHeader step={step} onBack={onBack} />
 
-      <h1 className="mb-1 text-xl font-bold text-[#173A5F]">{title}</h1>
+      <h2 className="mb-1 text-lg font-bold text-[#173A5F]">{title}</h2>
       <p className="mb-5 text-sm text-[#586270]">
         Si el texto se ve borroso o cortado, vuelve a tomarla: de esta foto sale todo lo demás.
       </p>
@@ -410,13 +416,13 @@ function ConfirmScreen({
       <div className="flex gap-3">
         <button
           onClick={onRetake}
-          className="flex-1 rounded-lg bg-white py-3.5 text-sm font-medium text-[#586270] hover:bg-[#F5F1E8]"
+          className="flex-1 rounded-lg border border-[#A7B0BB] bg-white py-3.5 text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8]"
         >
           Volver a tomar
         </button>
         <button
           onClick={onContinue}
-          className="flex-1 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#25855a]"
+          className="flex-1 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-bold text-white hover:bg-[#25855a]"
         >
           {continueLabel}
         </button>
@@ -500,7 +506,7 @@ function ReviewScreen({
 }) {
   return (
     <div>
-      <h1 className="mb-1 text-xl font-bold text-[#173A5F]">Revisa los datos</h1>
+      <h2 className="mb-1 text-lg font-bold text-[#173A5F]">Revisa los datos</h2>
       <p className="mb-5 text-sm text-[#586270]">
         {front ? 'El teléfono no viene en el INE, agrégalo a mano.' : 'Captura los datos del inquilino.'}
       </p>
@@ -529,7 +535,7 @@ function ReviewScreen({
         </div>
       )}
 
-      <div className="space-y-4 rounded-lg bg-white p-5 shadow-sm">
+      <div className="space-y-4 rounded-[8px] border border-[#DDD9CF] bg-white p-4 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
         <div>
           <label className={labelClass}>
             Nombre completo
@@ -633,14 +639,14 @@ function ReviewScreen({
       <div className="mt-6 flex gap-3">
         <button
           onClick={onCancel}
-          className="flex-1 rounded-lg bg-white py-3.5 text-sm font-medium text-[#586270] hover:bg-[#F5F1E8]"
+          className="flex-1 rounded-lg border border-[#A7B0BB] bg-white py-3.5 text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8]"
         >
           Cancelar
         </button>
         <button
           onClick={onSubmit}
           disabled={isSaving}
-          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#25855a] disabled:opacity-50"
+          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-bold text-white hover:bg-[#25855a] disabled:opacity-50"
         >
           {isSaving ? (
             'Guardando...'

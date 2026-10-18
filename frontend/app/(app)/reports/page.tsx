@@ -91,6 +91,7 @@ export default function ReportsPage() {
   const overdueList = inPeriod.filter((p) => p.status === 'OVERDUE');
   const pending = pendingList.reduce((sum, p) => sum + Number(p.amountDue) - Number(p.amountPaid || 0), 0);
   const overdue = overdueList.reduce((sum, p) => sum + Number(p.amountDue) - Number(p.amountPaid || 0), 0);
+  const overdueTenants = new Set(overdueList.map((p) => p.tenantId)).size;
   const totalDue = inPeriod.reduce((sum, p) => sum + Number(p.amountDue), 0);
   const rate = totalDue > 0 ? Math.round((collected / totalDue) * 100) : 0;
 
@@ -193,7 +194,7 @@ export default function ReportsPage() {
                 <div className="mt-2">
                   <span className="font-sans text-headline-sm font-bold text-[#173a5f] block tracking-tight">{money(pending)}</span>
                   <span className="inline-flex items-center text-[10px] font-semibold text-[#D9822B] bg-[#D9822B]/15 px-1.5 py-0.5 rounded-full mt-1">
-                    {pendingList.length} pagos
+                    {pendingList.length} {pendingList.length === 1 ? 'pago' : 'pagos'}
                   </span>
                 </div>
               </div>
@@ -205,7 +206,7 @@ export default function ReportsPage() {
                 <div className="mt-2">
                   <span className="font-sans text-headline-sm font-bold text-[#C0392B] block tracking-tight">{money(overdue)}</span>
                   <span className="inline-flex items-center text-[10px] font-semibold text-[#C0392B] bg-[#C0392B]/15 px-1.5 py-0.5 rounded-full mt-1">
-                    {new Set(overdueList.map((p) => p.tenantId)).size} inquilinos
+                    {overdueTenants} {overdueTenants === 1 ? 'inquilino' : 'inquilinos'}
                   </span>
                 </div>
               </div>
@@ -217,7 +218,7 @@ export default function ReportsPage() {
                 <div className="mt-2">
                   <span className="font-sans text-headline-sm font-bold text-[#173a5f] block tracking-tight">{money(totalDue)}</span>
                   <span className="inline-flex items-center text-[10px] font-semibold text-[#173a5f] bg-[#173a5f]/10 px-1.5 py-0.5 rounded-full mt-1">
-                    {inPeriod.length} pagos del periodo
+                    {inPeriod.length} {inPeriod.length === 1 ? 'pago' : 'pagos'} del periodo
                   </span>
                 </div>
               </div>

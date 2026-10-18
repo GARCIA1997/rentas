@@ -23,7 +23,7 @@ export function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-[#173A5F]/50 backdrop-blur-[1px]" onClick={onClose} />
       <div className="relative z-10 w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-2xl shadow-[0_-8px_30px_rgba(23,58,95,0.25)] border-t border-[#A7B0BB]/30 max-h-[92vh] overflow-y-auto animate-sheet-up sm:animate-none pb-[env(safe-area-inset-bottom)]">
         {/* Asa de arrastre gris */}
