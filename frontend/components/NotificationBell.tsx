@@ -54,27 +54,27 @@ export function NotificationBell({ onDark = false }: { onDark?: boolean }) {
       <button
         onClick={handleToggle}
         aria-label="Notificaciones"
-        className={`relative w-9 h-9 flex items-center justify-center rounded-full transition-colors ${onDark ? 'hover:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}
+        className={`relative w-9 h-9 flex items-center justify-center rounded-full transition-colors ${onDark ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}
       >
-        <BellIcon className={`w-5 h-5 ${onDark ? 'text-white' : 'text-muted'}`} />
+        <BellIcon className={`w-5 h-5 ${onDark ? 'text-white' : 'text-[#586270]'}`} />
         {count > 0 && (
           <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500" />
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-11 z-30 w-80 max-w-[85vw] max-h-96 overflow-y-auto glass-chrome rounded-2xl shadow-lg">
-          <div className="px-4 py-3 border-b border-black/[0.06] dark:border-white/[0.08]">
-            <p className="text-sm font-semibold text-heading">Notificaciones</p>
+        <div className="absolute right-0 top-11 z-30 w-80 max-w-[85vw] max-h-96 overflow-y-auto glass-chrome rounded-lg shadow-lg">
+          <div className="px-4 py-3 border-b border-black/[0.06]">
+            <p className="text-sm font-semibold text-[#173A5F]">Notificaciones</p>
           </div>
           {notifications.length === 0 ? (
-            <p className="text-muted text-sm text-center py-6 px-4">Sin notificaciones.</p>
+            <p className="text-[#586270] text-sm text-center py-6 px-4">Sin notificaciones.</p>
           ) : (
-            <div className="divide-y divide-black/5 dark:divide-white/10">
+            <div className="divide-y divide-black/5">
               {notifications.map((n) => (
                 <div key={n.id} className="px-4 py-3">
-                  <p className="text-heading text-sm">{n.whatsappMessage}</p>
-                  <p className="text-muted text-xs mt-1">{formatDate(n.sentAt)}</p>
+                  <p className="text-[#173A5F] text-sm">{n.whatsappMessage}</p>
+                  <p className="text-[#586270] text-xs mt-1">{formatDate(n.sentAt)}</p>
                 </div>
               ))}
             </div>

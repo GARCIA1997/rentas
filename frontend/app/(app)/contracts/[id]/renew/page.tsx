@@ -83,11 +83,11 @@ export default function ContractRenewalPage() {
   };
 
   if (isLoading) {
-    return <p className="text-muted">Cargando...</p>;
+    return <p className="text-[#586270]">Cargando...</p>;
   }
 
   if (!contract) {
-    return <p className="text-muted">Contrato no encontrado.</p>;
+    return <p className="text-[#586270]">Contrato no encontrado.</p>;
   }
 
   const newEndDate = new Date(new Date(contract.endDate || new Date()).getTime() + durationMonths * 30 * 24 * 60 * 60 * 1000);
@@ -99,59 +99,59 @@ export default function ContractRenewalPage() {
       <div className="mb-6">
         <button
           onClick={() => router.back()}
-          className="text-primary text-sm font-medium mb-2"
+          className="text-[#2D9E6B] text-sm font-medium mb-2"
         >
           ← Volver
         </button>
-        <h1 className="text-2xl font-bold text-heading">Renovar contrato</h1>
-        <p className="text-muted text-sm mt-1">{contract.tenant?.fullName} • {contract.property?.name}</p>
+        <h1 className="text-2xl font-bold text-[#173A5F]">Renovar contrato</h1>
+        <p className="text-[#586270] text-sm mt-1">{contract.tenant?.fullName} • {contract.property?.name}</p>
       </div>
 
       {/* Original Contract Info */}
-      <div className="bg-surface rounded-2xl shadow-sm p-5 mb-6">
-        <h3 className="text-heading font-semibold mb-4">Contrato actual</h3>
+      <div className="bg-white rounded-lg border border-[#A7B0BB]/30 shadow-sm p-5 mb-6">
+        <h3 className="text-[#173A5F] font-semibold mb-4">Contrato actual</h3>
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted">Vigencia</span>
-            <span className="text-heading font-medium">
+            <span className="text-[#586270]">Vigencia</span>
+            <span className="text-[#173A5F] font-medium">
               {formatDate(contract.startDate)} — {contract.endDate ? formatDate(contract.endDate) : '—'}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted">Duración</span>
-            <span className="text-heading font-medium">{contract.durationMonths} meses</span>
+            <span className="text-[#586270]">Duración</span>
+            <span className="text-[#173A5F] font-medium">{contract.durationMonths} meses</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted">Renta mensual</span>
-            <span className="text-heading font-medium">${Number(contract.monthlyRent).toLocaleString('es-MX')}</span>
+            <span className="text-[#586270]">Renta mensual</span>
+            <span className="text-[#173A5F] font-medium">${Number(contract.monthlyRent).toLocaleString('es-MX')}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted">Depósito (referencia)</span>
-            <span className="text-heading font-medium">${Number(contract.depositAmount).toLocaleString('es-MX')}</span>
+            <span className="text-[#586270]">Depósito (referencia)</span>
+            <span className="text-[#173A5F] font-medium">${Number(contract.depositAmount).toLocaleString('es-MX')}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted">Día de pago</span>
-            <span className="text-heading font-medium">Día {contract.paymentDay} de cada mes</span>
+            <span className="text-[#586270]">Día de pago</span>
+            <span className="text-[#173A5F] font-medium">Día {contract.paymentDay} de cada mes</span>
           </div>
         </div>
       </div>
 
       {/* Renewal Form */}
-      <div className="bg-surface rounded-2xl shadow-sm p-5 space-y-6">
-        <h3 className="text-heading font-semibold">Términos de la renovación</h3>
+      <div className="bg-white rounded-lg border border-[#A7B0BB]/30 shadow-sm p-5 space-y-6">
+        <h3 className="text-[#173A5F] font-semibold">Términos de la renovación</h3>
 
         {/* Duration */}
         <div>
-          <label className="block text-sm font-medium text-heading mb-2">Duración (meses) *</label>
+          <label className="block text-sm font-medium text-[#173A5F] mb-2">Duración (meses) *</label>
           <input
             type="number"
             min="1"
             max="360"
             value={durationMonths}
             onChange={(e) => setDurationMonths(Number(e.target.value))}
-            className="w-full px-4 py-2.5 rounded-lg border border-black/10 dark:border-white/10 bg-canvas text-heading focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full px-4 py-2.5 rounded-lg border border-[#A7B0BB]/30 bg-[#F5F1E8] text-[#173A5F] focus:outline-none focus:ring-2 focus:ring-[#173A5F]/50"
           />
-          <p className="text-xs text-muted mt-1">
+          <p className="text-xs text-[#586270] mt-1">
             Fin de contrato: {formatDate(newEndDate.toISOString())}
           </p>
         </div>
@@ -159,10 +159,10 @@ export default function ContractRenewalPage() {
         {/* Monthly Rent */}
         <div>
           <div className="flex items-baseline justify-between mb-2">
-            <label className="block text-sm font-medium text-heading">Renta mensual *</label>
+            <label className="block text-sm font-medium text-[#173A5F]">Renta mensual *</label>
             <button
               onClick={handleAcceptSuggestion}
-              className="text-xs font-medium text-primary hover:underline"
+              className="text-xs font-medium text-[#2D9E6B] hover:underline"
             >
               Usar sugerencia de ${suggestedRent.toLocaleString('es-MX')}
             </button>
@@ -174,13 +174,13 @@ export default function ContractRenewalPage() {
               step="100"
               value={monthlyRent}
               onChange={(e) => setMonthlyRent(Number(e.target.value))}
-              className="flex-1 px-4 py-2.5 rounded-lg border border-black/10 dark:border-white/10 bg-canvas text-heading focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="flex-1 px-4 py-2.5 rounded-lg border border-[#A7B0BB]/30 bg-[#F5F1E8] text-[#173A5F] focus:outline-none focus:ring-2 focus:ring-[#173A5F]/50"
             />
           </div>
-          <p className="text-xs text-muted mt-2">
+          <p className="text-xs text-[#586270] mt-2">
             Aumento sugerido: 7% redondeado = ${suggestedRent.toLocaleString('es-MX')}
             {rentIncrease !== 0 && (
-              <span className={rentIncrease > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}>
+              <span className={rentIncrease > 0 ? 'text-amber-600' : 'text-emerald-600'}>
                 {' '}({rentIncreasePercent}% de cambio)
               </span>
             )}
@@ -189,11 +189,11 @@ export default function ContractRenewalPage() {
 
         {/* Representative */}
         <div>
-          <label className="block text-sm font-medium text-heading mb-2">Representante *</label>
+          <label className="block text-sm font-medium text-[#173A5F] mb-2">Representante *</label>
           <select
             value={representativeId}
             onChange={(e) => setRepresentativeId(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-lg border border-black/10 dark:border-white/10 bg-canvas text-heading focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full px-4 py-2.5 rounded-lg border border-[#A7B0BB]/30 bg-[#F5F1E8] text-[#173A5F] focus:outline-none focus:ring-2 focus:ring-[#173A5F]/50"
           >
             <option value="">Selecciona un representante</option>
             {representatives.map((rep) => (
@@ -202,34 +202,34 @@ export default function ContractRenewalPage() {
               </option>
             ))}
           </select>
-          <p className="text-xs text-muted mt-1">El representante será quien firme el contrato renovado.</p>
+          <p className="text-xs text-[#586270] mt-1">El representante será quien firme el contrato renovado.</p>
         </div>
 
         {/* Summary Card */}
-        <div className="bg-emerald-50 dark:bg-emerald-900/10 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800">
-          <h4 className="text-sm font-semibold text-emerald-900 dark:text-emerald-100 mb-3">Resumen de la renovación</h4>
+        <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+          <h4 className="text-sm font-semibold text-emerald-900 mb-3">Resumen de la renovación</h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-emerald-800 dark:text-emerald-200">Nuevo inicio:</span>
-              <span className="font-medium text-emerald-900 dark:text-emerald-100">
+              <span className="text-emerald-800">Nuevo inicio:</span>
+              <span className="font-medium text-emerald-900">
                 {formatDate(new Date(new Date(contract.endDate || new Date()).getTime() + 1 * 24 * 60 * 60 * 1000).toISOString())}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-emerald-800 dark:text-emerald-200">Nuevo fin:</span>
-              <span className="font-medium text-emerald-900 dark:text-emerald-100">
+              <span className="text-emerald-800">Nuevo fin:</span>
+              <span className="font-medium text-emerald-900">
                 {formatDate(newEndDate.toISOString())}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-emerald-800 dark:text-emerald-200">Renta mensual:</span>
-              <span className="font-medium text-emerald-900 dark:text-emerald-100">
+              <span className="text-emerald-800">Renta mensual:</span>
+              <span className="font-medium text-emerald-900">
                 ${monthlyRent.toLocaleString('es-MX')}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-emerald-800 dark:text-emerald-200">Sin depósito</span>
-              <span className="font-medium text-emerald-900 dark:text-emerald-100">
+              <span className="text-emerald-800">Sin depósito</span>
+              <span className="font-medium text-emerald-900">
                 (Referencia: ${Number(contract.depositAmount).toLocaleString('es-MX')})
               </span>
             </div>
@@ -240,14 +240,14 @@ export default function ContractRenewalPage() {
         <div className="flex gap-3 pt-2">
           <button
             onClick={() => router.back()}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 text-heading font-medium hover:bg-surface transition-colors"
+            className="flex-1 px-4 py-2.5 rounded-lg border border-[#A7B0BB]/30 text-[#173A5F] font-medium hover:bg-white transition-colors"
           >
             Cancelar
           </button>
           <button
             onClick={handleRenew}
             disabled={isSubmitting}
-            className="flex-1 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-pressed text-white font-medium transition-colors disabled:opacity-50 active:opacity-80"
+            className="flex-1 px-4 py-2.5 rounded-lg bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white font-medium transition-colors disabled:opacity-50 active:opacity-80"
           >
             {isSubmitting ? 'Creando...' : 'Crear renovación'}
           </button>

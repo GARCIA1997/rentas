@@ -60,8 +60,8 @@ const emptyState: WizardState = {
 const emptyTenantForm: TenantInput = { fullName: '', phone: '', email: '', idDocument: '', status: 'ACTIVE' };
 
 const inputClass =
-  'w-full px-3 py-2.5 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-xl focus:outline-none focus:ring-2 focus:ring-primary';
-const labelClass = 'block text-sm font-medium text-heading mb-1.5';
+  'w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all';
+const labelClass = 'block text-xs font-bold text-[#173A5F] mb-1.5';
 
 export default function NewContractWizardPage() {
   const { token } = useAuth();
@@ -212,9 +212,9 @@ export default function NewContractWizardPage() {
     return (
       <ProtectedRoute requiredRole="ADMIN">
         <div className="max-w-lg mx-auto text-center py-12">
-          <CheckCircleIcon className="w-16 h-16 text-primary mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-heading mb-2">Contrato creado</h1>
-          <p className="text-muted mb-8">
+          <CheckCircleIcon className="w-16 h-16 text-[#2D9E6B] mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-[#173A5F] mb-2">Contrato creado</h1>
+          <p className="text-[#586270] mb-8">
             Se generó el calendario completo de pagos mensuales para este contrato. Ya puedes generar el PDF para
             imprimir y firmar.
           </p>
@@ -222,13 +222,13 @@ export default function NewContractWizardPage() {
             <button
               onClick={handleGeneratePdfNow}
               disabled={isGeneratingPdf || !form.templateId}
-              className="bg-primary hover:bg-primary-pressed text-white py-3 rounded-xl text-sm font-medium disabled:opacity-50"
+              className="bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
             >
               {isGeneratingPdf ? 'Generando...' : 'Generar PDF ahora'}
             </button>
             <button
               onClick={() => router.push('/contracts')}
-              className="text-muted py-3 rounded-xl text-sm font-medium hover:bg-surface"
+              className="text-[#586270] py-3 rounded-lg text-sm font-medium hover:bg-white"
             >
               Ir a Contratos
             </button>
@@ -241,7 +241,7 @@ export default function NewContractWizardPage() {
   if (isLoadingData) {
     return (
       <ProtectedRoute requiredRole="ADMIN">
-        <p className="text-muted">Cargando...</p>
+        <p className="text-[#586270]">Cargando...</p>
       </ProtectedRoute>
     );
   }
@@ -251,7 +251,7 @@ export default function NewContractWizardPage() {
       <div className="max-w-xl mx-auto">
         <button
           onClick={() => (step === 0 ? router.push('/contracts') : setStep(step - 1))}
-          className="flex items-center gap-1.5 text-muted hover:text-heading text-sm mb-4 -ml-1"
+          className="flex items-center gap-1.5 text-[#586270] hover:text-[#173A5F] text-sm mb-4 -ml-1"
         >
           <ArrowLeftIcon className="w-4 h-4" />
           {step === 0 ? 'Contratos' : STEP_LABELS[step - 1]}
@@ -260,16 +260,16 @@ export default function NewContractWizardPage() {
         {/* Progress bar */}
         <div className="flex gap-1.5 mb-2">
           {STEP_LABELS.map((_, i) => (
-            <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? 'bg-primary' : 'bg-black/10 dark:bg-white/10'}`} />
+            <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? 'bg-[#2D9E6B]' : 'bg-black/10'}`} />
           ))}
         </div>
-        <p className="text-xs text-muted mb-6">
+        <p className="text-xs text-[#586270] mb-6">
           Paso {step + 1} de {STEP_LABELS.length}
         </p>
 
-        <h1 className="text-xl font-bold text-heading mb-5">{STEP_LABELS[step]}</h1>
+        <h1 className="text-xl font-bold text-[#173A5F] mb-5">{STEP_LABELS[step]}</h1>
 
-        <div className="bg-surface rounded-2xl shadow-sm p-5 space-y-4">
+        <div className="bg-white rounded-lg border border-[#A7B0BB]/30 shadow-sm p-5 space-y-4">
           {/* Step 0: Tenant */}
           {step === 0 && (
             <>
@@ -284,27 +284,27 @@ export default function NewContractWizardPage() {
                   />
                   <div className="max-h-72 overflow-y-auto -mx-1 px-1 space-y-2">
                     {filteredTenants.length === 0 ? (
-                      <p className="text-muted text-sm py-4 text-center">Sin resultados.</p>
+                      <p className="text-[#586270] text-sm py-4 text-center">Sin resultados.</p>
                     ) : (
                       filteredTenants.map((tenant) => (
                         <button
                           key={tenant.id}
                           onClick={() => setForm((prev) => ({ ...prev, tenantId: tenant.id }))}
-                          className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${
+                          className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                             form.tenantId === tenant.id
-                              ? 'border-primary bg-primary/10'
-                              : 'border-black/10 dark:border-white/10 hover:bg-canvas'
+                              ? 'border-[#2D9E6B] bg-[#2D9E6B]/10'
+                              : 'border-[#A7B0BB]/30 hover:bg-[#F5F1E8]'
                           }`}
                         >
-                          <p className="text-heading font-medium text-sm">{tenant.fullName}</p>
-                          <p className="text-muted text-xs">{tenant.phone || 'Sin teléfono'}</p>
+                          <p className="text-[#173A5F] font-medium text-sm">{tenant.fullName}</p>
+                          <p className="text-[#586270] text-xs">{tenant.phone || 'Sin teléfono'}</p>
                         </button>
                       ))
                     )}
                   </div>
                   <button
                     onClick={() => setShowNewTenantForm(true)}
-                    className="w-full text-primary text-sm font-medium py-2.5 rounded-xl border border-dashed border-primary/40 hover:bg-primary/5"
+                    className="w-full text-[#2D9E6B] text-sm font-medium py-2.5 rounded-lg border border-dashed border-[#2D9E6B]/40 hover:bg-[#2D9E6B]/5"
                   >
                     + Crear inquilino nuevo
                   </button>
@@ -350,18 +350,18 @@ export default function NewContractWizardPage() {
                       className={inputClass}
                     />
                   </div>
-                  {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
+                  {error && <p className="text-red-600 text-sm">{error}</p>}
                   <div className="flex gap-3">
                     <button
                       onClick={() => setShowNewTenantForm(false)}
-                      className="flex-1 py-2.5 rounded-xl text-sm font-medium text-muted hover:bg-canvas"
+                      className="flex-1 py-2.5 rounded-lg text-sm font-medium text-[#586270] hover:bg-[#F5F1E8]"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleCreateTenant}
                       disabled={!newTenant.fullName || isCreatingTenant}
-                      className="flex-1 bg-primary hover:bg-primary-pressed text-white py-2.5 rounded-xl text-sm font-medium disabled:opacity-50"
+                      className="flex-1 bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
                     >
                       {isCreatingTenant ? 'Creando...' : 'Crear y seleccionar'}
                     </button>
@@ -387,7 +387,7 @@ export default function NewContractWizardPage() {
                   ))}
                 </select>
                 {selectedProperty?.status === 'OCUPADA' && (
-                  <p className="text-amber-600 dark:text-amber-400 text-xs mt-1.5">
+                  <p className="text-amber-600 text-xs mt-1.5">
                     Esta propiedad ya figura como ocupada. Verifica que no tenga otro contrato activo vigente.
                   </p>
                 )}
@@ -423,7 +423,7 @@ export default function NewContractWizardPage() {
                   onChange={(e) => setForm({ ...form, paymentDay: e.target.value })}
                   className={inputClass}
                 />
-                <p className="text-xs text-muted mt-1">Los pagos se vencen en este día de cada mes</p>
+                <p className="text-xs text-[#586270] mt-1">Los pagos se vencen en este día de cada mes</p>
               </div>
             </>
           )}
@@ -432,7 +432,7 @@ export default function NewContractWizardPage() {
           {step === 2 && (
             <>
               {selectedProperty && (
-                <p className="text-xs text-muted bg-canvas rounded-lg px-3 py-2">
+                <p className="text-xs text-[#586270] bg-[#F5F1E8] rounded-lg px-3 py-2">
                   Precio de lista de {selectedProperty.name}: ${Number(selectedProperty.rentalPrice).toLocaleString('es-MX')}
                   /mes. Puedes ajustar la renta pactada para este contrato específico.
                 </p>
@@ -461,7 +461,7 @@ export default function NewContractWizardPage() {
                   />
                 </div>
               </div>
-              <label className="flex items-center gap-2 text-sm text-heading">
+              <label className="flex items-center gap-2 text-sm text-[#173A5F]">
                 <input
                   type="checkbox"
                   checked={form.waterIncluded}
@@ -470,7 +470,7 @@ export default function NewContractWizardPage() {
                 />
                 Agua incluida en la renta
               </label>
-              <p className="text-xs text-muted">
+              <p className="text-xs text-[#586270]">
                 Se creará automáticamente un pago mensual pendiente por este monto durante todo el plazo del
                 contrato.
               </p>
@@ -495,7 +495,7 @@ export default function NewContractWizardPage() {
                   ))}
                 </select>
                 {representatives.length === 0 && (
-                  <p className="text-muted text-xs mt-1.5">
+                  <p className="text-[#586270] text-xs mt-1.5">
                     No hay representantes activos. Puedes agregarlos en Configuración → Representantes.
                   </p>
                 )}
@@ -521,7 +521,7 @@ export default function NewContractWizardPage() {
           {/* Step 4: Conditions */}
           {step === 4 && (
             <>
-              <label className="flex items-center gap-2 text-sm text-heading">
+              <label className="flex items-center gap-2 text-sm text-[#173A5F]">
                 <input
                   type="checkbox"
                   checked={form.autoRenewal}
@@ -531,7 +531,7 @@ export default function NewContractWizardPage() {
                 Renovación automática al finalizar
               </label>
               {selectedProperty?.propertyType === 'HOUSE' && (
-                <label className="flex items-center gap-2 text-sm text-heading">
+                <label className="flex items-center gap-2 text-sm text-[#173A5F]">
                   <input
                     type="checkbox"
                     checked={form.hasParking}
@@ -604,12 +604,12 @@ export default function NewContractWizardPage() {
                 ['Plantilla', selectedTemplate?.name ?? 'Sin plantilla'],
                 ['Renovación automática', form.autoRenewal ? 'Sí' : 'No'],
               ].map(([label, value]) => (
-                <div key={label} className="flex justify-between py-2 border-b border-black/5 dark:border-white/10 last:border-0 text-sm">
-                  <span className="text-muted">{label}</span>
-                  <span className="text-heading font-medium text-right">{value}</span>
+                <div key={label} className="flex justify-between py-2 border-b border-[#A7B0BB]/30 last:border-0 text-sm">
+                  <span className="text-[#586270]">{label}</span>
+                  <span className="text-[#173A5F] font-medium text-right">{value}</span>
                 </div>
               ))}
-              {error && <p className="text-red-600 dark:text-red-400 text-sm pt-2">{error}</p>}
+              {error && <p className="text-red-600 text-sm pt-2">{error}</p>}
             </div>
             );
           })()}
@@ -621,7 +621,7 @@ export default function NewContractWizardPage() {
             {step > 0 && (
               <button
                 onClick={() => setStep(step - 1)}
-                className="flex-1 py-3 rounded-xl text-sm font-medium text-muted bg-surface hover:bg-canvas"
+                className="flex-1 py-3 rounded-lg text-sm font-medium text-[#586270] bg-white hover:bg-[#F5F1E8]"
               >
                 Atrás
               </button>
@@ -630,7 +630,7 @@ export default function NewContractWizardPage() {
               <button
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed()}
-                className="flex-1 bg-primary hover:bg-primary-pressed text-white py-3 rounded-xl text-sm font-medium disabled:opacity-50"
+                className="flex-1 bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
               >
                 Siguiente
               </button>
@@ -638,7 +638,7 @@ export default function NewContractWizardPage() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="flex-1 bg-primary hover:bg-primary-pressed text-white py-3 rounded-xl text-sm font-medium disabled:opacity-50"
+                className="flex-1 bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
               >
                 {isSubmitting ? 'Creando...' : 'Crear contrato'}
               </button>
