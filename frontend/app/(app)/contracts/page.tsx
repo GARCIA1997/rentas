@@ -1,41 +1,31 @@
 'use client';
 
+// Markup portado de Stitch: design/stitch/contracts.html ("Listado de Contratos").
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { contractsApi, Contract, ContractRenewalAlert } from '@/lib/api';
 import { formatDate } from '@/lib/formatDate';
-import { ChevronRightIcon } from '@/components/icons';
+import { MainHeader } from '@/components/StitchHeader';
 
-const statusLabels: Record<Contract['status'], string> = {
-  DRAFT: 'Borrador',
-  ACTIVE: 'Activo',
-  EXPIRED: 'Expirado',
-  AUTO_RENEWAL_PENDING: 'Renovación pendiente',
-  CANCELLED: 'Cancelado',
-};
+type Filter = 'ALL' | 'ACTIVE' | 'RENEW' | 'DRAFT' | 'FINISHED' | 'CANCELLED';
+const money = (n: number | string) => `$${Number(n).toLocaleString('es-MX')}`;
+const initials = (name?: string) =>
+  (name ?? '—')
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase();
+const contractFolio = (c: Pick<Contract, 'id'>) => `CTR-${c.id.slice(-6).toUpperCase()}`;
 
-const statusColors: Record<Contract['status'], string> = {
-  DRAFT: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-  ACTIVE: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  EXPIRED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  AUTO_RENEWAL_PENDING: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  CANCELLED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-};
-
-type Segment = 'active' | 'finished' | 'cancelled';
-
-const segmentStatuses: Record<Segment, Contract['status'][]> = {
-  active: ['DRAFT', 'ACTIVE', 'AUTO_RENEWAL_PENDING'],
-  finished: ['EXPIRED'],
-  cancelled: ['CANCELLED'],
-};
-
-const segmentLabels: Record<Segment, string> = {
-  active: 'Activos',
-  finished: 'Finalizados',
-  cancelled: 'Cancelados',
+const badge: Record<Contract['status'], { label: string; cls: string }> = {
+  DRAFT: { label: 'Borrador', cls: 'bg-[#FEF3C7] text-[#92400E]' },
+  ACTIVE: { label: 'Activo', cls: 'bg-[#E8F5E9] text-[#2D9E6B]' },
+  EXPIRED: { label: 'Finalizado', cls: 'bg-[#f1eee5] text-[#43474e]' },
+  AUTO_RENEWAL_PENDING: { label: 'Por renovar', cls: 'bg-[#FEF3C7] text-[#92400E]' },
+  CANCELLED: { label: 'Cancelado', cls: 'bg-[#FDECEA] text-[#C0392B]' },
 };
 
 export default function ContractsPage() {
@@ -44,178 +34,205 @@ export default function ContractsPage() {
   const [renewalAlerts, setRenewalAlerts] = useState<ContractRenewalAlert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [segment, setSegment] = useState<Segment>('active');
+  const [filter, setFilter] = useState<Filter>('ALL');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     if (!token) return;
     setIsLoading(true);
     Promise.all([contractsApi.list(token), contractsApi.getRenewalAlerts(token)])
-      .then(([contractsData, alertsData]) => {
-        setContracts(contractsData);
-        setRenewalAlerts(alertsData);
+      .then(([c, a]) => {
+        setContracts(c);
+        setRenewalAlerts(a);
       })
       .catch((err) => setError(err instanceof Error ? err.message : 'Error al cargar contratos'))
       .finally(() => setIsLoading(false));
   }, [token]);
 
-  const counts: Record<Segment, number> = {
-    active: contracts.filter((c) => segmentStatuses.active.includes(c.status)).length,
-    finished: contracts.filter((c) => segmentStatuses.finished.includes(c.status)).length,
-    cancelled: contracts.filter((c) => segmentStatuses.cancelled.includes(c.status)).length,
+  const renewIds = new Set(renewalAlerts.map((a) => a.id));
+  const daysById = new Map(renewalAlerts.map((a) => [a.id, a.daysUntilEnd]));
+  const isRenew = (c: Contract) => renewIds.has(c.id) || c.status === 'AUTO_RENEWAL_PENDING';
+  const matches: Record<Filter, (c: Contract) => boolean> = {
+    ALL: () => true,
+    ACTIVE: (c) => c.status === 'ACTIVE',
+    RENEW: isRenew,
+    DRAFT: (c) => c.status === 'DRAFT',
+    FINISHED: (c) => c.status === 'EXPIRED',
+    CANCELLED: (c) => c.status === 'CANCELLED',
   };
+  const chips: { key: Filter; label: string }[] = [
+    { key: 'ALL', label: 'Todos' },
+    { key: 'ACTIVE', label: 'Activos' },
+    { key: 'RENEW', label: 'Por renovar' },
+    { key: 'DRAFT', label: 'Borrador' },
+    { key: 'FINISHED', label: 'Finalizados' },
+    { key: 'CANCELLED', label: 'Cancelados' },
+  ];
 
-  const filteredContracts = contracts.filter((c) => segmentStatuses[segment].includes(c.status));
+  const q = query.trim().toLowerCase();
+  const list = contracts
+    .filter(matches[filter])
+    .filter((c) => (q ? `${c.tenant?.fullName ?? ''} ${c.property?.name ?? ''} ${contractFolio(c)}`.toLowerCase().includes(q) : true));
+  const activeCount = contracts.filter((c) => c.status === 'ACTIVE').length;
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-2">
-        <h1 className="text-2xl font-bold text-heading">Contratos</h1>
+      <MainHeader>
+        <div className="pt-1 sm:pt-0">
+          <h1 className="font-sans text-headline-sm text-white font-semibold mt-3 sm:mt-0">Contratos de Arrendamiento</h1>
+          <p className="font-sans text-body-sm text-[#A7B0BB] mt-0.5">
+            {contracts.length} contratos registrados · {activeCount} activos
+          </p>
+          <div className="mt-3 flex items-center gap-2">
+            <div className="relative flex-1">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[20px] text-[#43474e]">search</span>
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full bg-white text-[#1c1c16] placeholder:text-[#A7B0BB] text-body-md font-sans pl-10 pr-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-[#2D9E6B] focus:outline-none shadow-sm"
+                placeholder="Buscar por inquilino, propiedad, folio..."
+                type="search"
+              />
+            </div>
+          </div>
+        </div>
+      </MainHeader>
+
+      <main className="px-4 py-4 space-y-4 flex-1 max-w-md sm:max-w-5xl mx-auto w-full">
+        {error && <div className="bg-[#FDECEA] border border-[#F5C6C0] rounded-lg p-3 text-body-sm text-[#C0392B]">{error}</div>}
+
+        {/* Alerta ámbar de contratos por vencer */}
+        {renewalAlerts.length > 0 && (
+          <div className="bg-[#FFF8E7] border border-[#F3DEB2] rounded-lg p-3 flex items-center justify-between gap-3 shadow-[0_1px_3px_rgba(23,58,95,0.04)]">
+            <div className="flex items-start gap-2.5">
+              <span className="material-symbols-outlined text-[#D9822B] text-[22px] shrink-0 mt-0.5">schedule</span>
+              <div>
+                <h2 className="font-sans text-label-md text-[#945600] font-bold">
+                  {renewalAlerts.length} contrato{renewalAlerts.length > 1 ? 's' : ''} por renovar
+                </h2>
+                <p className="font-sans text-body-sm text-[#B36B00]">Vencen en los próximos 2 meses</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setFilter('RENEW')}
+              className="px-2.5 py-1 text-label-sm font-sans bg-white border border-[#D9822B] text-[#D9822B] font-semibold rounded-lg shrink-0 hover:bg-[#FFF3D6] active:scale-95 transition"
+            >
+              Ver
+            </button>
+          </div>
+        )}
+
+        {/* Chips de filtro */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 no-scrollbar">
+          {chips.map((c) => (
+            <button
+              key={c.key}
+              onClick={() => setFilter(c.key)}
+              className={
+                filter === c.key
+                  ? 'bg-[#173a5f] text-white px-3 py-1.5 rounded-lg font-sans text-label-md shrink-0 shadow-sm'
+                  : 'bg-white text-[#002445] border border-[#A7B0BB]/40 px-3 py-1.5 rounded-lg font-sans text-label-md shrink-0 hover:border-[#173a5f] transition'
+              }
+            >
+              {c.label} ({contracts.filter(matches[c.key]).length})
+            </button>
+          ))}
+        </div>
+
+        {isLoading ? (
+          <p className="text-body-sm text-[#A7B0BB]">Cargando...</p>
+        ) : list.length === 0 ? (
+          <div className="bg-white rounded-lg border border-[#A7B0BB]/30 p-6 text-center text-body-sm text-[#A7B0BB]">
+            {contracts.length === 0 ? 'Aún no hay contratos registrados.' : 'Ningún contrato coincide con el filtro.'}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {list.map((c) => {
+              const renew = isRenew(c);
+              const b = renew && c.status === 'ACTIVE' ? badge.AUTO_RENEWAL_PENDING : badge[c.status];
+              const days = daysById.get(c.id);
+              return (
+                <article key={c.id} className="bg-white rounded-lg border border-[#A7B0BB]/30 p-4 shadow-[0_1px_3px_rgba(23,58,95,0.05)]">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#A7B0BB]/20">
+                    <div className="flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[18px] text-[#43474e]">description</span>
+                      <span className="font-sans text-label-md text-[#43474e] font-bold">{contractFolio(c)}</span>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-sans font-semibold ${b.cls}`}>{b.label}</span>
+                  </div>
+                  <div className="mt-3 flex items-start gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-full font-bold flex items-center justify-center shrink-0 font-sans text-label-md ${
+                        c.status === 'ACTIVE' && !renew ? 'bg-[#2D9E6B]/15 text-[#2D9E6B]' : 'bg-[#173A5F]/10 text-[#002445]'
+                      }`}
+                    >
+                      {initials(c.tenant?.fullName)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-sans text-headline-sm text-[#1c1c16] font-semibold truncate">{c.tenant?.fullName ?? 'Pendiente'}</h3>
+                      <p className="font-sans text-body-sm text-[#43474e] flex items-center gap-1 mt-0.5 truncate">
+                        <span className="material-symbols-outlined text-[16px] text-[#A7B0BB]">apartment</span>
+                        {c.property?.name ?? '—'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-3 bg-[#f7f3ea] rounded-lg p-2.5 space-y-1.5 border border-[#A7B0BB]/20">
+                    <div className="flex justify-between items-center text-body-sm font-sans">
+                      <span className="text-[#43474e]">Vigencia:</span>
+                      <span className="text-[#1c1c16] font-medium">
+                        {formatDate(c.startDate)} – {c.endDate ? formatDate(c.endDate) : '—'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-body-sm font-sans">
+                      {renew && days !== undefined ? (
+                        <span className="text-[#D9822B] font-medium flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px]">warning</span> Vence en {days} días
+                        </span>
+                      ) : c.status === 'DRAFT' ? (
+                        <span className="text-[#92400E] font-medium">Pendiente de firma</span>
+                      ) : (
+                        <span className="text-[#43474e]">{c.durationMonths} meses de contrato</span>
+                      )}
+                      <span className="text-[#002445] font-bold text-label-lg font-sans">
+                        {money(c.monthlyRent)} MXN<span className="text-xs font-normal text-[#43474e]">/mes</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <Link
+                      href={`/contracts/${c.id}`}
+                      className="w-full bg-[#173a5f] text-white py-2 rounded-lg font-sans text-label-md font-semibold hover:opacity-95 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm"
+                    >
+                      <span>Ver detalle</span>
+                      <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </Link>
+                    {renew && c.status === 'ACTIVE' && (
+                      <Link
+                        href={`/contracts/${c.id}/renew`}
+                        className="shrink-0 px-3 bg-white border border-[#D9822B] text-[#D9822B] py-2 rounded-lg font-sans text-label-md font-semibold hover:bg-[#FFF3D6] flex items-center justify-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">autorenew</span>
+                        Renovar
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </main>
+
+      {/* FAB */}
+      <div className="fixed bottom-20 sm:bottom-6 right-4 z-40">
         <Link
           href="/contracts/new"
-          className="bg-primary hover:bg-primary-pressed text-white px-4 py-2.5 rounded-xl text-sm font-medium self-start sm:self-auto text-center active:opacity-80"
+          className="bg-[#2D9E6B] text-white font-semibold text-xs px-4 py-3 rounded-lg shadow-lg hover:bg-[#258257] active:scale-95 transition-all duration-150 flex items-center space-x-1.5"
         >
-          + Nuevo contrato
+          <span className="material-symbols-outlined text-[20px]">add</span>
+          <span>Nuevo contrato</span>
         </Link>
       </div>
-      <Link href="/payments" className="inline-block text-sm text-primary hover:underline mb-6">
-        Ver pagos →
-      </Link>
-
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-sm text-red-800 dark:text-red-400 mb-6">
-          {error}
-        </div>
-      )}
-
-      {/* Renewal alerts */}
-      {renewalAlerts.length > 0 && (
-        <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 mb-6">
-          <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-3">
-            ⚠️ {renewalAlerts.length} contrato{renewalAlerts.length > 1 ? 's' : ''} próximo{renewalAlerts.length > 1 ? 's' : ''} a renovar
-          </h3>
-          <div className="space-y-2">
-            {renewalAlerts.map((alert) => (
-              <Link
-                key={alert.id}
-                href={`/contracts/${alert.id}`}
-                className="flex items-center justify-between p-3 bg-white dark:bg-black/20 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-heading">{alert.tenant.fullName}</p>
-                  <p className="text-xs text-muted">{alert.property.name} • Vence en {alert.daysUntilEnd} días</p>
-                </div>
-                <button
-                  className="ml-2 px-3 py-1.5 text-xs font-medium bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors active:opacity-80"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = `/contracts/${alert.id}/renew`;
-                  }}
-                >
-                  Renovar
-                </button>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Segmented control */}
-      <div className="flex border-b border-line mb-6">
-        {(Object.keys(segmentLabels) as Segment[]).map((key) => (
-          <button
-            key={key}
-            onClick={() => setSegment(key)}
-            className={`flex-1 py-2.5 -mb-px border-b-2 text-sm font-medium transition-colors ${
-              segment === key ? 'border-accent text-heading font-semibold' : 'border-transparent text-muted hover:text-heading'
-            }`}
-          >
-            {segmentLabels[key]} {counts[key] > 0 && `(${counts[key]})`}
-          </button>
-        ))}
-      </div>
-
-      {isLoading ? (
-        <p className="text-muted">Cargando...</p>
-      ) : contracts.length === 0 ? (
-        <div className="bg-surface rounded-2xl p-8 text-center text-muted">No hay contratos registrados.</div>
-      ) : filteredContracts.length === 0 ? (
-        <div className="bg-surface rounded-2xl p-8 text-center text-muted">
-          No hay contratos {segmentLabels[segment].toLowerCase()}.
-        </div>
-      ) : (
-        <>
-          {/* Mobile: cards */}
-          <div className="sm:hidden space-y-3">
-            {filteredContracts.map((contract) => (
-              <Link
-                key={contract.id}
-                href={`/contracts/${contract.id}`}
-                className="flex items-center gap-3 bg-surface rounded-2xl shadow-sm p-4 active:opacity-70 transition-opacity"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <p className="text-heading font-semibold truncate">{contract.tenant?.fullName ?? '—'}</p>
-                    <span className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[contract.status]}`}>
-                      {statusLabels[contract.status]}
-                    </span>
-                  </div>
-                  <p className="text-muted text-sm truncate">{contract.property?.name ?? '—'}</p>
-                  <p className="text-xs text-muted mt-1">
-                    {formatDate(contract.startDate)} — {contract.endDate ? formatDate(contract.endDate) : '—'} · $
-                    {Number(contract.monthlyRent).toLocaleString('es-MX')}/mes
-                    {!contract.signedAt && contract.status !== 'CANCELLED' && ' · Pendiente de firma'}
-                  </p>
-                </div>
-                <ChevronRightIcon className="w-5 h-5 text-muted shrink-0" />
-              </Link>
-            ))}
-          </div>
-
-          {/* Desktop: table */}
-          <div className="hidden sm:block bg-surface rounded-2xl shadow-sm overflow-hidden overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-canvas text-muted text-left">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Inquilino</th>
-                  <th className="px-4 py-3 font-medium">Propiedad</th>
-                  <th className="px-4 py-3 font-medium">Vigencia</th>
-                  <th className="px-4 py-3 font-medium">Renta</th>
-                  <th className="px-4 py-3 font-medium">Estado</th>
-                  <th className="px-4 py-3 font-medium">Firmado</th>
-                  <th className="px-4 py-3 font-medium text-right">Detalle</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/5 dark:divide-white/10">
-                {filteredContracts.map((contract) => (
-                  <tr
-                    key={contract.id}
-                    onClick={() => (window.location.href = `/contracts/${contract.id}`)}
-                    className="cursor-pointer hover:bg-black/[0.02] dark:hover:bg-white/[0.03]"
-                  >
-                    <td className="px-4 py-3 text-heading font-medium">{contract.tenant?.fullName ?? '—'}</td>
-                    <td className="px-4 py-3 text-muted">{contract.property?.name ?? '—'}</td>
-                    <td className="px-4 py-3 text-muted whitespace-nowrap">
-                      {formatDate(contract.startDate)} — {contract.endDate ? formatDate(contract.endDate) : '—'}
-                    </td>
-                    <td className="px-4 py-3 text-muted">${Number(contract.monthlyRent).toLocaleString('es-MX')}</td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${statusColors[contract.status]}`}>
-                        {statusLabels[contract.status]}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-muted">{contract.signedAt ? formatDate(contract.signedAt) : '—'}</td>
-                    <td className="px-4 py-3 text-right">
-                      <Link href={`/contracts/${contract.id}`} className="text-primary hover:underline">
-                        Ver detalle →
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
     </ProtectedRoute>
   );
 }

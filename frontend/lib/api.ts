@@ -326,7 +326,7 @@ export interface Contract {
   cancelledAt?: string | null;
   createdAt: string;
   updatedAt: string;
-  tenant?: { id: string; fullName: string; idDocument?: string | null };
+  tenant?: { id: string; fullName: string; idDocument?: string | null; phone?: string | null };
   property?: { id: string; name: string; address: string; city: string; propertyType?: 'HOUSE' | 'LOCAL' };
   representative?: { id: string; fullName: string; position?: string | null } | null;
   // Incumplimientos de normas de orden público detectados por el backend (p. ej. depósito
@@ -386,10 +386,10 @@ export const contractsApi = {
   remove: (id: string, token: string) => apiCall(`/api/contracts/${id}`, { method: 'DELETE', token }),
   generatePdf: (id: string, token: string) =>
     apiCall(`/api/contracts/${id}/generate-pdf`, { method: 'POST', token }) as Promise<Contract>,
-  markSigned: (id: string, signedDigitallyPhone: boolean, token: string) =>
+  markSigned: (id: string, signedDigitallyPhone: boolean, token: string, includeDeposit = true) =>
     apiCall(`/api/contracts/${id}/mark-signed`, {
       method: 'POST',
-      body: JSON.stringify({ signedDigitallyPhone }),
+      body: JSON.stringify({ signedDigitallyPhone, includeDeposit }),
       token,
     }) as Promise<Contract>,
   cancel: (id: string, reason: string, token: string) =>
