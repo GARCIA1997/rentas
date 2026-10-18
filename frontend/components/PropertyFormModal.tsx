@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import { Modal } from './Modal';
+import { Modal, fieldLabel, fieldInput, btnSecondary, btnConfirm } from './Modal';
 import { useAuth } from '@/hooks/useAuth';
 import { propertiesApi, Property, PropertyInput, VALID_CITIES } from '@/lib/api';
 
@@ -102,35 +102,35 @@ export function PropertyFormModal({
     <Modal isOpen={isOpen} onClose={onClose} title={property ? 'Editar propiedad' : 'Nueva propiedad'}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-heading mb-1">Nombre</label>
+          <label className={fieldLabel}>Nombre</label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className={fieldInput}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-heading mb-1">Dirección</label>
+          <label className={fieldLabel}>Dirección</label>
           <input
             type="text"
             value={form.address}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className={fieldInput}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-heading mb-1">Ciudad</label>
+            <label className={fieldLabel}>Ciudad</label>
             <select
               value={form.city}
               onChange={(e) => setForm({ ...form, city: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className={fieldInput}
             >
               {VALID_CITIES.map((city) => (
                 <option key={city} value={city}>
@@ -140,35 +140,35 @@ export function PropertyFormModal({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-heading mb-1">Código Postal</label>
+            <label className={fieldLabel}>Código Postal</label>
             <input
               type="text"
               value={form.postalCode}
               onChange={(e) => setForm({ ...form, postalCode: e.target.value })}
               required
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className={fieldInput}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-heading mb-1">Tipo</label>
+            <label className={fieldLabel}>Tipo</label>
             <select
               value={form.propertyType}
               onChange={(e) => setForm({ ...form, propertyType: e.target.value as PropertyInput['propertyType'] })}
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className={fieldInput}
             >
               <option value="HOUSE">Casa</option>
               <option value="LOCAL">Local</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-heading mb-1">Estado</label>
+            <label className={fieldLabel}>Estado</label>
             <select
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value as PropertyInput['status'] })}
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className={fieldInput}
             >
               <option value="LIBRE">Libre</option>
               <option value="OCUPADA">Ocupada</option>
@@ -179,30 +179,30 @@ export function PropertyFormModal({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-heading mb-1">Cuartos</label>
+            <label className={fieldLabel}>Cuartos</label>
             <input
               type="number"
               min="0"
               value={form.bedrooms ?? ''}
               onChange={(e) => setForm({ ...form, bedrooms: e.target.value ? Number(e.target.value) : null })}
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className={fieldInput}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-heading mb-1">Baños</label>
+            <label className={fieldLabel}>Baños</label>
             <input
               type="number"
               min="0"
               value={form.bathrooms ?? ''}
               onChange={(e) => setForm({ ...form, bathrooms: e.target.value ? Number(e.target.value) : null })}
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className={fieldInput}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 items-end">
           <div>
-            <label className="block text-sm font-medium text-heading mb-1">Renta mensual (precio de lista)</label>
+            <label className={fieldLabel}>Renta mensual (precio de lista)</label>
             <input
               type="number"
               min="0"
@@ -210,10 +210,10 @@ export function PropertyFormModal({
               value={form.rentalPrice}
               onChange={(e) => setForm({ ...form, rentalPrice: e.target.value as unknown as string })}
               required
-              className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className={fieldInput}
             />
           </div>
-          <label className="flex items-center gap-2 text-sm text-heading pb-2">
+          <label className="flex items-center gap-2 text-sm text-[#173A5F] pb-2">
             <input
               type="checkbox"
               checked={form.waterIncluded}
@@ -223,34 +223,34 @@ export function PropertyFormModal({
             Agua incluida
           </label>
         </div>
-        <p className="text-xs text-muted -mt-2">
+        <p className="text-xs text-[#586270] -mt-2">
           Este es el precio de referencia. La renta pactada de cada contrato se define al generarlo.
         </p>
 
         <div>
-          <label className="block text-sm font-medium text-heading mb-1">Notas de mantenimiento</label>
+          <label className={fieldLabel}>Notas de mantenimiento</label>
           <textarea
             value={form.maintenanceNotes ?? ''}
             onChange={(e) => setForm({ ...form, maintenanceNotes: e.target.value })}
             rows={2}
-            className="w-full px-3 py-2 border border-black/10 dark:border-white/10 bg-canvas text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className={fieldInput}
           />
         </div>
 
-        {error && <div className="p-3 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg text-sm">{error}</div>}
+        {error && <div className="p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg">{error}</div>}
 
-        <div className="flex justify-end gap-3 pt-2">
+        <div className="flex gap-3 pt-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-muted hover:bg-canvas"
+            className={btnSecondary}
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={isSaving}
-            className="bg-primary hover:bg-primary-pressed text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
+            className={btnConfirm}
           >
             {isSaving ? 'Guardando...' : 'Guardar'}
           </button>

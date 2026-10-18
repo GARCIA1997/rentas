@@ -45,18 +45,18 @@ const statusLabels: Record<Contract['status'], string> = {
 };
 
 const statusColors: Record<Contract['status'], string> = {
-  DRAFT: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-  ACTIVE: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  EXPIRED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  AUTO_RENEWAL_PENDING: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  CANCELLED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+  DRAFT: 'bg-gray-100 text-gray-800',
+  ACTIVE: 'bg-emerald-100 text-emerald-800',
+  EXPIRED: 'bg-red-100 text-red-800',
+  AUTO_RENEWAL_PENDING: 'bg-amber-100 text-amber-800',
+  CANCELLED: 'bg-red-100 text-red-800',
 };
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex justify-between py-2.5 border-b border-black/5 dark:border-white/10 last:border-0 text-sm">
-      <span className="text-muted">{label}</span>
-      <span className="text-heading font-medium text-right">{value}</span>
+    <div className="flex justify-between py-2.5 border-b border-[#A7B0BB]/30 last:border-0 text-sm">
+      <span className="text-[#586270]">{label}</span>
+      <span className="text-[#173A5F] font-medium text-right">{value}</span>
     </div>
   );
 }
@@ -210,7 +210,7 @@ function ContractEditModal({
               />
             </div>
           </div>
-          <p className="text-xs text-muted -mt-2">
+          <p className="text-xs text-[#586270] -mt-2">
             Cambiar las fechas no regenera el calendario de pagos ya creado; ajusta los pagos manualmente si es necesario.
           </p>
 
@@ -242,7 +242,7 @@ function ContractEditModal({
           </div>
 
           <div className="flex gap-6">
-            <label className="flex items-center gap-2 text-sm text-heading">
+            <label className="flex items-center gap-2 text-sm text-[#173A5F]">
               <input
                 type="checkbox"
                 checked={form.waterIncluded}
@@ -251,7 +251,7 @@ function ContractEditModal({
               />
               Agua incluida
             </label>
-            <label className="flex items-center gap-2 text-sm text-heading">
+            <label className="flex items-center gap-2 text-sm text-[#173A5F]">
               <input
                 type="checkbox"
                 checked={form.autoRenewal}
@@ -261,7 +261,7 @@ function ContractEditModal({
               Renovación automática
             </label>
             {contract.property?.propertyType === 'HOUSE' && (
-              <label className="flex items-center gap-2 text-sm text-heading">
+              <label className="flex items-center gap-2 text-sm text-[#173A5F]">
                 <input
                   type="checkbox"
                   checked={form.hasParking}
@@ -308,20 +308,20 @@ function ContractEditModal({
             />
           </div>
 
-          {error && <div className="p-3 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg text-sm">{error}</div>}
+          {error && <div className="p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg">{error}</div>}
 
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-sm font-medium text-muted hover:bg-canvas"
+              className="py-2.5 px-4 rounded-lg border border-[#A7B0BB] bg-white text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8] transition-all"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="bg-primary hover:bg-primary-pressed text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
+              className="py-2.5 px-4 rounded-lg bg-[#2D9E6B] hover:bg-[#25855a] text-white font-bold text-sm shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
             >
               {isSaving ? 'Guardando...' : 'Guardar'}
             </button>
