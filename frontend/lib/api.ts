@@ -497,9 +497,24 @@ export function getScheduledPayments(payments: RentPayment[]): RentPayment[] {
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 }
 
+// RentPayment.status sólo se recalcula en el backend al escribir el registro
+// (computeStatus en rentPaymentService.js), así que en producción hay pagos ya vencidos
+// que siguen guardados como PENDING. La UI deriva el estado real por fecha — mismo
+// criterio que el cron de recordatorios (paymentReminderService) — en vez de confiar en
+// el campo guardado. No requiere migración ni tocar datos existentes.
+export const withEffectiveStatus = (p: RentPayment): RentPayment => {
+  // Misma regla que computeStatus() del backend, evaluada hoy y no al último guardado.
+  let status: RentPayment['status'];
+  if (p.paidDate && Number(p.amountPaid) >= Number(p.amountDue)) status = 'PAID';
+  else if (new Date(p.dueDate) < new Date()) status = 'OVERDUE';
+  else status = 'PENDING';
+  return status === p.status ? p : { ...p, status };
+};
+const normalizePayments = (list: RentPayment[]) => list.map(withEffectiveStatus);
+
 export const rentPaymentsApi = {
-  list: (token: string) => apiCall('/api/rent-payments', { token }) as Promise<RentPayment[]>,
-  get: (id: string, token: string) => apiCall(`/api/rent-payments/${id}`, { token }) as Promise<RentPayment>,
+  list: (token: string) => (apiCall('/api/rent-payments', { token }) as Promise<RentPayment[]>).then(normalizePayments),
+  get: (id: string, token: string) => (apiCall(`/api/rent-payments/${id}`, { token }) as Promise<RentPayment>).then(withEffectiveStatus),
   create: (data: RentPaymentInput, token: string) =>
     apiCall('/api/rent-payments', { method: 'POST', body: JSON.stringify(data), token }) as Promise<RentPayment>,
   update: (id: string, data: Partial<RentPaymentInput>, token: string) =>
@@ -629,7 +644,7 @@ const downloadBlob = async (url: string, token: string, filename: string, errorM
 export const meApi = {
   getTenant: (token: string) => apiCall('/api/me/tenant', { token }) as Promise<MyTenant | null>,
   getContracts: (token: string) => apiCall('/api/me/contracts', { token }) as Promise<Contract[]>,
-  getPayments: (token: string) => apiCall('/api/me/payments', { token }) as Promise<RentPayment[]>,
+  getPayments: (token: string) => (apiCall('/api/me/payments', { token }) as Promise<RentPayment[]>).then(normalizePayments),
   downloadContractPdf: (id: string, token: string) =>
     downloadBlob(`${API_URL}/api/me/contracts/${id}/pdf`, token, `contrato-${id}.pdf`, 'No se pudo descargar el contrato'),
   downloadReceipt: (id: string, token: string) =>
