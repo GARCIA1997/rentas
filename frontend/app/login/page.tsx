@@ -33,9 +33,9 @@ export default function LoginPage() {
         <p className="mt-3 text-sm tracking-wide text-[#F5F1E8]/80">Gestión inteligente de propiedades</p>
       </div>
 
-      <div className="relative w-full max-w-md bg-surface rounded-xl shadow-xl p-8">
-        <h1 className="text-2xl font-bold text-heading">Bienvenido de nuevo</h1>
-        <p className="text-sm text-muted mt-1 mb-6">Ingresa tus credenciales para administrar tus propiedades.</p>
+      <div className="relative w-full max-w-md bg-white rounded-lg shadow-xl p-8">
+        <h1 className="text-2xl font-bold text-[#173A5F]">Bienvenido de nuevo</h1>
+        <p className="text-sm text-[#586270] mt-1 mb-6">Ingresa tus credenciales para administrar tus propiedades.</p>
         <LoginForm />
       </div>
     </div>

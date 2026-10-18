@@ -222,7 +222,7 @@ export default function NewContractWizardPage() {
             <button
               onClick={handleGeneratePdfNow}
               disabled={isGeneratingPdf || !form.templateId}
-              className="bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
+              className="bg-[#2D9E6B] hover:bg-[#25855a] text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
             >
               {isGeneratingPdf ? 'Generando...' : 'Generar PDF ahora'}
             </button>
@@ -361,7 +361,7 @@ export default function NewContractWizardPage() {
                     <button
                       onClick={handleCreateTenant}
                       disabled={!newTenant.fullName || isCreatingTenant}
-                      className="flex-1 bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
+                      className="flex-1 bg-[#2D9E6B] hover:bg-[#25855a] text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
                     >
                       {isCreatingTenant ? 'Creando...' : 'Crear y seleccionar'}
                     </button>
@@ -630,7 +630,7 @@ export default function NewContractWizardPage() {
               <button
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed()}
-                className="flex-1 bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
+                className="flex-1 bg-[#2D9E6B] hover:bg-[#25855a] text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
               >
                 Siguiente
               </button>
@@ -638,7 +638,7 @@ export default function NewContractWizardPage() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="flex-1 bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
+                className="flex-1 bg-[#2D9E6B] hover:bg-[#25855a] text-white py-3 rounded-lg text-sm font-medium disabled:opacity-50"
               >
                 {isSubmitting ? 'Creando...' : 'Crear contrato'}
               </button>

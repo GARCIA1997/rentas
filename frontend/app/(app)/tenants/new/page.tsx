@@ -364,7 +364,7 @@ function IntroScreen({
 
         <button
           onClick={onContinue}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#2D9E6B]-pressed"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#25855a]"
         >
           <CameraIcon className="h-4 w-4" />
           {continueLabel}
@@ -416,7 +416,7 @@ function ConfirmScreen({
         </button>
         <button
           onClick={onContinue}
-          className="flex-1 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#2D9E6B]-pressed"
+          className="flex-1 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#25855a]"
         >
           {continueLabel}
         </button>
@@ -640,7 +640,7 @@ function ReviewScreen({
         <button
           onClick={onSubmit}
           disabled={isSaving}
-          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#2D9E6B]-pressed disabled:opacity-50"
+          className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#2D9E6B] py-3.5 text-sm font-medium text-white hover:bg-[#25855a] disabled:opacity-50"
         >
           {isSaving ? (
             'Guardando...'

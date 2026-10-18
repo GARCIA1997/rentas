@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { Modal } from '@/components/Modal';
+import { Modal, fieldLabel, fieldInput, btnSecondary, btnConfirm } from '@/components/Modal';
+import { DetailHeader } from '@/components/StitchHeader';
 import { useAuth } from '@/hooks/useAuth';
 import { representativesApi, Representative, RepresentativeInput } from '@/lib/api';
 import { useToast } from '@/components/ToastProvider';
 import { useConfirm } from '@/components/ConfirmProvider';
-import { ArrowLeftIcon } from '@/components/icons';
 
 const emptyForm: RepresentativeInput = {
   fullName: '',
@@ -22,7 +21,6 @@ const emptyForm: RepresentativeInput = {
 
 export default function RepresentativesPage() {
   const { token } = useAuth();
-  const router = useRouter();
   const { showToast } = useToast();
   const confirm = useConfirm();
   const [representatives, setRepresentatives] = useState<Representative[]>([]);
@@ -112,113 +110,110 @@ export default function RepresentativesPage() {
     }
   };
 
+  // Markup portado de Stitch: design/stitch/representatives.html
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <button
-        onClick={() => router.push('/settings')}
-        className="flex items-center gap-1.5 text-[#586270] hover:text-[#173A5F] text-sm mb-4 -ml-1"
-      >
-        <ArrowLeftIcon className="w-4 h-4" />
-        Configuración
-      </button>
+      <DetailHeader title="Representantes legales" subtitle="Quiénes firman los contratos como arrendador" backHref="/settings" />
 
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-2">
-        <h1 className="text-2xl font-bold text-[#173A5F]">Representantes</h1>
-        <button
-          onClick={openCreateModal}
-          className="bg-[#2D9E6B] hover:bg-[#2D9E6B]-pressed text-white px-4 py-2.5 rounded-lg text-sm font-medium self-start sm:self-auto active:opacity-80"
-        >
-          + Nuevo representante
-        </button>
-      </div>
-      <p className="text-sm text-[#586270] mb-6">
-        Personas que firman los contratos a título personal (no como empresa). Se eligen al generar cada contrato.
-      </p>
+      <main className="max-w-md sm:max-w-3xl mx-auto w-full px-4 pt-4 pb-28 sm:pb-8 flex flex-col gap-4">
+        <div className="bg-white border border-[#DDD9CF] rounded-lg p-3 flex items-start gap-3 shadow-sm">
+          <div className="w-7 h-7 rounded-lg bg-[#173A5F]/10 flex items-center justify-center text-[#173A5F] shrink-0 mt-0.5">
+            <span className="material-symbols-outlined text-[18px]">gavel</span>
+          </div>
+          <p className="text-[11px] leading-tight text-[#586270]">
+            Firman los contratos a título personal (no como empresa). El representante elegido figura en el proemio, las declaraciones y la firma de cada contrato.
+          </p>
+        </div>
 
-      {isLoading ? (
-        <p className="text-[#586270]">Cargando...</p>
-      ) : representatives.length === 0 ? (
-        <div className="bg-white rounded-lg p-8 text-center text-[#586270]">No hay representantes registrados.</div>
-      ) : (
-        <>
-          {/* Mobile: cards */}
-          <div className="sm:hidden space-y-3">
+        {error && !isModalOpen && <div className="p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg">{error}</div>}
+
+        {isLoading ? (
+          <p className="text-xs text-[#73777f]">Cargando...</p>
+        ) : representatives.length === 0 ? (
+          <div className="bg-white border border-[#DDD9CF] rounded-lg p-6 text-center">
+            <span className="material-symbols-outlined text-[36px] text-[#A7B0BB]">badge</span>
+            <p className="text-xs text-[#586270] mt-1">No hay representantes registrados. Sin uno no se puede generar el PDF de un contrato.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {representatives.map((rep) => (
-              <div key={rep.id} className="bg-white rounded-lg border border-[#A7B0BB]/30 shadow-sm p-4">
+              <div key={rep.id} className="bg-white border border-[#DDD9CF] rounded-lg p-4 shadow-sm hover:border-[#173A5F]/30 transition-colors">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="text-[#173A5F] font-semibold truncate">{rep.fullName}</p>
-                    <p className="text-[#586270] text-sm truncate">{rep.position ?? 'Sin cargo'}</p>
-                    <p className="text-xs text-[#586270] mt-1 truncate">{rep.phone ?? rep.email ?? 'Sin contacto'}</p>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className={`w-10 h-10 rounded-lg text-white flex items-center justify-center font-bold text-sm shrink-0 ${rep.isActive ? 'bg-[#173A5F]' : 'bg-[#A7B0BB]'}`}>
+                      {rep.fullName
+                        .split(/\s+/)
+                        .slice(0, 2)
+                        .map((w) => w[0])
+                        .join('')
+                        .toUpperCase()}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <h2 className="text-sm font-bold text-[#173A5F] leading-tight truncate">{rep.fullName}</h2>
+                      <span className="text-[11px] text-[#586270] font-medium truncate">{rep.position || 'Sin cargo'}</span>
+                    </div>
                   </div>
-                  <span
-                    className={`shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${
-                      rep.isActive
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {rep.isActive ? 'Activo' : 'Inactivo'}
-                  </span>
+                  {rep.isActive ? (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#2D9E6B]/15 text-[#2D9E6B] border border-[#2D9E6B]/30 shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E6B]"></span>
+                      Activo
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#A7B0BB]/20 text-[#586270] border border-[#A7B0BB]/30 shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#A7B0BB]"></span>
+                      Inactivo
+                    </span>
+                  )}
                 </div>
-                <div className="flex gap-4 mt-3 pt-3 border-t border-[#A7B0BB]/30">
-                  <button onClick={() => openEditModal(rep)} className="text-[#2D9E6B] text-sm font-medium">
-                    Editar
+                <div className="mt-3 pt-3 border-t border-[#DDD9CF]/60 grid grid-cols-1 gap-2 text-xs">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[#A7B0BB] font-medium">Identificación:</span>
+                    <span className="font-semibold text-[#173A5F] tracking-wide select-all font-mono truncate">{rep.idDocument || '—'}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[#A7B0BB] font-medium">Teléfono:</span>
+                    <span className="font-semibold text-[#173A5F] select-all">{rep.phone || '—'}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[#A7B0BB] font-medium">Correo:</span>
+                    <span className="font-medium text-[#586270] truncate">{rep.email || '—'}</span>
+                  </div>
+                </div>
+                <div className="mt-3.5 pt-2.5 border-t border-[#DDD9CF]/40 flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => openEditModal(rep)}
+                    aria-label={`Editar ${rep.fullName}`}
+                    className="h-8 px-2.5 bg-white border border-[#DDD9CF] text-[#173A5F] hover:bg-[#F5F1E8] active:scale-95 transition-all rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">edit</span>
+                    <span>Editar</span>
                   </button>
-                  <button onClick={() => handleDelete(rep.id)} className="text-red-600 text-sm font-medium">
-                    Eliminar
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(rep.id)}
+                    aria-label={`Eliminar ${rep.fullName}`}
+                    className="h-8 w-8 bg-white border border-[#C0392B]/40 text-[#C0392B] hover:bg-red-50 active:scale-95 transition-all rounded-lg flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">delete</span>
                   </button>
                 </div>
               </div>
             ))}
           </div>
+        )}
+      </main>
 
-          {/* Desktop: table */}
-          <div className="hidden sm:block bg-white rounded-lg border border-[#A7B0BB]/30 shadow-sm overflow-hidden overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-[#F5F1E8] text-[#586270] text-left">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Nombre</th>
-                  <th className="px-4 py-3 font-medium">Cargo</th>
-                  <th className="px-4 py-3 font-medium">Identificación</th>
-                  <th className="px-4 py-3 font-medium">Contacto</th>
-                  <th className="px-4 py-3 font-medium">Estado</th>
-                  <th className="px-4 py-3 font-medium text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/5">
-                {representatives.map((rep) => (
-                  <tr key={rep.id}>
-                    <td className="px-4 py-3 text-[#173A5F] font-medium">{rep.fullName}</td>
-                    <td className="px-4 py-3 text-[#586270]">{rep.position ?? '—'}</td>
-                    <td className="px-4 py-3 text-[#586270]">{rep.idDocument ?? '—'}</td>
-                    <td className="px-4 py-3 text-[#586270]">{rep.phone ?? rep.email ?? '—'}</td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          rep.isActive
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}
-                      >
-                        {rep.isActive ? 'Activo' : 'Inactivo'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right space-x-3">
-                      <button onClick={() => openEditModal(rep)} className="text-[#2D9E6B] hover:underline">
-                        Editar
-                      </button>
-                      <button onClick={() => handleDelete(rep.id)} className="text-red-600 hover:underline">
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
+      <div className="fixed bottom-20 sm:bottom-6 right-4 z-40">
+        <button
+          onClick={openCreateModal}
+          type="button"
+          className="inline-flex items-center gap-2 bg-[#2D9E6B] hover:bg-[#25875a] active:scale-95 text-white font-bold text-xs px-4 py-3 rounded-full shadow-lg shadow-[#2D9E6B]/30 transition-all"
+        >
+          <span className="material-symbols-outlined text-[18px]">person_add</span>
+          <span>Nuevo representante</span>
+        </button>
+      </div>
 
       <Modal
           isOpen={isModalOpen}
@@ -227,55 +222,55 @@ export default function RepresentativesPage() {
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-[#173A5F] mb-1.5">Nombre completo</label>
+              <label className={fieldLabel}>Nombre completo</label>
               <input
                 type="text"
                 value={form.fullName}
                 onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                 required
-                className="w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all"
+                className={fieldInput}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#173A5F] mb-1.5">Cargo</label>
+              <label className={fieldLabel}>Cargo</label>
               <input
                 type="text"
                 placeholder="Ej: Administrador"
                 value={form.position ?? ''}
                 onChange={(e) => setForm({ ...form, position: e.target.value })}
-                className="w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all"
+                className={fieldInput}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#173A5F] mb-1.5">Identificación (INE/CURP)</label>
+              <label className={fieldLabel}>Identificación (INE/CURP)</label>
               <input
                 type="text"
                 value={form.idDocument ?? ''}
                 onChange={(e) => setForm({ ...form, idDocument: e.target.value })}
-                className="w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all"
+                className={fieldInput}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-[#173A5F] mb-1.5">Teléfono</label>
+                <label className={fieldLabel}>Teléfono</label>
                 <input
                   type="tel"
                   value={form.phone ?? ''}
                   onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                   maxLength={10}
-                  className="w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all"
+                  className={fieldInput}
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-[#173A5F] mb-1.5">Email</label>
+                <label className={fieldLabel}>Email</label>
                 <input
                   type="email"
                   value={form.email ?? ''}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full text-sm text-[#173A5F] placeholder-[#A7B0BB] bg-white border border-[#A7B0BB]/40 rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#173A5F] focus:ring-1 focus:ring-[#173A5F] transition-all"
+                  className={fieldInput}
                 />
               </div>
             </div>
@@ -285,25 +280,21 @@ export default function RepresentativesPage() {
                 type="checkbox"
                 checked={form.isActive}
                 onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                className="rounded"
+                className="w-4 h-4 accent-[#2D9E6B]"
               />
               Activo (disponible para elegir en nuevos contratos)
             </label>
 
             {error && <div className="p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg">{error}</div>}
 
-            <div className="flex justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="py-2.5 px-4 rounded-lg border border-[#A7B0BB] bg-white text-sm font-bold text-[#173A5F] hover:bg-[#F5F1E8] transition-all"
-              >
+            <div className="flex gap-3 pt-2">
+              <button type="button" onClick={() => setIsModalOpen(false)} className={btnSecondary}>
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isSaving}
-                className="py-2.5 px-4 rounded-lg bg-[#2D9E6B] hover:bg-[#25855a] text-white font-bold text-sm shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
+                className={btnConfirm}
               >
                 {isSaving ? 'Guardando...' : 'Guardar'}
               </button>

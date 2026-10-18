@@ -30,7 +30,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-2 text-heading">Teléfono</label>
+        <label className="block text-sm font-medium mb-2 text-[#173A5F]">Teléfono</label>
         <input
           type="tel"
           value={phone}
@@ -38,19 +38,19 @@ export function LoginForm() {
           placeholder="5551234567"
           maxLength={10}
           required
-          className="w-full px-4 py-3 border border-line bg-surface text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-4 py-3 border border-line bg-white text-[#173A5F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#173A5F]"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2 text-heading">Contraseña</label>
+        <label className="block text-sm font-medium mb-2 text-[#173A5F]">Contraseña</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           required
-          className="w-full px-4 py-3 border border-line bg-surface text-heading rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-4 py-3 border border-line bg-white text-[#173A5F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#173A5F]"
         />
       </div>
 
